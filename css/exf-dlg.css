@@ -1,0 +1,57 @@
+.exf-dlg {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 99999;
+}
+
+.exf-dlg.c-mdl {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.exf-dlg.c-mdl:target {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.exf-dlg > div {
+  width: 400px;
+  position: relative;
+  margin: 10% auto;
+  padding: 10px;
+  border-radius: 4px;
+  background: #fff;
+  -webkit-box-shadow: 10px 10px 25px -13px rgba(0, 0, 0, 0.75);
+  box-shadow: 10px 10px 25px -13px rgba(0, 0, 0, 0.75);
+}
+
+.exf-dlg .exf-dlg-b {
+  padding-top: 10px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #aaa;
+  margin-bottom: 1em;
+}
+
+.exf-dlg .dlg-bc {
+  float: right;
+  padding: 1px 8px;
+  border: 0;
+}
+
+.exf-dlg .dlg-x.dismiss {
+  display: none;
+}
+
+.exf-dlg.dlg-cv .dlg-x.dismiss {
+  display: inline-block;
+}
+
+.exf-dlg .exf-dlg-t {
+  font-size: 1.2em;
+  font-weight: 800;
+}
+/*# sourceMappingURL=exf-dlg.css.map */

@@ -1,0 +1,21 @@
+@import "exf-functional";
+@import "exf-ul-drop";
+@import "exf-ul-tabs";
+@import "exf-filedrop";
+@import "exf-tags";
+@import "exf-charts";
+@import "exf-dlg";
+@import "exf-range-switch";
+@import "exf-def-themes";
+
+.exf-tabs-wrapper {
+    fieldset.exf-page {
+        > legend {
+            display: none;
+        }
+
+        .exf-page-intro {
+            display: none;
+        }
+    }
+}

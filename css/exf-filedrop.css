@@ -1,0 +1,101 @@
+.exf-filedrop .file-preview {
+  border: 5px dashed rgba(0, 0, 0, 0.2);
+}
+
+.exf-filedrop.drag-over .file-preview {
+  border-color: rgba(0, 0, 0, 0.4);
+}
+
+.exf-filedrop input[type="file"] {
+  opacity: 0 !important;
+  position: absolute !important;
+  height: 180px !important;
+  width: 96% !important;
+  overflow: hidden !important;
+  margin-top: 20px !important;
+}
+
+.exf-filedrop .file-preview {
+  position: relative;
+  height: 180px;
+  pointer-events: none;
+  padding: 10px;
+}
+
+.exf-filedrop .file-preview:before {
+  position: absolute;
+  content: "\e6b2";
+  font-family: themify;
+  font-size: 36px;
+  font-size: 10vmax;
+  color: rgba(0, 0, 0, 0.2);
+  margin: auto;
+  height: 166px;
+  left: calc(50% - 5vmax);
+}
+
+.exf-filedrop .file-preview .thumb {
+  pointer-events: all;
+  position: relative;
+  display: inline-block;
+  background-color: white;
+  margin-right: 10px;
+  -webkit-box-shadow: 2px 0px 8px 0px rgba(0, 0, 0, 0.69);
+          box-shadow: 2px 0px 8px 0px rgba(0, 0, 0, 0.69);
+  padding: 10px 10px 25px 10px;
+}
+
+.exf-filedrop .file-preview .thumb .thumb-data {
+  height: 40px;
+  width: 60px;
+  overflow: hidden;
+  background-repeat: no-repeat;
+  background-position: 5px 5px;
+  background-size: contain;
+  margin-right: 5px;
+}
+
+.exf-filedrop .file-preview .thumb figcaption {
+  position: absolute;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  font-size: small;
+  width: 70px;
+  bottom: 5px;
+}
+
+.exf-filedrop .file-preview .thumb .no-img {
+  height: 60px;
+  width: 60px;
+}
+
+.exf-filedrop .file-preview .thumb .close {
+  opacity: 0;
+  pointer-events: all;
+  outline: none;
+  border: none;
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  font-size: 13px;
+  line-height: 2px;
+  vertical-align: sub;
+  padding: 0px 0px 3px 0px;
+  background-color: rgba(0, 0, 0, 0.4);
+  color: white;
+  border-radius: 24px;
+  right: -10px;
+  top: 5px;
+  font-weight: 800;
+  overflow: hidden;
+}
+
+.exf-filedrop .file-preview .thumb .close:hover {
+  background-color: #a10f0f;
+}
+
+.exf-filedrop .file-preview .thumb:hover .close {
+  opacity: 1;
+}
+/*# sourceMappingURL=exf-filedrop.css.map */

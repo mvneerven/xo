@@ -1,0 +1,29 @@
+{
+  "name": "exoform_with_rollup_es6",
+  "version": "0.1.0",
+  "description": "ExoForm ES6 modules",
+  "scripts": {
+    "dev": "rollup -c -w",
+    "build": "rollup -c",
+    "build-prod": "rollup -c --environment BUILD:production"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "@babel/core": "^7.13.14",
+    "@babel/plugin-proposal-class-properties": "^7.13.0",
+    "@babel/preset-env": "^7.13.12",
+    "babel-loader": "^8.0.0-beta.0",
+    "cssnano": "^4.1.10",
+    "rollup": "^2.44.0",
+    "rollup-plugin-terser": "^7.0.2",
+    "rollup-watch": "^3.2.2"
+  },
+  "babel": {
+    "presets": [
+      "@babel/preset-env"
+    ],
+    "plugins": [
+      "@babel/plugin-proposal-class-properties"
+    ]
+  }
+}

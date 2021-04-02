@@ -1,0 +1,102 @@
+.exf-container [class^="exf-cols-"], .exf-container [class*=" exf-cols-"] {
+  display: -ms-grid;
+  display: grid;
+  grid-column-gap: 10px;
+}
+
+.exf-container [class^="exf-cols-"] .exf-ctl-cnt.exf-base-text > input[name], .exf-container [class*=" exf-cols-"] .exf-ctl-cnt.exf-base-text > input[name] {
+  width: auto !important;
+}
+
+.exf-container .exf-cols-10em-1fr {
+  -ms-grid-columns: 10em 1fr;
+      grid-template-columns: 10em 1fr;
+}
+
+.exf-container .exf-cols-20em-1fr {
+  -ms-grid-columns: 20em 1fr;
+      grid-template-columns: 20em 1fr;
+}
+
+.exf-container .exf-cols-50-50 {
+  -ms-grid-columns: 1fr 1fr;
+      grid-template-columns: 1fr 1fr;
+}
+
+.exf-container .exf-cols-20-60-20 {
+  -ms-grid-columns: 20% 60% 20%;
+      grid-template-columns: 20% 60% 20%;
+}
+
+.exf-container .exf-cols-40-60 {
+  -ms-grid-columns: 40% 60%;
+      grid-template-columns: 40% 60%;
+}
+
+.exf-container .exf-cols-10em-10em {
+  -ms-grid-columns: 10em 10em;
+      grid-template-columns: 10em 10em;
+}
+
+.exf-container .exf-wrapper {
+  height: 100%;
+}
+
+.exf-container .exf-wrapper .exf-page {
+  display: none;
+}
+
+.exf-container .exf-wrapper .exf-page.active {
+  display: block;
+}
+
+.exf-container .exf-nav-cnt {
+  clear: both;
+}
+
+.exf-container.single-page .exf-page {
+  display: block;
+}
+
+.exf-container.single-page .exf-nav-cnt [name="prev"],
+.exf-container.single-page .exf-nav-cnt [name="next"] {
+  display: none;
+}
+
+.exf-container .exf-error {
+  display: inline-block;
+  padding: .2em;
+  color: red;
+  border: 1px solid red;
+}
+
+.exf-container .exf-ctl-cnt {
+  position: relative;
+  margin-bottom: 1em;
+}
+
+.exf-container .exf-ctl-cnt.exf-input-group > div {
+  clear: both;
+  margin: auto;
+  white-space: normal;
+}
+
+.exf-container .exf-ctl-cnt.exf-input-group > div > label {
+  display: inline-block;
+  width: 33%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  padding: 5px;
+}
+
+.exf-container .exf-ctl-cnt.exf-input-group > div > label > input {
+  width: 30px;
+  height: auto;
+}
+
+.exf-container .exf-ctl-cnt.exf-input-group.block > div > label {
+  display: block;
+  width: auto;
+}
+/*# sourceMappingURL=exf-functional.css.map */

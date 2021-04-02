@@ -1,0 +1,41 @@
+.circle-chart__circle {
+    animation: circle-chart-fill 2s reverse;
+    transform: rotate(-90deg);
+    transform-origin: center;
+}
+
+.circle-chart__circle--negative {
+    transform: rotate(-90deg) scale(1, -1);
+}
+
+.circle-chart__info {
+    animation: circle-chart-appear 2s forwards;
+    opacity: 0;
+    transform: translateY(0.3em);
+}
+
+@keyframes circle-chart-fill {
+    to {
+        stroke-dasharray: 0 100;
+    }
+}
+
+@keyframes circle-chart-appear {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+
+.theme-dark {
+    .metric {
+        &.chart-pct{
+            fill: white;
+        }
+
+        &.chart-sub {
+            fill: #bbb;
+        }
+    }
+}

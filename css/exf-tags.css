@@ -1,0 +1,29 @@
+.exf-tags-input {
+  padding: 10px;
+  background-color: var(--color-background);
+  border: 1px solid var(--color-shade);
+  white-space: normal;
+}
+
+.exf-tags-input > input {
+  border: none;
+  background: transparent;
+  outline: none;
+  width: 150px;
+}
+
+.exf-tags-input > .tag {
+  display: inline-block;
+  background-color: var(--color-background-lighter);
+  border-radius: 40px;
+  padding: 0px 3px 0px 7px;
+  margin-right: 5px;
+  margin-bottom: 5px;
+}
+
+.exf-tags-input > .tag a {
+  margin: 0 7px 3px;
+  display: inline-block;
+  cursor: pointer;
+}
+/*# sourceMappingURL=exf-tags.css.map */

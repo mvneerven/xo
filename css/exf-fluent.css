@@ -1,0 +1,154 @@
+.exf-container.fluent {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.exf-container.fluent .exf-ctl-cnt {
+  -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none;
+  position: relative;
+  min-height: 2.525rem;
+  height: auto;
+  padding: 2rem 0.5rem 0.5rem;
+  line-height: 1;
+}
+
+.exf-container.fluent .exf-ctl-cnt > [name] {
+  outline: none;
+}
+
+.exf-container.fluent .exf-ctl-cnt > input,
+.exf-container.fluent .exf-ctl-cnt > textarea,
+.exf-container.fluent .exf-ctl-cnt > select {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none;
+  border: 1px red solid;
+  height: 2rem;
+  padding: 0.3125rem;
+  z-index: 0;
+  width: auto;
+}
+
+.exf-container.fluent .exf-ctl-cnt > textarea {
+  width: 100%;
+  min-height: 6em;
+}
+
+.exf-container.fluent .exf-ctl-cnt > select {
+  min-width: 15rem;
+}
+
+.exf-container.fluent .exf-ctl-cnt > input:not([type="color"]):not([type="date"]):not([type="time"]) {
+  width: 100%;
+}
+
+.exf-container.fluent .exf-ctl-cnt > input[type="color"], .exf-container.fluent .exf-ctl-cnt [type="date"], .exf-container.fluent .exf-ctl-cnt [type="time"], .exf-container.fluent .exf-ctl-cnt [type="datetime"], .exf-container.fluent .exf-ctl-cnt [type="datetime-local"] {
+  min-width: 3rem;
+}
+
+.exf-container.fluent .exf-ctl-cnt > input:focus,
+.exf-container.fluent .exf-ctl-cnt > textarea:focus,
+.exf-container.fluent .exf-ctl-cnt > select:focus,
+.exf-container.fluent .exf-ctl-cnt > input:hover,
+.exf-container.fluent .exf-ctl-cnt > textarea:hover,
+.exf-container.fluent .exf-ctl-cnt > select:hover,
+.exf-container.fluent .exf-ctl-cnt > .btn:hover {
+  border-color: var(--field-box-shadow);
+}
+
+.exf-container.fluent .exf-ctl-cnt > input:disabled,
+.exf-container.fluent .exf-ctl-cnt > textarea:disabled,
+.exf-container.fluent .exf-ctl-cnt > select:disabled {
+  background-color: var(--color-disabled);
+}
+
+.exf-container.fluent .exf-ctl-cnt > input:-moz-read-only,
+.exf-container.fluent .exf-ctl-cnt > textarea:-moz-read-only,
+.exf-container.fluent .exf-ctl-cnt > select:-moz-read-only {
+  background-color: var(--color-readonly);
+}
+
+.exf-container.fluent .exf-ctl-cnt > input:read-only,
+.exf-container.fluent .exf-ctl-cnt > textarea:read-only,
+.exf-container.fluent .exf-ctl-cnt > select:read-only {
+  background-color: var(--color-readonly);
+}
+
+.exf-container.fluent .exf-ctl-cnt > label {
+  position: absolute;
+  top: 0.5rem;
+  left: 0.5rem;
+}
+
+.exf-container.fluent .exf-ctl-cnt [type="radio"],
+.exf-container.fluent .exf-ctl-cnt [type="checkbox"] {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  outline: none;
+  width: 20px;
+  height: 20px;
+  border: solid 1px #cccccc;
+  margin-right: 8px;
+  position: relative;
+}
+
+.exf-container.fluent .exf-ctl-cnt [type="radio"]:checked::before, .exf-container.fluent .exf-ctl-cnt [type="radio"]:checked::before,
+.exf-container.fluent .exf-ctl-cnt [type="checkbox"]:checked::before,
+.exf-container.fluent .exf-ctl-cnt [type="checkbox"]:checked::before {
+  content: "";
+  width: 14px;
+  height: 14px;
+  background-color: #ffa500;
+  position: absolute;
+  top: 2px;
+  left: 2px;
+}
+
+.exf-container.fluent .exf-ctl-cnt [type="radio"]:checked::before,
+.exf-container.fluent .exf-ctl-cnt [type="checkbox"]:checked::before {
+  border-radius: 100%;
+}
+
+.exf-container.fluent .exf-ctl-cnt [type="radio"] {
+  border-radius: 100%;
+}
+
+.exf-container.fluent .exf-input-group label > .exf-caption {
+  display: inline-block;
+  height: 20px;
+  vertical-align: text-bottom;
+  padding: .2rem .4rem .2rem .1rem;
+  margin-right: 1rem;
+}
+
+.exf-container.fluent .btn {
+  -webkit-appearance: button;
+  cursor: pointer;
+  padding: 0 1rem;
+  height: 2.125rem;
+  text-align: center;
+  background-color: var(--color-background);
+  border: 1px var(--color-shade) solid;
+  color: var(--color-text);
+  display: inline-block;
+  outline: none;
+  font-size: 0.875rem;
+  margin: 0.15625rem 0;
+  position: relative;
+  vertical-align: middle;
+}
+
+.exf-container.fluent .btn:active {
+  background: #eeeeee;
+  color: #262626;
+  -webkit-box-shadow: none;
+          box-shadow: none;
+}
+
+.exf-container.fluent .btn:hover {
+  border-color: #787878;
+}
+/*# sourceMappingURL=exf-fluent.css.map */

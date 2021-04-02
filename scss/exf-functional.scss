@@ -1,0 +1,116 @@
+.exf-container {
+
+    [class^="exf-cols-"], [class*=" exf-cols-"] {
+        display: grid;
+        grid-column-gap: 10px;
+        
+        .exf-ctl-cnt {
+            &.exf-base-text {
+                > input[name] {
+                    width: auto !important;
+                }
+            }
+        }
+    }
+
+
+    .exf-cols-10em-1fr {
+        grid-template-columns: 10em 1fr;
+    }
+
+    .exf-cols-20em-1fr {
+        grid-template-columns: 20em 1fr;
+    }
+
+    .exf-cols-50-50 {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .exf-cols-20-60-20 {
+        grid-template-columns: 20% 60% 20%;
+    }
+
+    .exf-cols-40-60{
+        grid-template-columns: 40% 60%;
+    }
+
+    .exf-cols-10em-10em {
+        grid-template-columns: 10em 10em;
+    }
+
+
+    .exf-wrapper{
+        height: 100%;
+        
+        .exf-page {
+            display: none;
+    
+            &.active {
+                display: block;
+            }
+        }
+    
+    }
+
+    
+
+    .exf-nav-cnt {
+        clear: both;
+    }
+
+    &.single-page {
+        .exf-page {
+            display: block;
+        }
+
+        .exf-nav-cnt {
+            [name="prev"],
+            [name="next"] {
+                display: none;
+            }
+        }
+    }
+
+    .exf-error {
+        display: inline-block;
+        padding: .2em;
+        color: red;
+        border: 1px solid red;
+    }
+
+    .exf-ctl-cnt {
+        position: relative;
+        margin-bottom: 1em;
+
+        &.exf-input-group {
+            > div {
+                clear: both;
+                //text-align: left;
+                margin: auto;
+                white-space: normal;
+
+                > label {
+                    display: inline-block;
+                    width: 33%;
+                    overflow: hidden;
+                    white-space: nowrap;
+                    text-overflow: ellipsis;
+                    padding: 5px;
+                    > input {
+                        width: 30px;
+                        height: auto;
+                    }
+                }
+            }
+
+            &.block {
+                > div {
+                    > label {
+                        display: block;
+                        width: auto;
+                    }
+                }
+            }
+        }
+    }
+}
