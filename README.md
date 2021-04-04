@@ -62,10 +62,9 @@ Basic JavaScript:
 ```javascript
 // beta lib location 
 
-import ExoFormFactory from "https://stasfpwawesteu.z6.web.core.windows.net/src/exo/ExoFormFactory.js";
+import * as xo from "https://xo-js.dev/v0.98/xo.min.js";
 
-const context = await
-ExoFormFactory.build();
+const context = await window.xo.form.factory.build();
 
 context
   .createForm()
