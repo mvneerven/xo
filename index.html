@@ -6,12 +6,18 @@
     <title>ExoForm - Flexible Vanilla JavaScript Form Generation</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-
     <meta name="color-scheme" content="dark">
-
     <link rel="stylesheet" href="/css/exf.css" />
-
     <link rel="shortcut icon" href="/favicon.ico" />
+
+    <style>
+        :root {
+            --color-background: #333;
+            --color-text: #fff;
+            --field-box-shadow-subtle: #555;
+            --field-box-shadow: #888;
+        }
+    </style>
 </head>
 
 <body>
@@ -20,9 +26,7 @@
 
     <script type="module">
 
-        const context = await window.xo.form.factory.build({
-
-        });
+        const context = await window.xo.form.factory.build();
         const schema = {
             pages: [
                 {
@@ -103,13 +107,10 @@
             ]
         };
 
-        context
-            .createForm()
-            .load(schema)
-            .then((x) => x.renderForm())
-            .then((exo) => {
-                document.body.appendChild(exo.container);
-            });
+        const x = context.createForm();
+        await x.load(schema)
+        let result = await x.renderForm();
+        document.body.appendChild(result.container);
 
     </script>
 

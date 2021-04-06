@@ -19,7 +19,7 @@
             > select {
                 font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
                 appearance: none;
-                border: 1px red solid;
+                border: 1px solid var(--field-box-shadow-subtle);
                 height: 2rem;
                 padding: 0.3125rem;
                 z-index: 0;
@@ -122,9 +122,9 @@
             padding: 0 1rem;
             height: 2.125rem;
             text-align: center;
-            background-color: var(--color-background);
+            background-color: var(--color-button);
             border: 1px var(--color-shade) solid;
-            color: var(--color-text);
+            color: var(--color-buttontext);
             display: inline-block;
             outline: none;
             font-size: 0.875rem;
@@ -141,6 +141,12 @@
             &:hover {
                 border-color: #787878;
             }
+
+            &.primary {
+                background-color: var(--color-button-primary);
+            }
         }
+
+
     }
 }

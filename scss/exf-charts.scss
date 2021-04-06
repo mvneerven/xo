@@ -1,5 +1,5 @@
 .circle-chart__circle {
-    animation: circle-chart-fill 2s reverse;
+    animation: circle-chart-fill 2s reverse; 
     transform: rotate(-90deg);
     transform-origin: center;
 }
@@ -27,15 +27,14 @@
     }
 }
 
-
 .theme-dark {
     .metric {
-        &.chart-pct{
+        &.chart-pct {
             fill: white;
         }
 
         &.chart-sub {
-            fill: #bbb;
+            fill: #bbb; 
         }
     }
 }

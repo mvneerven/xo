@@ -24,7 +24,7 @@
   -webkit-appearance: none;
      -moz-appearance: none;
           appearance: none;
-  border: 1px red solid;
+  border: 1px solid var(--field-box-shadow-subtle);
   height: 2rem;
   padding: 0.3125rem;
   z-index: 0;
@@ -130,9 +130,9 @@
   padding: 0 1rem;
   height: 2.125rem;
   text-align: center;
-  background-color: var(--color-background);
+  background-color: var(--color-button);
   border: 1px var(--color-shade) solid;
-  color: var(--color-text);
+  color: var(--color-buttontext);
   display: inline-block;
   outline: none;
   font-size: 0.875rem;
@@ -150,5 +150,9 @@
 
 .exf-container.fluent .btn:hover {
   border-color: #787878;
+}
+
+.exf-container.fluent .btn.primary {
+  background-color: var(--color-button-primary);
 }
 /*# sourceMappingURL=exf-fluent.css.map */
