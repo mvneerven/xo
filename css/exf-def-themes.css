@@ -1,11 +1,45 @@
-.exf-container [class^="exf-cols-"], .exf-container [class*=" exf-cols-"] {
+.exf-container [class^="exf-cols-"],
+.exf-container [class*=" exf-cols-"] {
   display: -ms-grid;
   display: grid;
   grid-column-gap: 10px;
 }
 
-.exf-container [class^="exf-cols-"] .exf-ctl-cnt.exf-base-text > input[name], .exf-container [class*=" exf-cols-"] .exf-ctl-cnt.exf-base-text > input[name] {
+.exf-container [class^="exf-cols-"] .exf-ctl-cnt.exf-base-text > input[name],
+.exf-container [class*=" exf-cols-"] .exf-ctl-cnt.exf-base-text > input[name] {
   width: auto !important;
+}
+
+.exf-container .exf-info {
+  font-size: 1.1rem;
+  background-color: var(--color-shade);
+  background-color: var(--color-shade);
+  padding: 0em 1em 1em;
+  border: 1px solid var(--button-shadow-color);
+  position: relative;
+}
+
+.exf-container .exf-info .exf-info-title {
+  font-size: 1.4rem;
+}
+
+.exf-container .exf-info .exf-info-icon {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+}
+
+.exf-container .exf-info .exf-info-body {
+  font-size: 1rem;
+}
+
+.exf-container .exf-info.hero {
+  margin: 2em;
+  font-size: 1.4rem;
+}
+
+.exf-container .exf-info.hero .exf-info-title {
+  font-size: 2rem;
 }
 
 .exf-container .exf-cols-10em-1fr {
@@ -50,6 +84,33 @@
   display: block;
 }
 
+.exf-container .exf-embed {
+  position: relative;
+  overflow: hidden;
+  padding-top: 56.25% !important;
+  /* 16:9*/
+}
+
+.exf-container .exf-embed.ar-4x3 {
+  padding-top: 75% !important;
+  /* 4:3 */
+}
+
+.exf-container .exf-embed > iframe {
+  border: 0;
+  height: 100%;
+  left: 0;
+  position: absolute;
+  top: 0;
+  width: 100%;
+}
+
+.exf-container .exf-info {
+  -webkit-box-shadow: -3px 3px 10px -2px rgba(255, 255, 255, 0.1);
+          box-shadow: -3px 3px 10px -2px rgba(255, 255, 255, 0.1);
+  padding: 1em;
+}
+
 .exf-container .exf-nav-cnt {
   clear: both;
 }
@@ -65,7 +126,7 @@
 
 .exf-container .exf-error {
   display: inline-block;
-  padding: .2em;
+  padding: 0.2em;
   color: red;
   border: 1px solid red;
 }
@@ -83,7 +144,7 @@
 
 .exf-container .exf-ctl-cnt.exf-input-group > div > label {
   display: inline-block;
-  width: 33%;
+  width: 30%;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
@@ -613,14 +674,35 @@ html.theme-light nav.ul-drop ul li > ul {
 .exf-container.fluent .exf-ctl-cnt > textarea,
 .exf-container.fluent .exf-ctl-cnt > select {
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  -webkit-appearance: none;
-     -moz-appearance: none;
-          appearance: none;
-  border: 1px red solid;
+  border: 1px solid var(--field-box-shadow-subtle);
   height: 2rem;
   padding: 0.3125rem;
   z-index: 0;
   width: auto;
+}
+
+.exf-container.fluent .exf-ctl-cnt > input ::-webkit-input-placeholder,
+.exf-container.fluent .exf-ctl-cnt > textarea ::-webkit-input-placeholder,
+.exf-container.fluent .exf-ctl-cnt > select ::-webkit-input-placeholder {
+  opacity: 0.6;
+}
+
+.exf-container.fluent .exf-ctl-cnt > input :-ms-input-placeholder,
+.exf-container.fluent .exf-ctl-cnt > textarea :-ms-input-placeholder,
+.exf-container.fluent .exf-ctl-cnt > select :-ms-input-placeholder {
+  opacity: 0.6;
+}
+
+.exf-container.fluent .exf-ctl-cnt > input ::-ms-input-placeholder,
+.exf-container.fluent .exf-ctl-cnt > textarea ::-ms-input-placeholder,
+.exf-container.fluent .exf-ctl-cnt > select ::-ms-input-placeholder {
+  opacity: 0.6;
+}
+
+.exf-container.fluent .exf-ctl-cnt > input ::placeholder,
+.exf-container.fluent .exf-ctl-cnt > textarea ::placeholder,
+.exf-container.fluent .exf-ctl-cnt > select ::placeholder {
+  opacity: 0.6;
 }
 
 .exf-container.fluent .exf-ctl-cnt > textarea {
@@ -636,7 +718,11 @@ html.theme-light nav.ul-drop ul li > ul {
   width: 100%;
 }
 
-.exf-container.fluent .exf-ctl-cnt > input[type="color"], .exf-container.fluent .exf-ctl-cnt [type="date"], .exf-container.fluent .exf-ctl-cnt [type="time"], .exf-container.fluent .exf-ctl-cnt [type="datetime"], .exf-container.fluent .exf-ctl-cnt [type="datetime-local"] {
+.exf-container.fluent .exf-ctl-cnt > input[type="color"],
+.exf-container.fluent .exf-ctl-cnt [type="date"],
+.exf-container.fluent .exf-ctl-cnt [type="time"],
+.exf-container.fluent .exf-ctl-cnt [type="datetime"],
+.exf-container.fluent .exf-ctl-cnt [type="datetime-local"] {
   min-width: 3rem;
 }
 
@@ -708,19 +794,38 @@ html.theme-light nav.ul-drop ul li > ul {
   border-radius: 100%;
 }
 
+.exf-container.fluent .exf-ctl-cnt > select {
+  outline: 0;
+  -webkit-box-shadow: none;
+          box-shadow: none;
+  background-color: var(--color-background);
+  border: 1px solid var(--field-box-shadow-subtle);
+  background-image: none;
+  -webkit-box-flex: 1;
+      -ms-flex: 1;
+          flex: 1;
+  height: 3rem;
+  padding: 0.3125rem;
+  cursor: pointer;
+  /* Remove IE arrow */
+}
+
+.exf-container.fluent .exf-ctl-cnt > select::-ms-expand {
+  display: none;
+}
+
 .exf-container.fluent .exf-input-group label > .exf-caption {
   display: inline-block;
-  height: 20px;
+  height: auto;
   vertical-align: text-bottom;
-  padding: .2rem .4rem .2rem .1rem;
+  padding: 0.2rem 0.4rem 0.2rem 0.1rem;
   margin-right: 1rem;
 }
 
 .exf-container.fluent .btn {
   -webkit-appearance: button;
   cursor: pointer;
-  padding: 0 1rem;
-  height: 2.125rem;
+  padding: 1rem 2rem;
   text-align: center;
   background-color: var(--color-button);
   border: 1px var(--color-shade) solid;
@@ -765,6 +870,10 @@ html.theme-light nav.ul-drop ul li > ul {
 
 .exf-container .exf-cnt > .btn {
   margin-right: 10px;
+}
+
+.exf-container .btn {
+  padding: 0.2em;
 }
 
 .exf-container.default > .exf-form {
@@ -1067,139 +1176,5 @@ html.theme-light nav.ul-drop ul li > ul {
   text-align: right;
   display: inline-block;
   margin-right: 1em;
-}
-
-.exf-container.survey {
-  position: relative;
-  margin: auto;
-  width: 70%;
-  height: 100%;
-  text-align: center;
-  display: -ms-grid;
-  display: grid;
-  -ms-grid-rows: 120px 1fr 30px;
-      grid-template-rows: 120px 1fr 30px;
-}
-
-.exf-container.survey .exf-form {
-  height: 500px;
-  padding-top: 50px;
-  overflow: hidden;
-  -ms-scroll-snap-type: y mandatory;
-      scroll-snap-type: y mandatory;
-  scroll-behavior: smooth;
-  -webkit-overflow-scrolling: touch;
-}
-
-.exf-container.survey .exf-page-intro {
-  margin: 30px;
-}
-
-.exf-container.survey .exf-cnt {
-  display: block;
-}
-
-.exf-container.survey .exf-cnt.active {
-  display: block;
-}
-
-.exf-container.survey .exf-cnt .exf-page-title {
-  margin-bottom: 2em;
-}
-
-.exf-container.survey .exf-nav-cnt {
-  text-align: center;
-  display: none;
-}
-
-.exf-container.survey.step-ready .exf-nav-cnt {
-  display: block;
-}
-
-.exf-container.survey.step-ready .exf-nav-cnt [name] {
-  font-size: 1.1em;
-  padding: 0.4em;
-  margin-top: 20px;
-}
-
-.exf-container.survey.step-ready .exf-nav-cnt [name="prev"],
-.exf-container.survey.step-ready .exf-nav-cnt [name="send"] {
-  display: none;
-}
-
-.exf-container.survey.step-ready .exf-nav-cnt [name="next"] {
-  display: inline-block;
-}
-
-.exf-container.survey.end-reached .exf-wrapper {
-  display: none;
-}
-
-.exf-container.survey.end-reached .exf-nav-cnt {
-  display: block;
-  padding-top: 200px;
-}
-
-.exf-container.survey.end-reached .exf-nav-cnt [name] {
-  font-size: smaller;
-  padding: 0.2em;
-  margin-top: 20px;
-}
-
-.exf-container.survey.end-reached .exf-nav-cnt [name="prev"],
-.exf-container.survey.end-reached .exf-nav-cnt [name="next"] {
-  display: none;
-}
-
-.exf-container.survey.end-reached .exf-nav-cnt [name="send"] {
-  font-size: x-large;
-}
-
-.exf-container.survey .exf-wiz-step-cnt {
-  font-size: smaller;
-  width: 100%;
-  max-width: none;
-}
-
-.exf-container.survey .exf-page {
-  font-size: 1.1em;
-  padding-top: 3em;
-  padding-bottom: 3em;
-  -webkit-transition: all 0.6s;
-  transition: all 0.6s;
-}
-
-.exf-container.survey .exf-page [name] {
-  padding: 1em;
-  font-size: 1.2em;
-  outline: none;
-  border: 0;
-  -webkit-box-shadow: 0 0 6px 2px var(--field-box-shadow);
-          box-shadow: 0 0 6px 2px var(--field-box-shadow);
-}
-
-.exf-container.survey .exf-page [name][type="checkbox"], .exf-container.survey .exf-page [name][type="radio"] {
-  -webkit-box-shadow: 0px 0px;
-          box-shadow: 0px 0px;
-}
-
-.exf-container.survey ::-webkit-input-placeholder {
-  /* Chrome/Opera/Safari */
-  color: #ccc;
-}
-
-.exf-container.survey ::-moz-placeholder {
-  /* Firefox 19+ */
-  color: #ccc;
-}
-
-.exf-container.survey :-ms-input-placeholder {
-  /* IE 10+ */
-  color: #ccc;
-}
-
-.exf-container.survey :-moz-placeholder {
-  /* Firefox 18- */
-  color: #ccc;
 }
 /*# sourceMappingURL=exf-def-themes.css.map */

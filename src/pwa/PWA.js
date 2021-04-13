@@ -1,6 +1,7 @@
 import DOM from './DOM';
+import Core from './Core';
 
-class ServiceWorker {
+class ServiceWorkerBase {
     constructor() {
         // TODO
     }
@@ -8,11 +9,17 @@ class ServiceWorker {
 
 //#region Router
 class Router {
+    static _ev_pfx = "pwa-ev-";
+
+    static events = {
+        route: Router._ev_pfx + "route"
+    }
 
     modules = [];
 
     constructor(app, routes, settings) {
         const _ = this;
+        Core.addEvents(this); // add simple event system
         _.app = app;
         _.routes = routes;
 
@@ -28,12 +35,38 @@ class Router {
         })
     }
 
+    _triggerEvent(eventName, detail, ev) {
+        console.debug("Triggering event", eventName, "detail: ", detail)
+        if (!ev) {
+            ev = new Event(eventName, { "bubbles": false, "cancelable": false });
+        }
+
+        ev.detail = {
+            router: this,
+            ...(detail || {})
+        };
+
+        return this.dispatchEvent(ev);
+    }
+
+    on(eventName, func) {
+        console.debug("Listening to event", eventName, func);
+        this.addEventListener(eventName, func);
+        return this;
+    }
+
     static changeHash(anchor) {
         history.replaceState(null, null, document.location.pathname + '#' + anchor);
     };
 
     setupHashListener(callback) {
-        this.routeCallback = callback;
+        this.routeCallback = (m,p) => {
+            this._triggerEvent(Router.events.route, {
+                module: m,
+                path: p
+            });
+            callback(m, p)
+        };
         const _ = this;
         window.addEventListener('hashchange', () => {
             _.hashChanged();
@@ -79,7 +112,13 @@ class Router {
     }
 
     set route(routePath) {
-        if (this.routes[routePath]) {
+        
+        if(!routePath.startsWith("/"))
+            throw "Invalid route";
+
+        let routeParts = routePath.substring(1).split('/');
+
+        if (this.routes["/" + routeParts[0]]) {
             Router.changeHash(routePath); // update history, prevent endless redirects back to home router
             this.hashChanged();
         }
@@ -162,15 +201,16 @@ class Router {
         const _ = this;
 
         const menuTpl = /*html*/`<nav class="main-menu"><ul>{{inner}}</ul></nav>`;
-        const menuItemTpl = /*html*/`<li class="{{menuClass}}" title="{{title}}"><a href="{{url}}"><span class="{{menuIcon}}"></span> <span class="name">{{menuTitle}}</span></a></li>`;
+        const menuItemTpl = /*html*/`<li class="{{class}}" data-module="{{name}}" title="{{title}}"><a href="{{url}}"><span class="{{menuIcon}}"></span> <span class="name">{{menuTitle}}</span></a></li>`;
         let ar = [];
 
         _.modules.forEach(m => {
+
             if (!m.hidden) {
-                let o = { ...m };
+                let o = { ...m, name: m.module.constructor.name };
 
                 o.menuTitle = o.menuTitle || m.title;
-                let s = DOM.format(menuItemTpl, o, { empty: undefined })
+                let s = DOM.format(menuItemTpl, o);
                 ar.push(s);
             }
         });
@@ -309,7 +349,7 @@ class Area {
         this.set("");
     }
 
-    checkPinnable(){
+    checkPinnable() {
         const _ = this;
         if (_.element.classList.contains("pwa-pinnable")) {
             // check hover over pin icon (cannot be done using CSS, since it's a pseudo-element - :before )
@@ -390,7 +430,7 @@ class PWA {
 
     static RouteModule = RouteModule;
     static Router = Router;
-    static ServiceWorker = ServiceWorker;
+    static ServiceWorkerBase = ServiceWorkerBase;
 
     defaults = {
         UI: {
@@ -409,6 +449,8 @@ class PWA {
         this.config = { ...this.defaults, ...(options || {}) };
         this.config.baseUrl = document.location.origin;
 
+        this.config.environment = ["localhost","127.0.0.1"].includes(document.location.hostname) ? "debug" : "prod";
+
         console.debug("Checking for serviceWorker in config: serviceWorker.src");
         if (_.config.serviceWorker.src) {
             _.registerWorker(_.config.serviceWorker)
@@ -425,6 +467,8 @@ class PWA {
 
         let cl = document.querySelector("html").classList;
         this.forceTheme = cl.contains("theme-dark") ? "dark" : cl.contains("theme-light") ? "light" : undefined;
+
+        cl.add( "pwa-env-" + this.config.environment); 
 
     }
 
@@ -483,23 +527,40 @@ class PWA {
 
     rest(endpoint, options) {
         const _ = this;
-
+        const headers = new Headers();
+        options = options || {};
+        
         endpoint = new URL(endpoint, this.config.baseUrl);
 
         const fetchOptions = {
             method: "GET",
-            ...(options || {})
+            ...options
         };
-        return _.getToken().then(r => {
 
+        let tokenAcquirer = (scope) => {
+            return Promise.resolve();
+        }
+        if (!options.isAnonymous) {
+            tokenAcquirer = () => {
+                return  _.getToken.apply(_)
+            };
+        }
+
+        return tokenAcquirer().then(r => {
             if (r && r.accessToken) {
-                const headers = new Headers();
                 headers.append("Authorization", `Bearer ` + r.accessToken);
-                fetchOptions.headers = headers
             }
             else {
                 console.warn("No JWT Token provided. Continuing anonymously");
             }
+
+            if(options.headers){
+                for(var h in options.headers){
+                    headers.append(h, options.headers[h]);
+                }
+            }
+
+            fetchOptions.headers = headers
             return fetch(endpoint, fetchOptions).then(x => x.json())
         })
     }
@@ -625,10 +686,10 @@ class UI {
         }
 
 
-        if(this.forceTheme){
+        if (this.forceTheme) {
             this.theme = this.forceTheme;
         }
-        else{
+        else {
             if (this.pwa.config.UI.user.currentTheme === undefined) {
                 this.theme = this.pwa.config.UI.user.prefersDarkScheme ? "dark" : "light";
             }
@@ -648,18 +709,6 @@ class UI {
                 event.returnValue = '';
             }
         });
-
-        // window.addEventListener("beforeunload", e=>{
-        //     console.log("Before unload")
-
-        //     e.preventDefault(); // If you prevent default behavior in Mozilla Firefox prompt will always be shown
-
-        //     //if (this.dirty) {
-        //         e.defaultValue = this._dirtyMessage;
-        //         return this._dirtyMessage;
-        //    // }
-        // });
-
         this._setAreas();
     }
 
@@ -707,6 +756,23 @@ class UI {
             "data-pwa": this.pwa.router.current.path
         });
 
+    }    
+
+    async showDialog(options){
+        let ctx = await window.xo.form.factory.build();
+        let frm = ctx.createForm();
+        frm.renderSingleControl({
+            ...options || {},
+            type: "dialog"
+        }).then(r => {
+            var f = window.xo.form.factory.getFieldFromElement(r);
+            // f._control.hide = e => {
+
+            //     options.click(e)
+            // }
+
+            f._control.show();
+        });
     }
 
 }

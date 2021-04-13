@@ -7,7 +7,8 @@ import PWA from '../pwa/PWA';
 import Core from '../pwa/Core';
 import MsIdentity from '../pwa/MsIdentity';
 
-window.xo = {
+
+const xo = {
     core: Core,
     dom: DOM,
     pwa: PWA,
@@ -22,5 +23,8 @@ window.xo = {
     identity: {
         msal: MsIdentity
     }
-}
+};
 
+window.xo = xo;
+
+export default xo;

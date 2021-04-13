@@ -29,6 +29,16 @@
     display: none;
 }
 
+.if-debug {
+    display: none;
+}
+
+.pwa-env-debug {
+    .if-debug {
+        display: block;
+    }
+}
+
 html {
     &.no-user-select {
         -webkit-touch-callout: none;

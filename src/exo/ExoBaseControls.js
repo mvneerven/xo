@@ -8,6 +8,8 @@ import DOM from '../pwa/DOM';
 class ExoControlBase {
     attributes = {};
 
+    acceptedProperties = [];
+
     dataProps = {};
 
     static returnValueType = undefined;
@@ -30,6 +32,12 @@ class ExoControlBase {
     set htmlElement(el) {
         this._htmlElement = el;
         this.allowedAttributes = ExoFormFactory.listNativeProps(this.htmlElement);
+        this.isSelfClosing = [
+            "area", "base", "col", "embed", "hr", "img", "input",
+            "link", "meta", "param", "source", "track", "wbr"
+        ].includes(el.tagName.toLowerCase());
+
+
     }
 
     get htmlElement() {
@@ -60,10 +68,22 @@ class ExoControlBase {
     * Tell system which properties to take from the configured field schema
     */
     acceptProperties(...ar) {
-        this.acceptedProperties = ar;
+
         ar.forEach(p => {
-            if (this.context.field[p] !== undefined)
-                this[p] = this.context.field[p];
+            if (typeof (p) === "string") {
+                p = {
+                    name: p
+                }
+            }
+
+            var prop = this.acceptedProperties.find(e => {
+                return e.name === p.name
+            })
+            if (!prop) {
+                this.acceptedProperties.push(p);
+                if (this.context.field[p.name] !== undefined)
+                    this[p.name] = this.context.field[p.name];
+            }
         });
     }
 
@@ -180,12 +200,55 @@ class ExoElementControl extends ExoControlBase {
                 if (this.htmlElement.nodeName !== context.field.tagName.toUpperCase()) {
                     throw "'" + context.field.tagName + "' is not a valid tagName";
                 }
+
+                if (!this.isSelfClosing) {
+                    this.acceptProperties(
+                        {
+                            name: "html",
+                            type: String,
+                            description: "Inner HTML"
+                        }
+                    );
+                }
+
+
+                if (this.html) {
+                    this.htmlElement.innerHTML = this.html;
+                }
+
             }
             catch (ex) {
                 throw "Could not generate '" + context.field.tagName + "' element: " + ex.toString();
             }
-
         }
+    }
+}
+
+class ExoLinkControl extends ExoElementControl {
+
+    constructor(context) {
+        super(context);
+
+        this.htmlElement = document.createElement("a");
+
+        this.acceptProperties(
+            {
+                name: "external",
+                type: Boolean,
+                description: "External to open in new tab"
+            },
+            {
+                name: "html",
+                type: String
+            }
+        );
+    }
+
+    async render() {
+        if (this.external)
+            this.htmlElement.setAttribute("target", "_blank");
+
+        return super.render();
     }
 }
 
@@ -353,18 +416,28 @@ class ExoFormControl extends ExoElementControl {
 }
 
 class ExoDivControl extends ExoElementControl {
-    constructor(context) {
-        super(context);
-        this.htmlElement = DOM.parseHTML('<div />');
-    }
 
     html = "";
+
+    constructor(context) {
+        super(context);
+        this.htmlElement = document.createElement('div');
+
+        this.acceptProperties(
+            {
+                name: "html",
+                type: String,
+                description: "Inner HTML of the div"
+            }
+        );
+    }
 
     async render() {
 
         if (this.html) {
-            this.htmlElement = DOM.parseHTML(this.html)
+            this.htmlElement.innerHTML = this.html;
         }
+
         return await super.render()
     }
 
@@ -395,10 +468,19 @@ class ExoListControl extends ExoElementControl {
 
     isMultiSelect = false;
 
+    view = "tiles";
 
     constructor(context) {
         super(context);
         this.htmlElement = DOM.parseHTML('<select></select>');
+
+        this.acceptProperties(
+            {
+                name: "view",
+                type: String,
+                description: "Set the view mode (list, tiles)"
+            }
+        );
     }
 
     async populateList(containerElm, tpl) {
@@ -449,11 +531,7 @@ class ExoListControl extends ExoElementControl {
             o.listElement = DOM.parseHTML(s);
             DOM.replace(dummy, o.listElement);
         }
-
-        //DOM.trigger(_.context.exo.form, ExoFormFactory.events.getListItem, o);
-
         _.context.exo.triggerEvent(ExoFormFactory.events.getListItem, o);
-
     }
 
     // use trick to run async stuff and wait for it.
@@ -474,6 +552,19 @@ class ExoListControl extends ExoElementControl {
         })(item, tpl) //So we defined and immediately called this async function.
     }
 
+    async render() {
+        let elm = await super.render();
+        switch (this.view) {
+            case "tiles":
+                elm.classList.add("tiles");
+                break;
+            case "list":
+                elm.classList.add("block");
+                break;
+        }
+
+        return elm;
+    }
 }
 
 class ExoDropdownListControl extends ExoListControl {
@@ -564,7 +655,19 @@ class ExoButtonControl extends ExoElementControl {
         this.iconHtml = "";
         this.htmlElement = DOM.parseHTML('<button />')
 
-        this.acceptProperties("icon", "click")
+        this.acceptProperties(
+            {
+                name: "icon",
+                description: "Icon class to be used (using a span)"
+            },
+            {
+                name: "click",
+                description: "Click method"
+            },
+            {
+                name: "action",
+                description: "Possible values: 'next' (next page in Wizard)"
+            });
     }
 
     async render() {
@@ -576,21 +679,38 @@ class ExoButtonControl extends ExoElementControl {
         _.htmlElement.appendChild(document.createTextNode(this.context.field.caption));
         let elm = await super.render();
 
-        if (_.click) {
-            _.htmlElement.addEventListener("click", e => {
+        _.htmlElement.addEventListener("click", e => {
+            if (_.click) {
                 _.context.exo.getFormValues().then(data => {
                     let f = _.click;
                     if (typeof (f) !== "function") {
                         f = _.context.exo.options.customMethods[f];
                     }
                     if (typeof (f) !== "function") {
-                        throw "Not a valid function: " + _.click
+                        if (_.context.exo.options.host) {
+                            if (typeof (_.context.exo.options.host[_.click]) === "function") {
+                                f = _.context.exo.options.host[_.click];
+                                f.apply(_.context.exo.options.host, [data]);
+                                return;
+                            }
+                        }
+                        else {
+                            throw "Not a valid function: " + _.click
+                        }
                     }
                     f.apply(_, [data]);
                 });
-            })
-        }
 
+            }
+            else if (_.action) {
+
+                switch (_.action) {
+                    case "next":
+                        _.context.exo.nextPage();
+                        break;
+                }
+            }
+        })
         return elm;
     }
 
@@ -604,13 +724,21 @@ class ExoButtonControl extends ExoElementControl {
 
 }
 
-class ExoRangeControl extends ExoInputControl {
+class ExoNumberControl extends ExoInputControl{
+
+    constructor(context) {
+        super(context);
+        this.context.field.type = "number";
+    }
+
+    static returnValueType = Number;
+}
+
+class ExoRangeControl extends ExoNumberControl {
 
     constructor(context) {
         super(context);
         this.context.field.type = "range";
-
-        //this.attributes.type = "range";
     }
 
     static returnValueType = Number;
@@ -670,7 +798,7 @@ class ExoBaseControls {
         text: { caption: "Short text", type: ExoTextControl, note: "Standard text input" },
         url: { caption: "Website Address/URL", base: "text", note: "A text input that will accept URLs only" },
         tel: { caption: "Phone number", base: "input", note: "A text input that is used to input phone numbers", demo: { value: "06 23467899" } },
-        number: { caption: "Numeric Control", base: "text", note: "A text input that is used to input phone numbers", demo: { min: 1, max: 99 } },
+        number: { caption: "Numeric Control", type: ExoNumberControl,  note: "A text input that is used to input phone numbers", demo: { min: 1, max: 99 } },
         range: { caption: "Range Slider", type: ExoRangeControl, note: "A range slider input", demo: { min: 1, max: 10, value: 5 } },
         color: { caption: "Color Input", base: "input", note: "A control to select a color", demo: { value: "#cc4433" } },
         checkbox: { base: "input", note: "A checkbox", demo: { checked: true } },
@@ -690,7 +818,8 @@ class ExoBaseControls {
         custom: { hidden: true, base: "div", note: "A custom control that is used to render your own ExoFormControl classes" },
         button: { type: ExoButtonControl, note: "A button control", demo: { caption: "Click me" } },
         time: { caption: "Time selector", base: "text", note: "A time input control" },
-        progressbar: { type: ExoProgressControl, alias: "progress", note: "A progress indicator control" }
+        progressbar: { type: ExoProgressControl, alias: "progress", note: "A progress indicator control" },
+        link: { type: ExoLinkControl, note: "HTML Anchor element" }
     }
 }
 

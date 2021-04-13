@@ -148,18 +148,13 @@ class ExoFormSurveyNavigation extends ExoFormWizardNavigation {
         super.render();
 
         const check = e => {
-
-            console.log("Element " + e.type + " event fired on ", e.target, e);
-
             let exf = e.target.closest("[data-exf]");
             if (exf && exf.data && exf.data.field) {
-                console.log("check whether to move forward")
                 _.checkForward(exf.data.field, "change", e)
             }
         };
 
         _.exo.form.querySelector(".exf-wrapper").addEventListener("change", check);
-
 
         _.exo.form.addEventListener("keydown", e => {
             if (e.keyCode === 8) { // backspace - TODO: Fix 
@@ -189,12 +184,14 @@ class ExoFormSurveyNavigation extends ExoFormWizardNavigation {
         })
 
         let container = _.exo.form.closest(".exf-container");
+        
+        container.classList.add("exf-survey");
+
         _.exo.on(ExoFormFactory.events.interactive, e => {
             _.exo.form.style.height = container.offsetHeight + "px";
             _.exo.form.querySelectorAll(".exf-page").forEach(p => {
                 p.style.height = container.offsetHeight + "px";
             })
-            console.log("Interactive: form height: " + _.exo.form.style.height)
         })
     }
 
@@ -337,7 +334,48 @@ class WizardProgress {
 
 class ExoFormContext {
     constructor(library) {
-        this.library = library;
+        this.library = this.enrichMeta(library)
+    }
+
+    enrichMeta(library){
+        const form = this.createForm();
+        form.load({ pages: [{}] });
+        
+        for (var name in library) {
+            let field = library[name];
+            let context = {
+                exo: form,
+                field: {
+                    name: name,
+                    type: name
+                }
+            };
+            let control = name !== "base" ? new field.type(context) : { acceptedProperties: [] };
+            field.returns = field.returnValueType ? field.returnValueType.name : "None";
+            field.element = control.htmlElement ? control.htmlElement.tagName.toLowerCase() : "none";
+            field.properties = this.getProps(field, field.type, control);
+            field._key = name;
+        }
+         
+        return library;
+    }
+
+    getProps(field, type, control) {
+        let ar = {};
+        if (control && control.acceptedProperties.length) {
+            control.acceptedProperties.forEach(p => {
+                let name = p;
+                if (typeof (p) === "object") {
+                    name = p.name
+                }
+                delete p.name;
+                p.type = p.type || String;
+                p.type = p.type.name;
+
+                ar[name] = p;
+            })
+        }
+        return ar
     }
 
     createForm(options) {
@@ -418,17 +456,17 @@ class ExoFormFactory {
         return new Promise((resolve, reject) => {
             var promises = [];
             options.imports = options.imports || this.defaults.imports;
+            
+            // add standard controls from Base Libraries
+            this.add(ExoBaseControls.controls);
+            this.add(ExoExtendedControls.controls);
+            this.add(ExoDevControls.controls);
+            this.add(ExoChartControls.controls);
 
             if (options.add) {
                 options.imports.push(...options.add);
             }
 
-            
-            // add standard controls from Base Library
-            this.add(ExoBaseControls.controls);
-            this.add(ExoExtendedControls.controls);
-            this.add(ExoDevControls.controls);
-            this.add(ExoChartControls.controls);
 
             options.imports.forEach(imp => {
                 promises.push(
@@ -449,6 +487,7 @@ class ExoFormFactory {
         for (var name in ExoFormFactory.library) {
             var field = ExoFormFactory.library[name];
             field.typeName = name;
+            field.returnValueType = String;
             field.type = this.lookupBaseType(name, field);
 
             field.isList = (field.type.prototype instanceof ExoFormFactory.library.list.type)
@@ -463,6 +502,8 @@ class ExoFormFactory {
         }
         return ExoFormFactory.library;
     }
+
+    
 
     static lookupBaseType(name, field) {
         let type = field.type;

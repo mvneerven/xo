@@ -1,7 +1,8 @@
-(function (factory) {
+(function (global, factory) {
+    typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
     typeof define === 'function' && define.amd ? define(factory) :
-    factory();
-}((function () { 'use strict';
+    (global = typeof globalThis !== 'undefined' ? globalThis : global || self, global.xo = factory());
+}(this, (function () { 'use strict';
 
     // Simple Vanilla JS Event System
     class Emitter {
@@ -14,6 +15,34 @@
 
         delegate(method) {
             this.obj[method] = this.eventTarget[method].bind(this.eventTarget);
+        }
+    }
+
+    // Reusable Iterator class:
+    class Iterator {
+        constructor(o, key) {
+            this.index = [];
+            this.i = 0;
+            this.o = o;
+
+            for (var x in o) {
+                this.index.push({ 'key': x, 'order': o[x][key] });
+            }
+
+            this.index.sort(function (a, b) {
+                var as = a['order'],
+                    bs = b['order'];
+
+                return as == bs ? 0 : (as > bs ? 1 : -1);
+            });
+
+            this.len = this.index.length;
+        }
+
+        next() {
+            return this.i < this.len ?
+                this.o[this.index[this.i++]['key']] :
+                null;
         }
     }
 
@@ -35,6 +64,8 @@
             '&&': (a, b) => { return a && b; }
 
         };
+
+        static Iterator = Iterator;
 
         static addEvents(obj) {
             new Emitter(obj);
@@ -102,18 +133,16 @@
         static async waitFor(f, timeoutMs) {
             return new Promise((resolve, reject) => {
                 let timeWas = new Date(),
-                wait = setInterval(function () {
-                    var result = f();
-                    if (result) {
-                        console.log("resolved after", new Date() - timeWas, "ms");
-                        clearInterval(wait);
-                        resolve();
-                    } else if (new Date() - timeWas > timeoutMs) { // Timeout
-                        console.log("rejected after", new Date() - timeWas, "ms");
-                        clearInterval(wait);
-                        reject();
-                    }
-                }, 20);
+                    wait = setInterval(function () {
+                        var result = f();
+                        if (result) {
+                            clearInterval(wait);
+                            resolve();
+                        } else if (new Date() - timeWas > timeoutMs) { // Timeout
+                            clearInterval(wait);
+                            reject();
+                        }
+                    }, 20);
             });
         }
 
@@ -654,7 +683,7 @@
 
         static _staticConstructor = (() => { ExoForm.setup(); })();
         static setup() { } // reserved for later
-        static version = "0.98";
+        static version = "0.981";
 
         defaults = {
             type: "form",
@@ -784,8 +813,7 @@
                 ...(detail || {})
             };
 
-
-            this.dispatchEvent(ev);
+            return this.dispatchEvent(ev);
         }
 
         getTotalFieldCount(schema) {
@@ -1024,12 +1052,12 @@
                 class: "exf-wrapper",
                 ...this.formSchema.form.container,
                 ...{
-                    pages: this.formSchema.pages.map(y => {
+                    pages: this.formSchema.pages && this.formSchema.pages.length ? this.formSchema.pages.map(y => {
                         return {
                             id: "page" + y.id,
                             caption: y.legend
                         }
-                    })
+                    }) : []
                 }
             };
             return p;
@@ -1047,6 +1075,19 @@
             return p;
         }
 
+        // query all fields using matcher and return matches
+        query(matcher){
+            let matches = [];
+            this.formSchema.pages.forEach(p => {
+                p.fields.forEach(f => {
+                    if(matcher(f)){
+                        matches.push(f);
+                    }
+                });
+            });
+            return matches;
+        }
+
         /*
             Call after load() schema to map field values
         */
@@ -1056,14 +1097,11 @@
                     let value = mapper(f);
                     if (value !== undefined) {
                         f.value = value;
-                        if (f._control && f._control.htmlElement) {
-                            let el = f._control.htmlElement;
-                            if (f._control.setCurrentValue) {
-                                f._control.setCurrentValue(f.value);
-                            }
-                            else {
-                                el.value = f.value || "";
-                            }
+                        if (f.setCurrentValue) {
+                            f.setCurrentValue(f.value);
+                        }                    
+                        else if (f._control && f._control.htmlElement) {
+                            f._control.htmlElement.value = f.value || "";
                         }
                     }
                 });
@@ -1163,9 +1201,18 @@
         updateView(add, page) {
             const _ = this;
 
-            //if (_.getTotalFieldCount() === 0)
-            //    return;
+            let current = _.currentPage;
 
+            if(add > 0 && current > 0) {
+
+                if(!this.isPageValid(_.currentPage)){
+                    
+                    if (_.showFirstInvalid())
+                        return;
+                }
+            }
+
+            
             page = page || 1;
             if (add !== 0)
                 page = parseInt(_.form.getAttribute("data-current-page") || "0");
@@ -1186,6 +1233,7 @@
             _.navigation.update();
 
             _.triggerEvent(ExoFormFactory.events.page, {
+                from: current,
                 page: page,
                 pageCount: pageCount
             });
@@ -1195,8 +1243,8 @@
 
         getNextPage(add, page) {
             const _ = this;
-
             let ok = false;
+
             var skip;
             do {
                 page += add;
@@ -1552,6 +1600,8 @@
     class ExoControlBase {
         attributes = {};
 
+        acceptedProperties = [];
+
         dataProps = {};
 
         static returnValueType = undefined;
@@ -1574,6 +1624,12 @@
         set htmlElement(el) {
             this._htmlElement = el;
             this.allowedAttributes = ExoFormFactory.listNativeProps(this.htmlElement);
+            this.isSelfClosing = [
+                "area", "base", "col", "embed", "hr", "img", "input",
+                "link", "meta", "param", "source", "track", "wbr"
+            ].includes(el.tagName.toLowerCase());
+
+
         }
 
         get htmlElement() {
@@ -1604,10 +1660,22 @@
         * Tell system which properties to take from the configured field schema
         */
         acceptProperties(...ar) {
-            this.acceptedProperties = ar;
+
             ar.forEach(p => {
-                if (this.context.field[p] !== undefined)
-                    this[p] = this.context.field[p];
+                if (typeof (p) === "string") {
+                    p = {
+                        name: p
+                    };
+                }
+
+                var prop = this.acceptedProperties.find(e => {
+                    return e.name === p.name
+                });
+                if (!prop) {
+                    this.acceptedProperties.push(p);
+                    if (this.context.field[p.name] !== undefined)
+                        this[p.name] = this.context.field[p.name];
+                }
             });
         }
 
@@ -1724,12 +1792,55 @@
                     if (this.htmlElement.nodeName !== context.field.tagName.toUpperCase()) {
                         throw "'" + context.field.tagName + "' is not a valid tagName";
                     }
+
+                    if (!this.isSelfClosing) {
+                        this.acceptProperties(
+                            {
+                                name: "html",
+                                type: String,
+                                description: "Inner HTML"
+                            }
+                        );
+                    }
+
+
+                    if (this.html) {
+                        this.htmlElement.innerHTML = this.html;
+                    }
+
                 }
                 catch (ex) {
                     throw "Could not generate '" + context.field.tagName + "' element: " + ex.toString();
                 }
-
             }
+        }
+    }
+
+    class ExoLinkControl extends ExoElementControl {
+
+        constructor(context) {
+            super(context);
+
+            this.htmlElement = document.createElement("a");
+
+            this.acceptProperties(
+                {
+                    name: "external",
+                    type: Boolean,
+                    description: "External to open in new tab"
+                },
+                {
+                    name: "html",
+                    type: String
+                }
+            );
+        }
+
+        async render() {
+            if (this.external)
+                this.htmlElement.setAttribute("target", "_blank");
+
+            return super.render();
         }
     }
 
@@ -1896,18 +2007,28 @@
     }
 
     class ExoDivControl extends ExoElementControl {
-        constructor(context) {
-            super(context);
-            this.htmlElement = DOM.parseHTML('<div />');
-        }
 
         html = "";
+
+        constructor(context) {
+            super(context);
+            this.htmlElement = document.createElement('div');
+
+            this.acceptProperties(
+                {
+                    name: "html",
+                    type: String,
+                    description: "Inner HTML of the div"
+                }
+            );
+        }
 
         async render() {
 
             if (this.html) {
-                this.htmlElement = DOM.parseHTML(this.html);
+                this.htmlElement.innerHTML = this.html;
             }
+
             return await super.render()
         }
 
@@ -1938,10 +2059,19 @@
 
         isMultiSelect = false;
 
+        view = "tiles";
 
         constructor(context) {
             super(context);
             this.htmlElement = DOM.parseHTML('<select></select>');
+
+            this.acceptProperties(
+                {
+                    name: "view",
+                    type: String,
+                    description: "Set the view mode (list, tiles)"
+                }
+            );
         }
 
         async populateList(containerElm, tpl) {
@@ -1992,11 +2122,7 @@
                 o.listElement = DOM.parseHTML(s);
                 DOM.replace(dummy, o.listElement);
             }
-
-            //DOM.trigger(_.context.exo.form, ExoFormFactory.events.getListItem, o);
-
             _.context.exo.triggerEvent(ExoFormFactory.events.getListItem, o);
-
         }
 
         // use trick to run async stuff and wait for it.
@@ -2017,6 +2143,19 @@
             })(item, tpl) //So we defined and immediately called this async function.
         }
 
+        async render() {
+            let elm = await super.render();
+            switch (this.view) {
+                case "tiles":
+                    elm.classList.add("tiles");
+                    break;
+                case "list":
+                    elm.classList.add("block");
+                    break;
+            }
+
+            return elm;
+        }
     }
 
     class ExoDropdownListControl extends ExoListControl {
@@ -2106,7 +2245,19 @@
             this.iconHtml = "";
             this.htmlElement = DOM.parseHTML('<button />');
 
-            this.acceptProperties("icon", "click");
+            this.acceptProperties(
+                {
+                    name: "icon",
+                    description: "Icon class to be used (using a span)"
+                },
+                {
+                    name: "click",
+                    description: "Click method"
+                },
+                {
+                    name: "action",
+                    description: "Possible values: 'next' (next page in Wizard)"
+                });
         }
 
         async render() {
@@ -2118,21 +2269,38 @@
             _.htmlElement.appendChild(document.createTextNode(this.context.field.caption));
             let elm = await super.render();
 
-            if (_.click) {
-                _.htmlElement.addEventListener("click", e => {
+            _.htmlElement.addEventListener("click", e => {
+                if (_.click) {
                     _.context.exo.getFormValues().then(data => {
                         let f = _.click;
                         if (typeof (f) !== "function") {
                             f = _.context.exo.options.customMethods[f];
                         }
                         if (typeof (f) !== "function") {
-                            throw "Not a valid function: " + _.click
+                            if (_.context.exo.options.host) {
+                                if (typeof (_.context.exo.options.host[_.click]) === "function") {
+                                    f = _.context.exo.options.host[_.click];
+                                    f.apply(_.context.exo.options.host, [data]);
+                                    return;
+                                }
+                            }
+                            else {
+                                throw "Not a valid function: " + _.click
+                            }
                         }
                         f.apply(_, [data]);
                     });
-                });
-            }
 
+                }
+                else if (_.action) {
+
+                    switch (_.action) {
+                        case "next":
+                            _.context.exo.nextPage();
+                            break;
+                    }
+                }
+            });
             return elm;
         }
 
@@ -2146,13 +2314,21 @@
 
     }
 
-    class ExoRangeControl extends ExoInputControl {
+    class ExoNumberControl extends ExoInputControl{
+
+        constructor(context) {
+            super(context);
+            this.context.field.type = "number";
+        }
+
+        static returnValueType = Number;
+    }
+
+    class ExoRangeControl extends ExoNumberControl {
 
         constructor(context) {
             super(context);
             this.context.field.type = "range";
-
-            //this.attributes.type = "range";
         }
 
         static returnValueType = Number;
@@ -2212,7 +2388,7 @@
             text: { caption: "Short text", type: ExoTextControl, note: "Standard text input" },
             url: { caption: "Website Address/URL", base: "text", note: "A text input that will accept URLs only" },
             tel: { caption: "Phone number", base: "input", note: "A text input that is used to input phone numbers", demo: { value: "06 23467899" } },
-            number: { caption: "Numeric Control", base: "text", note: "A text input that is used to input phone numbers", demo: { min: 1, max: 99 } },
+            number: { caption: "Numeric Control", type: ExoNumberControl,  note: "A text input that is used to input phone numbers", demo: { min: 1, max: 99 } },
             range: { caption: "Range Slider", type: ExoRangeControl, note: "A range slider input", demo: { min: 1, max: 10, value: 5 } },
             color: { caption: "Color Input", base: "input", note: "A control to select a color", demo: { value: "#cc4433" } },
             checkbox: { base: "input", note: "A checkbox", demo: { checked: true } },
@@ -2232,11 +2408,23 @@
             custom: { hidden: true, base: "div", note: "A custom control that is used to render your own ExoFormControl classes" },
             button: { type: ExoButtonControl, note: "A button control", demo: { caption: "Click me" } },
             time: { caption: "Time selector", base: "text", note: "A time input control" },
-            progressbar: { type: ExoProgressControl, alias: "progress", note: "A progress indicator control" }
+            progressbar: { type: ExoProgressControl, alias: "progress", note: "A progress indicator control" },
+            link: { type: ExoLinkControl, note: "HTML Anchor element" }
         }
     }
 
     class ExoFileDropControl extends ExoBaseControls.controls.input.type {
+
+        constructor(context) {
+            super(context);
+
+            this.acceptProperties(
+                { name: "maxSize" },
+                { name: "max", type: Number, description: "Max number of files accepted" },
+                { name: "fileTypes", type: String | Array, description: 'Array of strings - example: ["image/"]' },
+                { name: "maxSize", type: Number, description: "Maximum filesize of files to be uploaded (in bytes) - example: 4096000" }
+            );
+        }
 
         async render() {
             const _ = this;
@@ -2415,6 +2603,7 @@
             super(context);
 
             this.htmlElement.data = {};
+
         }
 
         async render() {
@@ -2435,6 +2624,10 @@
                                 return _.htmlElement.data.editor.getData();
                             };
 
+                            _.context.field.setCurrentValue = v => {
+                                _.htmlElement.data.editor.setData(v);
+                            };
+
                         });
                     resolve(_.container);
                 });
@@ -2448,10 +2641,6 @@
         containerTemplate = ExoForm.meta.templates.labelcontained;
 
         static returnValueType = Boolean;
-
-        constructor(context) {
-            super(context);
-        }
 
         setProperties() {
             this.context.field.min = 0;
@@ -2468,7 +2657,7 @@
             let e = await super.render();
 
             const check = e => {
-                
+
                 let sw = e.target.closest(".exf-switch");
                 let range = sw.querySelector("[type='range']");
                 sw.classList[range.value === "1" ? "add" : "remove"]("on");
@@ -2478,15 +2667,6 @@
             };
 
             check({ target: e });
-
-            // e.addEventListener("change", e=>{
-            //     e.stopImmediatePropagation();
-            //     e.cancelBubble = true;
-            //     e.preventDefault();
-            //     e.stopPropagation();
-            //     e.returnValue = false;
-            //     check(e)
-            // });
 
             if (this.context.field.disabled)
                 this.enabled = false;
@@ -2526,7 +2706,21 @@
         constructor(context) {
             super(context);
 
-            this.acceptProperties("max", "duplicate", "tags");
+            this.acceptProperties(
+                {
+                    name: "max",
+                    type: Number,
+                    description: "Maximum number of tags allowed"
+                },
+                {
+                    name: "duplicate",
+                    type: Boolean,
+                    description: "Allow duplicates. Default false"
+                },
+                {
+                    name: "tags",
+                    description: "Tag names to set (array)"
+                });
         }
 
         async render() {
@@ -2641,12 +2835,10 @@
         // Errors
         anyErrors(string) {
             if (this.max != null && this.arr.length >= this.max) {
-                console.log('Max tags limit reached');
                 return true;
             }
 
             if (!this.duplicate && this.arr.indexOf(string) != -1) {
-                console.log('duplicate found " ' + string + ' " ');
                 return true;
             }
 
@@ -2664,43 +2856,45 @@
         }
     }
 
-    class ExoTabStripControl extends ExoBaseControls.controls.div.type {
-        constructor(context) {
-            super(context);
+    // class ExoTabStripControl extends ExoBaseControls.controls.div.type {
+    //     constructor(context) {
+    //         super(context);
 
-            let name = this.context.field.name || "tabStrip";
+    //         let name = this.context.field.name || "tabStrip";
 
-            let tabs = {};
+    //         let tabs = {}
 
-            this.context.field.pages.forEach(p => {
-                tabs[p.id] = { caption: p.caption };
-            });
+    //         if(this.context.field.pages) {
+    //             this.context.field.pages.forEach(p => {
+    //                 tabs[p.id] = { caption: p.caption }
+    //             })
+    //         }
 
-            this.tabStrip = new ULTabStrip(name, {
-                tabs: tabs
-            });
-        }
+    //         this.tabStrip = new ULTabStrip(name, {
+    //             tabs: tabs
+    //         });
+    //     }
 
-        finalize(container) {
-            let index = 0;
-            let ar = container.querySelectorAll(".exf-page");
+    //     finalize(container) {
+    //         let index = 0;
+    //         let ar = container.querySelectorAll(".exf-page")
 
-            for (var t in this.tabStrip.tabs) {
-                this.tabStrip.tabs[t].replaceWith(ar[index]);
-                index++;
-            }
-        }
+    //         for (var t in this.tabStrip.tabs) {
+    //             this.tabStrip.tabs[t].replaceWith(ar[index]);
+    //             index++;
+    //         }
+    //     }
 
-        async render() {
-            await super.render();
+    //     async render() {
+    //         await super.render();
 
-            let elm = await this.tabStrip.render();
-            elm.classList.add("exf-tabs-wrapper");
-            return elm;
-        }
+    //         let elm = await this.tabStrip.render();
+    //         elm.classList.add("exf-tabs-wrapper")
+    //         return elm;
+    //     }
 
 
-    }
+    // }
 
     class ExoCaptchaControl extends ExoBaseControls.controls.div.type {
 
@@ -2709,7 +2903,12 @@
 
             DOM.require("https://www.google.com/recaptcha/api.js");
 
-            this.acceptProperties("sitekey");
+            this.acceptProperties({
+                name: "sitekey",
+                type: String,
+                description: "Key for Google reCaptcha",
+                more: "https://developers.google.com/recaptcha/intro"
+            });
         }
 
         async render() {
@@ -2764,11 +2963,46 @@
         }
     }
 
-    class ExoVideoControl extends ExoBaseControls.controls.list.type {
+    class ExoEmbedControl extends ExoBaseControls.controls.element.type {
+
+        containerTemplate = ExoForm.meta.templates.default;
 
         width = 600;
 
-        height = 400
+        height = 400;
+
+        constructor(context) {
+            super(context);
+
+            this.acceptProperties(
+                { name: "url", description: "Url of the page to embed" },
+                { name: "width" },
+                { name: "height" }
+            );
+
+            this.htmlElement = document.createElement("iframe");
+        }
+
+        async render() {
+
+
+            this.htmlElement.setAttribute("src", this.url);
+            this.htmlElement.setAttribute("frameborder", "0");
+            this.htmlElement.setAttribute("allowfullscreen", "true");
+            this.htmlElement.setAttribute("allow", "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture");
+
+            await super.render();
+
+            let wrapper = document.createElement("div");
+            wrapper.classList.add("exf-embed");
+            wrapper.appendChild(this.htmlElement);
+            this.container.appendChild(wrapper);
+
+            return this.container
+        }
+    }
+
+    class ExoVideoControl extends ExoEmbedControl {
 
         mute = false;
 
@@ -2776,38 +3010,40 @@
 
         player = "youtube";
 
-        tooltip = "YouTube video player";
-
         id = "abcdefghij";
 
         static players = {
             youtube: {
-                template: /*html*/`<iframe width="{{width}}" height="{{height}}" src="https://www.youtube.com/embed/{{id}}?autoplay={{autoplay}}&mute={{mute}}" title="{{tooltip}}" 
-                frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`
+                url: "https://www.youtube.com/embed/{{id}}?autoplay={{autoplay}}&mute={{mute}}"
+
             },
             vimeo: {
-                template: /*html*/`<iframe src="https://player.vimeo.com/video/{{id}}?title=0&byline=0&portrait=0&background={{mute}}" title="{{tooltip}}"
-                width="{{width}}" height="{{height}}" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>`
+                url: "https://player.vimeo.com/video/{{id}}?title=0&byline=0&portrait=0&background={{mute}}"
             }
-
         }
 
         constructor(context) {
             super(context);
 
-            this.acceptProperties("width", "height", "autoplay", "mute", "id", "tooltip", "player");
+            this.acceptProperties(
+                {name: "width"},
+                {name: "height"}, 
+                {name: "autoplay", type: Boolean, description: "Boolean indicating whether the video should immediately start playing"}, 
+                {name: "mute", type: Boolean, description: "Boolean indicating whether the video should be muted"}, 
+                {name: "player", type: String, description: "Player type. Currently implemented: youtube, vimeo"}
+            );
         }
 
         async render() {
-
             const player = ExoVideoControl.players[this.player];
+            // if (!player)
+            //     throw "Unrecognized player";
 
-            if (!player)
-                throw "Unrecognized player";
+            this.url = DOM.format(player.url, this);
 
-            this.htmlElement = DOM.parseHTML(DOM.format(player.template, this));
+            await super.render();
 
-            return this.htmlElement;
+            return this.container;
 
         }
     }
@@ -2816,10 +3052,34 @@
 
         grid = "exf-cols-50-50";
 
+        static returnValueType = Object;
+
         constructor(context) {
             super(context);
 
-            this.acceptProperties("grid-template", "grid");
+            this.acceptProperties(
+                {
+                    name: "grid-template",
+                    description: "CSS3 grid template",
+                    more: "https://developer.mozilla.org/en-US/docs/Web/CSS/grid-template"
+                },
+                {
+                    name: "grid",
+                    description: "Grid class to add to container div",
+                    example: "exf-cols-50-50"
+                },
+                {
+                    name: "fields", type: Object,
+                    description: "Fields structure",
+                    example: {
+                        first: { caption: "First", type: "text", maxlength: 30, required: true, placeholder: "" },
+                        last: { caption: "Last", type: "text", maxlength: 50, required: true, placeholder: "" },
+                    }
+                }
+
+            );
+
+
         }
 
         async render() {
@@ -2850,9 +3110,14 @@
                 _.htmlElement.appendChild(_.inputs[n]);
             };
 
+            if (!this.fields && f.fields) {
+                this.fields = f.fields;
+            }
+
             for (var n in this.fields) {
                 await add(n, this.fields[n]);
             }
+            // custom getter
             _._gc = e => {
                 let data = {};
                 for (var n in _.fields) {
@@ -2861,7 +3126,17 @@
                 return data
             };
 
+            // custom setter
+            _._sc = data => {
+                for (var n in _.fields) {
+                    var elm = _._qs(n);
+                    elm.value = data[n];
+                }
+            };
+
             this.context.field.getCurrentValue = _._gc;
+
+            this.context.field.setCurrentValue = _._sc;
 
             return _.htmlElement;
         }
@@ -2875,6 +3150,7 @@
             first: { caption: "First", type: "text", maxlength: 30, required: true, placeholder: "" },
             last: { caption: "Last", type: "text", maxlength: 50, required: true, placeholder: "" },
         }
+
     }
 
     class ExoNLAddressControl extends MultiInputControl {
@@ -2989,7 +3265,7 @@
 
         body = "The dialog body";
 
-        modal  = false;
+        modal = false;
 
         dlgTemplate = /*html*/`<div class="exf-dlg" role="dialog" id="{{dlgId}}">
 <div class="exf-dlg-c">
@@ -3007,17 +3283,19 @@
         constructor(context) {
             super(context);
             this.acceptProperties("title", "cancelText", "body", "confirmText", "cancelVisible", "modal");
-            this.dlgId = 'dlg_' + Core.guid().replace('-','');
+            this.dlgId = 'dlg_' + Core.guid().replace('-', '');
         }
 
-        hide(){
-
+        hide(button) {
+            if (this.context.field.click) {
+                this.context.field.click.apply(this, [button]);
+            }
         }
 
         show() {
-            const _ = this;      
+            const _ = this;
 
-            let html = DOM.format(_.dlgTemplate, {...this});
+            let html = DOM.format(_.dlgTemplate, { ...this });
 
             let dlg = DOM.parseHTML(html);
 
@@ -3025,11 +3303,13 @@
 
             const c = (e, confirm) => {
                 _.remove();
+
                 //window.location.hash = "na";
                 var btn = "cancel", b = e.target;
                 if (confirm || b.classList.contains("confirm")) {
                     btn = "confirm";
                 }
+
                 _.hide.apply(_, [btn]);
             };
 
@@ -3054,20 +3334,95 @@
                 }, 10);
         }
 
-        remove(){
+        remove() {
             let dlg = document.querySelector("#" + this.dlgId);
-            if(dlg)
+            if (dlg)
                 dlg.remove();
         }
     }
+
+    class ExoInfoControl extends ExoBaseControls.controls.div.type {
+
+        template = `<section class="exf-info {{class}}">
+    <div class="exf-info-title"><span class="exf-info-icon {{icon}}"></span><span class="exf-info-title-text">{{title}}</span></div>
+    <div class="exf-info-body">{{body}}</div>
+    </section>`
+
+        title = ""
+
+        body = "";
+
+        icon = "ti-info";
+
+        constructor(context) {
+            super(context);
+            this.acceptProperties("title", "icon", "body", "class");
+        }
+
+        async render() {
+            const _ = this;
+
+            DOM.format(_.template, { ...this });
+
+            _.htmlElement.appendChild(DOM.parseHTML(DOM.format(_.template, this)));
+
+
+            return _.htmlElement;
+        }
+    }
+
+    class ExoStarRatingControl extends ExoBaseControls.controls.range.type {
+
+        svg = /*html*/`<svg>
+    <defs>
+      <path id="star" d="M48.856,22.73c0.983-0.958,1.33-2.364,0.906-3.671c-0.425-1.307-1.532-2.24-2.892-2.438l-12.092-1.757c-0.515-0.075-0.96-0.398-1.19-0.865L28.182,3.043c-0.607-1.231-1.839-1.996-3.212-1.996c-1.372,0-2.604,0.765-3.211,1.996L16.352,14c-0.23,0.467-0.676,0.79-1.191,0.865L3.069,16.622c-1.359,0.197-2.467,1.131-2.892,2.438c-0.424,1.307-0.077,2.713,0.906,3.671l8.749,8.528c0.373,0.364,0.544,0.888,0.456,1.4L8.224,44.701c-0.183,1.06,0.095,2.091,0.781,2.904c1.066,1.267,2.927,1.653,4.415,0.871l10.814-5.686c0.452-0.237,1.021-0.235,1.472,0l10.815,5.686c0.526,0.277,1.087,0.417,1.666,0.417c1.057,0,2.059-0.47,2.748-1.288c0.687-0.813,0.964-1.846,0.781-2.904l-2.065-12.042c-0.088-0.513,0.083-1.036,0.456-1.4L48.856,22.73z"></path>
+      <clipPath id="stars">
+        <use xlink:href="#star" x="0"></use>
+        <use xlink:href="#star" x="50"></use>
+        <use xlink:href="#star" x="100"></use>
+        <use xlink:href="#star" x="150"></use>
+        <use xlink:href="#star" x="200"></use>
+      </clipPath>
+    </defs>
+  </svg>
+  <!-- for safari-->
+  <svg>
+    <clipPath id="allStars">
+      <path d="M24.97,0.047 C26.343,0.047 27.575,0.812 28.182,2.043 L28.182,2.043 L33.588,12.999 C33.818,13.466 34.263,13.789 34.778,13.864 L34.778,13.864 L46.87,15.621 C48.23,15.819 49.337,16.752 49.762,18.059 C50.186,19.366 49.839,20.772 48.856,21.73 L48.856,21.73 L40.107,30.259 C39.734,30.623 39.563,31.146 39.651,31.659 L39.651,31.659 L41.716,43.701 C41.899,44.759 41.622,45.792 40.935,46.605 C40.246,47.423 39.244,47.893 38.187,47.893 C37.608,47.893 37.047,47.753 36.521,47.476 L36.521,47.476 L25.706,41.79 C25.255,41.555 24.686,41.553 24.234,41.79 L24.234,41.79 L13.42,47.476 C11.932,48.258 10.071,47.872 9.005,46.605 C8.319,45.792 8.041,44.761 8.224,43.701 L8.224,43.701 L10.288,31.659 C10.376,31.147 10.205,30.623 9.832,30.259 L9.832,30.259 L1.083,21.731 C0.1,20.773 -0.247,19.367 0.177,18.06 C0.602,16.753 1.71,15.819 3.069,15.622 L3.069,15.622 L15.161,13.865 C15.676,13.79 16.122,13.467 16.352,13 L16.352,13 L21.759,2.043 C22.366,0.812 23.598,0.047 24.97,0.047 Z M124.97,0.047 C126.343,0.047 127.575,0.812 128.182,2.043 L128.182,2.043 L133.588,12.999 C133.818,13.466 134.263,13.789 134.778,13.864 L134.778,13.864 L146.87,15.621 C148.23,15.819 149.337,16.752 149.762,18.059 C150.186,19.366 149.839,20.772 148.856,21.73 L148.856,21.73 L140.107,30.259 C139.734,30.623 139.563,31.146 139.651,31.659 L139.651,31.659 L141.716,43.701 C141.899,44.759 141.622,45.792 140.935,46.605 C140.246,47.423 139.244,47.893 138.187,47.893 C137.608,47.893 137.047,47.753 136.521,47.476 L136.521,47.476 L125.706,41.79 C125.255,41.555 124.686,41.553 124.234,41.79 L124.234,41.79 L113.42,47.476 C111.932,48.258 110.071,47.872 109.005,46.605 C108.319,45.792 108.041,44.761 108.224,43.701 L108.224,43.701 L110.288,31.659 C110.376,31.147 110.205,30.623 109.832,30.259 L109.832,30.259 L101.083,21.731 C100.1,20.773 99.753,19.367 100.177,18.06 C100.602,16.753 101.71,15.819 103.069,15.622 L103.069,15.622 L115.161,13.865 C115.676,13.79 116.122,13.467 116.352,13 L116.352,13 L121.759,2.043 C122.366,0.812 123.598,0.047 124.97,0.047 Z M174.97,0.047 C176.343,0.047 177.575,0.812 178.182,2.043 L178.182,2.043 L183.588,12.999 C183.818,13.466 184.263,13.789 184.778,13.864 L184.778,13.864 L196.87,15.621 C198.23,15.819 199.337,16.752 199.762,18.059 C200.186,19.366 199.839,20.772 198.856,21.73 L198.856,21.73 L190.107,30.259 C189.734,30.623 189.563,31.146 189.651,31.659 L189.651,31.659 L191.716,43.701 C191.899,44.759 191.622,45.792 190.935,46.605 C190.246,47.423 189.244,47.893 188.187,47.893 C187.608,47.893 187.047,47.753 186.521,47.476 L186.521,47.476 L175.706,41.79 C175.255,41.555 174.686,41.553 174.234,41.79 L174.234,41.79 L163.42,47.476 C161.932,48.258 160.071,47.872 159.005,46.605 C158.319,45.792 158.041,44.761 158.224,43.701 L158.224,43.701 L160.288,31.659 C160.376,31.147 160.205,30.623 159.832,30.259 L159.832,30.259 L151.083,21.731 C150.1,20.773 149.753,19.367 150.177,18.06 C150.602,16.753 151.71,15.819 153.069,15.622 L153.069,15.622 L165.161,13.865 C165.676,13.79 166.122,13.467 166.352,13 L166.352,13 L171.759,2.043 C172.366,0.812 173.598,0.047 174.97,0.047 Z M224.97,0.047 C226.343,0.047 227.575,0.812 228.182,2.043 L228.182,2.043 L233.588,12.999 C233.818,13.466 234.263,13.789 234.778,13.864 L234.778,13.864 L246.87,15.621 C248.23,15.819 249.337,16.752 249.762,18.059 C250.186,19.366 249.839,20.772 248.856,21.73 L248.856,21.73 L240.107,30.259 C239.734,30.623 239.563,31.146 239.651,31.659 L239.651,31.659 L241.716,43.701 C241.899,44.759 241.622,45.792 240.935,46.605 C240.246,47.423 239.244,47.893 238.187,47.893 C237.608,47.893 237.047,47.753 236.521,47.476 L236.521,47.476 L225.706,41.79 C225.255,41.555 224.686,41.553 224.234,41.79 L224.234,41.79 L213.42,47.476 C211.932,48.258 210.071,47.872 209.005,46.605 C208.319,45.792 208.041,44.761 208.224,43.701 L208.224,43.701 L210.288,31.659 C210.376,31.147 210.205,30.623 209.832,30.259 L209.832,30.259 L201.083,21.731 C200.1,20.773 199.753,19.367 200.177,18.06 C200.602,16.753 201.71,15.819 203.069,15.622 L203.069,15.622 L215.161,13.865 C215.676,13.79 216.122,13.467 216.352,13 L216.352,13 L221.759,2.043 C222.366,0.812 223.598,0.047 224.97,0.047 Z M74.97,0.047 C76.343,0.047 77.575,0.812 78.182,2.043 L78.182,2.043 L83.588,12.999 C83.818,13.466 84.263,13.789 84.778,13.864 L84.778,13.864 L96.87,15.621 C98.23,15.819 99.337,16.752 99.762,18.059 C100.186,19.366 99.839,20.772 98.856,21.73 L98.856,21.73 L90.107,30.259 C89.734,30.623 89.563,31.146 89.651,31.659 L89.651,31.659 L91.716,43.701 C91.899,44.759 91.622,45.792 90.935,46.605 C90.246,47.423 89.244,47.893 88.187,47.893 C87.608,47.893 87.047,47.753 86.521,47.476 L86.521,47.476 L75.706,41.79 C75.255,41.555 74.686,41.553 74.234,41.79 L74.234,41.79 L63.42,47.476 C61.932,48.258 60.071,47.872 59.005,46.605 C58.319,45.792 58.041,44.761 58.224,43.701 L58.224,43.701 L60.288,31.659 C60.376,31.147 60.205,30.623 59.832,30.259 L59.832,30.259 L51.083,21.731 C50.1,20.773 49.753,19.367 50.177,18.06 C50.602,16.753 51.71,15.819 53.069,15.622 L53.069,15.622 L65.161,13.865 C65.676,13.79 66.122,13.467 66.352,13 L66.352,13 L71.759,2.043 C72.366,0.812 73.598,0.047 74.97,0.047 Z"></path>
+    </clipPath>
+  </svg>`
+
+        static returnValueType = Number;
+
+        async render() {
+            let e = await super.render();
+
+            let wrapper = document.createElement('div');
+            e.appendChild(wrapper);
+
+            let input = e.querySelector("[type=range]");
+            input.setAttribute("min", "0");
+            input.setAttribute("max", "5");
+            input.setAttribute("step", "any");
+
+            wrapper.appendChild(input);
+
+            e.insertBefore(DOM.parseHTML(this.svg), wrapper);
+
+            e.classList.add("exf-star-rating-cnt");
+            wrapper.classList.add("exf-star-rating");
+
+
+            throw "Not implemented";
+        }
+
+    }
+
 
     class ExoExtendedControls {
         static controls = {
             filedrop: {
                 type: ExoFileDropControl, alias: "file", note: "An input for file uploading", demo: {
-                    drop: {
-                        height: "100px"
-                    },
                     max: 1, "fileTypes": ["image/"],
                     maxSize: 4096000,
                     caption: "Select your profile image",
@@ -3077,15 +3432,20 @@
             switch: { type: ExoSwitchControl },
             richtext: { type: ExoCKRichEditor, note: "A CKEditor wrapper for ExoForm" },
             tags: { caption: "Tags control", type: ExoTaggingControl, note: "A control for adding multiple tags", demo: { tags: ["JavaScript", "CSS", "HTML"] } },
+            multiinput: { type: MultiInputControl },
             creditcard: { caption: "Credit Card", type: ExoCreditCardControl, note: "A credit card control" },
-            name: { caption: "Name (first, last) group", type: ExoNameControl, note: "Person name controk" },
+            name: { caption: "Name (first, last) group", type: ExoNameControl, note: "Person name control" },
             nladdress: { caption: "Dutch address", type: ExoNLAddressControl, note: "Nederlands adres" },
-            tabstrip: { for: "page", type: ExoTabStripControl, note: "A tabstrip control for grouping controls in a form" },
+            //tabstrip: { for: "page", type: ExoTabStripControl, note: "A tabstrip control for grouping controls in a form" },
             daterange: { caption: "Date range", type: ExoDateRangeControl, note: "A date range control" },
+            embed: { type: ExoEmbedControl, note: "Embed anything in an IFrame", demo: { url: "https://codepen.io/chriscoyier/embed/gfdDu" } },
             video: { type: ExoVideoControl, caption: "Embed video", note: "An embedded video from YouTube or Vimeo", demo: { player: "youtube", id: "85Nyi4Xb9PY" } },
             dropdownbutton: { hidden: true, type: DropDownButton, note: "A dropdown menu button" },
             captcha: { caption: "Google ReCaptcha Control", type: ExoCaptchaControl, note: "Captcha field", demo: { sitekey: "6Lel4Z4UAAAAAOa8LO1Q9mqKRUiMYl_00o5mXJrR" } },
-            dialog: { type: ExoDialogControl, caption: "Dialog", note: "A simple dialog (modal or modeless)" }
+            starrating: { type: ExoStarRatingControl, note: "An accessible star rating control", demo: { value: 2.5 } },
+            dialog: { type: ExoDialogControl, caption: "Dialog", note: "A simple dialog (modal or modeless)" },
+            info: { type: ExoInfoControl, note: "An info panel", demo: { title: "Info", icon: "ti-info", body: "Your informational text" } }
+
         }
     }
 
@@ -3093,10 +3453,16 @@
         mode = "html";
         theme = "chrome";
 
+        static returnValueType = String;
+
         constructor(context) {
             super(context);
             this.htmlElement.data = {};
 
+            this.acceptProperties(
+                { name: "mode", type: String, description: "Ace Editor mode - refer to Ace documentation" },
+                { name: "theme", type: String, description: "Ace Editor theme - refer to Ace documentation" }
+            );
 
             if (document.querySelector("html").classList.contains("theme-dark")) {
                 this.theme = "ambiance";
@@ -3120,8 +3486,15 @@
             return new Promise((resolve, reject) => {
                 DOM.require("https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/ace.js", () => {
                     var editor = ace.edit(_.htmlElement);
+
+                    ace.require("ace/ext/beautify"); // get reference to extension
+
                     editor.setTheme("ace/theme/" + _.theme);
                     editor.session.setMode("ace/mode/" + _.mode);
+
+                    editor.setOptions({
+                        enableBasicAutocompletion: true
+                    });
 
                     _.htmlElement.style = "min-height: 200px; width: 100%";
 
@@ -3169,108 +3542,11 @@
         }
     }
 
-    class ExoMonacoCodeEditor extends ExoBaseControls.controls.div.type {
-        mode = "html";
-        theme = "vs-light";
-
-        async render() {
-            const _ = this;
-            await super.render();
-
-            _.context.field.setCurrentValue = value => {
-                _.context.field.value = value;
-
-                Core.waitFor(() => {
-                    return _.htmlElement.data && _.htmlElement.data.editor;
-                }, 1000).then(() => {
-                    _.htmlElement.data.editor.getModel().setValue(value);
-
-                });
-            };
-
-            _.context.field.getCurrentValue = () => {
-                let value = this.context.field.value;
-                if (_.htmlElement.data.editor) {
-                    value = _.htmlElement.data.editor.getModel().getValue();
-                }
-                return value;
-            };
-
-            var observer = new IntersectionObserver((entries, observer) => {
-                if (_.htmlElement.parentNode.offsetHeight) {
-                    _.initMonacoEditor();
-                }
-            }, { root: document.documentElement });
-            observer.observe(_.htmlElement);
-            return _.htmlElement;
-        }
-
-        initMonacoEditor() {
-            const _ = this;
-
-            if (_.isInitalized) return;
-
-            const me = _.htmlElement;
-            me.style = "min-height: 200px; width: 100%";
-
-            DOM.require("https://unpkg.com/monaco-editor@0.8.3/min/vs/loader.js", () => {
-
-                require.config({ paths: { 'vs': 'https://unpkg.com/monaco-editor@0.8.3/min/vs' } });
-                window.MonacoEnvironment = { getWorkerUrl: () => proxy };
-
-                let proxy = URL.createObjectURL(new Blob([`
-                    self.MonacoEnvironment = {
-                        baseUrl: 'https://unpkg.com/monaco-editor@0.8.3/min/'
-                    };
-                    importScripts('https://unpkg.com/monaco-editor@0.8.3/min/vs/base/worker/workerMain.js');
-                `], { type: 'text/javascript' }));
-
-                require(["vs/editor/editor.main"], function () {
-                    let editor = monaco.editor.create(me, {
-                        value: _.value || "",
-                        language: _.mode,
-                        theme: _.theme
-                    });
-
-                    me.data.editor = editor;
-
-                    _.isInitalized = true;
-
-                    editor.addListener('didType', () => {
-                        _.value = editor.getValue();
-                        DOM.trigger(me, "change", { target: me });
-                    });
-
-
-                });
-            });
-        }
-
-        setProperties() {
-
-            if (this.context.field.mode) {
-                this.mode = this.context.field.mode;
-                delete this.context.field.mode;
-            }
-
-            if (this.context.field.theme) {
-                this.theme = this.context.field.theme;
-                delete this.context.field.theme;
-            }
-
-            if (this.context.field.value) {
-                this.value = this.context.field.value;
-                delete this.context.field.value;
-            }
-
-            super.setProperties();
-        }
-    }
 
     class ExoDevControls {
         static controls = {
-            aceeditor: { type: ExoAceCodeEditor, note: "Ace code editor", demo: { mode: "html" } },
-            monacoeditor: { type: ExoMonacoCodeEditor, note: "Monaco - Visual Studio Code - editor", demo: { mode: "html", theme: "vs-light", value: '<html>\n</html>' } }
+            aceeditor: { type: ExoAceCodeEditor, note: "Ace code editor", demo: { mode: "html" } }
+
         }
     }
 
@@ -3283,8 +3559,15 @@
         constructor(context){
             super(context);
 
-            this.acceptProperties("value", "size", "color", 
-                "backgroundColor", "textColor", "subLineColor", "caption");
+            this.acceptProperties(
+                {name: "value", type: Number, description: "Percentual value of the chart (0-100)"},
+                {name: "size"},
+                {name: "color"}, 
+                {name: "backgroundColor"}, 
+                {name: "textColor"}, 
+                {name: "subLineColor"},
+                {name: "caption"
+            });
         }
 
         async render() {
@@ -3458,18 +3741,13 @@
             super.render();
 
             const check = e => {
-
-                console.log("Element " + e.type + " event fired on ", e.target, e);
-
                 let exf = e.target.closest("[data-exf]");
                 if (exf && exf.data && exf.data.field) {
-                    console.log("check whether to move forward");
                     _.checkForward(exf.data.field, "change", e);
                 }
             };
 
             _.exo.form.querySelector(".exf-wrapper").addEventListener("change", check);
-
 
             _.exo.form.addEventListener("keydown", e => {
                 if (e.keyCode === 8) { // backspace - TODO: Fix 
@@ -3499,12 +3777,14 @@
             });
 
             let container = _.exo.form.closest(".exf-container");
+            
+            container.classList.add("exf-survey");
+
             _.exo.on(ExoFormFactory.events.interactive, e => {
                 _.exo.form.style.height = container.offsetHeight + "px";
                 _.exo.form.querySelectorAll(".exf-page").forEach(p => {
                     p.style.height = container.offsetHeight + "px";
                 });
-                console.log("Interactive: form height: " + _.exo.form.style.height);
             });
         }
 
@@ -3559,7 +3839,48 @@
 
     class ExoFormContext {
         constructor(library) {
-            this.library = library;
+            this.library = this.enrichMeta(library);
+        }
+
+        enrichMeta(library){
+            const form = this.createForm();
+            form.load({ pages: [{}] });
+            
+            for (var name in library) {
+                let field = library[name];
+                let context = {
+                    exo: form,
+                    field: {
+                        name: name,
+                        type: name
+                    }
+                };
+                let control = name !== "base" ? new field.type(context) : { acceptedProperties: [] };
+                field.returns = field.returnValueType ? field.returnValueType.name : "None";
+                field.element = control.htmlElement ? control.htmlElement.tagName.toLowerCase() : "none";
+                field.properties = this.getProps(field, field.type, control);
+                field._key = name;
+            }
+             
+            return library;
+        }
+
+        getProps(field, type, control) {
+            let ar = {};
+            if (control && control.acceptedProperties.length) {
+                control.acceptedProperties.forEach(p => {
+                    let name = p;
+                    if (typeof (p) === "object") {
+                        name = p.name;
+                    }
+                    delete p.name;
+                    p.type = p.type || String;
+                    p.type = p.type.name;
+
+                    ar[name] = p;
+                });
+            }
+            return ar
         }
 
         createForm(options) {
@@ -3640,17 +3961,17 @@
             return new Promise((resolve, reject) => {
                 var promises = [];
                 options.imports = options.imports || this.defaults.imports;
+                
+                // add standard controls from Base Libraries
+                this.add(ExoBaseControls.controls);
+                this.add(ExoExtendedControls.controls);
+                this.add(ExoDevControls.controls);
+                this.add(ExoChartControls.controls);
 
                 if (options.add) {
                     options.imports.push(...options.add);
                 }
 
-                
-                // add standard controls from Base Library
-                this.add(ExoBaseControls.controls);
-                this.add(ExoExtendedControls.controls);
-                this.add(ExoDevControls.controls);
-                this.add(ExoChartControls.controls);
 
                 options.imports.forEach(imp => {
                     promises.push(
@@ -3671,6 +3992,7 @@
             for (var name in ExoFormFactory.library) {
                 var field = ExoFormFactory.library[name];
                 field.typeName = name;
+                field.returnValueType = String;
                 field.type = this.lookupBaseType(name, field);
 
                 field.isList = (field.type.prototype instanceof ExoFormFactory.library.list.type);
@@ -3685,6 +4007,8 @@
             }
             return ExoFormFactory.library;
         }
+
+        
 
         static lookupBaseType(name, field) {
             let type = field.type;
@@ -3827,7 +4151,7 @@
 
     }
 
-    class ServiceWorker {
+    class ServiceWorkerBase {
         constructor() {
             // TODO
         }
@@ -3835,11 +4159,17 @@
 
     //#region Router
     class Router {
+        static _ev_pfx = "pwa-ev-";
+
+        static events = {
+            route: Router._ev_pfx + "route"
+        }
 
         modules = [];
 
         constructor(app, routes, settings) {
             const _ = this;
+            Core.addEvents(this); // add simple event system
             _.app = app;
             _.routes = routes;
 
@@ -3855,12 +4185,38 @@
             });
         }
 
+        _triggerEvent(eventName, detail, ev) {
+            console.debug("Triggering event", eventName, "detail: ", detail);
+            if (!ev) {
+                ev = new Event(eventName, { "bubbles": false, "cancelable": false });
+            }
+
+            ev.detail = {
+                router: this,
+                ...(detail || {})
+            };
+
+            return this.dispatchEvent(ev);
+        }
+
+        on(eventName, func) {
+            console.debug("Listening to event", eventName, func);
+            this.addEventListener(eventName, func);
+            return this;
+        }
+
         static changeHash(anchor) {
             history.replaceState(null, null, document.location.pathname + '#' + anchor);
         };
 
         setupHashListener(callback) {
-            this.routeCallback = callback;
+            this.routeCallback = (m,p) => {
+                this._triggerEvent(Router.events.route, {
+                    module: m,
+                    path: p
+                });
+                callback(m, p);
+            };
             const _ = this;
             window.addEventListener('hashchange', () => {
                 _.hashChanged();
@@ -3906,7 +4262,13 @@
         }
 
         set route(routePath) {
-            if (this.routes[routePath]) {
+            
+            if(!routePath.startsWith("/"))
+                throw "Invalid route";
+
+            let routeParts = routePath.substring(1).split('/');
+
+            if (this.routes["/" + routeParts[0]]) {
                 Router.changeHash(routePath); // update history, prevent endless redirects back to home router
                 this.hashChanged();
             }
@@ -3988,15 +4350,16 @@
             const _ = this;
 
             const menuTpl = /*html*/`<nav class="main-menu"><ul>{{inner}}</ul></nav>`;
-            const menuItemTpl = /*html*/`<li class="{{menuClass}}" title="{{title}}"><a href="{{url}}"><span class="{{menuIcon}}"></span> <span class="name">{{menuTitle}}</span></a></li>`;
+            const menuItemTpl = /*html*/`<li class="{{class}}" data-module="{{name}}" title="{{title}}"><a href="{{url}}"><span class="{{menuIcon}}"></span> <span class="name">{{menuTitle}}</span></a></li>`;
             let ar = [];
 
             _.modules.forEach(m => {
+
                 if (!m.hidden) {
-                    let o = { ...m };
+                    let o = { ...m, name: m.module.constructor.name };
 
                     o.menuTitle = o.menuTitle || m.title;
-                    let s = DOM.format(menuItemTpl, o, { empty: undefined });
+                    let s = DOM.format(menuItemTpl, o);
                     ar.push(s);
                 }
             });
@@ -4135,7 +4498,7 @@
             this.set("");
         }
 
-        checkPinnable(){
+        checkPinnable() {
             const _ = this;
             if (_.element.classList.contains("pwa-pinnable")) {
                 // check hover over pin icon (cannot be done using CSS, since it's a pseudo-element - :before )
@@ -4216,7 +4579,7 @@
 
         static RouteModule = RouteModule;
         static Router = Router;
-        static ServiceWorker = ServiceWorker;
+        static ServiceWorkerBase = ServiceWorkerBase;
 
         defaults = {
             UI: {
@@ -4235,6 +4598,8 @@
             this.config = { ...this.defaults, ...(options || {}) };
             this.config.baseUrl = document.location.origin;
 
+            this.config.environment = ["localhost","127.0.0.1"].includes(document.location.hostname) ? "debug" : "prod";
+
             console.debug("Checking for serviceWorker in config: serviceWorker.src");
             if (_.config.serviceWorker.src) {
                 _.registerWorker(_.config.serviceWorker);
@@ -4251,6 +4616,8 @@
 
             let cl = document.querySelector("html").classList;
             this.forceTheme = cl.contains("theme-dark") ? "dark" : cl.contains("theme-light") ? "light" : undefined;
+
+            cl.add( "pwa-env-" + this.config.environment); 
 
         }
 
@@ -4309,23 +4676,40 @@
 
         rest(endpoint, options) {
             const _ = this;
-
+            const headers = new Headers();
+            options = options || {};
+            
             endpoint = new URL(endpoint, this.config.baseUrl);
 
             const fetchOptions = {
                 method: "GET",
-                ...(options || {})
+                ...options
             };
-            return _.getToken().then(r => {
 
+            let tokenAcquirer = (scope) => {
+                return Promise.resolve();
+            };
+            if (!options.isAnonymous) {
+                tokenAcquirer = () => {
+                    return  _.getToken.apply(_)
+                };
+            }
+
+            return tokenAcquirer().then(r => {
                 if (r && r.accessToken) {
-                    const headers = new Headers();
                     headers.append("Authorization", `Bearer ` + r.accessToken);
-                    fetchOptions.headers = headers;
                 }
                 else {
                     console.warn("No JWT Token provided. Continuing anonymously");
                 }
+
+                if(options.headers){
+                    for(var h in options.headers){
+                        headers.append(h, options.headers[h]);
+                    }
+                }
+
+                fetchOptions.headers = headers;
                 return fetch(endpoint, fetchOptions).then(x => x.json())
             })
         }
@@ -4451,7 +4835,7 @@
             }
 
 
-            if(this.forceTheme){
+            if (this.forceTheme) {
                 this.theme = this.forceTheme;
             }
             else {
@@ -4474,18 +4858,6 @@
                     event.returnValue = '';
                 }
             });
-
-            // window.addEventListener("beforeunload", e=>{
-            //     console.log("Before unload")
-
-            //     e.preventDefault(); // If you prevent default behavior in Mozilla Firefox prompt will always be shown
-
-            //     //if (this.dirty) {
-            //         e.defaultValue = this._dirtyMessage;
-            //         return this._dirtyMessage;
-            //    // }
-            // });
-
             this._setAreas();
         }
 
@@ -4533,6 +4905,23 @@
                 "data-pwa": this.pwa.router.current.path
             });
 
+        }    
+
+        async showDialog(options){
+            let ctx = await window.xo.form.factory.build();
+            let frm = ctx.createForm();
+            frm.renderSingleControl({
+                ...options || {},
+                type: "dialog"
+            }).then(r => {
+                var f = window.xo.form.factory.getFieldFromElement(r);
+                // f._control.hide = e => {
+
+                //     options.click(e)
+                // }
+
+                f._control.show();
+            });
         }
 
     }
@@ -4568,20 +4957,26 @@
 
             // clean up wizard progress
             let wp = document.querySelector(".exf-wiz-step-cnt");
-            if (wp) wp.remove();
+            if (wp) wp.remove(); 
             document.body.classList.remove("exf-fs-progress");
         }
 
         render() {
             const _ = this;
 
-            _.engine = _.exoContext.createForm()
+            _.engine = _.exoContext.createForm({
+                host: _
+            })
                 .on(ExoFormFactory.events.post, e => {
                     _.post(e.detail.postData);
                 });
 
-            
-            let u = new URL(_.wizardSettings.url, _.app.config.baseUrl).toString();
+            let u = null;
+            if(_.wizardSettings.url)
+                u = new URL(_.wizardSettings.url, _.app.config.baseUrl).toString();
+            else {
+                u = _.wizardSettings.schema; 
+            }
 
             _.engine.load(u).then(x => {
 
@@ -4591,14 +4986,11 @@
                     DOM.changeHash(_.path + "/page/" + e.detail.page);
                 });
 
-
                 x.renderForm().then(x => {
-                    console.log("Ready rendering wizard");
-
                     _.app.UI.areas.main.clear();
                     _.app.UI.areas.main.add(x.container);
 
-                    _.wizardRendered(x);
+                    _.wizardRendered(x); 
                 });
 
             });
@@ -4834,7 +5226,7 @@
 
     }
 
-    window.xo = {
+    const xo = {
         core: Core,
         dom: DOM,
         pwa: PWA,
@@ -4850,5 +5242,9 @@
             msal: MsIdentity
         }
     };
+
+    window.xo = xo;
+
+    return xo;
 
 })));

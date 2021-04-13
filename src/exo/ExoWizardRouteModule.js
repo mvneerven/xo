@@ -23,20 +23,26 @@ class ExoWizardRouteModule extends ExoRouteModule {
 
         // clean up wizard progress
         let wp = document.querySelector(".exf-wiz-step-cnt");
-        if (wp) wp.remove();
+        if (wp) wp.remove(); 
         document.body.classList.remove("exf-fs-progress");
     }
 
     render() {
         const _ = this;
 
-        _.engine = _.exoContext.createForm()
+        _.engine = _.exoContext.createForm({
+            host: _
+        })
             .on(ExoFormFactory.events.post, e => {
                 _.post(e.detail.postData)
             });
 
-        
-        let u = new URL(_.wizardSettings.url, _.app.config.baseUrl).toString();
+        let u = null;
+        if(_.wizardSettings.url)
+            u = new URL(_.wizardSettings.url, _.app.config.baseUrl).toString();
+        else{
+            u = _.wizardSettings.schema; 
+        }
 
         _.engine.load(u).then(x => {
 
@@ -46,14 +52,11 @@ class ExoWizardRouteModule extends ExoRouteModule {
                 DOM.changeHash(_.path + "/page/" + e.detail.page);
             })
 
-
             x.renderForm().then(x => {
-                console.log("Ready rendering wizard");
-
                 _.app.UI.areas.main.clear();
                 _.app.UI.areas.main.add(x.container);
 
-                _.wizardRendered(x);
+                _.wizardRendered(x); 
             })
 
         });

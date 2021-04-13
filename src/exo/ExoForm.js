@@ -45,7 +45,7 @@ class ExoForm {
 
     static _staticConstructor = (() => { ExoForm.setup() })();
     static setup() { } // reserved for later
-    static version = "0.98";
+    static version = "0.981";
 
     defaults = {
         type: "form",
@@ -175,8 +175,7 @@ class ExoForm {
             ...(detail || {})
         };
 
-
-        this.dispatchEvent(ev);
+        return this.dispatchEvent(ev);
     }
 
     getTotalFieldCount(schema) {
@@ -416,12 +415,12 @@ class ExoForm {
             class: "exf-wrapper",
             ...this.formSchema.form.container,
             ...{
-                pages: this.formSchema.pages.map(y => {
+                pages: this.formSchema.pages && this.formSchema.pages.length ? this.formSchema.pages.map(y => {
                     return {
                         id: "page" + y.id,
                         caption: y.legend
                     }
-                })
+                }) : []
             }
         }
         return p;
@@ -439,6 +438,19 @@ class ExoForm {
         return p;
     }
 
+    // query all fields using matcher and return matches
+    query(matcher){
+        let matches = [];
+        this.formSchema.pages.forEach(p => {
+            p.fields.forEach(f => {
+                if(matcher(f)){
+                    matches.push(f)
+                }
+            });
+        });
+        return matches;
+    }
+
     /*
         Call after load() schema to map field values
     */
@@ -448,14 +460,11 @@ class ExoForm {
                 let value = mapper(f);
                 if (value !== undefined) {
                     f.value = value;
-                    if (f._control && f._control.htmlElement) {
-                        let el = f._control.htmlElement;
-                        if (f._control.setCurrentValue) {
-                            f._control.setCurrentValue(f.value);
-                        }
-                        else {
-                            el.value = f.value || ""
-                        }
+                    if (f.setCurrentValue) {
+                        f.setCurrentValue(f.value);
+                    }                    
+                    else if (f._control && f._control.htmlElement) {
+                        f._control.htmlElement.value = f.value || ""
                     }
                 }
             })
@@ -556,9 +565,18 @@ class ExoForm {
     updateView(add, page) {
         const _ = this;
 
-        //if (_.getTotalFieldCount() === 0)
-        //    return;
+        let current = _.currentPage;
 
+        if(add > 0 && current > 0) {
+
+            if(!this.isPageValid(_.currentPage)){
+                
+                if (_.showFirstInvalid())
+                    return;
+            }
+        }
+
+        
         page = page || 1;
         if (add !== 0)
             page = parseInt(_.form.getAttribute("data-current-page") || "0");
@@ -579,6 +597,7 @@ class ExoForm {
         _.navigation.update();
 
         _.triggerEvent(ExoFormFactory.events.page, {
+            from: current,
             page: page,
             pageCount: pageCount
         });
@@ -588,8 +607,8 @@ class ExoForm {
 
     getNextPage(add, page) {
         const _ = this;
-
         let ok = false;
+
         var skip;
         do {
             page += add;

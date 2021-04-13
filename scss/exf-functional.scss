@@ -1,9 +1,9 @@
 .exf-container {
-
-    [class^="exf-cols-"], [class*=" exf-cols-"] {
+    [class^="exf-cols-"],
+    [class*=" exf-cols-"] {
         display: grid;
         grid-column-gap: 10px;
-        
+
         .exf-ctl-cnt {
             &.exf-base-text {
                 > input[name] {
@@ -13,6 +13,38 @@
         }
     }
 
+    // temp - move to xo
+    .exf-info {
+        font-size: 1.1rem;
+        background-color: var(--color-shade);
+        background-color: var(--color-shade);
+        padding: 0em 1em 1em;
+        border: 1px solid var(--button-shadow-color);
+        position: relative;
+
+        .exf-info-title {
+            font-size: 1.4rem;
+        }
+
+        .exf-info-icon {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+        }
+
+        .exf-info-body {
+            font-size: 1rem;
+        }
+
+        &.hero{
+            margin: 2em;
+            font-size: 1.4rem;
+
+            .exf-info-title {
+                font-size: 2rem;
+            }
+        }
+    }
 
     .exf-cols-10em-1fr {
         grid-template-columns: 10em 1fr;
@@ -30,7 +62,7 @@
         grid-template-columns: 20% 60% 20%;
     }
 
-    .exf-cols-40-60{
+    .exf-cols-40-60 {
         grid-template-columns: 40% 60%;
     }
 
@@ -38,21 +70,41 @@
         grid-template-columns: 10em 10em;
     }
 
-
-    .exf-wrapper{
+    .exf-wrapper {
         height: 100%;
-        
+
         .exf-page {
             display: none;
-    
+
             &.active {
                 display: block;
             }
         }
-    
     }
 
-    
+    .exf-embed {
+        position: relative;
+        overflow: hidden;
+        padding-top: 56.25%!important; /* 16:9*/
+
+        &.ar-4x3 {
+            padding-top: 75%!important; /* 4:3 */
+        }
+
+        > iframe {
+            border: 0;
+            height: 100%;
+            left: 0;
+            position: absolute;
+            top: 0;
+            width: 100%;
+         }
+    }
+
+    .exf-info {
+        box-shadow: -3px 3px 10px -2px rgba(255, 255, 255, 0.1);
+        padding: 1em;
+    }
 
     .exf-nav-cnt {
         clear: both;
@@ -73,7 +125,7 @@
 
     .exf-error {
         display: inline-block;
-        padding: .2em;
+        padding: 0.2em;
         color: red;
         border: 1px solid red;
     }
@@ -91,7 +143,7 @@
 
                 > label {
                     display: inline-block;
-                    width: 33%;
+                    width: 30%;
                     overflow: hidden;
                     white-space: nowrap;
                     text-overflow: ellipsis;

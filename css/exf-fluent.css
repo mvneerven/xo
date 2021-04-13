@@ -21,14 +21,35 @@
 .exf-container.fluent .exf-ctl-cnt > textarea,
 .exf-container.fluent .exf-ctl-cnt > select {
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  -webkit-appearance: none;
-     -moz-appearance: none;
-          appearance: none;
   border: 1px solid var(--field-box-shadow-subtle);
   height: 2rem;
   padding: 0.3125rem;
   z-index: 0;
   width: auto;
+}
+
+.exf-container.fluent .exf-ctl-cnt > input ::-webkit-input-placeholder,
+.exf-container.fluent .exf-ctl-cnt > textarea ::-webkit-input-placeholder,
+.exf-container.fluent .exf-ctl-cnt > select ::-webkit-input-placeholder {
+  opacity: 0.6;
+}
+
+.exf-container.fluent .exf-ctl-cnt > input :-ms-input-placeholder,
+.exf-container.fluent .exf-ctl-cnt > textarea :-ms-input-placeholder,
+.exf-container.fluent .exf-ctl-cnt > select :-ms-input-placeholder {
+  opacity: 0.6;
+}
+
+.exf-container.fluent .exf-ctl-cnt > input ::-ms-input-placeholder,
+.exf-container.fluent .exf-ctl-cnt > textarea ::-ms-input-placeholder,
+.exf-container.fluent .exf-ctl-cnt > select ::-ms-input-placeholder {
+  opacity: 0.6;
+}
+
+.exf-container.fluent .exf-ctl-cnt > input ::placeholder,
+.exf-container.fluent .exf-ctl-cnt > textarea ::placeholder,
+.exf-container.fluent .exf-ctl-cnt > select ::placeholder {
+  opacity: 0.6;
 }
 
 .exf-container.fluent .exf-ctl-cnt > textarea {
@@ -44,7 +65,11 @@
   width: 100%;
 }
 
-.exf-container.fluent .exf-ctl-cnt > input[type="color"], .exf-container.fluent .exf-ctl-cnt [type="date"], .exf-container.fluent .exf-ctl-cnt [type="time"], .exf-container.fluent .exf-ctl-cnt [type="datetime"], .exf-container.fluent .exf-ctl-cnt [type="datetime-local"] {
+.exf-container.fluent .exf-ctl-cnt > input[type="color"],
+.exf-container.fluent .exf-ctl-cnt [type="date"],
+.exf-container.fluent .exf-ctl-cnt [type="time"],
+.exf-container.fluent .exf-ctl-cnt [type="datetime"],
+.exf-container.fluent .exf-ctl-cnt [type="datetime-local"] {
   min-width: 3rem;
 }
 
@@ -116,19 +141,38 @@
   border-radius: 100%;
 }
 
+.exf-container.fluent .exf-ctl-cnt > select {
+  outline: 0;
+  -webkit-box-shadow: none;
+          box-shadow: none;
+  background-color: var(--color-background);
+  border: 1px solid var(--field-box-shadow-subtle);
+  background-image: none;
+  -webkit-box-flex: 1;
+      -ms-flex: 1;
+          flex: 1;
+  height: 3rem;
+  padding: 0.3125rem;
+  cursor: pointer;
+  /* Remove IE arrow */
+}
+
+.exf-container.fluent .exf-ctl-cnt > select::-ms-expand {
+  display: none;
+}
+
 .exf-container.fluent .exf-input-group label > .exf-caption {
   display: inline-block;
-  height: 20px;
+  height: auto;
   vertical-align: text-bottom;
-  padding: .2rem .4rem .2rem .1rem;
+  padding: 0.2rem 0.4rem 0.2rem 0.1rem;
   margin-right: 1rem;
 }
 
 .exf-container.fluent .btn {
   -webkit-appearance: button;
   cursor: pointer;
-  padding: 0 1rem;
-  height: 2.125rem;
+  padding: 1rem 2rem;
   text-align: center;
   background-color: var(--color-button);
   border: 1px var(--color-shade) solid;

@@ -31,12 +31,14 @@
 .nsp-grid.nsp-grid-3rc body main {
   display: -ms-grid;
   display: grid;
+  overflow-y: hidden;
   -ms-grid-columns: minmax(10vw, 200px) 1fr minmax(10vw, 300px);
       grid-template-columns: minmax(10vw, 200px) 1fr minmax(10vw, 300px);
 }
 
 .nsp-grid.nsp-grid-3rc body main [data-pwa-area="main"] {
   padding: 10px;
+  overflow: auto;
 }
 
 .nsp-grid.nsp-grid-3rc body.nsp-uw main {
@@ -54,12 +56,10 @@
 }
 
 .nsp-grid.nsp-grid-3rc.nsp-xs body main {
-  position: relative;
   -ms-grid-columns: none;
       grid-template-columns: none;
   -ms-grid-rows: 1fr;
       grid-template-rows: 1fr;
-  overflow-y: hidden;
 }
 
 .nsp-grid.nsp-grid-3rc.nsp-xs body main [data-pwa-area].pwa-pinnable::before {
@@ -157,7 +157,6 @@
 .nsp-grid.nsp-grid-3rc.nsp-xs body main [data-pwa-area="main"] {
   margin-left: 20px;
   margin-right: 10px;
-  overflow: auto;
 }
 
 .nsp-grid.nsp-grid-3rc.nsp-xs body main [data-pwa-area="panel"] {

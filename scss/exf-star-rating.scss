@@ -1,0 +1,79 @@
+.exf-star-rating-cnt {
+
+    svg{
+        position: absolute;
+    }
+
+    .exf-star-rating {
+        $background: gold;
+        $foreground: lightgray;
+        $size: 50px;
+        $width: $size * 5;
+        $height: $size;
+    
+        overflow: hidden;
+        font-size: 0;
+        
+        clip-path: url(#allStars);
+    
+        > input[type="range"] {
+            appearance: none;
+            &::-webkit-slider-thumb {
+                appearance: none;
+            }
+            &:focus {
+                outline: 0;
+            }
+        }
+    
+        @function shadow($color) {
+            $val: 5px 0 0 0 $color;
+    
+            @for $i from 0 through 5 {
+                $val: #{$val}, #{$i * $size} 0 0 0 #{$color};
+            }
+    
+            @return $val;
+        }
+    
+        @mixin track {
+            background: $background;
+        }
+        @mixin thumb {
+            background: $background;
+            height: $size;
+            width: $size;
+            box-shadow: shadow($foreground);
+            border: none;
+        }
+    
+        > input[type="range"] {
+            width: $width;
+            height: $height;
+            background: $background;
+            &::-webkit-slider-runnable-track {
+                @include track();
+            }
+            &::-webkit-slider-thumb {
+                @include thumb();
+            }
+            &::-moz-range-track {
+                @include track();
+            }
+            &::-moz-range-thumb {
+                @include thumb();
+            }
+            &::ms-track {
+                @include track();
+            }
+            &::ms-thumb {
+                @include thumb();
+            }
+            &:focus {
+                outline: 0;
+            }
+        }
+    }
+    
+}
+

@@ -24,11 +24,16 @@
 
             main {
                 display: grid;
+                overflow-y: hidden;
                 grid-template-columns: minmax(10vw, 200px) 1fr minmax(10vw, 300px);
 
                 [data-pwa-area="main"] {
                     padding: 10px;
+
+                    overflow: auto;
                 }
+
+
             }
 
             &.nsp-uw {
@@ -47,11 +52,10 @@
                 }
 
                 main {
-                    position: relative;
                     grid-template-columns: none;
                     grid-template-rows: 1fr;
 
-                    overflow-y: hidden;
+                    //overflow-y: hidden;
 
                     [data-pwa-area] {
                         &.pwa-pinnable {
@@ -148,7 +152,7 @@
                     [data-pwa-area="main"] {
                         margin-left: 20px;
                         margin-right: 10px;
-                        overflow: auto;
+                        //overflow: auto;
                     }
 
                     [data-pwa-area="panel"] {

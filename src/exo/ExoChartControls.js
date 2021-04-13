@@ -11,8 +11,15 @@ class ExoCircularChart extends ExoBaseControls.controls.div.type {
     constructor(context){
         super(context);
 
-        this.acceptProperties("value", "size", "color", 
-            "backgroundColor", "textColor", "subLineColor", "caption")
+        this.acceptProperties(
+            {name: "value", type: Number, description: "Percentual value of the chart (0-100)"},
+            {name: "size"},
+            {name: "color"}, 
+            {name: "backgroundColor"}, 
+            {name: "textColor"}, 
+            {name: "subLineColor"},
+            {name: "caption"
+        })
     }
 
     async render() {

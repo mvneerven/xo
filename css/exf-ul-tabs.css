@@ -80,7 +80,7 @@
   bottom: 0;
   left: 0;
   width: 100%;
-  padding: 8px;
+  padding: 0px;
   overflow: auto;
   background: var(--color-background);
   -webkit-box-sizing: border-box;

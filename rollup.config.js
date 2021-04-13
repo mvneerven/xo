@@ -13,7 +13,7 @@ export default [
     watch: {
       // include and exclude govern which files to watch. by
       // default, all dependencies will be watched
-      exclude: ["node_modules/**"],
+      exclude: ["node_modules/**", "css/**", ".vscode/**"],
     },
   },
   {

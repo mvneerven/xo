@@ -1,11 +1,45 @@
-.exf-container [class^="exf-cols-"], .exf-container [class*=" exf-cols-"] {
+.exf-container [class^="exf-cols-"],
+.exf-container [class*=" exf-cols-"] {
   display: -ms-grid;
   display: grid;
   grid-column-gap: 10px;
 }
 
-.exf-container [class^="exf-cols-"] .exf-ctl-cnt.exf-base-text > input[name], .exf-container [class*=" exf-cols-"] .exf-ctl-cnt.exf-base-text > input[name] {
+.exf-container [class^="exf-cols-"] .exf-ctl-cnt.exf-base-text > input[name],
+.exf-container [class*=" exf-cols-"] .exf-ctl-cnt.exf-base-text > input[name] {
   width: auto !important;
+}
+
+.exf-container .exf-info {
+  font-size: 1.1rem;
+  background-color: var(--color-shade);
+  background-color: var(--color-shade);
+  padding: 0em 1em 1em;
+  border: 1px solid var(--button-shadow-color);
+  position: relative;
+}
+
+.exf-container .exf-info .exf-info-title {
+  font-size: 1.4rem;
+}
+
+.exf-container .exf-info .exf-info-icon {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+}
+
+.exf-container .exf-info .exf-info-body {
+  font-size: 1rem;
+}
+
+.exf-container .exf-info.hero {
+  margin: 2em;
+  font-size: 1.4rem;
+}
+
+.exf-container .exf-info.hero .exf-info-title {
+  font-size: 2rem;
 }
 
 .exf-container .exf-cols-10em-1fr {
@@ -50,6 +84,33 @@
   display: block;
 }
 
+.exf-container .exf-embed {
+  position: relative;
+  overflow: hidden;
+  padding-top: 56.25% !important;
+  /* 16:9*/
+}
+
+.exf-container .exf-embed.ar-4x3 {
+  padding-top: 75% !important;
+  /* 4:3 */
+}
+
+.exf-container .exf-embed > iframe {
+  border: 0;
+  height: 100%;
+  left: 0;
+  position: absolute;
+  top: 0;
+  width: 100%;
+}
+
+.exf-container .exf-info {
+  -webkit-box-shadow: -3px 3px 10px -2px rgba(255, 255, 255, 0.1);
+          box-shadow: -3px 3px 10px -2px rgba(255, 255, 255, 0.1);
+  padding: 1em;
+}
+
 .exf-container .exf-nav-cnt {
   clear: both;
 }
@@ -65,7 +126,7 @@
 
 .exf-container .exf-error {
   display: inline-block;
-  padding: .2em;
+  padding: 0.2em;
   color: red;
   border: 1px solid red;
 }
@@ -83,7 +144,7 @@
 
 .exf-container .exf-ctl-cnt.exf-input-group > div > label {
   display: inline-block;
-  width: 33%;
+  width: 30%;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
