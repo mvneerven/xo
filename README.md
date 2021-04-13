@@ -52,19 +52,90 @@ See it at work on [CodePen](https://codepen.io/mvneerven/pen/XWpRREG):
 
 Basic JavaScript:
 
-```javascript
-// beta lib location 
+```const context = await window.xo.form.factory.build();
+        const schema = {
+            pages: [
+                {
+                    legend: "My Form",
+                    fields: [
+                        {
+                            name: "name",
+                            type: "text",
+                            caption: "Your name",
+                            placeholder: "Peter"
+                        },
+                        {
+                            name: "email",
+                            type: "email",
+                            caption: "Your email adress",
+                            placeholder: "john@doe.com",
+                            value: "ma@pa.com"
+                        },
+                        {
+                            name: "color",
+                            type: "color",
+                            caption: "Your preferred color",
+                            value: "#ff5522"
+                        },
+                        {
+                            name: "date",
+                            type: "date",
+                            caption: "Your birthdate"
+                        },
+                        {
+                            name: "daterange",
+                            type: "daterange",
+                            caption: "Worked in period"
+                        },
 
-import * as xo from "https://xo-js.dev/v0.98/xo.min.js";
+                        {
+                            name: "cklist",
+                            type: "checkboxlist",
+                            caption: "Good or bad",
+                            items: ["Good", "Bad", "Ugly"]
+                        },
+                        {
+                            name: "address",
+                            type: "nladdress",
+                            caption: "Address"
+                        },
+                        {
+                            name: "comments",
+                            type: "multline",
+                            caption: "Comments"
+                        },
+                        {
+                            "name": "radiobuttonlistfield1",
+                            "type": "radiobuttonlist",
+                            "caption": "Radiobuttonlist",
+                            "items": [
+                                "First",
+                                "Second",
+                                "Third",
+                                "Fourth"
+                            ]
+                        },
+                        {
+                            name: "role",
+                            type: "dropdown",
+                            caption: "Your role",
+                            items: [
+                                { value: "", name: "Please select..." },
+                                "Architect",
+                                "CEO",
+                                "CTO",
+                                "COO",
+                                "Developer"
+                            ]
+                        }
+                    ]
+                }
+            ]
+        };
 
-const context = await window.xo.form.factory.build();
-
-context
-  .createForm()
-  .load(schema)
-  .then(x => {
-    x.renderForm().then(x => {}) 
- });
-     
+        const x = context.createForm();
+        await x.load(schema)
+        let result = await x.renderForm();
+        document.body.appendChild(result.container);     
 ```
 
