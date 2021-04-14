@@ -118,7 +118,7 @@ class ExoForm {
 
                     let nav = ExoFormFactory.navigation[_.formSchema.navigation];
                     _.navigation = new nav(_);
-                    console.debug("Navigation type:", _.formSchema.navigation, nav.name)
+                    console.debug("Navigation type:", _.formSchema.navigation, nav.name);
 
                     resolve(_);
                 }

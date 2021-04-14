@@ -4,6 +4,8 @@ import ExoBaseControls from './ExoBaseControls';
 import ExoExtendedControls from './ExoExtendedControls';
 import ExoDevControls from './ExoDevControls';
 import ExoChartControls from './ExoChartControls';
+import ExoSchemaGenerator from './ExoSchemaGenerator';
+import ExoThemes from './ExoThemes';
 
 //#region Navigation Classes
 class ExoFormNavigationBase {
@@ -335,6 +337,10 @@ class WizardProgress {
 class ExoFormContext {
     constructor(library) {
         this.library = this.enrichMeta(library)
+
+        this.themes = ExoThemes
+
+        this._theme = this.themes.fluent; // default theme
     }
 
     enrichMeta(library){
@@ -362,6 +368,24 @@ class ExoFormContext {
 
     getProps(field, type, control) {
         let ar = {};
+
+        if(field.returnValueType){
+            ar.name = {
+                type: "string",
+                description: "Name of the field. Determines posted value key"
+            }
+            ar.required = {
+                type: "boolean",
+                description: "Makes the field required. The form cannot be posted when the user has not entered a value in thisn field."
+            }
+    
+        }
+        
+        ar.caption = {
+            type: "string",
+            description: "Caption text. Normally shown in a label element within the field container"
+        }
+
         if (control && control.acceptedProperties.length) {
             control.acceptedProperties.forEach(p => {
                 let name = p;
@@ -406,6 +430,24 @@ class ExoFormContext {
     renderSingleControl(field) {
         return this.createForm().renderSingleControl(field);
     }
+
+    createGenerator() {
+        return new ExoSchemaGenerator();
+    }
+
+    get theme(){
+        return this._theme;
+    }
+
+    set theme(value){
+        if(this.themes[value]){
+            this._theme = this.themes[value];
+        }
+        else{
+            throw "Theme not registered"
+        }
+    }
+
 }
 
 // ExoForm Factory - imports libraries and provides factory methods 

@@ -236,7 +236,7 @@ class ExoSwitchControl extends ExoBaseControls.controls.range.type {
     setProperties() {
         this.context.field.min = 0;
         this.context.field.max = 1;
-        this.context.field.containerClass = "exf-switch";
+        //this.context.field.containerClass = "exf-switch";
         this.context.field.value = this.context.field.value || 0;
         super.setProperties();
 
@@ -246,6 +246,8 @@ class ExoSwitchControl extends ExoBaseControls.controls.range.type {
     async render() {
         const _ = this;
         let e = await super.render();
+
+        this.container.classList.add("exf-switch");
 
         const check = e => {
 

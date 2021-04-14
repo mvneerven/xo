@@ -100,7 +100,7 @@ class ExoControlBase {
         for (var a in this.dataProps) {
             this._htmlElement.setAttribute("data-" + a, this.dataProps[a]);
         }
-
+        
         this.container = DOM.parseHTML(
             DOM.format(this.containerTemplate, this.getContainerAttributes())
         );
@@ -152,7 +152,7 @@ class ExoControlBase {
         return {
             caption: f.caption,
             tooltip: f.tooltip || "",
-            class: f.containerClass || "",
+            class: (f.containerClass || ""), //+ this.isTextInput ? " exf-base-text" : "" ,
             id: f.id + "-container"
         }
     }
@@ -260,6 +260,7 @@ class ExoInputControl extends ExoElementControl {
     constructor(context) {
         super(context);
         this.htmlElement = DOM.parseHTML('<input />');
+        
         if (context.field.type === "hidden") {
             this.containerTemplate = ExoForm.meta.templates.empty;
         }
@@ -385,6 +386,8 @@ class ExoTextControl extends ExoInputControl {
 
     constructor(context) {
         super(context);
+
+        this.isTextInput = true;
         this.htmlElement = DOM.parseHTML('<input type="text"/>');
     }
 

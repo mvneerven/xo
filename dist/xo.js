@@ -1692,7 +1692,7 @@
             for (var a in this.dataProps) {
                 this._htmlElement.setAttribute("data-" + a, this.dataProps[a]);
             }
-
+            
             this.container = DOM.parseHTML(
                 DOM.format(this.containerTemplate, this.getContainerAttributes())
             );
@@ -1744,7 +1744,7 @@
             return {
                 caption: f.caption,
                 tooltip: f.tooltip || "",
-                class: f.containerClass || "",
+                class: (f.containerClass || ""), //+ this.isTextInput ? " exf-base-text" : "" ,
                 id: f.id + "-container"
             }
         }
@@ -1852,6 +1852,7 @@
         constructor(context) {
             super(context);
             this.htmlElement = DOM.parseHTML('<input />');
+            
             if (context.field.type === "hidden") {
                 this.containerTemplate = ExoForm.meta.templates.empty;
             }
@@ -1976,6 +1977,8 @@
 
         constructor(context) {
             super(context);
+
+            this.isTextInput = true;
             this.htmlElement = DOM.parseHTML('<input type="text"/>');
         }
 
@@ -2645,7 +2648,7 @@
         setProperties() {
             this.context.field.min = 0;
             this.context.field.max = 1;
-            this.context.field.containerClass = "exf-switch";
+            //this.context.field.containerClass = "exf-switch";
             this.context.field.value = this.context.field.value || 0;
             super.setProperties();
 
@@ -2655,6 +2658,8 @@
         async render() {
             const _ = this;
             let e = await super.render();
+
+            this.container.classList.add("exf-switch");
 
             const check = e => {
 
@@ -3492,10 +3497,6 @@
                     editor.setTheme("ace/theme/" + _.theme);
                     editor.session.setMode("ace/mode/" + _.mode);
 
-                    editor.setOptions({
-                        enableBasicAutocompletion: true
-                    });
-
                     _.htmlElement.style = "min-height: 200px; width: 100%";
 
                     if (typeof (_.value) === "string" && _.value.length) {
@@ -3512,6 +3513,22 @@
                         }, 10);
 
                     });
+
+                    // var staticWordCompleter = {
+                    //     getCompletions: function(editor, session, pos, prefix, callback) {
+                    //         var wordList = ["foo", "bar", "baz"];
+                    //         callback(null, wordList.map(function(word) {
+                    //             return {
+                    //                 caption: word,
+                    //                 value: word,
+                    //                 meta: "static"
+                    //             };
+                    //         }));
+                    
+                    //     }
+                    // }
+                    
+                    // editor.completers = [staticWordCompleter]
 
                     _.htmlElement.data["editor"] = editor;
 
@@ -3596,6 +3613,113 @@
             circularchart: { type: ExoCircularChart, note: "Simple circular chart (SVG)", demo: { mode: "html" } }
 
         }
+    }
+
+    class ExoSchemaGenerator {
+
+        typeMap = {
+            string: "text",
+            number: "number",
+            boolean: "switch",
+            "null": "text"
+        }
+
+        defaultSchema = {
+            "form": {
+                "theme": "fluent",
+                "class": "standard"
+            },
+            "pages": [
+                {
+                    "label": "",
+                    "intro": "",
+                    "fields": []
+                }
+            ]
+        }
+
+
+        generateFormSchema(DTO) {
+
+            if (!DTO)
+                throw "Missing DTO";
+
+            if (typeof (DTO) === "string")
+                DTO = JSON.parse(DTO);
+
+            this.dto = DTO;
+
+            let schema = {
+                ...this.defaultSchema
+            };
+
+            for (var p in this.dto) {
+                schema.pages[0].fields.push({
+                    name: p,
+                    caption: p,
+                    value: this.dto[p],
+                    ...this.getMatchingFieldSettingsFuzzy(p, this.dto[p])
+                });
+            }
+
+            return schema
+        }
+
+        getMatchingFieldSettingsFuzzy(name, value, metaData) {
+
+            if (value === undefined) {
+                value = this.getDefault(metaData);
+            }
+
+            let tp = this.typeMap[typeof (value)];
+
+            return {
+                type: tp || "text",
+                caption: this.toWords(name)
+            }
+        }
+
+        getDefault(meta) {
+            if (meta){
+                if (meta.type === "boolean")
+                    return false;
+
+                else if (meta.type === "number")
+                    return 0;
+            }
+            return "";
+        }
+
+        toWords(text) {
+            var result = text.replace(/([A-Z])/g, " $1");
+            return result.charAt(0).toUpperCase() + result.slice(1);
+        }
+    }
+
+    class ExoTheme {
+
+        // exf-base-text
+        fieldTemplate = /*html*/
+`<div data-id="{{id}}" class="exf-ctl-cnt {{class}}">
+    <label title="{{caption}}">
+        <div class="exf-caption">{{caption}}</div>
+        <span data-replace="true"></span>
+    </label>
+</div>`    ;
+
+        constructor(name) {
+            this.name = name;
+        }
+    }
+
+    class Fluent extends ExoTheme {
+        constructor(name) {
+            super(name);
+        }
+    }   
+
+    class ExoThemes {
+        static fluent = new Fluent("fluent");
     }
 
     //#region Navigation Classes
@@ -3840,6 +3964,10 @@
     class ExoFormContext {
         constructor(library) {
             this.library = this.enrichMeta(library);
+
+            this.themes = ExoThemes;
+
+            this._theme = this.themes.fluent; // default theme
         }
 
         enrichMeta(library){
@@ -3867,6 +3995,24 @@
 
         getProps(field, type, control) {
             let ar = {};
+
+            if(field.returnValueType){
+                ar.name = {
+                    type: "string",
+                    description: "Name of the field. Determines posted value key"
+                };
+                ar.required = {
+                    type: "boolean",
+                    description: "Makes the field required. The form cannot be posted when the user has not entered a value in thisn field."
+                };
+        
+            }
+            
+            ar.caption = {
+                type: "string",
+                description: "Caption text. Normally shown in a label element within the field container"
+            };
+
             if (control && control.acceptedProperties.length) {
                 control.acceptedProperties.forEach(p => {
                     let name = p;
@@ -3911,6 +4057,24 @@
         renderSingleControl(field) {
             return this.createForm().renderSingleControl(field);
         }
+
+        createGenerator() {
+            return new ExoSchemaGenerator();
+        }
+
+        get theme(){
+            return this._theme;
+        }
+
+        set theme(value){
+            if(this.themes[value]){
+                this._theme = this.themes[value];
+            }
+            else {
+                throw "Theme not registered"
+            }
+        }
+
     }
 
     // ExoForm Factory - imports libraries and provides factory methods 
