@@ -1,22 +1,22 @@
 .circle-chart__circle {
   animation: circle-chart-fill 2s reverse;
   -webkit-transform: rotate(-90deg);
-  transform: rotate(-90deg);
+          transform: rotate(-90deg);
   -webkit-transform-origin: center;
-  transform-origin: center;
+          transform-origin: center;
 }
 
 .circle-chart__circle--negative {
   -webkit-transform: rotate(-90deg) scale(1, -1);
-  transform: rotate(-90deg) scale(1, -1);
+          transform: rotate(-90deg) scale(1, -1);
 }
 
 .circle-chart__info {
   -webkit-animation: circle-chart-appear 2s forwards;
-  animation: circle-chart-appear 2s forwards;
+          animation: circle-chart-appear 2s forwards;
   opacity: 0;
   -webkit-transform: translateY(0.3em);
-  transform: translateY(0.3em);
+          transform: translateY(0.3em);
 }
 
 @-webkit-keyframes circle-chart-fill {
@@ -35,7 +35,7 @@
   to {
     opacity: 1;
     -webkit-transform: translateY(0);
-    transform: translateY(0);
+            transform: translateY(0);
   }
 }
 
@@ -43,7 +43,7 @@
   to {
     opacity: 1;
     -webkit-transform: translateY(0);
-    transform: translateY(0);
+            transform: translateY(0);
   }
 }
 

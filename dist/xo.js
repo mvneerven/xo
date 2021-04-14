@@ -3133,9 +3133,12 @@
 
       _defineProperty(this, "player", "youtube");
 
-      _defineProperty(this, "id", "abcdefghij");
+      _defineProperty(this, "code", "abcdefghij");
 
       this.acceptProperties({
+        name: "code",
+        description: "Code of the video to embed"
+      }, {
         name: "width"
       }, {
         name: "height"
@@ -3167,10 +3170,10 @@
 
   _defineProperty(ExoVideoControl, "players", {
     youtube: {
-      url: "https://www.youtube.com/embed/{{id}}?autoplay={{autoplay}}&mute={{mute}}"
+      url: "https://www.youtube.com/embed/{{code}}?autoplay={{autoplay}}&mute={{mute}}"
     },
     vimeo: {
-      url: "https://player.vimeo.com/video/{{id}}?title=0&byline=0&portrait=0&background={{mute}}"
+      url: "https://player.vimeo.com/video/{{code}}?title=0&byline=0&portrait=0&background={{mute}}"
     }
   });
 
@@ -3713,7 +3716,7 @@
       note: "An embedded video from YouTube or Vimeo",
       demo: {
         player: "youtube",
-        id: "85Nyi4Xb9PY"
+        code: "85Nyi4Xb9PY"
       }
     },
     dropdownbutton: {
@@ -4383,7 +4386,6 @@
   } // ExoForm Factory - imports libraries and provides factory methods 
   // for creating forms.
 
-
   class ExoFormFactory {
     // setup static ExoForm.meta structure 
     static build(options) {
@@ -4922,7 +4924,6 @@
 
   } //#endregion
   //#region Area
-
 
   class Area {
     constructor(name, element) {

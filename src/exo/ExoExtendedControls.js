@@ -604,15 +604,15 @@ class ExoVideoControl extends ExoEmbedControl {
 
     player = "youtube";
 
-    id = "abcdefghij";
+    code = "abcdefghij";
 
     static players = {
         youtube: {
-            url: "https://www.youtube.com/embed/{{id}}?autoplay={{autoplay}}&mute={{mute}}"
+            url: "https://www.youtube.com/embed/{{code}}?autoplay={{autoplay}}&mute={{mute}}"
 
         },
         vimeo: {
-            url: "https://player.vimeo.com/video/{{id}}?title=0&byline=0&portrait=0&background={{mute}}"
+            url: "https://player.vimeo.com/video/{{code}}?title=0&byline=0&portrait=0&background={{mute}}"
         }
     }
 
@@ -620,6 +620,7 @@ class ExoVideoControl extends ExoEmbedControl {
         super(context);
 
         this.acceptProperties(
+            {name: "code", description: "Code of the video to embed"},
             {name: "width"},
             {name: "height"}, 
             {name: "autoplay", type: Boolean, description: "Boolean indicating whether the video should immediately start playing"}, 
@@ -1036,7 +1037,7 @@ class ExoExtendedControls {
         //tabstrip: { for: "page", type: ExoTabStripControl, note: "A tabstrip control for grouping controls in a form" },
         daterange: { caption: "Date range", type: ExoDateRangeControl, note: "A date range control" },
         embed: { type: ExoEmbedControl, note: "Embed anything in an IFrame", demo: { url: "https://codepen.io/chriscoyier/embed/gfdDu" } },
-        video: { type: ExoVideoControl, caption: "Embed video", note: "An embedded video from YouTube or Vimeo", demo: { player: "youtube", id: "85Nyi4Xb9PY" } },
+        video: { type: ExoVideoControl, caption: "Embed video", note: "An embedded video from YouTube or Vimeo", demo: { player: "youtube", code: "85Nyi4Xb9PY" } },
         dropdownbutton: { hidden: true, type: DropDownButton, note: "A dropdown menu button" },
         captcha: { caption: "Google ReCaptcha Control", type: ExoCaptchaControl, note: "Captcha field", demo: { sitekey: "6Lel4Z4UAAAAAOa8LO1Q9mqKRUiMYl_00o5mXJrR" } },
         starrating: { type: ExoStarRatingControl, note: "An accessible star rating control", demo: { value: 2.5 } },
