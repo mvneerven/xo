@@ -76,7 +76,7 @@ class ExoControlBase {
                 }
             }
 
-            var prop = this.acceptedProperties.find(e => {
+            let prop = this.acceptedProperties.find(e => {
                 return e.name === p.name
             })
             if (!prop) {
