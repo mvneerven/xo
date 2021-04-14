@@ -1,3 +1,17 @@
+export class RouteModule {
+    constructor(app: any, route: any, path: any);
+    title: string;
+    menuIcon: string;
+    route: any;
+    app: any;
+    path: any;
+    _unload(): void;
+    unload(): void;
+    asyncInit(): Promise<void>;
+    execute(): void;
+    render(): void;
+    _init(): void;
+}
 export default PWA;
 declare class PWA {
     static RouteModule: typeof RouteModule;
@@ -67,20 +81,6 @@ declare class Router {
     home(): void;
     generateMenu(menu: any): any;
     touchStarted: boolean;
-}
-declare class RouteModule {
-    constructor(app: any, route: any, path: any);
-    title: string;
-    menuIcon: string;
-    route: any;
-    app: any;
-    path: any;
-    _unload(): void;
-    unload(): void;
-    asyncInit(): Promise<void>;
-    execute(): void;
-    render(): void;
-    _init(): void;
 }
 declare class ServiceWorkerBase {
 }

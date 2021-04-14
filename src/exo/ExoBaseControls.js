@@ -185,7 +185,7 @@ class ExoControlBase {
     }
 }
 
-class ExoElementControl extends ExoControlBase {
+export class ExoElementControl extends ExoControlBase {
 
     static returnValueType = undefined;
 
@@ -252,7 +252,7 @@ class ExoLinkControl extends ExoElementControl {
     }
 }
 
-class ExoInputControl extends ExoElementControl {
+export class ExoInputControl extends ExoElementControl {
     containerTemplate = ExoForm.meta.templates.default;
 
     static returnValueType = String;
@@ -379,7 +379,7 @@ class ExoInputControl extends ExoElementControl {
     }
 }
 
-class ExoTextControl extends ExoInputControl {
+export class ExoTextControl extends ExoInputControl {
 
     // "exocontainer, default, nolabel, text, group, form, page, navigation, datalist, datalistItem, button"
     containerTemplate = ExoForm.meta.templates.text;
@@ -418,7 +418,7 @@ class ExoFormControl extends ExoElementControl {
     }
 }
 
-class ExoDivControl extends ExoElementControl {
+export class ExoDivControl extends ExoElementControl {
 
     html = "";
 
@@ -465,7 +465,7 @@ class ExoTextAreaControl extends ExoTextControl {
     }
 }
 
-class ExoListControl extends ExoElementControl {
+export class ExoListControl extends ExoElementControl {
 
     containerTemplate = ExoForm.meta.templates.default;
 
@@ -737,7 +737,7 @@ class ExoNumberControl extends ExoInputControl{
     static returnValueType = Number;
 }
 
-class ExoRangeControl extends ExoNumberControl {
+export class ExoRangeControl extends ExoNumberControl {
 
     constructor(context) {
         super(context);

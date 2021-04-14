@@ -16,7 +16,7 @@ class ExoTheme {
     }
 }
 
-class Fluent extends ExoTheme {
+export class Fluent extends ExoTheme {
     constructor(name) {
         super(name);
     }

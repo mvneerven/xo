@@ -1,4 +1,60 @@
+export class ExoElementControl extends ExoControlBase {
+}
+export class ExoInputControl extends ExoElementControl {
+    static returnValueType: StringConstructor;
+    createEmailLookup(): void;
+    testDataList(): void;
+    getFetchLookup(f: any): any;
+    createDataList(f: any, data: any): void;
+}
+export class ExoTextControl extends ExoInputControl {
+    isTextInput: boolean;
+}
+export class ExoDivControl extends ExoElementControl {
+    html: string;
+}
+export class ExoListControl extends ExoElementControl {
+    isMultiSelect: boolean;
+    view: string;
+    populateList(containerElm: any, tpl: any): Promise<void>;
+    addListItem(f: any, i: any, tpl: any, container: any): void;
+    renderFieldSync(item: any, tpl: any, container: any): Promise<void>;
+}
+export class ExoRangeControl extends ExoNumberControl {
+}
 export default ExoBaseControls;
+declare class ExoControlBase {
+    static returnValueType: any;
+    constructor(context: any);
+    attributes: {};
+    acceptedProperties: any[];
+    dataProps: {};
+    containerTemplate: string;
+    context: any;
+    set htmlElement(arg: any);
+    get htmlElement(): any;
+    _htmlElement: any;
+    allowedAttributes: string[];
+    isSelfClosing: boolean;
+    appendChild(elm: any): void;
+    triggerChange(detail: any): void;
+    set enabled(arg: boolean);
+    get enabled(): boolean;
+    acceptProperties(...ar: any[]): void;
+    render(): Promise<any>;
+    container: any;
+    addEventListeners(): void;
+    getContainerAttributes(): {
+        caption: any;
+        tooltip: any;
+        class: any;
+        id: string;
+    };
+    setProperties(): void;
+}
+declare class ExoNumberControl extends ExoInputControl {
+    static returnValueType: NumberConstructor;
+}
 declare class ExoBaseControls {
     static controls: {
         base: {
@@ -192,47 +248,6 @@ declare class ExoBaseControls {
         };
     };
 }
-declare class ExoControlBase {
-    static returnValueType: any;
-    constructor(context: any);
-    attributes: {};
-    acceptedProperties: any[];
-    dataProps: {};
-    containerTemplate: string;
-    context: any;
-    set htmlElement(arg: any);
-    get htmlElement(): any;
-    _htmlElement: any;
-    allowedAttributes: string[];
-    isSelfClosing: boolean;
-    appendChild(elm: any): void;
-    triggerChange(detail: any): void;
-    set enabled(arg: boolean);
-    get enabled(): boolean;
-    acceptProperties(...ar: any[]): void;
-    render(): Promise<any>;
-    container: any;
-    addEventListeners(): void;
-    getContainerAttributes(): {
-        caption: any;
-        tooltip: any;
-        class: any;
-        id: string;
-    };
-    setProperties(): void;
-}
-declare class ExoElementControl extends ExoControlBase {
-}
-declare class ExoInputControl extends ExoElementControl {
-    static returnValueType: StringConstructor;
-    createEmailLookup(): void;
-    testDataList(): void;
-    getFetchLookup(f: any): any;
-    createDataList(f: any, data: any): void;
-}
-declare class ExoDivControl extends ExoElementControl {
-    html: string;
-}
 declare class ExoFormControl extends ExoElementControl {
 }
 declare class ExoFormPageControl extends ExoDivControl {
@@ -240,22 +255,7 @@ declare class ExoFormPageControl extends ExoDivControl {
 }
 declare class ExoFieldSetControl extends ExoFormPageControl {
 }
-declare class ExoTextControl extends ExoInputControl {
-    isTextInput: boolean;
-}
-declare class ExoNumberControl extends ExoInputControl {
-    static returnValueType: NumberConstructor;
-}
-declare class ExoRangeControl extends ExoNumberControl {
-}
 declare class ExoTextAreaControl extends ExoTextControl {
-}
-declare class ExoListControl extends ExoElementControl {
-    isMultiSelect: boolean;
-    view: string;
-    populateList(containerElm: any, tpl: any): Promise<void>;
-    addListItem(f: any, i: any, tpl: any, container: any): void;
-    renderFieldSync(item: any, tpl: any, container: any): Promise<void>;
 }
 declare class ExoDropdownListControl extends ExoListControl {
 }

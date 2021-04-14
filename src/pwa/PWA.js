@@ -250,7 +250,7 @@ class Router {
     }
 }
 
-class RouteModule {
+export class RouteModule {
 
     title = "Module";
 

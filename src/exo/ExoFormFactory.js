@@ -334,7 +334,7 @@ class WizardProgress {
 
 //#endregion 
 
-class ExoFormContext {
+export class ExoFormContext {
     constructor(library) {
         this.library = this.enrichMeta(library)
 
