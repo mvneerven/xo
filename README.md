@@ -52,7 +52,7 @@ See it at work on [CodePen](https://codepen.io/mvneerven/pen/XWpRREG):
 
 Basic JavaScript:
 
-```const context = await window.xo.form.factory.build();
+```javascript const context = await window.xo.form.factory.build();
         const schema = {
             pages: [
                 {
