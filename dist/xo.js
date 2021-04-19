@@ -811,7 +811,7 @@
         _.runValidCheck = true; // prevent reportValidity() showing messages on controls 
 
         _.form.querySelectorAll('[data-page="' + index + '"] .exf-ctl-cnt [name]').forEach(f => {
-          var isValid = f.reportValidity();
+          var isValid = f.reportValidity ? f.reportValidity() : true;
 
           if (!isValid) {
             hasInvalid = true;
@@ -4855,10 +4855,16 @@
       menu.element.addEventListener("touchstart", e => {
         this.touchStarted = true;
 
-        if (e.target.closest("li")) {
-          e.target.closest(_.config.areas.menu).classList.add("clicked");
-        } else {
-          e.target.closest(_.config.areas.menu).classList.remove("clicked");
+        if (_.config.areas.menu) {
+          let menu = e.target.closest(_.config.areas.menu);
+
+          if (menu) {
+            if (e.target.closest("li")) {
+              menu.classList.add("clicked");
+            } else {
+              menu.classList.remove("clicked");
+            }
+          }
         }
       });
       return menu;
@@ -5271,6 +5277,10 @@
 
       if (!this.pwa.config.UI.allowUserSelection) {
         this.html.classList.add("no-user-select");
+      }
+
+      if ('ontouchstart' in window) {
+        this.html.classList.add('pwa-touch');
       }
 
       if (this.forceTheme) {

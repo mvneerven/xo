@@ -60,7 +60,7 @@ class Router {
     };
 
     setupHashListener(callback) {
-        this.routeCallback = (m,p) => {
+        this.routeCallback = (m, p) => {
             this._triggerEvent(Router.events.route, {
                 module: m,
                 path: p
@@ -112,8 +112,8 @@ class Router {
     }
 
     set route(routePath) {
-        
-        if(!routePath.startsWith("/"))
+
+        if (!routePath.startsWith("/"))
             throw "Invalid route";
 
         let routeParts = routePath.substring(1).split('/');
@@ -238,11 +238,16 @@ class Router {
         // when mouse
         menu.element.addEventListener("touchstart", e => {
             this.touchStarted = true;
-            if (e.target.closest("li")) {
-                e.target.closest(_.config.areas.menu).classList.add("clicked");
-            }
-            else {
-                e.target.closest(_.config.areas.menu).classList.remove("clicked");
+            if (_.config.areas.menu) {
+                let menu = e.target.closest(_.config.areas.menu);
+                if (menu) {
+                    if (e.target.closest("li")) {
+                        menu.classList.add("clicked");
+                    }
+                    else {
+                        menu.classList.remove("clicked");
+                    }
+                }
             }
         });
 
@@ -449,7 +454,7 @@ class PWA {
         this.config = { ...this.defaults, ...(options || {}) };
         this.config.baseUrl = document.location.origin;
 
-        this.config.environment = ["localhost","127.0.0.1"].includes(document.location.hostname) ? "debug" : "prod";
+        this.config.environment = ["localhost", "127.0.0.1"].includes(document.location.hostname) ? "debug" : "prod";
 
         console.debug("Checking for serviceWorker in config: serviceWorker.src");
         if (_.config.serviceWorker.src) {
@@ -468,7 +473,7 @@ class PWA {
         let cl = document.querySelector("html").classList;
         this.forceTheme = cl.contains("theme-dark") ? "dark" : cl.contains("theme-light") ? "light" : undefined;
 
-        cl.add( "pwa-env-" + this.config.environment); 
+        cl.add("pwa-env-" + this.config.environment);
 
     }
 
@@ -529,7 +534,7 @@ class PWA {
         const _ = this;
         const headers = new Headers();
         options = options || {};
-        
+
         endpoint = new URL(endpoint, this.config.baseUrl);
 
         const fetchOptions = {
@@ -542,7 +547,7 @@ class PWA {
         }
         if (!options.isAnonymous) {
             tokenAcquirer = () => {
-                return  _.getToken.apply(_)
+                return _.getToken.apply(_)
             };
         }
 
@@ -554,8 +559,8 @@ class PWA {
                 console.warn("No JWT Token provided. Continuing anonymously");
             }
 
-            if(options.headers){
-                for(var h in options.headers){
+            if (options.headers) {
+                for (var h in options.headers) {
                     headers.append(h, options.headers[h]);
                 }
             }
@@ -685,6 +690,9 @@ class UI {
             this.html.classList.add("no-user-select");
         }
 
+        if ('ontouchstart' in window) {
+            this.html.classList.add('pwa-touch');
+        }
 
         if (this.forceTheme) {
             this.theme = this.forceTheme;
@@ -756,9 +764,9 @@ class UI {
             "data-pwa": this.pwa.router.current.path
         });
 
-    }    
+    }
 
-    async showDialog(options){
+    async showDialog(options) {
         let ctx = await window.xo.form.factory.build();
         let frm = ctx.createForm();
         frm.renderSingleControl({

@@ -196,7 +196,7 @@ class ExoForm {
         try {
             _.runValidCheck = true; // prevent reportValidity() showing messages on controls 
             _.form.querySelectorAll('[data-page="' + index + '"] .exf-ctl-cnt [name]').forEach(f => {
-                var isValid = f.reportValidity();
+                var isValid = f.reportValidity ? f.reportValidity() : true;
                 if (!isValid) {
                     hasInvalid = true;
                 }
