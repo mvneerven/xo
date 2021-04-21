@@ -1,6 +1,6 @@
 (function (global, factory) {
-  typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
-  typeof define === 'function' && define.amd ? define(factory) :
+  typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('regenerator-runtime/runtime')) :
+  typeof define === 'function' && define.amd ? define(['regenerator-runtime/runtime'], factory) :
   (global = typeof globalThis !== 'undefined' ? globalThis : global || self, global.xo = factory());
 }(this, (function () { 'use strict';
 
@@ -815,7 +815,7 @@
 
         hasInvalid = this.formSchema.pages[index - 1].fields.filter(f => {
           return !f._control.valid;
-        }).length;
+        }).length > 0;
       } finally {
         _.runValidCheck = false;
       }
@@ -1050,11 +1050,16 @@
       let matches = [];
       this.formSchema.pages.forEach(p => {
         p.fields.forEach(f => {
+          f = {
+            _page: {
+              index: p.index,
+              legend: p.legend
+            },
+            ...f
+          };
+
           if (matcher(f)) {
-            matches.push({
-              page: p,
-              ...f
-            });
+            matches.push(f);
           }
         });
       });
@@ -1156,7 +1161,7 @@
 
       if (add > 0 && current > 0) {
         if (!this.isPageValid(_.currentPage)) {
-          debugger;
+          this.validation.reportValidity(_.currentPage);
           return;
         }
       }
@@ -2190,11 +2195,11 @@
     }
 
     showValidationError() {
-      this.htmlElement.querySelector("input").setCustomValidity('This cannot be empty'); //else
-      //    this.setCustomValidity( '' );
-      // debugger;
-      // //TODO
-      // alert("Not valid")
+      this.htmlElement.querySelector("input").setCustomValidity('This cannot be empty');
+    }
+
+    get validationMessage() {
+      return this.htmlElement.querySelector("input").validationMessage;
     }
 
   }
@@ -3242,6 +3247,7 @@
       const _ = this;
 
       const f = _.context.field;
+      const exo = _.context.exo;
       this.htmlElement.classList.add("exf-cnt", "exf-ctl-group", this.grid);
 
       if (this["grid-template"]) {
@@ -3249,20 +3255,23 @@
       }
 
       _._qs = name => {
-        return this.htmlElement.querySelector('[name="' + f.name + "_" + name + '"]');
+        return this.htmlElement.querySelector('[data-multi-name="' + f.name + "_" + name + '"]');
       };
 
       const rs = async (name, options) => {
-        return _.context.exo.renderSingleControl({
-          name: f.name + "_" + name,
-          ...options
-        });
+        return _.context.exo.renderSingleControl(options);
       };
 
       _.inputs = {};
 
       const add = async (n, options) => {
+        options = {
+          name: f.name + "_" + n,
+          ...options
+        };
         _.inputs[n] = await rs(n, options);
+
+        _.inputs[n].setAttribute("data-multi-name", options.name);
 
         _.htmlElement.appendChild(_.inputs[n]);
       };
@@ -3279,7 +3288,10 @@
         let data = {};
 
         for (var n in _.fields) {
-          data[n] = _._qs(n).value;
+          var elm = _._qs(n);
+
+          let fld = ExoFormFactory.getFieldFromElement(elm);
+          data[n] = exo.getFieldValue(fld);
         }
 
         return data;
@@ -3290,7 +3302,10 @@
         for (var n in _.fields) {
           var elm = _._qs(n);
 
-          elm.value = data[n];
+          let fld = ExoFormFactory.getFieldFromElement(elm);
+          if (fld.setCurrentValue) fld.setCurrentValue(data[n]);else {
+            elm.querySelector("[name]").value = data[n];
+          }
         }
       };
 
@@ -4063,7 +4078,7 @@
       let numInvalid = this.exo.query(f => {
         return !f._control.valid;
       }).length;
-      return numInvalid.length === 0;
+      return numInvalid === 0;
     }
 
     reportValidity() {
@@ -4083,6 +4098,8 @@
 
         if (returnValue !== false) {
           this.focus(invalidFields[0].field);
+
+          invalidFields[0].field._control.reportValidity();
         }
       }
     }
@@ -4137,7 +4154,6 @@
 
 
     showError() {
-
       if (this._error !== null) {
         return this.updateError();
       }
@@ -4205,13 +4221,16 @@
       });
     }
 
-    reportValidity() {
-      let invalidFields = this.exo.query(f => {
-        return !f._control.valid;
-      }).map(f => {
-        return f.caption + ": " + f._control.validationMessage;
+    reportValidity(page) {
+      const cb = page ? f => {
+        return f._page.index === page && !f._control.valid; // only controls on given page
+      } : f => {
+        return !f._control.valid; // across all pages
+      };
+      let invalidFields = this.exo.query(cb);
+      invalidFields.forEach(f => {
+        f._control._validator.showError();
       });
-      alert(invalidFields.join('\n'));
     }
 
   }
@@ -5073,7 +5092,9 @@
 
       const imp = async src => {
         try {
-          return await import(src);
+          return await import(
+          /* webpackMode: "eager" */
+          src);
         } catch (ex) {
           throw "Could not load " + src + ": " + ex;
         }

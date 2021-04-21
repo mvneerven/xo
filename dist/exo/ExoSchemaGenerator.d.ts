@@ -33,6 +33,6 @@ declare class ExoSchemaGenerator {
         type: any;
         caption: any;
     };
-    getDefault(meta: any): false | "" | 0;
+    getDefault(meta: any): false | 0 | "";
     toWords(text: any): any;
 }

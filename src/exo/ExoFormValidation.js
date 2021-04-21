@@ -11,7 +11,7 @@ class ExoFormDefaultValidation {
         let numInvalid = this.exo.query(f => {
             return !f._control.valid;
         }).length;
-        return numInvalid.length === 0;
+        return numInvalid === 0;
     }
 
     reportValidity() {
@@ -31,6 +31,7 @@ class ExoFormDefaultValidation {
 
             if (returnValue !== false) {
                 this.focus(invalidFields[0].field);
+                invalidFields[0].field._control.reportValidity()
             }
         }
     }
@@ -61,6 +62,7 @@ class ExoFormDefaultValidation {
 class InlineFieldValidator {
 
     constructor(field) {
+        
         this._field = field;
         this._cnt = this._field._control.container || this._field._control.htmlElement;
 
@@ -87,8 +89,6 @@ class InlineFieldValidator {
 
     // Displays an error message and adds error styles and aria attributes
     showError() {
-        let errorNode;
-
         if (this._error !== null) {
             return this.updateError();
         }
@@ -134,6 +134,7 @@ class InlineFieldValidator {
     }
 
     _onChange(event) {
+        
         if (!this._field._control.valid) {
             this.showError();
         }
@@ -160,15 +161,16 @@ class ExoFormInlineValidation extends ExoFormDefaultValidation {
         });
     }
 
-    reportValidity(){
-        let invalidFields = this.exo.query(f => {
-            return !f._control.valid;
-        }).map(f => {
-            return f.caption + ": " + f._control.validationMessage
-        });
-
-        alert(invalidFields.join('\n'))
-
+    reportValidity(page){
+        const cb = page ? f => {
+            return f._page.index === page && !f._control.valid; // only controls on given page
+        } : f => {
+            return !f._control.valid; // across all pages
+        }
+        let invalidFields = this.exo.query(cb);
+        invalidFields.forEach(f=>{
+            f._control._validator.showError();
+        })
     }
 }
 

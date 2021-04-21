@@ -200,9 +200,9 @@ class ExoForm {
         let hasInvalid = false;
         try {
             this.runValidCheck = true; // prevent reportValidity() showing messages on controls 
-            hasInvalid = this.formSchema.pages[index-1].fields.filter(f=>{
+            hasInvalid = this.formSchema.pages[index - 1].fields.filter(f => {
                 return !f._control.valid;
-            }).length;
+            }).length > 0;
         }
         finally {
             _.runValidCheck = false;
@@ -436,16 +436,21 @@ class ExoForm {
     }
 
     // query all fields using matcher and return matches
-    query(matcher){
-        if(matcher === undefined) matcher = ()=>{return true};
+    query(matcher) {
+        if (matcher === undefined) matcher = () => { return true };
         let matches = [];
         this.formSchema.pages.forEach(p => {
             p.fields.forEach(f => {
-                if(matcher(f)){
-                    matches.push({
-                        page: p,
-                        ...f
-                    })
+                f = {
+                    _page: {
+                        index: p.index,
+                        legend: p.legend
+                    },
+                    ...f
+                }
+
+                if (matcher(f)) {
+                    matches.push(f)
                 }
             });
         });
@@ -463,7 +468,7 @@ class ExoForm {
                     f.value = value;
                     if (f.setCurrentValue) {
                         f.setCurrentValue(f.value);
-                    }                    
+                    }
                     else if (f._control && f._control.htmlElement) {
                         f._control.htmlElement.value = f.value || ""
                     }
@@ -478,7 +483,7 @@ class ExoForm {
         if (ev)
             ev.preventDefault();
 
-        if(!_.validation.checkValidity()){
+        if (!_.validation.checkValidity()) {
             console.debug("checkValidity - Form not valid");
             _.validation.reportValidity();
             return;
@@ -539,15 +544,14 @@ class ExoForm {
 
         let current = _.currentPage;
 
-        if(add > 0 && current > 0) {
+        if (add > 0 && current > 0) {
 
-            if(!this.isPageValid(_.currentPage)){
-                debugger;
+            if (!this.isPageValid(_.currentPage)) {
+                this.validation.reportValidity(_.currentPage);
                 return;
-                
             }
         }
-        
+
         page = page || 1;
         if (add !== 0)
             page = parseInt(_.form.getAttribute("data-current-page") || "0");
@@ -555,18 +559,18 @@ class ExoForm {
         page = _.getNextPage(add, page)
         let pageCount = _.getLastPage();
 
-        if(current>0){
-            if(!_.navigation.canMove(current, page))
+        if (current > 0) {
+            if (!_.navigation.canMove(current, page))
                 return;
         }
-        
+
         let returnValue = _.triggerEvent(ExoFormFactory.events.beforePage, {
             from: current,
             page: page,
             pageCount: pageCount
         });
 
-        if(returnValue === false)
+        if (returnValue === false)
             return;
 
         _.form.setAttribute("data-current-page", page);
@@ -667,11 +671,10 @@ class ExoForm {
         return element;
     }
 
-
     createControl(f) {
         const _ = this;
-        
-        
+
+
         return new Promise((resolve, reject) => {
 
             const doResolve = (f, c) => {
@@ -683,10 +686,10 @@ class ExoForm {
                 console.debug("Resolving ", ExoFormFactory.fieldToString(f));
                 resolve(c);
             }
-            
+
 
             try {
-                
+
 
                 if (!f || !f.type)
                     throw "Incorrect field options. Must be object with at least 'type' property. " + JSON.stringify(f)
@@ -726,7 +729,7 @@ class ExoForm {
 
             }
             catch (ex) {
-               
+
                 //reject("Error in createControl(): " + ex.toString())
                 let field = _.context.get("div");
                 let control = new field.type({
@@ -739,11 +742,11 @@ class ExoForm {
                 control.htmlElement.appendChild(DOM.parseHTML(DOM.format('<span class="exf-error exf-create-error" title="{{title}}">ERROR</span>', {
                     title: "Error creating " + ExoFormFactory.fieldToString(f) + ": " + ex.toString()
                 })));
-                
+
 
                 doResolve(f, control);
-                
-                
+
+
 
             }
         });
