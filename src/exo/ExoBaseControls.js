@@ -183,6 +183,27 @@ class ExoControlBase {
             }
         }
     }
+
+    // returns valid state of the control - can be subclassed
+    get valid(){
+        
+        if(this.htmlElement && this.htmlElement.reportValidity)
+            return this.htmlElement.reportValidity()
+        
+        return true;
+    }
+
+    get validationMessage(){
+        return this.htmlElement.validationMessage;
+    }
+
+    showValidationError(){
+        if(this.htmlElement && this.htmlElement.reportValidity)
+            return this.htmlElement.reportValidity()
+        
+        return true;
+    }
+
 }
 
 export class ExoElementControl extends ExoControlBase {
@@ -610,6 +631,33 @@ class ExoInputListControl extends ExoListControl {
 
         super.render();
         return this.container;
+    }
+
+    get valid(){
+        if(this.context.field.required){
+            let value = this.context.exo.getFieldValue(this.context.field);
+            if(!value || value.length === 0){
+                
+                let inp = this.htmlElement.querySelector("input");
+                inp.setCustomValidity('This cannot be empty' );
+                inp.reportValidity()
+
+                return false;
+            }
+                
+        }
+
+        return true;
+    }
+
+    showValidationError(){
+        
+        this.htmlElement.querySelector("input").setCustomValidity('This cannot be empty' );
+        //else
+        //    this.setCustomValidity( '' );
+        // debugger;
+        // //TODO
+        // alert("Not valid")
     }
 }
 

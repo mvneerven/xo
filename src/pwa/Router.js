@@ -1,5 +1,6 @@
 import DOM from './DOM';
 import Core from './Core';
+import RouteModule from './RouteModule';
 
 class Router {
     static _ev_pfx = "pwa-ev-";
@@ -144,9 +145,17 @@ class Router {
                 throw "Malformed route: " + r;
 
             promises.push(new Promise((resolve, reject) => {
-                _.loadES6Module(route, _.app, route, r).then(o => {
+
+                if (route.prototype && route.prototype instanceof RouteModule) {
+                    let o = new route(_.app, route, r)
                     resolve(o);
-                })
+
+                }
+                else if (typeof (route) === "string") {
+                    _.loadES6Module(route, _.app, route, r).then(o => {
+                        resolve(o);
+                    })
+                }
             }));
         }
         if (!homeRouteFound) {

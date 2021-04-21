@@ -50,7 +50,8 @@ class ExoForm {
     defaults = {
         type: "form",
         baseUrl: document.location.origin,
-        navigation: "default",
+        navigation: "auto",
+        validation: "default",
         runtime: {
             progress: false
         },
@@ -116,8 +117,12 @@ class ExoForm {
                     _.formSchema.totalFieldCount = _.getTotalFieldCount(_.formSchema)
                     _.applyLoadedSchema();
 
-                    let nav = ExoFormFactory.navigation[_.formSchema.navigation];
+                    let nav = ExoFormFactory.navigation.getType(_);
                     _.navigation = new nav(_);
+
+                    let vald = ExoFormFactory.validation.types[_.formSchema.validation];
+                    _.validation = new vald(_);
+
                     console.debug("Navigation type:", _.formSchema.navigation, nav.name);
 
                     resolve(_);
@@ -194,18 +199,10 @@ class ExoForm {
         const _ = this;
         let hasInvalid = false;
         try {
-            _.runValidCheck = true; // prevent reportValidity() showing messages on controls 
-            _.form.querySelectorAll('[data-page="' + index + '"] .exf-ctl-cnt [name]').forEach(f => {
-                var isValid = f.reportValidity ? f.reportValidity() : true;
-                if (!isValid) {
-                    hasInvalid = true;
-                }
-                if (!hasInvalid) {
-                    if (f.required && _.getFieldValue(f) == "") {
-                        hasInvalid = true;
-                    }
-                }
-            })
+            this.runValidCheck = true; // prevent reportValidity() showing messages on controls 
+            hasInvalid = this.formSchema.pages[index-1].fields.filter(f=>{
+                return !f._control.valid;
+            }).length;
         }
         finally {
             _.runValidCheck = false;
@@ -440,11 +437,15 @@ class ExoForm {
 
     // query all fields using matcher and return matches
     query(matcher){
+        if(matcher === undefined) matcher = ()=>{return true};
         let matches = [];
         this.formSchema.pages.forEach(p => {
             p.fields.forEach(f => {
                 if(matcher(f)){
-                    matches.push(f)
+                    matches.push({
+                        page: p,
+                        ...f
+                    })
                 }
             });
         });
@@ -472,43 +473,16 @@ class ExoForm {
         return this;
     }
 
-
-    showFirstInvalid() {
-        const _ = this;
-
-        // find all invalid controls on pages that are in scope (not skipped)
-        let allInvalid = _.form.querySelectorAll(".exf-page:not([data-skip='true']) :invalid");
-        console.debug("Invalid controls", allInvalid);
-
-        if (allInvalid && allInvalid.length) {
-            const f = () => {
-                allInvalid[0].focus();
-                allInvalid[0].reportValidity();
-                DOM.trigger(allInvalid[0], "change");
-            };
-
-            if (allInvalid[0].offsetParent === null) { // currently invisible
-                let pgElm = allInvalid[0].closest('[data-page]');
-                if (pgElm) {
-                    let page = parseInt(pgElm.getAttribute("data-page"));
-                    _.updateView(0, page);
-                    setTimeout(e => f, 20);
-                }
-            }
-            else {
-                f();
-            }
-            return true;
-        }
-    }
-
     submitForm(ev) {
         const _ = this;
         if (ev)
             ev.preventDefault();
 
-        if (_.showFirstInvalid())
+        if(!_.validation.checkValidity()){
+            console.debug("checkValidity - Form not valid");
+            _.validation.reportValidity();
             return;
+        }
 
         let e = { target: _.form };
 
@@ -548,8 +522,6 @@ class ExoForm {
         }
     }
 
-
-
     gotoPage(page) {
         return this.updateView(0, page);
     }
@@ -570,12 +542,11 @@ class ExoForm {
         if(add > 0 && current > 0) {
 
             if(!this.isPageValid(_.currentPage)){
+                debugger;
+                return;
                 
-                if (_.showFirstInvalid())
-                    return;
             }
         }
-
         
         page = page || 1;
         if (add !== 0)
@@ -583,6 +554,20 @@ class ExoForm {
 
         page = _.getNextPage(add, page)
         let pageCount = _.getLastPage();
+
+        if(current>0){
+            if(!_.navigation.canMove(current, page))
+                return;
+        }
+        
+        let returnValue = _.triggerEvent(ExoFormFactory.events.beforePage, {
+            from: current,
+            page: page,
+            pageCount: pageCount
+        });
+
+        if(returnValue === false)
+            return;
 
         _.form.setAttribute("data-current-page", page);
         _.form.setAttribute("data-page-count", _.formSchema.pages.length);

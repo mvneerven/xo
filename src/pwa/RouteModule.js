@@ -39,7 +39,9 @@ class RouteModule {
 
         _.asyncInit().then(() => {
             _._beforeRender();
-            _.app.UI.areas.title.set(_.title);
+            if(_.app.UI.areas.title)
+                _.app.UI.areas.title.set(_.title);
+                
             _.render(...arguments);
         })
     }
