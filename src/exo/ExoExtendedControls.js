@@ -1,4 +1,5 @@
 import ExoBaseControls from './ExoBaseControls';
+import ExoFormFactory from './ExoFormFactory';
 import ExoForm from './ExoForm';
 import Core from '../pwa/Core';
 import DOM from '../pwa/DOM';
@@ -620,12 +621,12 @@ class ExoVideoControl extends ExoEmbedControl {
         super(context);
 
         this.acceptProperties(
-            {name: "code", description: "Code of the video to embed"},
-            {name: "width"},
-            {name: "height"}, 
-            {name: "autoplay", type: Boolean, description: "Boolean indicating whether the video should immediately start playing"}, 
-            {name: "mute", type: Boolean, description: "Boolean indicating whether the video should be muted"}, 
-            {name: "player", type: String, description: "Player type. Currently implemented: youtube, vimeo"}
+            { name: "code", description: "Code of the video to embed" },
+            { name: "width" },
+            { name: "height" },
+            { name: "autoplay", type: Boolean, description: "Boolean indicating whether the video should immediately start playing" },
+            { name: "mute", type: Boolean, description: "Boolean indicating whether the video should be muted" },
+            { name: "player", type: String, description: "Player type. Currently implemented: youtube, vimeo" }
         )
     }
 
@@ -681,6 +682,7 @@ class MultiInputControl extends ExoBaseControls.controls.div.type {
 
         const _ = this;
         const f = _.context.field;
+        const exo = _.context.exo;
         this.htmlElement.classList.add("exf-cnt", "exf-ctl-group", this.grid)
 
         if (this["grid-template"]) {
@@ -688,20 +690,22 @@ class MultiInputControl extends ExoBaseControls.controls.div.type {
         }
 
         _._qs = (name) => {
-            return this.htmlElement.querySelector('[name="' + f.name + "_" + name + '"]')
+            return this.htmlElement.querySelector('[data-multi-name="' + f.name + "_" + name + '"]')
         }
 
         const rs = async (name, options) => {
-            return _.context.exo.renderSingleControl({
-                name: f.name + "_" + name,
-                ...options
-            })
+            return _.context.exo.renderSingleControl(options)
         }
 
         _.inputs = {}
 
         const add = async (n, options) => {
+            options = {
+                name: f.name + "_" + n,
+                ...options
+            }
             _.inputs[n] = await rs(n, options);
+            _.inputs[n].setAttribute("data-multi-name", options.name);
             _.htmlElement.appendChild(_.inputs[n])
         }
 
@@ -717,7 +721,9 @@ class MultiInputControl extends ExoBaseControls.controls.div.type {
         _._gc = e => {
             let data = {}
             for (var n in _.fields) {
-                data[n] = _._qs(n).value;
+                var elm = _._qs(n);
+                let fld = ExoFormFactory.getFieldFromElement(elm);
+                data[n] = exo.getFieldValue(fld);
             }
             return data
         }
@@ -726,7 +732,13 @@ class MultiInputControl extends ExoBaseControls.controls.div.type {
         _._sc = data => {
             for (var n in _.fields) {
                 var elm = _._qs(n);
-                elm.value = data[n];
+                let fld = ExoFormFactory.getFieldFromElement(elm);
+                if (fld.setCurrentValue)
+                    fld.setCurrentValue(data[n]);
+
+                else {
+                    elm.querySelector("[name]").value = data[n];
+                }
             }
         }
 

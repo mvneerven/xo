@@ -100,7 +100,7 @@ class ExoControlBase {
         for (var a in this.dataProps) {
             this._htmlElement.setAttribute("data-" + a, this.dataProps[a]);
         }
-        
+
         this.container = DOM.parseHTML(
             DOM.format(this.containerTemplate, this.getContainerAttributes())
         );
@@ -183,6 +183,27 @@ class ExoControlBase {
             }
         }
     }
+
+    // returns valid state of the control - can be subclassed
+    get valid() {
+
+        if (this.htmlElement && this.htmlElement.reportValidity)
+            return this.htmlElement.reportValidity()
+
+        return true;
+    }
+
+    get validationMessage() {
+        return this.htmlElement.validationMessage;
+    }
+
+    showValidationError() {
+        if (this.htmlElement && this.htmlElement.reportValidity)
+            return this.htmlElement.reportValidity()
+
+        return true;
+    }
+
 }
 
 export class ExoElementControl extends ExoControlBase {
@@ -260,7 +281,7 @@ export class ExoInputControl extends ExoElementControl {
     constructor(context) {
         super(context);
         this.htmlElement = DOM.parseHTML('<input />');
-        
+
         if (context.field.type === "hidden") {
             this.containerTemplate = ExoForm.meta.templates.empty;
         }
@@ -611,6 +632,29 @@ class ExoInputListControl extends ExoListControl {
         super.render();
         return this.container;
     }
+
+    get valid() {
+        if (this.context.field.required) {
+            let value = this.context.exo.getFieldValue(this.context.field);
+            if (!value || value.length === 0) {
+
+                let inp = this.htmlElement.querySelector("input");
+                inp.setCustomValidity('This cannot be empty');
+                inp.reportValidity()
+
+                return false;
+            }
+        }
+        return true;
+    }
+
+    showValidationError() {
+        this.htmlElement.querySelector("input").setCustomValidity('This cannot be empty');
+    }
+
+    get validationMessage() {
+        return this.htmlElement.querySelector("input").validationMessage;
+    }
 }
 
 class ExoRadioButtonListControl extends ExoInputListControl {
@@ -727,7 +771,7 @@ class ExoButtonControl extends ExoElementControl {
 
 }
 
-class ExoNumberControl extends ExoInputControl{
+class ExoNumberControl extends ExoInputControl {
 
     constructor(context) {
         super(context);
@@ -801,7 +845,7 @@ class ExoBaseControls {
         text: { caption: "Short text", type: ExoTextControl, note: "Standard text input" },
         url: { caption: "Website Address/URL", base: "text", note: "A text input that will accept URLs only" },
         tel: { caption: "Phone number", base: "input", note: "A text input that is used to input phone numbers", demo: { value: "06 23467899" } },
-        number: { caption: "Numeric Control", type: ExoNumberControl,  note: "A text input that is used to input phone numbers", demo: { min: 1, max: 99 } },
+        number: { caption: "Numeric Control", type: ExoNumberControl, note: "A text input that is used to input phone numbers", demo: { min: 1, max: 99 } },
         range: { caption: "Range Slider", type: ExoRangeControl, note: "A range slider input", demo: { min: 1, max: 10, value: 5 } },
         color: { caption: "Color Input", base: "input", note: "A control to select a color", demo: { value: "#cc4433" } },
         checkbox: { base: "input", note: "A checkbox", demo: { checked: true } },

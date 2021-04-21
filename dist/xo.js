@@ -1,6 +1,6 @@
 (function (global, factory) {
-  typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
-  typeof define === 'function' && define.amd ? define(factory) :
+  typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('regenerator-runtime/runtime')) :
+  typeof define === 'function' && define.amd ? define(['regenerator-runtime/runtime'], factory) :
   (global = typeof globalThis !== 'undefined' ? globalThis : global || self, global.xo = factory());
 }(this, (function () { 'use strict';
 
@@ -671,7 +671,8 @@
       _defineProperty(this, "defaults", {
         type: "form",
         baseUrl: document.location.origin,
-        navigation: "default",
+        navigation: "auto",
+        validation: "default",
         runtime: {
           progress: false
         },
@@ -734,8 +735,10 @@
 
             _.applyLoadedSchema();
 
-            let nav = ExoFormFactory.navigation[_.formSchema.navigation];
+            let nav = ExoFormFactory.navigation.getType(_);
             _.navigation = new nav(_);
+            let vald = ExoFormFactory.validation.types[_.formSchema.validation];
+            _.validation = new vald(_);
             console.debug("Navigation type:", _.formSchema.navigation, nav.name);
             resolve(_);
           }
@@ -808,21 +811,11 @@
       let hasInvalid = false;
 
       try {
-        _.runValidCheck = true; // prevent reportValidity() showing messages on controls 
+        this.runValidCheck = true; // prevent reportValidity() showing messages on controls 
 
-        _.form.querySelectorAll('[data-page="' + index + '"] .exf-ctl-cnt [name]').forEach(f => {
-          var isValid = f.reportValidity ? f.reportValidity() : true;
-
-          if (!isValid) {
-            hasInvalid = true;
-          }
-
-          if (!hasInvalid) {
-            if (f.required && _.getFieldValue(f) == "") {
-              hasInvalid = true;
-            }
-          }
-        });
+        hasInvalid = this.formSchema.pages[index - 1].fields.filter(f => {
+          return !f._control.valid;
+        }).length > 0;
       } finally {
         _.runValidCheck = false;
       }
@@ -1051,9 +1044,20 @@
 
 
     query(matcher) {
+      if (matcher === undefined) matcher = () => {
+        return true;
+      };
       let matches = [];
       this.formSchema.pages.forEach(p => {
         p.fields.forEach(f => {
+          f = {
+            _page: {
+              index: p.index,
+              legend: p.legend
+            },
+            ...f
+          };
+
           if (matcher(f)) {
             matches.push(f);
           }
@@ -1085,45 +1089,19 @@
       return this;
     }
 
-    showFirstInvalid() {
-      const _ = this; // find all invalid controls on pages that are in scope (not skipped)
-
-
-      let allInvalid = _.form.querySelectorAll(".exf-page:not([data-skip='true']) :invalid");
-
-      console.debug("Invalid controls", allInvalid);
-
-      if (allInvalid && allInvalid.length) {
-        const f = () => {
-          allInvalid[0].focus();
-          allInvalid[0].reportValidity();
-          DOM$1.trigger(allInvalid[0], "change");
-        };
-
-        if (allInvalid[0].offsetParent === null) {
-          // currently invisible
-          let pgElm = allInvalid[0].closest('[data-page]');
-
-          if (pgElm) {
-            let page = parseInt(pgElm.getAttribute("data-page"));
-
-            _.updateView(0, page);
-
-            setTimeout(e => f, 20);
-          }
-        } else {
-          f();
-        }
-
-        return true;
-      }
-    }
-
     submitForm(ev) {
       const _ = this;
 
       if (ev) ev.preventDefault();
-      if (_.showFirstInvalid()) return;
+
+      if (!_.validation.checkValidity()) {
+        console.debug("checkValidity - Form not valid");
+
+        _.validation.reportValidity();
+
+        return;
+      }
+
       ({
         target: _.form
       });
@@ -1183,7 +1161,8 @@
 
       if (add > 0 && current > 0) {
         if (!this.isPageValid(_.currentPage)) {
-          if (_.showFirstInvalid()) return;
+          this.validation.reportValidity(_.currentPage);
+          return;
         }
       }
 
@@ -1192,6 +1171,18 @@
       page = _.getNextPage(add, page);
 
       let pageCount = _.getLastPage();
+
+      if (current > 0) {
+        if (!_.navigation.canMove(current, page)) return;
+      }
+
+      let returnValue = _.triggerEvent(ExoFormFactory.events.beforePage, {
+        from: current,
+        page: page,
+        pageCount: pageCount
+      });
+
+      if (returnValue === false) return;
 
       _.form.setAttribute("data-current-page", page);
 
@@ -1758,6 +1749,21 @@
           }
         }
       }
+    } // returns valid state of the control - can be subclassed
+
+
+    get valid() {
+      if (this.htmlElement && this.htmlElement.reportValidity) return this.htmlElement.reportValidity();
+      return true;
+    }
+
+    get validationMessage() {
+      return this.htmlElement.validationMessage;
+    }
+
+    showValidationError() {
+      if (this.htmlElement && this.htmlElement.reportValidity) return this.htmlElement.reportValidity();
+      return true;
     }
 
   }
@@ -2171,6 +2177,29 @@
       await this.populateList(this.htmlElement, tpl);
       super.render();
       return this.container;
+    }
+
+    get valid() {
+      if (this.context.field.required) {
+        let value = this.context.exo.getFieldValue(this.context.field);
+
+        if (!value || value.length === 0) {
+          let inp = this.htmlElement.querySelector("input");
+          inp.setCustomValidity('This cannot be empty');
+          inp.reportValidity();
+          return false;
+        }
+      }
+
+      return true;
+    }
+
+    showValidationError() {
+      this.htmlElement.querySelector("input").setCustomValidity('This cannot be empty');
+    }
+
+    get validationMessage() {
+      return this.htmlElement.querySelector("input").validationMessage;
     }
 
   }
@@ -3218,6 +3247,7 @@
       const _ = this;
 
       const f = _.context.field;
+      const exo = _.context.exo;
       this.htmlElement.classList.add("exf-cnt", "exf-ctl-group", this.grid);
 
       if (this["grid-template"]) {
@@ -3225,20 +3255,23 @@
       }
 
       _._qs = name => {
-        return this.htmlElement.querySelector('[name="' + f.name + "_" + name + '"]');
+        return this.htmlElement.querySelector('[data-multi-name="' + f.name + "_" + name + '"]');
       };
 
       const rs = async (name, options) => {
-        return _.context.exo.renderSingleControl({
-          name: f.name + "_" + name,
-          ...options
-        });
+        return _.context.exo.renderSingleControl(options);
       };
 
       _.inputs = {};
 
       const add = async (n, options) => {
+        options = {
+          name: f.name + "_" + n,
+          ...options
+        };
         _.inputs[n] = await rs(n, options);
+
+        _.inputs[n].setAttribute("data-multi-name", options.name);
 
         _.htmlElement.appendChild(_.inputs[n]);
       };
@@ -3255,7 +3288,10 @@
         let data = {};
 
         for (var n in _.fields) {
-          data[n] = _._qs(n).value;
+          var elm = _._qs(n);
+
+          let fld = ExoFormFactory.getFieldFromElement(elm);
+          data[n] = exo.getFieldValue(fld);
         }
 
         return data;
@@ -3266,7 +3302,10 @@
         for (var n in _.fields) {
           var elm = _._qs(n);
 
-          elm.value = data[n];
+          let fld = ExoFormFactory.getFieldFromElement(elm);
+          if (fld.setCurrentValue) fld.setCurrentValue(data[n]);else {
+            elm.querySelector("[name]").value = data[n];
+          }
         }
       };
 
@@ -4030,6 +4069,179 @@
 
   _defineProperty(ExoThemes, "fluent", new Fluent("fluent"));
 
+  class ExoFormDefaultValidation {
+    constructor(exo) {
+      this.exo = exo;
+    }
+
+    checkValidity() {
+      let numInvalid = this.exo.query(f => {
+        return !f._control.valid;
+      }).length;
+      return numInvalid === 0;
+    }
+
+    reportValidity() {
+      let invalidFields = this.exo.query(f => {
+        return !f._control.valid;
+      }).map(f => {
+        return {
+          field: f,
+          validationMessage: f._control.validationMessage
+        };
+      });
+
+      if (invalidFields.length) {
+        let returnValue = this.exo.triggerEvent(ExoFormFactory.events.reportValidity, {
+          invalid: invalidFields
+        });
+
+        if (returnValue !== false) {
+          this.focus(invalidFields[0].field);
+
+          invalidFields[0].field._control.reportValidity();
+        }
+      }
+    }
+
+    focus(field) {
+      let element = field._control.htmlElement;
+
+      const f = () => {
+        field._control.showValidationError();
+
+        element.focus();
+      };
+
+      if (element.offsetParent === null) {
+        // currently invisible
+        let pgElm = element.closest('[data-page]');
+
+        if (pgElm) {
+          let page = parseInt(pgElm.getAttribute("data-page"));
+          this.exo.updateView(0, page);
+          setTimeout(e => f, 20);
+        }
+      } else {
+        f();
+      }
+
+      return true;
+    }
+
+  }
+
+  class InlineFieldValidator {
+    constructor(field) {
+      this._field = field;
+      this._cnt = this._field._control.container || this._field._control.htmlElement;
+      this._error = null;
+      this._onInvalid = this._onInvalid.bind(this); //this._onInput = this._onInput.bind(this);
+
+      this._onChange = this._onChange.bind(this);
+      this.bindEventListeners();
+    }
+
+    bindEventListeners() {
+      if (this._cnt) {
+        this._cnt.querySelectorAll("[name]").forEach(c => {
+          c.addEventListener('invalid', this._onInvalid);
+        });
+
+        this._cnt.addEventListener("change", this._onChange);
+      }
+    } // Displays an error message and adds error styles and aria attributes
+
+
+    showError() {
+      if (this._error !== null) {
+        return this.updateError();
+      }
+
+      this._error = DOM$1.parseHTML(DOM$1.format(`<div class="exf-help">{{help}}</div>`, {
+        help: this._field._control.validationMessage
+      }));
+
+      this._cnt.setAttribute('aria-invalid', 'true');
+
+      if (this._cnt) {
+        this._cnt.classList.add('has-error');
+
+        this._cnt.appendChild(this._error);
+      }
+    } // Updates an existing error message
+
+
+    updateError() {
+      if (this._error === null) return;
+      this._error.innerHTML = this._field._control.validationMessage;
+    } // Hides an error message if one is being displayed
+    // and removes error styles and aria attributes
+
+
+    hideError() {
+      if (this._error !== null) {
+        this._error.parentNode.removeChild(this._error);
+
+        this._error = null;
+      }
+
+      this._cnt.removeAttribute('aria-invalid');
+
+      if (this._cnt) this._cnt.classList.remove('has-error');
+    } // Suppress the browsers default error messages
+
+
+    _onInvalid(event) {
+      event.preventDefault();
+    }
+
+    _onChange(event) {
+      if (!this._field._control.valid) {
+        this.showError();
+      } else {
+        this.hideError();
+      }
+    }
+
+  }
+
+  class ExoFormInlineValidation extends ExoFormDefaultValidation {
+    constructor(exo) {
+      super(exo);
+      const form = exo.form;
+      exo.on(ExoFormFactory.events.interactive, e => {
+        exo.query().forEach(f => {
+          f._control._validator = new InlineFieldValidator(f);
+        }); // For some reason without setting the forms novalidate option
+        // we are unable to focus on an input inside the form when handling
+        // the 'submit' event
+
+        form.setAttribute('novalidate', true);
+      });
+    }
+
+    reportValidity(page) {
+      const cb = page ? f => {
+        return f._page.index === page && !f._control.valid; // only controls on given page
+      } : f => {
+        return !f._control.valid; // across all pages
+      };
+      let invalidFields = this.exo.query(cb);
+      invalidFields.forEach(f => {
+        f._control._validator.showError();
+      });
+    }
+
+  }
+
+  class ExoFormValidation {}
+
+  _defineProperty(ExoFormValidation, "types", {
+    default: ExoFormDefaultValidation,
+    inline: ExoFormInlineValidation
+  });
+
   class ExoFormNavigationBase {
     constructor(exo) {
       _defineProperty(this, "buttons", {});
@@ -4064,6 +4276,12 @@
       }
 
       this.exo.form.appendChild(this.container);
+    }
+
+    canMove(fromPage, toPage) {
+      // to be subclassed
+      console.debug("Check navigation from", fromPage, "to", toPage);
+      return true;
     }
 
     addButton(name, options) {
@@ -4199,18 +4417,16 @@
         } else if (e.keyCode === 13) {
           // enter
           if (e.target.type !== "textarea") {
-            var isValid = _.exo.form.reportValidity ? _.exo.form.reportValidity() : true;
+            //var isValid = _.exo.form.reportValidity ? _.exo.form.reportValidity() : true;
+            //if (isValid) {
+            let exf = e.target.closest("[data-exf]");
+            let field = ExoFormFactory.getFieldFromElement(exf); //if (exf && exf.data && exf.data.field) {
 
-            if (isValid) {
-              let exf = e.target.closest("[data-exf]");
+            _.checkForward(field, "enter", e);
 
-              if (exf && exf.data && exf.data.field) {
-                _.checkForward(exf.data.field, "enter", e);
-
-                e.preventDefault();
-                e.returnValue = false;
-              }
-            }
+            e.preventDefault();
+            e.returnValue = false; //}
+            //}
           }
         }
       });
@@ -4241,9 +4457,10 @@
 
       _.container.classList.remove("end-reached");
 
-      _.container.classList.remove("step-ready");
+      _.container.classList.remove("step-ready"); //var isValid = f._control.htmlElement.reportValidity ? f._control.htmlElement.reportValidity() : true;
 
-      var isValid = f._control.htmlElement.reportValidity ? f._control.htmlElement.reportValidity() : true;
+
+      var isValid = f._control.valid;
 
       if (isValid || !_.formSchema.multiValueFieldTypes.includes(f.type)) {
         if (_.currentPage == _.getLastPage()) {
@@ -4269,6 +4486,27 @@
 
   }
 
+  class ExoFormNavigation {
+    static getType(exo) {
+      let type = exo.formSchema.navigation;
+      if (type === "auto") type = ExoFormNavigation.matchNavigationType(exo);
+      return ExoFormNavigation.types[type];
+    }
+
+    static matchNavigationType(exo) {
+      if (exo.formSchema.pages.length > 1) return "wizard";
+      return "default";
+    }
+
+  }
+
+  _defineProperty(ExoFormNavigation, "types", {
+    auto: undefined,
+    none: ExoFormNoNavigation,
+    default: ExoFormDefaultNavigation,
+    wizard: ExoFormWizardNavigation,
+    survey: ExoFormSurveyNavigation
+  });
 
   class ExoFormContext {
     constructor(library) {
@@ -4577,23 +4815,31 @@
   _defineProperty(ExoFormFactory, "_ev_pfx", "exf-ev-");
 
   _defineProperty(ExoFormFactory, "events", {
+    beforePage: ExoFormFactory._ev_pfx + "before-page",
+    // cancellable - called just before paging
     page: ExoFormFactory._ev_pfx + "page",
+    // after moving to other page
     getListItem: ExoFormFactory._ev_pfx + "get-list-item",
+    // 
     post: ExoFormFactory._ev_pfx + "post",
+    // on form post/submit
     renderStart: ExoFormFactory._ev_pfx + "render-start",
+    // when form rendering starts
     renderReady: ExoFormFactory._ev_pfx + "render-ready",
+    // when form rendering is complete
     change: ExoFormFactory._ev_pfx + "change",
+    // when any control on the form changes
+    reportValidity: ExoFormFactory._ev_pfx + "report-validity",
+    // when form control validity is reported
     schemaLoaded: ExoFormFactory._ev_pfx + "form-loaded",
+    // when loading the form schema is complete
     interactive: ExoFormFactory._ev_pfx + "form-interactive" // when form is actually shown to user
 
   });
 
-  _defineProperty(ExoFormFactory, "navigation", {
-    none: ExoFormNoNavigation,
-    default: ExoFormDefaultNavigation,
-    wizard: ExoFormWizardNavigation,
-    survey: ExoFormSurveyNavigation
-  });
+  _defineProperty(ExoFormFactory, "navigation", ExoFormNavigation);
+
+  _defineProperty(ExoFormFactory, "validation", ExoFormValidation);
 
   _defineProperty(ExoFormFactory, "Context", ExoFormContext);
 
@@ -4610,6 +4856,61 @@
   });
 
   _defineProperty(ExoFormFactory, "library", {});
+
+  class RouteModule {
+    constructor(app, route, path) {
+      _defineProperty(this, "title", "Module");
+
+      _defineProperty(this, "menuIcon", "ti-test");
+
+      this.route = route;
+      this.app = app;
+      this.path = path;
+      if (!app) throw "RouteModule constructor parameter 'app' not defined";
+      if (!app.config) throw "app.config not defined";
+    }
+
+    init() {} // called just after instantiation. To be subclassed
+
+
+    _unload() {
+      document.head.querySelectorAll("[data-pwa]").forEach(e => {
+        e.remove();
+      });
+      this.unload();
+    }
+
+    unload() {// to be implemented by subclasser
+    } // subclass this if you need async stuff to be initialized
+
+
+    async asyncInit() {
+      return Promise.resolve();
+    }
+
+    execute() {
+      const _ = this;
+
+      _.asyncInit().then(() => {
+        _._beforeRender();
+
+        if (_.app.UI.areas.title) _.app.UI.areas.title.set(_.title);
+
+        _.render(...arguments);
+      });
+    }
+
+    render() {}
+
+    _beforeRender() {
+      const _ = this;
+
+      for (var a in _.app.UI.areas) {
+        _.app.UI.areas[a].empty = false;
+      }
+    }
+
+  }
 
   class Router {
     constructor(app, routes, settings) {
@@ -4758,9 +5059,14 @@
         let route = _.routes[r];
         if (!r.startsWith('/')) throw "Malformed route: " + r;
         promises.push(new Promise((resolve, reject) => {
-          _.loadES6Module(route, _.app, route, r).then(o => {
+          if (route.prototype && route.prototype instanceof RouteModule) {
+            let o = new route(_.app, route, r);
             resolve(o);
-          });
+          } else if (typeof route === "string") {
+            _.loadES6Module(route, _.app, route, r).then(o => {
+              resolve(o);
+            });
+          }
         }));
       }
 
@@ -4786,7 +5092,9 @@
 
       const imp = async src => {
         try {
-          return await import(src);
+          return await import(
+          /* webpackMode: "eager" */
+          src);
         } catch (ex) {
           throw "Could not load " + src + ": " + ex;
         }
@@ -4872,61 +5180,6 @@
   _defineProperty(Router, "events", {
     route: Router._ev_pfx + "route"
   });
-
-  class RouteModule {
-    constructor(app, route, path) {
-      _defineProperty(this, "title", "Module");
-
-      _defineProperty(this, "menuIcon", "ti-test");
-
-      this.route = route;
-      this.app = app;
-      this.path = path;
-      if (!app) throw "RouteModule constructor parameter 'app' not defined";
-      if (!app.config) throw "app.config not defined";
-    }
-
-    init() {} // called just after instantiation. To be subclassed
-
-
-    _unload() {
-      document.head.querySelectorAll("[data-pwa]").forEach(e => {
-        e.remove();
-      });
-      this.unload();
-    }
-
-    unload() {// to be implemented by subclasser
-    } // subclass this if you need async stuff to be initialized
-
-
-    async asyncInit() {
-      return Promise.resolve();
-    }
-
-    execute() {
-      const _ = this;
-
-      _.asyncInit().then(() => {
-        _._beforeRender();
-
-        _.app.UI.areas.title.set(_.title);
-
-        _.render(...arguments);
-      });
-    }
-
-    render() {}
-
-    _beforeRender() {
-      const _ = this;
-
-      for (var a in _.app.UI.areas) {
-        _.app.UI.areas[a].empty = false;
-      }
-    }
-
-  }
 
   class PWA_Notifications {
     constructor(ui) {

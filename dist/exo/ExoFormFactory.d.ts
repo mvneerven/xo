@@ -34,21 +34,19 @@ import ExoSchemaGenerator from "./ExoSchemaGenerator";
 declare class ExoFormFactory {
     static _ev_pfx: string;
     static events: {
+        beforePage: string;
         page: string;
         getListItem: string;
         post: string;
         renderStart: string;
         renderReady: string;
         change: string;
+        reportValidity: string;
         schemaLoaded: string;
         interactive: string;
     };
-    static navigation: {
-        none: typeof ExoFormNoNavigation;
-        default: typeof ExoFormDefaultNavigation;
-        wizard: typeof ExoFormWizardNavigation;
-        survey: typeof ExoFormSurveyNavigation;
-    };
+    static navigation: typeof ExoFormNavigation;
+    static validation: typeof ExoFormValidation;
     static Context: typeof ExoFormContext;
     static defaults: {
         imports: any[];
@@ -76,28 +74,5 @@ declare class ExoFormFactory {
     static getFieldFromElement(e: any): any;
     static fieldToString(f: any): string;
 }
-declare class ExoFormNoNavigation extends ExoFormNavigationBase {
-    next(): void;
-    back(): void;
-    restart(): void;
-}
-declare class ExoFormDefaultNavigation extends ExoFormNoNavigation {
-}
-declare class ExoFormWizardNavigation extends ExoFormDefaultNavigation {
-}
-declare class ExoFormSurveyNavigation extends ExoFormWizardNavigation {
-    checkForward(f: any, eventName: any, e: any): void;
-}
-declare class ExoFormNavigationBase {
-    constructor(exo: any);
-    buttons: {};
-    exo: any;
-    _visible: boolean;
-    set visible(arg: boolean);
-    get visible(): boolean;
-    clear(): void;
-    render(): void;
-    container: ChildNode;
-    addButton(name: any, options: any): void;
-    update(): void;
-}
+import ExoFormNavigation from "./ExoFormNavigation";
+import ExoFormValidation from "./ExoFormValidation";

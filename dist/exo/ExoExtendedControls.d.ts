@@ -64,7 +64,7 @@ declare class ExoExtendedControls {
             note: string;
             demo: {
                 player: string;
-                id: string;
+                code: string;
             };
         };
         dropdownbutton: {
@@ -169,7 +169,7 @@ declare class ExoVideoControl extends ExoEmbedControl {
     mute: boolean;
     autoplay: boolean;
     player: string;
-    id: string;
+    code: string;
     url: any;
 }
 declare const DropDownButton_base: typeof import("./ExoBaseControls").ExoListControl;

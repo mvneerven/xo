@@ -2138,4 +2138,9 @@ html.theme-light nav.ul-drop ul li > ul {
 .exf-tabs-wrapper fieldset.exf-page .exf-page-intro {
   display: none;
 }
+
+.exf-help {
+  color: #ff3344;
+  font-size: smaller;
+}
 /*# sourceMappingURL=exf.css.map */

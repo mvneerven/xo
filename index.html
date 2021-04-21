@@ -4,116 +4,158 @@
 <head>
     <meta charset="utf-8" />
     <title>ExoForm - Flexible Vanilla JavaScript Form Generation</title>
+
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+
     <meta name="color-scheme" content="dark">
+
+    <link rel="stylesheet" href="https://www.xo-js.dev/css/xo-portal.css" />
     <link rel="stylesheet" href="/css/exf.css" />
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/themify-icons/0.1.2/css/themify-icons.css" />
     <link rel="shortcut icon" href="/favicon.ico" />
 
-    <style>
-        :root {
-             
-            --color-background: #333;
-            --color-text: #fff;
-            --field-box-shadow-subtle: #555;
-            --field-box-shadow: #888;
-
-            color-scheme: light dark;
-        }
-    </style>
 </head>
 
 <body>
+    <header>
+        <section data-pwa-area="headerleft"></section>
+        <section data-pwa-area="headerright"></section>
+    </header>
+    <main>
+        <section data-pwa-area="menu"></section>
+        <section data-pwa-area="main"></section>
+        <section data-pwa-area="panel" class="pwa-pinnable"></section>
+    </main>
+    <footer>&copy; 2021 Neerventure</footer>
 
     <script type="module" src="/dist/xo.js"></script>
 
     <script type="module">
+        class App extends window.xo.pwa {
+            routerReady() {
+                this.router.on(window.xo.pwa.Router.events.route, e => {
+                    document.title = "ExoForm - " + e.detail.module.title
+                })
 
-        const context = await window.xo.form.factory.build();
-        const schema = {
-            pages: [
-                {
-                    legend: "My Form",
-                    fields: [
-                        {
-                            name: "name",
-                            type: "text",
-                            caption: "Your name",
-                            placeholder: "Peter"
-                        },
-                        {
-                            name: "email",
-                            type: "email",
-                            caption: "Your email adress",
-                            placeholder: "john@doe.com",
-                            value: "ma@pa.com"
-                        },
-                        {
-                            name: "color",
-                            type: "color",
-                            caption: "Your preferred color",
-                            value: "#ff5522"
-                        },
-                        {
-                            name: "date",
-                            type: "date",
-                            caption: "Your birthdate"
-                        },
-                        {
-                            name: "daterange",
-                            type: "daterange",
-                            caption: "Worked in period"
-                        },
+            }
+        }
 
+        class DefMod extends window.xo.route {
+            async render(path) {
+                const context = await window.xo.form.factory.build();
+                const schema = {
+                    //validation: "inline",
+                    pages: [
                         {
-                            name: "cklist",
-                            type: "checkboxlist",
-                            caption: "Good or bad",
-                            items: ["Good", "Bad", "Ugly"]
-                        },
-                        {
-                            name: "address",
-                            type: "nladdress",
-                            caption: "Address"
-                        },
-                        {
-                            name: "comments",
-                            type: "multline",
-                            caption: "Comments"
-                        },
-                        {
-                            "name": "radiobuttonlistfield1",
-                            "type": "radiobuttonlist",
-                            "caption": "Radiobuttonlist",
-                            "items": [
-                                "First",
-                                "Second",
-                                "Third",
-                                "Fourth"
+                            legend: "My Form",
+                            fields: [
+                                {
+                                    name: "name",
+                                    type: "text",
+                                    minlength: 3,
+                                    required: true,
+                                    caption: "Your name",
+                                    placeholder: "Peter"
+                                },
+                                {
+                                    name: "email",
+                                    type: "email",
+                                    required: true,
+                                    caption: "Your email adress",
+                                    placeholder: "john@doe.com",
+                                    value: "ma@pa.com"
+                                },
+                                {
+                                    name: "color",
+                                    type: "color",
+                                    caption: "Your preferred color",
+                                    value: "#ff5522"
+                                },
+                                {
+                                    name: "date",
+                                    type: "date",
+                                    required: true,
+                                    caption: "Your birthdate"
+                                },
+                                {
+                                    name: "daterange",
+                                    type: "daterange",
+                                    caption: "Worked in period"
+                                }
                             ]
                         },
                         {
-                            name: "role",
-                            type: "dropdown",
-                            caption: "Your role",
-                            items: [
-                                { value: "", name: "Please select..." },
-                                "Architect",
-                                "CEO",
-                                "CTO",
-                                "COO",
-                                "Developer"
+                            legend: "Page 2",
+
+                            fields: [
+
+                                {
+                                    name: "cklist",
+                                    type: "checkboxlist",
+                                    required: true,
+                                    caption: "Good or bad",
+                                    items: ["Good", "Bad", "Ugly"]
+                                },
+                                {
+                                    name: "address",
+                                    type: "nladdress",
+                                    caption: "Address"
+                                },
+                                {
+                                    name: "comments",
+                                    type: "multline",
+                                    caption: "Comments"
+                                },
+                                {
+                                    name: "radiobuttonlistfield1",
+                                    type: "radiobuttonlist",
+                                    caption: "Radiobuttonlist",
+                                    required: true,
+                                    items: [
+                                        "First",
+                                        "Second",
+                                        "Third",
+                                        "Fourth"
+                                    ]
+                                },
+                                {
+                                    name: "role",
+                                    type: "dropdown",
+                                    caption: "Your role",
+                                    items: [
+                                        { value: "", name: "Please select..." },
+                                        "Architect",
+                                        "CEO",
+                                        "CTO",
+                                        "COO",
+                                        "Developer"
+                                    ]
+                                }
                             ]
                         }
                     ]
-                }
-            ]
-        };
+                };
 
-        const x = context.createForm();
-        await x.load(schema)
-        let result = await x.renderForm();
-        document.body.appendChild(result.container);
+                const x = context.createForm();
+                x.on(window.xo.form.factory.events.post, e=>{
+                    alert(JSON.stringify(e.detail.postData, null, 2))
+                })
+                await x.load(schema);
+                let result = await x.renderForm();
+                
+                this.app.UI.areas.main.add(result.container);
+
+                //this.app.UI.notifications.add("Welcome to ExoForm - the coolest place to play to play  to play  to play  to play  to play  to play  to play  to play  to play  to play  to play  to play  to play  to play  to play  to play  to play  to play  to play ")
+            }
+        }
+
+        new App({
+            routes: {
+                "/": DefMod
+            }
+        });
 
     </script>
 

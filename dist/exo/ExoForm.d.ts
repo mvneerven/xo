@@ -41,6 +41,7 @@ declare class ExoForm {
         type: string;
         baseUrl: string;
         navigation: string;
+        validation: string;
         runtime: {
             progress: boolean;
         };
@@ -64,6 +65,7 @@ declare class ExoForm {
         type: string;
         baseUrl: string;
         navigation: string;
+        validation: string;
         runtime: {
             progress: boolean;
         };
@@ -88,6 +90,7 @@ declare class ExoForm {
     triggerEvent(eventName: any, detail: any, ev: any): any;
     getTotalFieldCount(schema: any): number;
     isPageValid(index: any): boolean;
+    runValidCheck: boolean;
     getField(name: any): any;
     findField(compare: any): any;
     renderForm(): Promise<any>;
@@ -100,7 +103,6 @@ declare class ExoForm {
     enrichPageSettings(p: any, pageNr: any): any;
     query(matcher: any): any[];
     map(mapper: any): ExoForm;
-    showFirstInvalid(): boolean;
     submitForm(ev: any): void;
     getFormValues(e: any): Promise<any>;
     getFieldValue(f: any): any;

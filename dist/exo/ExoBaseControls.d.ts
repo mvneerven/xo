@@ -51,6 +51,9 @@ declare class ExoControlBase {
         id: string;
     };
     setProperties(): void;
+    get valid(): any;
+    get validationMessage(): any;
+    showValidationError(): any;
 }
 declare class ExoNumberControl extends ExoInputControl {
     static returnValueType: NumberConstructor;
