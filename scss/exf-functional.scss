@@ -13,6 +13,11 @@
         }
     }
 
+    .exf-required > label::after {
+        content: " *";
+        color: red;
+    }
+
     // temp - move to xo
     .exf-info {
         font-size: 1.1rem;

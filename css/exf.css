@@ -10,6 +10,11 @@
   width: auto !important;
 }
 
+.exf-container .exf-required > label::after {
+  content: " *";
+  color: red;
+}
+
 .exf-container .exf-info {
   font-size: 1.1rem;
   background-color: var(--color-shade);
@@ -836,6 +841,11 @@ html.theme-dark .exf-ctl-cnt.exf-switch input[type="range"] {
 .exf-container [class^="exf-cols-"] .exf-ctl-cnt.exf-base-text > input[name],
 .exf-container [class*=" exf-cols-"] .exf-ctl-cnt.exf-base-text > input[name] {
   width: auto !important;
+}
+
+.exf-container .exf-required > label::after {
+  content: " *";
+  color: red;
 }
 
 .exf-container .exf-info {

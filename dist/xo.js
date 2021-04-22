@@ -1180,7 +1180,7 @@
 
 
     previousPage() {
-      this._updateView(+1);
+      this._updateView(-1);
     }
 
     _updateView(add, page) {
@@ -1712,7 +1712,11 @@
         let toReplace = this.container.querySelector('[data-replace="true"]');
         if (!toReplace) this.container = this.htmlElement;else DOM$1.replace(toReplace, this.htmlElement);
       }
-      this.addEventListeners(); //if(this.exclude)
+      this.addEventListeners();
+
+      if (this.context.field.required) {
+        this.container.classList.add("exf-required");
+      }
 
       return this.container;
     }
@@ -3254,6 +3258,8 @@
 
       _defineProperty(this, "areas", "");
 
+      _defineProperty(this, "gap", "inherit");
+
       this.acceptProperties({
         name: "grid-template",
         description: "CSS3 grid template",
@@ -3267,6 +3273,10 @@
         name: "columns",
         description: "Grid columns to set up on containing div",
         example: "10em 10em 1fr"
+      }, {
+        name: "gap",
+        description: "Grid gap to set up on containing div",
+        example: "16px"
       }, {
         name: "fields",
         type: Object,
@@ -3304,7 +3314,7 @@
       }
 
       if (this.areas && this.columns) {
-        this.htmlElement.setAttribute("style", `display: grid; grid-template-areas: ${this.areas}; grid-template-columns: ${this.columns}`);
+        this.htmlElement.setAttribute("style", `display: grid; grid-template-areas: ${this.areas}; grid-template-columns: ${this.columns}; grid-gap: ${this.gap}`);
       } else {
         if (this["grid-template"]) {
           this.htmlElement.setAttribute("style", `display: grid; grid-template: ${this["grid-template"]}`);
@@ -3376,6 +3386,22 @@
       return this.container;
     }
 
+    get valid() {
+      let v = true;
+
+      for (var n in this.fields) {
+        var elm = this._qs(n);
+
+        let fld = ExoFormFactory.getFieldFromElement(elm);
+
+        if (!fld._control.valid) {
+          v = false;
+        }
+      }
+
+      return v;
+    }
+
   }
 
   _defineProperty(MultiInputControl, "returnValueType", Object);
@@ -3411,8 +3437,6 @@
   class ExoNLAddressControl extends MultiInputControl {
     constructor(...args) {
       super(...args);
-
-      _defineProperty(this, "grid", "");
 
       _defineProperty(this, "columns", "4em 4em 10em 1fr");
 

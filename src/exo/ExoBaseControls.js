@@ -118,7 +118,10 @@ class ExoControlBase {
 
         this.addEventListeners();
 
-        //if(this.exclude)
+        if(this.context.field.required){
+            this.container.classList.add("exf-required");
+        }
+        
         return this.container
     }
 

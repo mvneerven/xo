@@ -72,6 +72,15 @@
       grid-template-columns: 10em 10em;
 }
 
+.exf-container .exf-cols-20em-20em-1fr {
+  -ms-grid-columns: 20em 20em 1fr;
+      grid-template-columns: 20em 20em 1fr;
+}
+
+.exf-container .exf-cnt.exf-ctl-group.grid .exf-ctl-cnt > [name] {
+  width: 100%;
+}
+
 .exf-container .exf-wrapper {
   height: 100%;
 }
@@ -714,7 +723,7 @@ html.theme-light nav.ul-drop ul li > ul {
   min-width: 15rem;
 }
 
-.exf-container.fluent .exf-ctl-cnt > input:not([type="color"]):not([type="date"]):not([type="time"]) {
+.exf-container.fluent .exf-ctl-cnt > input:not([type="color"]):not([type="date"]):not([type="time"]):not([size]) {
   width: 100%;
 }
 

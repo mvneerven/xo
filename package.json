@@ -1,7 +1,7 @@
 {
   "name": "@mvneerven/xo-js",
-  "version": "0.1.31",
-  "description": "ExoForm ES6 modules",
+  "version": "0.1.32",
+  "description": "ExoForm - Next Level Forms Generation based on JSON Schema",
   "repository": {
     "type": "git",
     "url": "https://github.com/mvneerven/xo"

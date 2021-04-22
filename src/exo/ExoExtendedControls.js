@@ -654,6 +654,8 @@ class MultiInputControl extends ExoBaseControls.controls.div.type {
 
     areas = "";
 
+    gap = "inherit";
+
     static returnValueType = Object;
 
     constructor(context) {
@@ -665,7 +667,7 @@ class MultiInputControl extends ExoBaseControls.controls.div.type {
                 description: "CSS3 grid template",
                 more: "https://developer.mozilla.org/en-US/docs/Web/CSS/grid-template"
             },
-            
+
             {
                 name: "areas",
                 description: "Grid template areas to set up on the containing div",
@@ -676,6 +678,11 @@ class MultiInputControl extends ExoBaseControls.controls.div.type {
                 name: "columns",
                 description: "Grid columns to set up on containing div",
                 example: "10em 10em 1fr"
+            },
+            {
+                name: "gap",
+                description: "Grid gap to set up on containing div",
+                example: "16px"
             },
             {
                 name: "fields", type: Object,
@@ -690,7 +697,7 @@ class MultiInputControl extends ExoBaseControls.controls.div.type {
     }
 
     async render() {
-        
+
         await super.render();
 
         const _ = this;
@@ -704,8 +711,8 @@ class MultiInputControl extends ExoBaseControls.controls.div.type {
         }
 
         if (this.areas && this.columns) {
-            
-            this.htmlElement.setAttribute("style", `display: grid; grid-template-areas: ${this.areas}; grid-template-columns: ${this.columns}`);
+
+            this.htmlElement.setAttribute("style", `display: grid; grid-template-areas: ${this.areas}; grid-template-columns: ${this.columns}; grid-gap: ${this.gap}`);
         }
         else {
             if (this["grid-template"]) {
@@ -744,7 +751,7 @@ class MultiInputControl extends ExoBaseControls.controls.div.type {
         for (var n in this.fields) {
             var elm = await add(n, this.fields[n])
 
-            if(this.areas)
+            if (this.areas)
                 elm.setAttribute("style", `grid-area: ${n}`);
         };
 
@@ -779,6 +786,19 @@ class MultiInputControl extends ExoBaseControls.controls.div.type {
 
         return this.container;
     }
+
+
+    get valid() {
+        let v = true;
+        for (var n in this.fields) {
+            var elm = this._qs(n);
+            let fld = ExoFormFactory.getFieldFromElement(elm);
+            if (!fld._control.valid) {
+                v = false;
+            }
+        }
+        return v;
+    }
 }
 
 class ExoNameControl extends MultiInputControl {
@@ -797,19 +817,13 @@ class ExoNameControl extends MultiInputControl {
 
 class ExoNLAddressControl extends MultiInputControl {
 
-    //grid = "exf-cols-10em-10em";
-
-    // ["grid-template"] = '"a b c"\n"a b b"';
-
-    //grid = "exf-cols-10em-1fr";
-    grid = "";
-
     columns = "4em 4em 10em 1fr"
 
     areas = `
         "code code nr fill"
         "ext ext city city"
         "street street street street"`;
+
 
     // https://github.com/PDOK/locatieserver/wiki/API-Locatieserver
     static APIUrl = "https://geodata.nationaalgeoregister.nl/locatieserver/v3/free?q=postcode:{{code}}&huisnummer:{{nr}}";

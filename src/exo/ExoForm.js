@@ -561,7 +561,7 @@ class ExoForm {
      * Moves to the previous page in a multi-page form.
      */
     previousPage() {
-        this._updateView(+1);
+        this._updateView(-1);
     }
 
     _updateView(add, page) {
