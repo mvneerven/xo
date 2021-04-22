@@ -443,7 +443,7 @@ class ExoForm {
      * @return {array} - All matched fields in the current ExoForm schema
      */
     query(matcher) {
-        if (matcher === undefined) matcher = () => { return true };
+        if (matcher === undefined) matcher = () => { return true };        
         let matches = [];
         this.formSchema.pages.forEach(p => {
             p.fields.forEach(f => {
@@ -461,6 +461,18 @@ class ExoForm {
             });
         });
         return matches;
+    }
+
+    /**
+     * Get field with given name
+     * @param {string} name - name of field to get
+     * @return {Object} - Field
+     */
+    get(name){
+        let results = this.query(f=>{
+            return f.name === name;
+        });
+        return results.length ? results[0] : null;
     }
 
     /**

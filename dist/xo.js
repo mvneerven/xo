@@ -1073,6 +1073,19 @@
       return matches;
     }
     /**
+     * Get field with given name
+     * @param {string} name - name of field to get
+     * @return {Object} - Field
+     */
+
+
+    get(name) {
+      let results = this.query(f => {
+        return f.name === name;
+      });
+      return results.length ? results[0] : null;
+    }
+    /**
      * Map data to form, once schema is loaded
      * @param {function} mapper - a function that will return a value per field
      * @return {object} - the current ExoForm instance
