@@ -292,7 +292,7 @@
 
   }
 
-  class DOM$1 {
+  class DOM {
     // static constructor
     static parseHTML(html) {
       let parser = new DOMParser(),
@@ -301,7 +301,7 @@
     }
 
     static getValue(ctl) {
-      DOM$1._checkNull('getValue', ctl);
+      DOM._checkNull('getValue', ctl);
 
       if (ctl.type === "select" || ctl.type === "select-one") {
         if (ctl.selectedIndex !== -1) return ctl.options[ctl.selectedIndex].value;else return undefined;
@@ -316,7 +316,7 @@
     }
 
     static setValue(ctl, value) {
-      DOM$1._checkNull('setValue', ctl);
+      DOM._checkNull('setValue', ctl);
 
       ctl.value = value;
     }
@@ -329,7 +329,7 @@
 
 
     static elementToString(el) {
-      DOM$1._checkNull('elementToString', el);
+      DOM._checkNull('elementToString', el);
 
       let s = [];
 
@@ -357,31 +357,31 @@
     }
 
     static hide(ctl) {
-      DOM$1._checkNull('hide', ctl);
+      DOM._checkNull('hide', ctl);
 
       ctl.style.display = "none";
     }
 
     static show(ctl) {
-      DOM$1._checkNull('show', ctl);
+      DOM._checkNull('show', ctl);
 
       ctl.style.display = "block";
     }
 
     static enable(ctl) {
-      DOM$1._checkNull('enable', ctl);
+      DOM._checkNull('enable', ctl);
 
       ctl.removeAttribute("disabled");
     }
 
     static disable(ctl) {
-      DOM$1._checkNull('disable', ctl);
+      DOM._checkNull('disable', ctl);
 
       ctl.setAttribute("disabled", "disabled");
     }
 
     static trigger(el, type, x) {
-      DOM$1._checkNull('trigger', el);
+      DOM._checkNull('trigger', el);
 
       let ev = new Event(type);
       ev.detail = x;
@@ -389,7 +389,7 @@
     }
 
     static throttleResize(elm, callback) {
-      DOM$1._checkNull('throttleResize', elm);
+      DOM._checkNull('throttleResize', elm);
 
       let delay = 100,
           timeout;
@@ -407,7 +407,7 @@
     static prettyPrintHTML(str) {
       var div = document.createElement('div');
       div.innerHTML = str.trim();
-      return DOM$1.formatHTMLNode(div, 0).innerHTML.trim();
+      return DOM.formatHTMLNode(div, 0).innerHTML.trim();
     }
 
     static formatHTMLNode(node, level) {
@@ -418,7 +418,7 @@
       for (var i = 0; i < node.children.length; i++) {
         textNode = document.createTextNode('\n' + indentBefore);
         node.insertBefore(textNode, node.children[i]);
-        DOM$1.formatHTMLNode(node.children[i], level);
+        DOM.formatHTMLNode(node.children[i], level);
 
         if (node.lastElementChild == node.children[i]) {
           textNode = document.createTextNode('\n' + indentAfter);
@@ -454,7 +454,7 @@
         html.classList.add(cls);
       };
 
-      DOM$1.throttleResize(window, e => {
+      DOM.throttleResize(window, e => {
         setC(window.innerWidth, window.innerHeight);
       });
     }
@@ -523,7 +523,7 @@
     static getObjectValue(obj, path, def) {
 
 
-      path = DOM$1.stringToPath(path); // Cache the current object
+      path = DOM.stringToPath(path); // Cache the current object
 
       var current = obj; // For each item in the path, dig into the object
 
@@ -551,7 +551,7 @@
         // Remove the wrapping curly braces
         match = match.slice(2, -2); // Get the value
 
-        var val = DOM$1.getObjectValue(data, match.trim()); // Replace
+        var val = DOM.getObjectValue(data, match.trim()); // Replace
 
         if (!val) return settings.empty !== undefined ? settings.empty : '{{' + match + '}}';
         return val;
@@ -657,10 +657,10 @@
 
   }
 
-  _defineProperty(DOM$1, "DragDropSorter", DragDropSorter);
+  _defineProperty(DOM, "DragDropSorter", DragDropSorter);
 
-  _defineProperty(DOM$1, "_staticConstructor", function () {
-    DOM$1.setupGrid();
+  _defineProperty(DOM, "_staticConstructor", function () {
+    DOM.setupGrid();
   }());
 
   /**
@@ -717,11 +717,11 @@
       _.formSchema = { ..._.defaults
       }; // set defaults
 
-      _.form = DOM$1.parseHTML(DOM$1.format(ExoForm.meta.templates[_.options.type], { ...(_.formSchema.form || {
+      _.form = DOM.parseHTML(DOM.format(ExoForm.meta.templates[_.options.type], { ...(_.formSchema.form || {
           class: ""
         })
       }));
-      _.container = DOM$1.parseHTML(ExoForm.meta.templates.exocontainer);
+      _.container = DOM.parseHTML(ExoForm.meta.templates.exocontainer);
     }
     /**
      * load ExoForm schema 
@@ -936,7 +936,7 @@
         _.form.setAttribute("data-current-page", pageNr + 1);
 
         let totalFieldsRendered = 0;
-        _.pageContainer = DOM$1.parseHTML('<div class="exf-wrapper" />');
+        _.pageContainer = DOM.parseHTML('<div class="exf-wrapper" />');
 
         _.formSchema.pages.forEach(p => {
           pageNr++;
@@ -948,7 +948,7 @@
             let pageFieldsRendered = 0;
             p.fields.forEach(f => {
               console.debug("Rendering field", f.name, f);
-              f.dummy = DOM$1.parseHTML('<span/>');
+              f.dummy = DOM.parseHTML('<span/>');
               page.appendChild(f.dummy);
 
               _.createControl(f).then(() => {
@@ -956,7 +956,7 @@
                   if (!rendered) throw ExoFormFactory.fieldToString(f) + " does not render an HTML element";
                   pageFieldsRendered = this._addRendered(f, rendered, pageFieldsRendered, p, page);
                 }).catch(ex => {
-                  let rendered = DOM$1.parseHTML(DOM$1.format('<span class="exf-error exf-render-error" title="{{title}}">ERROR</span>', {
+                  let rendered = DOM.parseHTML(DOM.format('<span class="exf-error exf-render-error" title="{{title}}">ERROR</span>', {
                     title: "Error rendering field " + ExoFormFactory.fieldToString(f) + ": " + ex.toString()
                   }));
                   pageFieldsRendered = this._addRendered(f, rendered, pageFieldsRendered, p, page);
@@ -973,7 +973,7 @@
                       _.createControl(cf).then(cx => {
                         cx.render().then(x => {
                           x.appendChild(_.pageContainer);
-                          _.pageContainer = DOM$1.unwrap(_.pageContainer);
+                          _.pageContainer = DOM.unwrap(_.pageContainer);
                           cx.finalize(_.pageContainer);
 
                           _.form.appendChild(x);
@@ -1000,14 +1000,14 @@
     }
 
     _addRendered(f, rendered, pageFieldsRendered, p, page) {
-      DOM$1.replace(f.dummy, rendered);
+      DOM.replace(f.dummy, rendered);
       delete f.dummy;
       pageFieldsRendered++;
 
       if (pageFieldsRendered === p.fields.length) {
         console.debug("Page " + p.pagenr + " rendered with " + pageFieldsRendered + " controls");
         page.render().then(pageElm => {
-          DOM$1.replace(p.dummy, pageElm);
+          DOM.replace(p.dummy, pageElm);
           delete p.dummy;
         });
       }
@@ -1040,7 +1040,7 @@
       p.pagenr = pageNr;
       p.pageid = p.id || "page" + pageNr;
       p.class = "exf-cnt exf-page" + (p.class ? " " + p.class : "");
-      p.dummy = DOM$1.parseHTML('<span/>');
+      p.dummy = DOM.parseHTML('<span/>');
       return p;
     }
     /**
@@ -1168,7 +1168,7 @@
 
     getFieldValue(f) {
       if (f && f.getCurrentValue) return f.getCurrentValue();else if (f.name) {
-        return DOM$1.getValue(this.form.querySelector("[name='" + f.name + "']"));
+        return DOM.getValue(this.form.querySelector("[name='" + f.name + "']"));
       }
     }
     /**
@@ -1367,7 +1367,7 @@
             field: { ...f
             }
           });
-          control.htmlElement.appendChild(DOM$1.parseHTML(DOM$1.format('<span class="exf-error exf-create-error" title="{{title}}">ERROR</span>', {
+          control.htmlElement.appendChild(DOM.parseHTML(DOM.format('<span class="exf-error exf-create-error" title="{{title}}">ERROR</span>', {
             title: "Error creating " + ExoFormFactory.fieldToString(f) + ": " + ex.toString()
           })));
           doResolve(f, control);
@@ -1439,7 +1439,7 @@
               console.debug("Dependency control for rule on '" + obj + "': ", dependencyControl.name);
 
               const func = e => {
-                console.debug("Event '" + rule.expression[1] + "' fired on ", DOM$1.elementPath(e));
+                console.debug("Event '" + rule.expression[1] + "' fired on ", DOM.elementPath(e));
                 let ruleArgs = rule.expression.slice(2, 5);
 
                 let expressionMatched = _._testRule(f, dependencyControl, ...ruleArgs);
@@ -1486,7 +1486,7 @@
         settings.eventType = "input";
       }
 
-      console.debug("Setting up event listener of type '" + settings.eventType + "' on ", DOM$1.elementToString(settings.host));
+      console.debug("Setting up event listener of type '" + settings.eventType + "' on ", DOM.elementToString(settings.host));
       settings.host.addEventListener(settings.eventType, settings.method);
     }
 
@@ -1585,19 +1585,19 @@
 
   class Field {
     static show(obj) {
-      DOM$1.show(obj.field._control.container);
+      DOM.show(obj.field._control.container);
     }
 
     static hide(obj) {
-      DOM$1.hide(obj.field._control.container);
+      DOM.hide(obj.field._control.container);
     }
 
     static enable(obj) {
-      DOM$1.enable(obj.field._control.htmlElement);
+      DOM.enable(obj.field._control.htmlElement);
     }
 
     static disable(obj) {
-      DOM$1.disable(obj.field._control.htmlElement);
+      DOM.disable(obj.field._control.htmlElement);
     }
 
     static callCustomMethod(obj) {
@@ -1648,7 +1648,7 @@
       if (this.constructor === ExoControlBase) throw new Error("Can't instantiate abstract class!");
       this.context = context;
       if (!context || !context.field || !context.exo) throw "Invalid instantiation of ExoControlBase";
-      this.htmlElement = DOM$1.parseHTML('<span/>');
+      this.htmlElement = DOM.parseHTML('<span/>');
     }
 
     set htmlElement(el) {
@@ -1720,10 +1720,10 @@
         this._htmlElement.setAttribute("data-" + a, this.dataProps[a]);
       }
 
-      this.container = DOM$1.parseHTML(DOM$1.format(this.containerTemplate, this.getContainerAttributes()));
+      this.container = DOM.parseHTML(DOM.format(this.containerTemplate, this.getContainerAttributes()));
       if (this.container.getAttribute("data-replace") === "true") this.container = this.htmlElement;else {
         let toReplace = this.container.querySelector('[data-replace="true"]');
-        if (!toReplace) this.container = this.htmlElement;else DOM$1.replace(toReplace, this.htmlElement);
+        if (!toReplace) this.container = this.htmlElement;else DOM.replace(toReplace, this.htmlElement);
       }
       this.addEventListeners();
 
@@ -1817,7 +1817,7 @@
 
       if (context.field.tagName) {
         try {
-          this.htmlElement = DOM$1.parseHTML('<' + context.field.tagName + '/>');
+          this.htmlElement = DOM.parseHTML('<' + context.field.tagName + '/>');
 
           if (this.htmlElement.nodeName !== context.field.tagName.toUpperCase()) {
             throw "'" + context.field.tagName + "' is not a valid tagName";
@@ -1976,7 +1976,7 @@
       let dl = f._control.container.querySelector("datalist");
 
       if (dl) dl.remove();
-      const dataList = DOM$1.parseHTML(DOM$1.format(ExoForm.meta.templates.datalist, {
+      const dataList = DOM.parseHTML(DOM.format(ExoForm.meta.templates.datalist, {
         id: "list-" + id
       }));
       data.forEach(el => {
@@ -1985,7 +1985,7 @@
           label: el.name,
           ...el
         };
-        dataList.appendChild(DOM$1.parseHTML(DOM$1.format(ExoForm.meta.templates.datalistItem, o)));
+        dataList.appendChild(DOM.parseHTML(DOM.format(ExoForm.meta.templates.datalistItem, o)));
       });
 
       f._control.container.appendChild(dataList);
@@ -2003,7 +2003,7 @@
       _defineProperty(this, "containerTemplate", ExoForm.meta.templates.text);
 
       this.isTextInput = true;
-      this.htmlElement = DOM$1.parseHTML('<input type="text"/>');
+      this.htmlElement = DOM.parseHTML('<input type="text"/>');
     }
 
     async render() {
@@ -2013,7 +2013,7 @@
       await super.render();
 
       if (f.mask) {
-        DOM$1.maskInput(this.htmlElement, {
+        DOM.maskInput(this.htmlElement, {
           mask: f.mask,
           format: f.format
         });
@@ -2027,7 +2027,7 @@
   class ExoFormControl extends ExoElementControl {
     constructor(context) {
       super(context);
-      this.htmlElement = DOM$1.parseHTML('<form />');
+      this.htmlElement = DOM.parseHTML('<form />');
     }
 
   }
@@ -2062,7 +2062,7 @@
 
       _defineProperty(this, "containerTemplate", ExoForm.meta.templates.text);
 
-      this.htmlElement = DOM$1.parseHTML('<textarea/>');
+      this.htmlElement = DOM.parseHTML('<textarea/>');
     }
 
     setProperties() {
@@ -2086,7 +2086,7 @@
 
       _defineProperty(this, "view", "tiles");
 
-      this.htmlElement = DOM$1.parseHTML('<select></select>');
+      this.htmlElement = DOM.parseHTML('<select></select>');
       this.acceptProperties({
         name: "view",
         type: String,
@@ -2109,7 +2109,7 @@
     addListItem(f, i, tpl, container) {
       const _ = this;
 
-      var dummy = DOM$1.parseHTML('<span/>');
+      var dummy = DOM.parseHTML('<span/>');
       container.appendChild(dummy);
       let item = { ...i,
         name: i.name || i,
@@ -2127,17 +2127,17 @@
 
       if (item.element) {
         o.listElement = item.element;
-        DOM$1.replace(dummy, item.element);
+        DOM.replace(dummy, item.element);
       } else if (item.field) {
         // replace item.name with rendered ExoForm control
         this.renderFieldSync(item, tpl, container);
       } else if (item.html) {
-        o.listElement = DOM$1.parseHTML(item.html);
-        DOM$1.replace(dummy, o.listElement);
+        o.listElement = DOM.parseHTML(item.html);
+        DOM.replace(dummy, o.listElement);
       } else {
-        var s = DOM$1.format(tpl, item);
-        o.listElement = DOM$1.parseHTML(s);
-        DOM$1.replace(dummy, o.listElement);
+        var s = DOM.format(tpl, item);
+        o.listElement = DOM.parseHTML(s);
+        DOM.replace(dummy, o.listElement);
       }
 
       _.context.exo.triggerEvent(ExoFormFactory.events.getListItem, o);
@@ -2153,10 +2153,10 @@
 
         const exoContext = this.context.exo.context;
         let e = await exoContext.createForm().renderSingleControl(item.field);
-        item.name = DOM$1.format(item.name, {
+        item.name = DOM.format(item.name, {
           field: e.outerHTML
         });
-        container.appendChild(DOM$1.parseHTML(DOM$1.format(tpl, item)));
+        container.appendChild(DOM.parseHTML(DOM.format(tpl, item)));
       })(item, tpl); //So we defined and immediately called this async function.
     }
 
@@ -2181,7 +2181,7 @@
   class ExoDropdownListControl extends ExoListControl {
     constructor(context) {
       super(context);
-      this.htmlElement = DOM$1.parseHTML(
+      this.htmlElement = DOM.parseHTML(
       /*html*/
       `<select size="1"></select>`);
     }
@@ -2202,7 +2202,7 @@
     constructor(context) {
       super(context);
       const tpl = `<div data-evtarget="true" class="{{class}}" {{required}}>{{inner}}</div>`;
-      this.htmlElement = DOM$1.parseHTML(DOM$1.format(tpl, {
+      this.htmlElement = DOM.parseHTML(DOM.format(tpl, {
         class: [this.context.field.class || ""].join(' ')
       }));
     }
@@ -2239,7 +2239,7 @@
 
     getValidationMessage() {
       let msg = "You must select a value",
-          testFrm = DOM$1.parseHTML('<form><input name="test" required /></form');
+          testFrm = DOM.parseHTML('<form><input name="test" required /></form');
       testFrm.querySelector("input").addEventListener("invalid", e => {
         msg = e.validationMessage;
         e.preventDefault();
@@ -2303,7 +2303,7 @@
       _defineProperty(this, "containerTemplate", ExoForm.meta.templates.nolabel);
 
       this.iconHtml = "";
-      this.htmlElement = DOM$1.parseHTML('<button />');
+      this.htmlElement = DOM.parseHTML('<button />');
       this.acceptProperties({
         name: "icon",
         description: "Icon class to be used (using a span)"
@@ -2320,7 +2320,7 @@
       const _ = this;
 
       if (_.icon) {
-        _.htmlElement.appendChild(DOM$1.parseHTML('<span class="' + _.icon + '"></span>'));
+        _.htmlElement.appendChild(DOM.parseHTML('<span class="' + _.icon + '"></span>'));
 
         this.htmlElement.appendChild(document.createTextNode(' '));
       }
@@ -2401,7 +2401,7 @@
 
       _defineProperty(this, "containerTemplate", ExoForm.meta.templates.nolabel);
 
-      this.htmlElement = DOM$1.parseHTML('<progress />');
+      this.htmlElement = DOM.parseHTML('<progress />');
     }
 
   }
@@ -2414,16 +2414,16 @@
   class ExoFieldSetControl extends ExoFormPageControl {
     constructor(context) {
       super(context);
-      this.htmlElement = DOM$1.parseHTML(DOM$1.format(ExoForm.meta.templates.fieldset, context.field));
+      this.htmlElement = DOM.parseHTML(DOM.format(ExoForm.meta.templates.fieldset, context.field));
 
       if (context.field.legend) {
-        this.appendChild(DOM$1.parseHTML(DOM$1.format(ExoForm.meta.templates.legend, {
+        this.appendChild(DOM.parseHTML(DOM.format(ExoForm.meta.templates.legend, {
           legend: context.field.legend
         })));
       }
 
       if (context.field.intro) {
-        this.appendChild(DOM$1.parseHTML(DOM$1.format(ExoForm.meta.templates.pageIntro, {
+        this.appendChild(DOM.parseHTML(DOM.format(ExoForm.meta.templates.pageIntro, {
           intro: context.field.intro
         })));
       }
@@ -2653,7 +2653,7 @@
       _.field.type = "file";
       _.field.data = this.field.data || [];
       await super.render();
-      _.previewDiv = DOM$1.parseHTML(`<div class="file-preview clearable"></div>`);
+      _.previewDiv = DOM.parseHTML(`<div class="file-preview clearable"></div>`);
 
       _.container.appendChild(_.previewDiv);
 
@@ -2661,8 +2661,8 @@
 
       _.bind(data => {
         if (!data.error) {
-          var thumb = DOM$1.parseHTML('<div data-id="' + data.fileName + '" class="thumb ' + data.type.replace('/', ' ') + '"></div>');
-          let close = DOM$1.parseHTML('<button title="Remove" type="button" class="close">x</button>');
+          var thumb = DOM.parseHTML('<div data-id="' + data.fileName + '" class="thumb ' + data.type.replace('/', ' ') + '"></div>');
+          let close = DOM.parseHTML('<button title="Remove" type="button" class="close">x</button>');
           close.addEventListener("click", e => {
             let thumb = e.target.closest(".thumb");
             let id = thumb.getAttribute("data-id");
@@ -2674,7 +2674,7 @@
           });
           thumb.appendChild(close);
           thumb.setAttribute("title", data.fileName);
-          let img = DOM$1.parseHTML('<div class="thumb-data"></div>');
+          let img = DOM.parseHTML('<div class="thumb-data"></div>');
 
           if (data.type.startsWith("image/")) {
             thumb.classList.add("image");
@@ -2684,7 +2684,7 @@
           }
 
           thumb.appendChild(img);
-          thumb.appendChild(DOM$1.parseHTML('<figcaption>' + data.fileName + '</figcaption>'));
+          thumb.appendChild(DOM.parseHTML('<figcaption>' + data.fileName + '</figcaption>'));
 
           _.previewDiv.appendChild(thumb);
         } else {
@@ -2702,7 +2702,7 @@
     _change() {
       const _ = this;
 
-      DOM$1.trigger(this.htmlElement, "change", {
+      DOM.trigger(this.htmlElement, "change", {
         data: _.context.field.data
       });
     }
@@ -2820,7 +2820,7 @@
       await super.render();
       _.htmlElement;
       return new Promise((resolve, reject) => {
-        DOM$1.require("https://cdn.ckeditor.com/ckeditor5/17.0.0/classic/ckeditor.js", () => {
+        DOM.require("https://cdn.ckeditor.com/ckeditor5/17.0.0/classic/ckeditor.js", () => {
           ClassicEditor.create(_.htmlElement).catch(error => {
             console.error(error);
           }).then(ck => {
@@ -3102,7 +3102,7 @@
     constructor(context) {
       super(context);
 
-      DOM$1.require("https://www.google.com/recaptcha/api.js");
+      DOM.require("https://www.google.com/recaptcha/api.js");
 
       this.acceptProperties({
         name: "sitekey",
@@ -3148,7 +3148,7 @@
         </nav>`);
 
       this.context.field.type = "hidden";
-      this.htmlElement = DOM$1.parseHTML(this.navTemplate);
+      this.htmlElement = DOM.parseHTML(this.navTemplate);
     }
 
     async render() {
@@ -3163,7 +3163,7 @@
     setupButton() {
 
       document.querySelector("body").classList.add("signed-out");
-      container.appendChild(DOM$1.parseHTML(DOM$1.format(tpl, data, {
+      container.appendChild(DOM.parseHTML(DOM.format(tpl, data, {
         empty: undefined
       })));
     }
@@ -3244,7 +3244,7 @@
       const player = ExoVideoControl.players[this.player]; // if (!player)
       //     throw "Unrecognized player";
 
-      this.url = DOM$1.format(player.url, this);
+      this.url = DOM.format(player.url, this);
       await super.render();
       return this.container;
     }
@@ -3347,9 +3347,8 @@
       _.inputs = {};
 
       const add = async (n, options) => {
-        options = {
-          name: f.name + "_" + n,
-          ...options
+        options = { ...options,
+          name: f.name + "_" + n
         };
         _.inputs[n] = await rs(n, options);
 
@@ -3508,7 +3507,7 @@
         var data = _._gc();
 
         if (data.code && data.nr) {
-          fetch(DOM$1.format(ExoNLAddressControl.APIUrl, {
+          fetch(DOM.format(ExoNLAddressControl.APIUrl, {
             nr: data.nr,
             code: data.code
           }), {
@@ -3674,9 +3673,9 @@
     show() {
       const _ = this;
 
-      let html = DOM$1.format(_.dlgTemplate, { ...this
+      let html = DOM.format(_.dlgTemplate, { ...this
       });
-      let dlg = DOM$1.parseHTML(html);
+      let dlg = DOM.parseHTML(html);
       dlg.classList.add(this.cancelVisible ? "dlg-cv" : "dlg-ch");
 
       const c = (e, confirm) => {
@@ -3737,10 +3736,10 @@
     async render() {
       const _ = this;
 
-      DOM$1.format(_.template, { ...this
+      DOM.format(_.template, { ...this
       });
 
-      _.htmlElement.appendChild(DOM$1.parseHTML(DOM$1.format(_.template, this)));
+      _.htmlElement.appendChild(DOM.parseHTML(DOM.format(_.template, this)));
 
       return _.htmlElement;
     }
@@ -3782,7 +3781,7 @@
       input.setAttribute("max", "5");
       input.setAttribute("step", "any");
       wrapper.appendChild(input);
-      e.insertBefore(DOM$1.parseHTML(this.svg), wrapper);
+      e.insertBefore(DOM.parseHTML(this.svg), wrapper);
       e.classList.add("exf-star-rating-cnt");
       wrapper.classList.add("exf-star-rating");
       throw "Not implemented";
@@ -3937,7 +3936,7 @@
       };
 
       return new Promise((resolve, reject) => {
-        DOM$1.require("https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/ace.js", () => {
+        DOM.require("https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/ace.js", () => {
           var editor = ace.edit(_.htmlElement);
 
           ace.require("ace/ext/beautify"); // get reference to extension
@@ -3956,7 +3955,7 @@
 
           editor.on("change", e => {
             setTimeout(() => {
-              DOM$1.trigger(_.htmlElement, "change", {
+              DOM.trigger(_.htmlElement, "change", {
                 target: _.htmlElement
               });
             }, 10);
@@ -4059,7 +4058,7 @@
               <text class="metric chart-sub" x="16.91549431" y="20.5" alignment-baseline="central" text-anchor="middle" font-size="2" >{{caption}}</text>
             </g>
           </svg>`;
-      me.appendChild(DOM$1.parseHTML(DOM$1.format(tpl, this)));
+      me.appendChild(DOM.parseHTML(DOM.format(tpl, this)));
       return elm;
     }
 
@@ -4256,7 +4255,7 @@
         return this.updateError();
       }
 
-      this._error = DOM$1.parseHTML(DOM$1.format(`<div class="exf-help">{{help}}</div>`, {
+      this._error = DOM.parseHTML(DOM.format(`<div class="exf-help">{{help}}</div>`, {
         help: this._field._control.validationMessage
       }));
 
@@ -4355,7 +4354,7 @@
     set visible(value) {
       this._visible = value;
       let cnt = this.exo.form.querySelector(".exf-nav-cnt");
-      if (cnt) DOM$1[this._visible ? "show" : "hide"]();
+      if (cnt) DOM[this._visible ? "show" : "hide"]();
     }
 
     clear() {
@@ -4367,7 +4366,7 @@
       const tpl =
       /*html*/
       `<fieldset class="exf-cnt exf-nav-cnt"></fieldset>`;
-      this.container = DOM$1.parseHTML(tpl);
+      this.container = DOM.parseHTML(tpl);
 
       for (var b in this.buttons) {
         this.addButton(b, this.buttons[b]);
@@ -4393,7 +4392,7 @@
       const tpl =
       /*html*/
       `<button name="{{name}}" type="{{type}}" class="btn {{class}}">{{caption}}</button>`;
-      let btn = DOM$1.parseHTML(DOM$1.format(tpl, options));
+      let btn = DOM.parseHTML(DOM.format(tpl, options));
       this.buttons[name].element = btn;
       this.container.appendChild(btn);
     }
@@ -4480,8 +4479,8 @@
       _.exo.on(ExoFormFactory.events.page, e => {
         let page = e.detail.page;
         let pageCount = e.detail.pageCount;
-        DOM$1[page === 1 ? "disable" : "enable"](_.buttons["prev"].element);
-        DOM$1[page === pageCount ? "disable" : "enable"](_.buttons["next"].element);
+        DOM[page === 1 ? "disable" : "enable"](_.buttons["prev"].element);
+        DOM[page === pageCount ? "disable" : "enable"](_.buttons["next"].element);
       });
     }
 
@@ -5058,7 +5057,7 @@
 
       _.loadModules().then(() => {
         console.debug("Loaded Route modules", _.modules);
-        DOM$1.trigger(window, 'hashchange');
+        DOM.trigger(window, 'hashchange');
       }).then(() => {
         console.debug("Router Ready");
         settings.ready();
@@ -5258,15 +5257,15 @@
             name: m.module.constructor.name
           };
           o.menuTitle = o.menuTitle || m.title;
-          let s = DOM$1.format(menuItemTpl, o);
+          let s = DOM.format(menuItemTpl, o);
           ar.push(s);
         }
       });
 
-      let ul = DOM$1.format(menuTpl, {
+      let ul = DOM.format(menuTpl, {
         inner: ar.join('')
       });
-      menu.add(DOM$1.parseHTML(ul));
+      menu.add(DOM.parseHTML(ul));
       menu.element.addEventListener("click", e => {
         const _ = this;
 
@@ -5331,7 +5330,7 @@
                 </div>
             </div>
         `;
-      let notif = DOM$1.parseHTML(DOM$1.format(tpl, {
+      let notif = DOM.parseHTML(DOM.format(tpl, {
         type: options.type,
         msg: msg
       }));
@@ -5341,7 +5340,7 @@
 
         for (var b in options.buttons) {
           let btn = options.buttons[b];
-          let btnHtml = DOM$1.parseHTML(DOM$1.format(`<button class="btn">{{caption}}</button>`, btn));
+          let btnHtml = DOM.parseHTML(DOM.format(`<button class="btn">{{caption}}</button>`, btn));
           notifBtn.appendChild(btnHtml);
           btnHtml.addEventListener("click", e => {
             e.stopPropagation();
@@ -5390,7 +5389,7 @@
 
       try {
         if (typeof e == "string") {
-          if (e.indexOf('<') === -1) e = DOM$1.parseHTML('<span>' + e + '</span>');else e = DOM$1.parseHTML(e);
+          if (e.indexOf('<') === -1) e = DOM.parseHTML('<span>' + e + '</span>');else e = DOM.parseHTML(e);
         }
 
         this.element.appendChild(e);
@@ -5603,7 +5602,7 @@
         const sr = this.app.config.signalR;
 
         if (sr && sr.enabled) {
-          DOM$1.require("https://cdn.jsdelivr.net/npm/@aspnet/signalr@1.1.2/dist/browser/signalr.js", () => {
+          DOM.require("https://cdn.jsdelivr.net/npm/@aspnet/signalr@1.1.2/dist/browser/signalr.js", () => {
             const signalRConnection = new signalR.HubConnectionBuilder().withUrl(sr.notificationServiceUrl + "/api").configureLogging(signalR.LogLevel[sr.logLevel]) //don't use in production
             .build();
             signalRConnection.on('newMessage', msg => {
@@ -5856,7 +5855,7 @@
         _.formLoaded();
 
         x.addEventListener(ExoFormFactory.events.page, e => {
-          DOM$1.changeHash(_.path + "/page/" + e.detail.page);
+          DOM.changeHash(_.path + "/page/" + e.detail.page);
         });
         x.renderForm().then(x => {
           _.app.UI.areas.main.clear();
@@ -6102,7 +6101,7 @@
 
   const xo = {
     core: Core,
-    dom: DOM$1,
+    dom: DOM,
     pwa: PWA,
     route: ExoRouteModule,
     form: {

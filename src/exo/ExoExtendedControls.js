@@ -734,9 +734,10 @@ class MultiInputControl extends ExoBaseControls.controls.div.type {
         _.inputs = {}
 
         const add = async (n, options) => {
+            
             options = {
-                name: f.name + "_" + n,
-                ...options
+                ...options,
+                name: f.name + "_" + n
             }
             _.inputs[n] = await rs(n, options);
             _.inputs[n].setAttribute("data-multi-name", options.name);

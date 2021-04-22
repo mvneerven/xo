@@ -1,5 +1,7 @@
+
 import PWA_Notifications from './PWA_Notifications';
 import PWA_Area from './PWA_Area';
+import DOM from '../pwa/DOM';
 
 class PWA_UI {
     _dirtyMessage = 'If you continue your changes will not be saved.';
