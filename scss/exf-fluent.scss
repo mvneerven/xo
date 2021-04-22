@@ -39,7 +39,7 @@
                 min-width: 15rem;
             }
 
-            > input:not([type="color"]):not([type="date"]):not([type="time"]):not([type="datetime"]:not([type="datetime-local"])) {
+            > input:not([type="color"]):not([type="date"]):not([type="time"]):not([type="datetime"]:not([type="datetime-local"])):not([size]) {
                 width: 100%;
             }
             > input[type="color"],

@@ -61,7 +61,7 @@
   min-width: 15rem;
 }
 
-.exf-container.fluent .exf-ctl-cnt > input:not([type="color"]):not([type="date"]):not([type="time"]) {
+.exf-container.fluent .exf-ctl-cnt > input:not([type="color"]):not([type="date"]):not([type="time"]):not([size]) {
   width: 100%;
 }
 

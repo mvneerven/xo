@@ -150,6 +150,11 @@
       return url.protocol === "http:" || url.protocol === "https:";
     }
 
+    static toWords(text) {
+      var result = text.replace(/([A-Z])/g, " $1");
+      return result.charAt(0).toUpperCase() + result.slice(1);
+    }
+
   }
 
   _defineProperty(Core, "operatorTable", {
@@ -658,10 +663,12 @@
     DOM$1.setupGrid();
   }());
 
-  /*!
-   * ExoForm - Generic Form/Wizard Generator - using JSON Form Schemas
-   * (c) 2021 Marc van Neerven, MIT License, https://cto-as-a-service.nl 
-  */
+  /**
+   * ExoForm class. 
+   * Created using ExoFormContext create() method
+   * 
+   * @hideconstructor
+   */
 
   class ExoForm {
     static setup() {} // reserved for later
@@ -716,6 +723,12 @@
       }));
       _.container = DOM$1.parseHTML(ExoForm.meta.templates.exocontainer);
     }
+    /**
+     * load ExoForm schema 
+     * @param {any} schema - A JSON ExoForm Schema object or a URL to fetch it from.
+     * @return {Promise} - A Promise
+     */
+
 
     load(schema) {
       const _ = this;
@@ -733,7 +746,7 @@
 
             _.formSchema.totalFieldCount = _.getTotalFieldCount(_.formSchema);
 
-            _.applyLoadedSchema();
+            _._applyLoadedSchema();
 
             let nav = ExoFormFactory.navigation.getType(_);
             _.navigation = new nav(_);
@@ -763,7 +776,7 @@
       });
     }
 
-    applyLoadedSchema() {
+    _applyLoadedSchema() {
       const _ = this;
 
       _.formSchema.form = _.formSchema.form || {
@@ -785,7 +798,7 @@
       if (!ev) {
         ev = new Event(eventName, {
           "bubbles": false,
-          "cancelable": false
+          "cancelable": true
         });
       }
 
@@ -822,36 +835,18 @@
 
       return !hasInvalid;
     }
+    /**
+     * Render ExoForm schema into a form
+     * Returns a Promise
+     */
 
-    getField(name) {
-      return this.findField(f => {
-        return f.name === name;
-      });
-    }
-
-    findField(compare) {
-      const _ = this;
-
-      let field = null;
-
-      for (var p in _.formSchema.pages) {
-        let page = _.formSchema.pages[p];
-        field = page.fields.find(compare);
-
-        if (field) {
-          break;
-        }
-      }
-
-      return field;
-    }
 
     renderForm() {
       const _ = this;
 
       _.triggerEvent(ExoFormFactory.events.renderStart);
 
-      _.cleanup();
+      _._cleanup();
 
       return new Promise((resolve, reject) => {
         if (!_.formSchema || !_.formSchema.pages || _.formSchema.pages.length == undefined) throw "Invalid ExoForm schema";
@@ -861,20 +856,20 @@
         _.container.classList.add("exf-ver-" + ExoForm.version);
 
         try {
-          _.renderPages().then(() => {
-            _.finalizeForm();
+          _._renderPages().then(() => {
+            _._finalizeForm();
 
             resolve(_);
           }).catch(ex => {
-            reject("renderPages() failed: " + ex.toString());
+            reject("_renderPages() failed: " + ex.toString());
           });
         } catch (ex) {
-          reject("Exception in renderPages(): " + ex.toString());
+          reject("Exception in _renderPages(): " + ex.toString());
         }
       });
     }
 
-    finalizeForm() {
+    _finalizeForm() {
       const _ = this;
 
       console.debug("Finalizing form, rendering is ready");
@@ -895,9 +890,9 @@
         e.stopPropagation();
       });
 
-      _.checkRules();
+      _._checkRules();
 
-      _.updateView(0);
+      _._updateView(0);
 
       _.triggerEvent(ExoFormFactory.events.renderReady); // Test for fom becoming user-interactive 
 
@@ -914,10 +909,17 @@
       observer.observe(_.container);
     }
 
-    cleanup() {
+    _cleanup() {
       this.navigation.clear();
       if (this.container) this.container.innerHTML = "";
     }
+    /**
+    * Adds an event handler
+    * @param {string} eventName - Name of the event to listen to - Use xo.form.factory.events as a reference
+    * @param {function} func - function to attach 
+    * @return {object} - The ExoForm instance
+    */
+
 
     on(eventName, func) {
       console.debug("Listening to event", eventName, func);
@@ -925,7 +927,7 @@
       return this;
     }
 
-    renderPages() {
+    _renderPages() {
       const _ = this;
 
       return new Promise((resolve, reject) => {
@@ -938,7 +940,7 @@
 
         _.formSchema.pages.forEach(p => {
           pageNr++;
-          p = _.enrichPageSettings(p, pageNr);
+          p = _._enrichPageSettings(p, pageNr);
 
           _.pageContainer.appendChild(p.dummy);
 
@@ -966,7 +968,7 @@
 
 
                     if (_.formSchema.form.container) {
-                      let cf = _.getFormContainerProps(_);
+                      let cf = _._getFormContainerProps(_);
 
                       _.createControl(cf).then(cx => {
                         cx.render().then(x => {
@@ -1013,7 +1015,7 @@
       return pageFieldsRendered;
     }
 
-    getFormContainerProps() {
+    _getFormContainerProps() {
       let p = {
         type: "div",
         class: "exf-wrapper",
@@ -1030,7 +1032,7 @@
       return p;
     }
 
-    enrichPageSettings(p, pageNr) {
+    _enrichPageSettings(p, pageNr) {
       p.index = pageNr;
       console.debug("Rendering page " + p.index);
       p.isPage = true;
@@ -1040,7 +1042,12 @@
       p.class = "exf-cnt exf-page" + (p.class ? " " + p.class : "");
       p.dummy = DOM$1.parseHTML('<span/>');
       return p;
-    } // query all fields using matcher and return matches
+    }
+    /**
+     * query all fields using matcher and return matches
+     * @param {function} matcher - function to use to filter
+     * @return {array} - All matched fields in the current ExoForm schema
+     */
 
 
     query(matcher) {
@@ -1065,29 +1072,34 @@
       });
       return matches;
     }
-    /*
-        Call after load() schema to map field values
-    */
+    /**
+     * Map data to form, once schema is loaded
+     * @param {function} mapper - a function that will return a value per field
+     * @return {object} - the current ExoForm instance
+     */
 
 
     map(mapper) {
-      this.formSchema.pages.forEach(p => {
-        p.fields.forEach(f => {
-          let value = mapper(f);
+      this.query().forEach(f => {
+        let value = mapper(f);
 
-          if (value !== undefined) {
-            f.value = value;
+        if (value !== undefined) {
+          f.value = value;
 
-            if (f.setCurrentValue) {
-              f.setCurrentValue(f.value);
-            } else if (f._control && f._control.htmlElement) {
-              f._control.htmlElement.value = f.value || "";
-            }
+          if (f.setCurrentValue) {
+            f.setCurrentValue(f.value);
+          } else if (f._control && f._control.htmlElement) {
+            f._control.htmlElement.value = f.value || "";
           }
-        });
+        }
       });
       return this;
     }
+    /**
+     * Submits the form
+     * @param {event} ev - event object to pass onto the submit handler
+     */
+
 
     submitForm(ev) {
       const _ = this;
@@ -1112,8 +1124,13 @@
         });
       });
     }
+    /**
+     * Gets the current form's values
+     * @return {promise} - A promise with the typed data posted
+     */
 
-    getFormValues(e) {
+
+    getFormValues() {
       const _ = this;
 
       const data = {};
@@ -1141,20 +1158,32 @@
         return DOM$1.getValue(this.form.querySelector("[name='" + f.name + "']"));
       }
     }
+    /**
+     * Moves to the given page in a multi-page form.
+     */
+
 
     gotoPage(page) {
-      return this.updateView(0, page);
+      return this._updateView(0, page);
     }
+    /**
+     * Moves to the next page in a multi-page form.
+     */
+
 
     nextPage() {
-      this.updateView(+1);
+      this._updateView(+1);
     }
+    /**
+     * Moves to the previous page in a multi-page form.
+     */
+
 
     previousPage() {
-      this.updateView(+1);
+      this._updateView(+1);
     }
 
-    updateView(add, page) {
+    _updateView(add, page) {
       const _ = this;
 
       let current = _.currentPage;
@@ -1168,21 +1197,21 @@
 
       page = page || 1;
       if (add !== 0) page = parseInt(_.form.getAttribute("data-current-page") || "0");
-      page = _.getNextPage(add, page);
+      page = _._getNextPage(add, page);
 
       let pageCount = _.getLastPage();
 
       if (current > 0) {
         if (!_.navigation.canMove(current, page)) return;
+
+        let returnValue = _.triggerEvent(ExoFormFactory.events.beforePage, {
+          from: current,
+          page: page,
+          pageCount: pageCount
+        });
+
+        if (returnValue === false) return;
       }
-
-      let returnValue = _.triggerEvent(ExoFormFactory.events.beforePage, {
-        from: current,
-        page: page,
-        pageCount: pageCount
-      });
-
-      if (returnValue === false) return;
 
       _.form.setAttribute("data-current-page", page);
 
@@ -1207,7 +1236,7 @@
       return page;
     }
 
-    getNextPage(add, page) {
+    _getNextPage(add, page) {
       const _ = this;
 
       let ok = false;
@@ -1249,7 +1278,7 @@
       let nextPage = -1;
 
       do {
-        nextPage = _.getNextPage(+1, pageNr);
+        nextPage = _._getNextPage(+1, pageNr);
 
         if (nextPage) {
           lastPage = nextPage;
@@ -1259,27 +1288,19 @@
 
       return lastPage || pageNr || 1;
     }
+    /**
+     * Renders a single ExoForm control 
+     * @param {object} field - field structure sub-schema. 
+     * @return {promise} - A promise with the typed rendered element
+     */
 
-    focusFirstControl() {
-      const _ = this;
 
-      var first = _.form.querySelector(".exf-page.active .exf-ctl-cnt");
+    async renderSingleControl(field) {
 
-      if (first && first.offsetParent !== null) {
-        first.closest(".exf-page").scrollIntoView();
-        setTimeout(e => {
-          let ctl = first.querySelector("[name]");
-          if (ctl && ctl.offsetParent) ctl.focus();
-        }, 20);
-      }
-    }
-
-    async renderSingleControl(f) {
-
-      let c = await this.createControl(f);
-      f._control = c;
-      let element = await f._control.render();
-      if (!element) throw ExoFormFactory.fieldToString(f) + " does not render an HTML element";
+      let c = await this.createControl(field);
+      field._control = c;
+      let element = await c.render();
+      if (!element) throw ExoFormFactory.fieldToString(field) + " does not render an HTML element";
       return element;
     }
 
@@ -1345,7 +1366,7 @@
       if (this.runValidCheck) e.preventDefault();
     }
 
-    checkRules() {
+    _checkRules() {
       const _ = this;
 
       if (_.options.type !== "form") return;
@@ -1355,7 +1376,7 @@
           console.debug("Checking page rules", p);
           p.rules.forEach(r => {
             if (Array.isArray(r.expression)) {
-              _.interpretRule("page", p, r);
+              _._interpretRule("page", p, r);
             }
           });
         }
@@ -1365,7 +1386,7 @@
             console.debug("Checking field rules", f);
             f.rules.forEach(r => {
               if (Array.isArray(r.expression)) {
-                _.interpretRule("field", f, r);
+                _._interpretRule("field", f, r);
               }
             });
           }
@@ -1383,7 +1404,7 @@
     } // Interpret rules like "msg_about,change,value,!,''"
 
 
-    interpretRule(objType, f, rule) {
+    _interpretRule(objType, f, rule) {
       const _ = this;
 
       let obj = ExoFormFactory.fieldToString(f);
@@ -1408,7 +1429,7 @@
                 console.debug("Event '" + rule.expression[1] + "' fired on ", DOM$1.elementPath(e));
                 let ruleArgs = rule.expression.slice(2, 5);
 
-                let expressionMatched = _.testRule(f, dependencyControl, ...ruleArgs);
+                let expressionMatched = _._testRule(f, dependencyControl, ...ruleArgs);
 
                 console.debug("Rule", ruleArgs, "matched: ", expressionMatched);
                 let index = expressionMatched ? 0 : 1;
@@ -1422,9 +1443,9 @@
                   dependency: dependencyControl
                 }]);
 
-                let host = _.getEventHost(dependencyControl);
+                let host = _._getEventHost(dependencyControl);
 
-                _.setupEventEventListener({
+                _._setupEventEventListener({
                   field: f,
                   host: host,
                   rule: rule,
@@ -1446,7 +1467,7 @@
       }
     }
 
-    setupEventEventListener(settings) {
+    _setupEventEventListener(settings) {
 
       if (settings.eventType === "livechange") {
         settings.eventType = "input";
@@ -1456,12 +1477,12 @@
       settings.host.addEventListener(settings.eventType, settings.method);
     }
 
-    getEventHost(ctl) {
+    _getEventHost(ctl) {
       let eh = ctl.closest('[data-evtarget="true"]');
       return eh || ctl;
     }
 
-    testRule(f, control, value, compare, rawValue) {
+    _testRule(f, control, value, compare, rawValue) {
       var t = undefined;
       let v = this.getFieldValue(control);
 
@@ -1691,7 +1712,8 @@
         let toReplace = this.container.querySelector('[data-replace="true"]');
         if (!toReplace) this.container = this.htmlElement;else DOM$1.replace(toReplace, this.htmlElement);
       }
-      this.addEventListeners();
+      this.addEventListeners(); //if(this.exclude)
+
       return this.container;
     }
 
@@ -1832,7 +1854,7 @@
 
       _defineProperty(this, "containerTemplate", ExoForm.meta.templates.default);
 
-      this.htmlElement = DOM$1.parseHTML('<input />');
+      this.htmlElement = document.createElement('input');
 
       if (context.field.type === "hidden") {
         this.containerTemplate = ExoForm.meta.templates.empty;
@@ -2185,13 +2207,28 @@
 
         if (!value || value.length === 0) {
           let inp = this.htmlElement.querySelector("input");
-          inp.setCustomValidity('This cannot be empty');
-          inp.reportValidity();
+
+          try {
+            inp.setCustomValidity(this.getValidationMessage());
+            inp.reportValidity();
+          } catch {}
           return false;
         }
       }
 
       return true;
+    } // Used to get localized standard validation message 
+
+
+    getValidationMessage() {
+      let msg = "You must select a value",
+          testFrm = DOM$1.parseHTML('<form><input name="test" required /></form');
+      testFrm.querySelector("input").addEventListener("invalid", e => {
+        msg = e.validationMessage;
+        e.preventDefault();
+      });
+      testFrm.submit();
+      return msg;
     }
 
     showValidationError() {
@@ -3207,19 +3244,29 @@
   });
 
   class MultiInputControl extends ExoBaseControls.controls.div.type {
+    //grid = "exf-cols-50-50";
     constructor(context) {
       super(context);
 
-      _defineProperty(this, "grid", "exf-cols-50-50");
+      _defineProperty(this, "containerTemplate", ExoForm.meta.templates.default);
+
+      _defineProperty(this, "columns", "");
+
+      _defineProperty(this, "areas", "");
 
       this.acceptProperties({
         name: "grid-template",
         description: "CSS3 grid template",
         more: "https://developer.mozilla.org/en-US/docs/Web/CSS/grid-template"
       }, {
-        name: "grid",
-        description: "Grid class to add to container div",
-        example: "exf-cols-50-50"
+        name: "areas",
+        description: "Grid template areas to set up on the containing div",
+        example: `"field1 field1 field2"
+                "field3 field4 field4"`
+      }, {
+        name: "columns",
+        description: "Grid columns to set up on containing div",
+        example: "10em 10em 1fr"
       }, {
         name: "fields",
         type: Object,
@@ -3244,14 +3291,26 @@
     }
 
     async render() {
+      await super.render();
+
       const _ = this;
 
       const f = _.context.field;
       const exo = _.context.exo;
-      this.htmlElement.classList.add("exf-cnt", "exf-ctl-group", this.grid);
+      this.htmlElement.classList.add("exf-cnt", "exf-ctl-group");
 
-      if (this["grid-template"]) {
-        this.htmlElement.setAttribute("style", 'grid-template: ' + this["grid-template"]);
+      if (this.areas && this.columns || this["grid-template"] || this.grid) {
+        this.htmlElement.classList.add("grid");
+      }
+
+      if (this.areas && this.columns) {
+        this.htmlElement.setAttribute("style", `display: grid; grid-template-areas: ${this.areas}; grid-template-columns: ${this.columns}`);
+      } else {
+        if (this["grid-template"]) {
+          this.htmlElement.setAttribute("style", `display: grid; grid-template: ${this["grid-template"]}`);
+        } else if (this.grid) {
+          this.htmlElement.classList.add(this.grid);
+        }
       }
 
       _._qs = name => {
@@ -3274,6 +3333,8 @@
         _.inputs[n].setAttribute("data-multi-name", options.name);
 
         _.htmlElement.appendChild(_.inputs[n]);
+
+        return _.inputs[n];
       };
 
       if (!this.fields && f.fields) {
@@ -3281,7 +3342,8 @@
       }
 
       for (var n in this.fields) {
-        await add(n, this.fields[n]);
+        var elm = await add(n, this.fields[n]);
+        if (this.areas) elm.setAttribute("style", `grid-area: ${n}`);
       }
 
       _._gc = e => {
@@ -3311,7 +3373,7 @@
 
       this.context.field.getCurrentValue = _._gc;
       this.context.field.setCurrentValue = _._sc;
-      return _.htmlElement;
+      return this.container;
     }
 
   }
@@ -3322,7 +3384,9 @@
     constructor(...args) {
       super(...args);
 
-      _defineProperty(this, "grid", "exf-cols-10em-1fr");
+      _defineProperty(this, "grid", "");
+
+      _defineProperty(this, "grid-template", "'first last' auto/ 10em 1fr");
 
       _defineProperty(this, "fields", {
         first: {
@@ -3348,9 +3412,14 @@
     constructor(...args) {
       super(...args);
 
-      _defineProperty(this, "grid", "exf-cols-10em-1fr");
+      _defineProperty(this, "grid", "");
 
-      _defineProperty(this, "grid-template", '"a b c"\n"a b b"');
+      _defineProperty(this, "columns", "4em 4em 10em 1fr");
+
+      _defineProperty(this, "areas", `
+        "code code nr fill"
+        "ext ext city city"
+        "street street street street"`);
 
       _defineProperty(this, "fields", {
         code: {
@@ -3413,8 +3482,8 @@
 
             if (r.numFound > 0) {
               let d = r.docs[0];
-              _._qs("street").value = d.straatnaam_verkort;
-              _._qs("city").value = d.woonplaatsnaam;
+              _._qs("street").querySelector("[name]").value = d.straatnaam_verkort;
+              _._qs("city").querySelector("[name]").value = d.woonplaatsnaam;
             }
           });
         }
@@ -3436,8 +3505,6 @@
   class ExoCreditCardControl extends MultiInputControl {
     constructor(...args) {
       super(...args);
-
-      _defineProperty(this, "grid", "exf-cols-50-50");
 
       _defineProperty(this, "fields", {
         name: {
@@ -4022,7 +4089,7 @@
       let tp = this.typeMap[typeof value];
       return {
         type: tp || "text",
-        caption: this.toWords(name)
+        caption: Core.toWords(name)
       };
     }
 
@@ -4032,11 +4099,6 @@
       }
 
       return "";
-    }
-
-    toWords(text) {
-      var result = text.replace(/([A-Z])/g, " $1");
-      return result.charAt(0).toUpperCase() + result.slice(1);
     }
 
   }
@@ -4072,6 +4134,7 @@
   class ExoFormDefaultValidation {
     constructor(exo) {
       this.exo = exo;
+      exo.form.setAttribute('novalidate', true);
     }
 
     checkValidity() {
@@ -4097,9 +4160,7 @@
         });
 
         if (returnValue !== false) {
-          this.focus(invalidFields[0].field);
-
-          invalidFields[0].field._control.reportValidity();
+          this.focus(invalidFields[0].field); //invalidFields[0].field._control.reportValidity()
         }
       }
     }
@@ -4119,7 +4180,7 @@
 
         if (pgElm) {
           let page = parseInt(pgElm.getAttribute("data-page"));
-          this.exo.updateView(0, page);
+          this.exo.gotoPage(page);
           setTimeout(e => f, 20);
         }
       } else {
@@ -4306,15 +4367,15 @@
 
   class ExoFormNoNavigation extends ExoFormNavigationBase {
     next() {
-      this.exo.updateView(+1);
+      this.exo.nextPage();
     }
 
     back() {
-      this.exo.updateView(-1);
+      this.exo.previousPage();
     }
 
     restart() {
-      this.exo.updateView(0, 1);
+      this.exo.gotoPage(1);
     }
 
   }
@@ -4409,7 +4470,7 @@
         if (e.keyCode === 8) {
           // backspace - TODO: Fix 
           if (e.target.value === "" && !e.target.selectionStart || e.target.selectionStart === 0) {
-            _.exo.updateView(-1);
+            _.exo.previousPage();
 
             e.preventDefault();
             e.returnValue = false;
@@ -4417,22 +4478,19 @@
         } else if (e.keyCode === 13) {
           // enter
           if (e.target.type !== "textarea") {
-            //var isValid = _.exo.form.reportValidity ? _.exo.form.reportValidity() : true;
-            //if (isValid) {
             let exf = e.target.closest("[data-exf]");
-            let field = ExoFormFactory.getFieldFromElement(exf); //if (exf && exf.data && exf.data.field) {
+            let field = ExoFormFactory.getFieldFromElement(exf);
 
             _.checkForward(field, "enter", e);
 
             e.preventDefault();
-            e.returnValue = false; //}
-            //}
+            e.returnValue = false;
           }
         }
       });
 
       _.exo.on(ExoFormFactory.events.page, e => {
-        _.exo.focusFirstControl();
+        _.focusFirstControl();
       });
 
       let container = _.exo.form.closest(".exf-container");
@@ -4446,6 +4504,20 @@
           p.style.height = container.offsetHeight + "px";
         });
       });
+    }
+
+    focusFirstControl() {
+      const _ = this;
+
+      var first = _.exo.form.querySelector(".exf-page.active .exf-ctl-cnt");
+
+      if (first && first.offsetParent !== null) {
+        first.closest(".exf-page").scrollIntoView();
+        setTimeout(e => {
+          let ctl = first.querySelector("[name]");
+          if (ctl && ctl.offsetParent) ctl.focus();
+        }, 20);
+      }
     }
 
     checkForward(f, eventName, e) {
@@ -4474,7 +4546,7 @@
 
           if (!["checkboxlist", "tags"].includes(type)) {
             // need metadata from controls
-            _.updateView(+1);
+            _.nextPage();
           } else {
             _.container.classList.add("step-ready");
           }
@@ -4507,6 +4579,13 @@
     wizard: ExoFormWizardNavigation,
     survey: ExoFormSurveyNavigation
   });
+
+  /**
+   * Hosts an ExoForm context to create forms with.
+   * Created using {ExoFormFactory}.build()
+   * 
+   * @hideconstructor
+   */
 
   class ExoFormContext {
     constructor(library) {
@@ -4588,6 +4667,11 @@
     get(type) {
       return this.library[type];
     }
+    /**
+    * Searches the control library using @param {Function} callback.
+    * @return {Array} - list of matched controls.
+    */
+
 
     query(callback) {
       for (var name in this.library) {
@@ -4621,11 +4705,19 @@
       }
     }
 
-  } // ExoForm Factory - imports libraries and provides factory methods 
-  // for creating forms.
+  }
+  /**
+   * Factory class for ExoForm - Used to create an ExoForm context.
+   * Provides factory methods. Starting point for using ExoForm. 
+   * 
+   * @hideconstructor
+   */
 
   class ExoFormFactory {
-    // setup static ExoForm.meta structure 
+    /**
+     * Build {ExoFormContext} instance.
+     * 
+     */
     static build(options) {
       options = options || {};
       return new Promise((resolve, reject) => {

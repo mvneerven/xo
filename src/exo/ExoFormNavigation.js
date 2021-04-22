@@ -37,8 +37,8 @@ class ExoFormNavigationBase {
         this.exo.form.appendChild(this.container);
     }
 
-    canMove(fromPage, toPage){ // to be subclassed
-        console.debug("Check navigation from", fromPage , "to", toPage);
+    canMove(fromPage, toPage) { // to be subclassed
+        console.debug("Check navigation from", fromPage, "to", toPage);
         return true;
     }
 
@@ -58,7 +58,7 @@ class ExoFormNavigationBase {
 
         this.container.appendChild(btn);
     }
-    
+
 
     update() { }
 }
@@ -66,15 +66,15 @@ class ExoFormNavigationBase {
 class ExoFormNoNavigation extends ExoFormNavigationBase {
 
     next() {
-        this.exo.updateView(+1);
+        this.exo.nextPage();
     }
 
     back() {
-        this.exo.updateView(-1);
+        this.exo.previousPage();
     }
 
     restart() {
-        this.exo.updateView(0, 1);
+        this.exo.gotoPage(1);
     }
 
 }
@@ -161,29 +161,24 @@ class ExoFormSurveyNavigation extends ExoFormWizardNavigation {
         _.exo.form.addEventListener("keydown", e => {
             if (e.keyCode === 8) { // backspace - TODO: Fix 
                 if ((e.target.value === "" && (!e.target.selectionStart) || e.target.selectionStart === 0)) {
-                    _.exo.updateView(-1);
+                    _.exo.previousPage();
                     e.preventDefault();
                     e.returnValue = false;
                 }
             }
             else if (e.keyCode === 13) { // enter
                 if (e.target.type !== "textarea") {
-                    //var isValid = _.exo.form.reportValidity ? _.exo.form.reportValidity() : true;
-                    //if (isValid) {
                     let exf = e.target.closest("[data-exf]");
                     let field = ExoFormFactory.getFieldFromElement(exf)
-                    //if (exf && exf.data && exf.data.field) {
                     _.checkForward(field, "enter", e);
                     e.preventDefault();
                     e.returnValue = false;
-                    //}
-                    //}
                 }
             }
         });
 
         _.exo.on(ExoFormFactory.events.page, e => {
-            _.exo.focusFirstControl();
+            _.focusFirstControl();
         })
 
         let container = _.exo.form.closest(".exf-container");
@@ -196,6 +191,19 @@ class ExoFormSurveyNavigation extends ExoFormWizardNavigation {
                 p.style.height = container.offsetHeight + "px";
             })
         })
+    }
+
+    focusFirstControl() {
+        const _ = this;
+        var first = _.exo.form.querySelector(".exf-page.active .exf-ctl-cnt");
+
+        if (first && first.offsetParent !== null) {
+            first.closest(".exf-page").scrollIntoView();
+            setTimeout(e => {
+                let ctl = first.querySelector("[name]");
+                if (ctl && ctl.offsetParent) ctl.focus();
+            }, 20);
+        }
     }
 
     checkForward(f, eventName, e) {
@@ -229,7 +237,7 @@ class ExoFormSurveyNavigation extends ExoFormWizardNavigation {
                     type = e.detail.field;
 
                 if (!["checkboxlist", "tags"].includes(type)) { // need metadata from controls
-                    _.updateView(+1);
+                    _.nextPage();
                 }
 
                 else {
@@ -294,7 +302,7 @@ class WizardProgress {
         _.container.querySelectorAll(".step-wizard ul button").forEach(b => {
             b.addEventListener("click", e => {
                 var step = parseInt(b.querySelector("div.step").innerText);
-                _.generator.updateView(0, step);
+                _.generator[step > 0 ? "nextPage" : "previousPage"]();
             })
         });
 
@@ -334,7 +342,7 @@ class WizardProgress {
     }
 }
 
-class ExoFormNavigation{
+class ExoFormNavigation {
     static types = {
         auto: undefined,
         none: ExoFormNoNavigation,
@@ -343,16 +351,16 @@ class ExoFormNavigation{
         survey: ExoFormSurveyNavigation
     }
 
-    static getType(exo){
+    static getType(exo) {
         let type = exo.formSchema.navigation;
-        if(type === "auto")
+        if (type === "auto")
             type = ExoFormNavigation.matchNavigationType(exo);
-        
+
         return ExoFormNavigation.types[type];
     }
 
-    static matchNavigationType(exo){
-        if(exo.formSchema.pages.length > 1)
+    static matchNavigationType(exo) {
+        if (exo.formSchema.pages.length > 1)
             return "wizard"
 
         return "default"

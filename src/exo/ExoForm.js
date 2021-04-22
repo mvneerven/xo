@@ -1,11 +1,18 @@
-import Core from '../pwa/Core';
-import DOM from '../pwa/DOM';
-import ExoFormFactory from './ExoFormFactory';
-
 /*!
  * ExoForm - Generic Form/Wizard Generator - using JSON Form Schemas
  * (c) 2021 Marc van Neerven, MIT License, https://cto-as-a-service.nl 
 */
+
+import Core from '../pwa/Core';
+import DOM from '../pwa/DOM';
+import ExoFormFactory from './ExoFormFactory';
+
+/**
+ * ExoForm class. 
+ * Created using ExoFormContext create() method
+ * 
+ * @hideconstructor
+ */
 class ExoForm {
 
     static meta = {
@@ -100,6 +107,11 @@ class ExoForm {
         _.container = DOM.parseHTML(ExoForm.meta.templates.exocontainer);
     }
 
+    /**
+     * load ExoForm schema 
+     * @param {any} schema - A JSON ExoForm Schema object or a URL to fetch it from.
+     * @return {Promise} - A Promise
+     */
     load(schema) {
         const _ = this;
 
@@ -115,7 +127,7 @@ class ExoForm {
                     _.triggerEvent(ExoFormFactory.events.schemaLoaded);
 
                     _.formSchema.totalFieldCount = _.getTotalFieldCount(_.formSchema)
-                    _.applyLoadedSchema();
+                    _._applyLoadedSchema();
 
                     let nav = ExoFormFactory.navigation.getType(_);
                     _.navigation = new nav(_);
@@ -151,7 +163,7 @@ class ExoForm {
 
     }
 
-    applyLoadedSchema() {
+    _applyLoadedSchema() {
         const _ = this;
 
         _.formSchema.form = _.formSchema.form || { theme: _.defaults.form.theme };
@@ -172,7 +184,7 @@ class ExoForm {
     triggerEvent(eventName, detail, ev) {
         console.debug("Triggering event", eventName, "detail: ", detail)
         if (!ev) {
-            ev = new Event(eventName, { "bubbles": false, "cancelable": false });
+            ev = new Event(eventName, { "bubbles": false, "cancelable": true });
         }
 
         ev.detail = {
@@ -210,31 +222,15 @@ class ExoForm {
         return !hasInvalid;
     }
 
-    getField(name) {
-        return this.findField(f => {
-            return f.name === name
-        });
-    }
-
-    findField(compare) {
-        const _ = this;
-        let field = null;
-
-        for (var p in _.formSchema.pages) {
-            let page = _.formSchema.pages[p];
-            field = page.fields.find(compare);
-            if (field) {
-                break
-            }
-        }
-        return field
-    }
-
+    /**
+     * Render ExoForm schema into a form
+     * Returns a Promise
+     */
     renderForm() {
         const _ = this;
 
         _.triggerEvent(ExoFormFactory.events.renderStart)
-        _.cleanup();
+        _._cleanup();
 
         return new Promise((resolve, reject) => {
 
@@ -246,21 +242,21 @@ class ExoForm {
             _.container.classList.add("exf-ver-" + ExoForm.version);
 
             try {
-                _.renderPages().then(() => {
-                    _.finalizeForm();
+                _._renderPages().then(() => {
+                    _._finalizeForm();
                     resolve(_);
                 }).catch(ex => {
-                    reject("renderPages() failed: " + ex.toString());
+                    reject("_renderPages() failed: " + ex.toString());
                 });
 
             }
             catch (ex) {
-                reject("Exception in renderPages(): " + ex.toString())
+                reject("Exception in _renderPages(): " + ex.toString())
             }
         });
     }
 
-    finalizeForm() {
+    _finalizeForm() {
         const _ = this;
         console.debug("Finalizing form, rendering is ready");
 
@@ -278,8 +274,8 @@ class ExoForm {
             e.stopPropagation();
         })
 
-        _.checkRules();
-        _.updateView(0);
+        _._checkRules();
+        _._updateView(0);
         _.triggerEvent(ExoFormFactory.events.renderReady);
 
 
@@ -296,20 +292,26 @@ class ExoForm {
         observer.observe(_.container);
     }
 
-    cleanup() {
+    _cleanup() {
         this.navigation.clear();
 
         if (this.container)
             this.container.innerHTML = "";
     }
 
+    /**
+    * Adds an event handler
+    * @param {string} eventName - Name of the event to listen to - Use xo.form.factory.events as a reference
+    * @param {function} func - function to attach 
+    * @return {object} - The ExoForm instance
+    */
     on(eventName, func) {
         console.debug("Listening to event", eventName, func);
         this.addEventListener(eventName, func);
         return this;
     }
 
-    renderPages() {
+    _renderPages() {
         const _ = this;
 
         return new Promise((resolve, reject) => {
@@ -322,7 +324,7 @@ class ExoForm {
             _.formSchema.pages.forEach(p => {
                 pageNr++;
 
-                p = _.enrichPageSettings(p, pageNr);
+                p = _._enrichPageSettings(p, pageNr);
 
                 _.pageContainer.appendChild(p.dummy);
 
@@ -357,7 +359,7 @@ class ExoForm {
 
                                     // check for custom container
                                     if (_.formSchema.form.container) {
-                                        let cf = _.getFormContainerProps(_)
+                                        let cf = _._getFormContainerProps(_)
 
                                         _.createControl(cf).then(cx => {
                                             cx.render().then(x => {
@@ -406,7 +408,7 @@ class ExoForm {
         return pageFieldsRendered;
     }
 
-    getFormContainerProps() {
+    _getFormContainerProps() {
         let p = {
             type: "div",
             class: "exf-wrapper",
@@ -423,7 +425,7 @@ class ExoForm {
         return p;
     }
 
-    enrichPageSettings(p, pageNr) {
+    _enrichPageSettings(p, pageNr) {
         p.index = pageNr;
         console.debug("Rendering page " + p.index)
         p.isPage = true;
@@ -435,7 +437,11 @@ class ExoForm {
         return p;
     }
 
-    // query all fields using matcher and return matches
+    /**
+     * query all fields using matcher and return matches
+     * @param {function} matcher - function to use to filter
+     * @return {array} - All matched fields in the current ExoForm schema
+     */
     query(matcher) {
         if (matcher === undefined) matcher = () => { return true };
         let matches = [];
@@ -457,27 +463,33 @@ class ExoForm {
         return matches;
     }
 
-    /*
-        Call after load() schema to map field values
-    */
+    /**
+     * Map data to form, once schema is loaded
+     * @param {function} mapper - a function that will return a value per field
+     * @return {object} - the current ExoForm instance
+     */
     map(mapper) {
-        this.formSchema.pages.forEach(p => {
-            p.fields.forEach(f => {
-                let value = mapper(f);
-                if (value !== undefined) {
-                    f.value = value;
-                    if (f.setCurrentValue) {
-                        f.setCurrentValue(f.value);
-                    }
-                    else if (f._control && f._control.htmlElement) {
-                        f._control.htmlElement.value = f.value || ""
-                    }
+
+        this.query().forEach(f => {
+            let value = mapper(f);
+            if (value !== undefined) {
+                f.value = value;
+                if (f.setCurrentValue) {
+                    f.setCurrentValue(f.value);
                 }
-            })
-        })
+                else if (f._control && f._control.htmlElement) {
+                    f._control.htmlElement.value = f.value || ""
+                }
+            }
+        });
+
         return this;
     }
 
+    /**
+     * Submits the form
+     * @param {event} ev - event object to pass onto the submit handler
+     */
     submitForm(ev) {
         const _ = this;
         if (ev)
@@ -497,7 +509,11 @@ class ExoForm {
         })
     }
 
-    getFormValues(e) {
+    /**
+     * Gets the current form's values
+     * @return {promise} - A promise with the typed data posted
+     */
+    getFormValues() {
         const _ = this;
         const data = {};
         return new Promise((resolve, reject) => {
@@ -527,19 +543,28 @@ class ExoForm {
         }
     }
 
+    /**
+     * Moves to the given page in a multi-page form.
+     */
     gotoPage(page) {
-        return this.updateView(0, page);
+        return this._updateView(0, page);
     }
 
+    /**
+     * Moves to the next page in a multi-page form.
+     */
     nextPage() {
-        this.updateView(+1);
+        this._updateView(+1);
     }
 
+    /**
+     * Moves to the previous page in a multi-page form.
+     */
     previousPage() {
-        this.updateView(+1);
+        this._updateView(+1);
     }
 
-    updateView(add, page) {
+    _updateView(add, page) {
         const _ = this;
 
         let current = _.currentPage;
@@ -556,22 +581,22 @@ class ExoForm {
         if (add !== 0)
             page = parseInt(_.form.getAttribute("data-current-page") || "0");
 
-        page = _.getNextPage(add, page)
+        page = _._getNextPage(add, page)
         let pageCount = _.getLastPage();
 
         if (current > 0) {
             if (!_.navigation.canMove(current, page))
                 return;
+
+            let returnValue = _.triggerEvent(ExoFormFactory.events.beforePage, {
+                from: current,
+                page: page,
+                pageCount: pageCount
+            });
+
+            if (returnValue === false)
+                return;
         }
-
-        let returnValue = _.triggerEvent(ExoFormFactory.events.beforePage, {
-            from: current,
-            page: page,
-            pageCount: pageCount
-        });
-
-        if (returnValue === false)
-            return;
 
         _.form.setAttribute("data-current-page", page);
         _.form.setAttribute("data-page-count", _.formSchema.pages.length);
@@ -594,7 +619,7 @@ class ExoForm {
         return page;
     }
 
-    getNextPage(add, page) {
+    _getNextPage(add, page) {
         const _ = this;
         let ok = false;
 
@@ -636,7 +661,7 @@ class ExoForm {
         let lastPage = 0;
         let nextPage = -1;
         do {
-            nextPage = _.getNextPage(+1, pageNr);
+            nextPage = _._getNextPage(+1, pageNr);
             if (nextPage) {
                 lastPage = nextPage;
                 pageNr = nextPage;
@@ -647,26 +672,18 @@ class ExoForm {
         return lastPage || pageNr || 1;
     }
 
-    focusFirstControl() {
+    /**
+     * Renders a single ExoForm control 
+     * @param {object} field - field structure sub-schema. 
+     * @return {promise} - A promise with the typed rendered element
+     */
+    async renderSingleControl(field) {
         const _ = this;
-        var first = _.form.querySelector(".exf-page.active .exf-ctl-cnt");
-
-        if (first && first.offsetParent !== null) {
-            first.closest(".exf-page").scrollIntoView();
-            setTimeout(e => {
-                let ctl = first.querySelector("[name]");
-                if (ctl && ctl.offsetParent) ctl.focus();
-            }, 20);
-        }
-    }
-
-    async renderSingleControl(f) {
-        const _ = this;
-        let c = await this.createControl(f);
-        f._control = c;
-        let element = await f._control.render();
+        let c = await this.createControl(field);
+        field._control = c;
+        let element = await c.render();
         if (!element)
-            throw ExoFormFactory.fieldToString(f) + " does not render an HTML element";
+            throw ExoFormFactory.fieldToString(field) + " does not render an HTML element";
 
         return element;
     }
@@ -757,7 +774,7 @@ class ExoForm {
             e.preventDefault();
     }
 
-    checkRules() {
+    _checkRules() {
         const _ = this;
 
         if (_.options.type !== "form")
@@ -773,7 +790,7 @@ class ExoForm {
                 p.rules.forEach(r => {
                     if (Array.isArray(r.expression)) {
 
-                        _.interpretRule("page", p, r);
+                        _._interpretRule("page", p, r);
                     }
                 })
             }
@@ -784,7 +801,7 @@ class ExoForm {
 
                     f.rules.forEach(r => {
                         if (Array.isArray(r.expression)) {
-                            _.interpretRule("field", f, r);
+                            _._interpretRule("field", f, r);
                         }
                     })
                 }
@@ -802,7 +819,7 @@ class ExoForm {
     }
 
     // Interpret rules like "msg_about,change,value,!,''"
-    interpretRule(objType, f, rule) {
+    _interpretRule(objType, f, rule) {
         const _ = this;
 
         let obj = ExoFormFactory.fieldToString(f)
@@ -829,7 +846,7 @@ class ExoForm {
                             console.debug("Event '" + rule.expression[1] + "' fired on ", DOM.elementPath(e));
 
                             let ruleArgs = rule.expression.slice(2, 5);
-                            let expressionMatched = _.testRule(f, dependencyControl, ...ruleArgs);
+                            let expressionMatched = _._testRule(f, dependencyControl, ...ruleArgs);
                             console.debug("Rule", ruleArgs, "matched: ", expressionMatched);
 
                             let index = expressionMatched ? 0 : 1;
@@ -844,9 +861,9 @@ class ExoForm {
                                 dependency: dependencyControl
                             }])
 
-                            let host = _.getEventHost(dependencyControl);
+                            let host = _._getEventHost(dependencyControl);
 
-                            _.setupEventEventListener({
+                            _._setupEventEventListener({
                                 field: f,
                                 host: host,
                                 rule: rule,
@@ -867,7 +884,7 @@ class ExoForm {
         }
     }
 
-    setupEventEventListener(settings) {
+    _setupEventEventListener(settings) {
         const _ = this;
 
         if (settings.eventType === "livechange") {
@@ -878,12 +895,12 @@ class ExoForm {
         settings.host.addEventListener(settings.eventType, settings.method);
     }
 
-    getEventHost(ctl) {
+    _getEventHost(ctl) {
         let eh = ctl.closest('[data-evtarget="true"]');
         return eh || ctl;
     }
 
-    testRule(f, control, value, compare, rawValue) {
+    _testRule(f, control, value, compare, rawValue) {
         var t = undefined;
         let v = this.getFieldValue(control);
         try {

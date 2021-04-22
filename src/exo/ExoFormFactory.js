@@ -8,6 +8,12 @@ import ExoThemes from './ExoThemes';
 import ExoFormValidation from './ExoFormValidation';
 import ExoFormNavigation from './ExoFormNavigation';
 
+/**
+ * Hosts an ExoForm context to create forms with.
+ * Created using {ExoFormFactory}.build()
+ * 
+ * @hideconstructor
+ */
 export class ExoFormContext {
     constructor(library) {
         this.library = this.enrichMeta(library)
@@ -86,6 +92,10 @@ export class ExoFormContext {
         return this.library[type]
     }
 
+    /**
+    * Searches the control library using @param {Function} callback.
+    * @return {Array} - list of matched controls.
+    */
     query(callback) {
 
         for (var name in this.library) {
@@ -124,8 +134,12 @@ export class ExoFormContext {
 
 }
 
-// ExoForm Factory - imports libraries and provides factory methods 
-// for creating forms.
+/**
+ * Factory class for ExoForm - Used to create an ExoForm context.
+ * Provides factory methods. Starting point for using ExoForm. 
+ * 
+ * @hideconstructor
+ */
 class ExoFormFactory {
 
     static _ev_pfx = "exf-ev-";
@@ -163,7 +177,11 @@ class ExoFormFactory {
 
     static library = {};
 
-    // setup static ExoForm.meta structure 
+    
+    /**
+     * Build {ExoFormContext} instance.
+     * 
+     */
     static build(options) {
         options = options || {};
 

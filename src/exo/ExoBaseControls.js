@@ -118,6 +118,7 @@ class ExoControlBase {
 
         this.addEventListeners();
 
+        //if(this.exclude)
         return this.container
     }
 
@@ -280,7 +281,7 @@ export class ExoInputControl extends ExoElementControl {
 
     constructor(context) {
         super(context);
-        this.htmlElement = DOM.parseHTML('<input />');
+        this.htmlElement = document.createElement('input');
 
         if (context.field.type === "hidden") {
             this.containerTemplate = ExoForm.meta.templates.empty;
@@ -639,13 +640,27 @@ class ExoInputListControl extends ExoListControl {
             if (!value || value.length === 0) {
 
                 let inp = this.htmlElement.querySelector("input");
-                inp.setCustomValidity('This cannot be empty');
-                inp.reportValidity()
+                try{
+                    inp.setCustomValidity(this.getValidationMessage());
+                    inp.reportValidity()
+                } catch {};
 
                 return false;
             }
         }
         return true;
+    }
+
+    // Used to get localized standard validation message 
+    getValidationMessage(){
+        let msg = "You must select a value", 
+        testFrm = DOM.parseHTML('<form><input name="test" required /></form');
+        testFrm.querySelector("input").addEventListener("invalid", e=>{
+            msg = e.validationMessage;
+            e.preventDefault()
+        });
+        testFrm.submit();
+        return msg; 
     }
 
     showValidationError() {

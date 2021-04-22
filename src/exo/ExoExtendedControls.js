@@ -646,7 +646,13 @@ class ExoVideoControl extends ExoEmbedControl {
 
 class MultiInputControl extends ExoBaseControls.controls.div.type {
 
-    grid = "exf-cols-50-50";
+    //grid = "exf-cols-50-50";
+
+    containerTemplate = ExoForm.meta.templates.default;
+
+    columns = ""
+
+    areas = "";
 
     static returnValueType = Object;
 
@@ -659,10 +665,17 @@ class MultiInputControl extends ExoBaseControls.controls.div.type {
                 description: "CSS3 grid template",
                 more: "https://developer.mozilla.org/en-US/docs/Web/CSS/grid-template"
             },
+            
             {
-                name: "grid",
-                description: "Grid class to add to container div",
-                example: "exf-cols-50-50"
+                name: "areas",
+                description: "Grid template areas to set up on the containing div",
+                example: `"field1 field1 field2"
+                "field3 field4 field4"`
+            },
+            {
+                name: "columns",
+                description: "Grid columns to set up on containing div",
+                example: "10em 10em 1fr"
             },
             {
                 name: "fields", type: Object,
@@ -674,19 +687,33 @@ class MultiInputControl extends ExoBaseControls.controls.div.type {
             }
 
         );
-
-
     }
 
     async render() {
+        
+        await super.render();
 
         const _ = this;
         const f = _.context.field;
         const exo = _.context.exo;
-        this.htmlElement.classList.add("exf-cnt", "exf-ctl-group", this.grid)
 
-        if (this["grid-template"]) {
-            this.htmlElement.setAttribute("style", 'grid-template: ' + this["grid-template"]);
+        this.htmlElement.classList.add("exf-cnt", "exf-ctl-group")
+
+        if ((this.areas && this.columns) || this["grid-template"] || this.grid) {
+            this.htmlElement.classList.add("grid");
+        }
+
+        if (this.areas && this.columns) {
+            
+            this.htmlElement.setAttribute("style", `display: grid; grid-template-areas: ${this.areas}; grid-template-columns: ${this.columns}`);
+        }
+        else {
+            if (this["grid-template"]) {
+                this.htmlElement.setAttribute("style", `display: grid; grid-template: ${this["grid-template"]}`);
+            }
+            else if (this.grid) {
+                this.htmlElement.classList.add(this.grid)
+            }
         }
 
         _._qs = (name) => {
@@ -707,6 +734,7 @@ class MultiInputControl extends ExoBaseControls.controls.div.type {
             _.inputs[n] = await rs(n, options);
             _.inputs[n].setAttribute("data-multi-name", options.name);
             _.htmlElement.appendChild(_.inputs[n])
+            return _.inputs[n];
         }
 
         if (!this.fields && f.fields) {
@@ -714,7 +742,10 @@ class MultiInputControl extends ExoBaseControls.controls.div.type {
         }
 
         for (var n in this.fields) {
-            await add(n, this.fields[n])
+            var elm = await add(n, this.fields[n])
+
+            if(this.areas)
+                elm.setAttribute("style", `grid-area: ${n}`);
         };
 
         // custom getter
@@ -746,13 +777,16 @@ class MultiInputControl extends ExoBaseControls.controls.div.type {
 
         this.context.field.setCurrentValue = _._sc;
 
-        return _.htmlElement;
+        return this.container;
     }
 }
 
 class ExoNameControl extends MultiInputControl {
 
-    grid = "exf-cols-10em-1fr";
+    //grid = "exf-cols-10em-1fr";
+    grid = "";
+
+    "grid-template" = "'first last' auto/ 10em 1fr";
 
     fields = {
         first: { caption: "First", type: "text", maxlength: 30, required: true, placeholder: "" },
@@ -763,9 +797,19 @@ class ExoNameControl extends MultiInputControl {
 
 class ExoNLAddressControl extends MultiInputControl {
 
-    grid = "exf-cols-10em-1fr";
+    //grid = "exf-cols-10em-10em";
 
-    ["grid-template"] = '"a b c"\n"a b b"';
+    // ["grid-template"] = '"a b c"\n"a b b"';
+
+    //grid = "exf-cols-10em-1fr";
+    grid = "";
+
+    columns = "4em 4em 10em 1fr"
+
+    areas = `
+        "code code nr fill"
+        "ext ext city city"
+        "street street street street"`;
 
     // https://github.com/PDOK/locatieserver/wiki/API-Locatieserver
     static APIUrl = "https://geodata.nationaalgeoregister.nl/locatieserver/v3/free?q=postcode:{{code}}&huisnummer:{{nr}}";
@@ -785,6 +829,7 @@ class ExoNLAddressControl extends MultiInputControl {
 
         const check = () => {
             var data = _._gc();
+
             if (data.code && data.nr) {
                 fetch(DOM.format(ExoNLAddressControl.APIUrl, {
                     nr: data.nr,
@@ -797,8 +842,8 @@ class ExoNLAddressControl extends MultiInputControl {
                     var r = j.response;
                     if (r.numFound > 0) {
                         let d = r.docs[0];
-                        _._qs("street").value = d.straatnaam_verkort;
-                        _._qs("city").value = d.woonplaatsnaam;
+                        _._qs("street").querySelector("[name]").value = d.straatnaam_verkort;
+                        _._qs("city").querySelector("[name]").value = d.woonplaatsnaam;
                     }
                 });
             }
@@ -815,7 +860,7 @@ class ExoNLAddressControl extends MultiInputControl {
 
 class ExoCreditCardControl extends MultiInputControl {
 
-    grid = "exf-cols-50-50";
+    //grid = "exf-cols-50-50";
 
     fields = {
         name: { caption: "Name on Card", type: "text", maxlength: 50, required: true, placeholder: "" },

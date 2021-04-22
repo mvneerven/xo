@@ -1,3 +1,4 @@
+import Core from '../pwa/Core';
 
 class ExoSchemaGenerator {
 
@@ -59,7 +60,7 @@ class ExoSchemaGenerator {
 
         return {
             type: tp || "text",
-            caption: this.toWords(name)
+            caption: Core.toWords(name)
         }
     }
 
@@ -74,10 +75,7 @@ class ExoSchemaGenerator {
         return "";
     }
 
-    toWords(text) {
-        var result = text.replace(/([A-Z])/g, " $1");
-        return result.charAt(0).toUpperCase() + result.slice(1);
-    }
+    
 }
 
 export default ExoSchemaGenerator;

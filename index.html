@@ -60,6 +60,18 @@
                                     placeholder: "Peter"
                                 },
                                 {
+                                    name: "radiobuttonlistfield1",
+                                    type: "radiobuttonlist",
+                                    caption: "Radiobuttonlist",
+                                    required: true,
+                                    items: [
+                                        "First",
+                                        "Second",
+                                        "Third",
+                                        "Fourth"
+                                    ]
+                                },
+                                {
                                     name: "email",
                                     type: "email",
                                     required: true,
@@ -109,18 +121,6 @@
                                     caption: "Comments"
                                 },
                                 {
-                                    name: "radiobuttonlistfield1",
-                                    type: "radiobuttonlist",
-                                    caption: "Radiobuttonlist",
-                                    required: true,
-                                    items: [
-                                        "First",
-                                        "Second",
-                                        "Third",
-                                        "Fourth"
-                                    ]
-                                },
-                                {
                                     name: "role",
                                     type: "dropdown",
                                     caption: "Your role",
@@ -139,12 +139,12 @@
                 };
 
                 const x = context.createForm();
-                x.on(window.xo.form.factory.events.post, e=>{
+                x.on(window.xo.form.factory.events.post, e => {
                     alert(JSON.stringify(e.detail.postData, null, 2))
                 })
                 await x.load(schema);
                 let result = await x.renderForm();
-                
+
                 this.app.UI.areas.main.add(result.container);
 
                 //this.app.UI.notifications.add("Welcome to ExoForm - the coolest place to play to play  to play  to play  to play  to play  to play  to play  to play  to play  to play  to play  to play  to play  to play  to play  to play  to play  to play  to play ")

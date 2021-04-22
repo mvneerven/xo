@@ -5,6 +5,9 @@ import ExoFormFactory from './ExoFormFactory';
 class ExoFormDefaultValidation {
     constructor(exo) {
         this.exo = exo;
+
+
+        exo.form.setAttribute('novalidate', true);
     }
 
     checkValidity() {
@@ -30,8 +33,9 @@ class ExoFormDefaultValidation {
             });
 
             if (returnValue !== false) {
+                
                 this.focus(invalidFields[0].field);
-                invalidFields[0].field._control.reportValidity()
+                //invalidFields[0].field._control.reportValidity()
             }
         }
     }
@@ -48,7 +52,7 @@ class ExoFormDefaultValidation {
             let pgElm = element.closest('[data-page]');
             if (pgElm) {
                 let page = parseInt(pgElm.getAttribute("data-page"));
-                this.exo.updateView(0, page);
+                this.exo.gotoPage(page);
                 setTimeout(e => f, 20);
             }
         }

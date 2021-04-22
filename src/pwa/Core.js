@@ -154,6 +154,11 @@ class Core {
 
         return url.protocol === "http:" || url.protocol === "https:";
     }
+
+    static toWords(text) {
+        var result = text.replace(/([A-Z])/g, " $1");
+        return result.charAt(0).toUpperCase() + result.slice(1);
+    }
 }
 
 export default Core;

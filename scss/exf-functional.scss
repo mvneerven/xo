@@ -70,6 +70,15 @@
         grid-template-columns: 10em 10em;
     }
 
+    .exf-cols-20em-20em-1fr {
+        grid-template-columns: 20em 20em 1fr;
+    }
+    
+    // make sure multi-input grid inputs fill out
+    .exf-cnt.exf-ctl-group.grid .exf-ctl-cnt > [name] {
+        width: 100%;
+    }
+
     .exf-wrapper {
         height: 100%;
 
