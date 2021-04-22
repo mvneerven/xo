@@ -118,10 +118,10 @@ class ExoControlBase {
 
         this.addEventListeners();
 
-        if(this.context.field.required){
+        if (this.context.field.required) {
             this.container.classList.add("exf-required");
         }
-        
+
         return this.container
     }
 
@@ -191,14 +191,36 @@ class ExoControlBase {
     // returns valid state of the control - can be subclassed
     get valid() {
 
-        if (this.htmlElement && this.htmlElement.reportValidity)
-            return this.htmlElement.reportValidity()
+        let numInvalid = 0;
+        this.container.querySelectorAll("*").forEach(el => {
+            if (el.reportValidity) {
+                try {
+                    if (!el.reportValidity()) {
+                        numInvalid++;
+                    }
+                }
+                catch { }
+            }
+        })
 
-        return true;
+        // let input = this.container.querySelector("[name]");
+
+        // if (this.htmlElement && this.htmlElement.reportValidity)
+        //     return this.htmlElement.reportValidity()
+
+        // return true;
+
+        return numInvalid === 0;
     }
 
     get validationMessage() {
-        return this.htmlElement.validationMessage;
+        let msg = "";
+        this.container.querySelectorAll("*").forEach(el => {
+            if (el.validationMessage) {
+                msg = el.validationMessage;
+            }
+        })
+        return msg;
     }
 
     showValidationError() {
@@ -309,7 +331,8 @@ export class ExoInputControl extends ExoElementControl {
         const _ = this;
 
         _.htmlElement.addEventListener("keyup", e => {
-            if (e.keyCode !== 13) {
+            if (e.key !== "Enter") {
+                console.log(e.key);
                 let data = [];
 
                 ["@gmail.com", "@outlook.com", "@live.nl", "@yahoo.com", "@hotmail.com"].forEach(a => {
@@ -319,6 +342,13 @@ export class ExoInputControl extends ExoElementControl {
                 if (data.length > 1) {
                     _.createDataList(_.context.field, data);
                 }
+            }
+            else {
+                let dl = _.container.querySelector("datalist");
+                if (dl) {
+                    dl.remove();
+                }
+                e.preventDefault();
             }
         })
     }
@@ -643,10 +673,10 @@ class ExoInputListControl extends ExoListControl {
             if (!value || value.length === 0) {
 
                 let inp = this.htmlElement.querySelector("input");
-                try{
+                try {
                     inp.setCustomValidity(this.getValidationMessage());
                     inp.reportValidity()
-                } catch {};
+                } catch { };
 
                 return false;
             }
@@ -655,15 +685,15 @@ class ExoInputListControl extends ExoListControl {
     }
 
     // Used to get localized standard validation message 
-    getValidationMessage(){
-        let msg = "You must select a value", 
-        testFrm = DOM.parseHTML('<form><input name="test" required /></form');
-        testFrm.querySelector("input").addEventListener("invalid", e=>{
+    getValidationMessage() {
+        let msg = "You must select a value",
+            testFrm = DOM.parseHTML('<form><input name="test" required /></form');
+        testFrm.querySelector("input").addEventListener("invalid", e => {
             msg = e.validationMessage;
             e.preventDefault()
         });
         testFrm.submit();
-        return msg; 
+        return msg;
     }
 
     showValidationError() {

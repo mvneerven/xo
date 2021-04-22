@@ -17,13 +17,13 @@ class ExoFormDefaultValidation {
         return numInvalid === 0;
     }
 
-    reportValidity() {
+    reportValidity(page) {
         let invalidFields = this.exo.query(f => {
-            return !f._control.valid;
+            return page === undefined ? !f._control.valid : page === f._page.index && !f._control.valid;
         }).map(f => {
             return {
                 field: f,
-                validationMessage: f._control.validationMessage
+                validationMessage: f._control.validationMessage 
             }
         });
 
@@ -33,9 +33,7 @@ class ExoFormDefaultValidation {
             });
 
             if (returnValue !== false) {
-                
                 this.focus(invalidFields[0].field);
-                //invalidFields[0].field._control.reportValidity()
             }
         }
     }
@@ -66,7 +64,7 @@ class ExoFormDefaultValidation {
 class InlineFieldValidator {
 
     constructor(field) {
-        
+
         this._field = field;
         this._cnt = this._field._control.container || this._field._control.htmlElement;
 
@@ -138,7 +136,7 @@ class InlineFieldValidator {
     }
 
     _onChange(event) {
-        
+
         if (!this._field._control.valid) {
             this.showError();
         }
@@ -153,7 +151,7 @@ class ExoFormInlineValidation extends ExoFormDefaultValidation {
         super(exo);
         const form = exo.form;
         exo.on(ExoFormFactory.events.interactive, e => {
-            
+
             exo.query().forEach(f => {
                 f._control._validator = new InlineFieldValidator(f);
             })
@@ -165,14 +163,14 @@ class ExoFormInlineValidation extends ExoFormDefaultValidation {
         });
     }
 
-    reportValidity(page){
+    reportValidity(page) {
         const cb = page ? f => {
             return f._page.index === page && !f._control.valid; // only controls on given page
         } : f => {
             return !f._control.valid; // across all pages
         }
         let invalidFields = this.exo.query(cb);
-        invalidFields.forEach(f=>{
+        invalidFields.forEach(f => {
             f._control._validator.showError();
         })
     }

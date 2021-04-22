@@ -137,7 +137,14 @@ class ExoFormWizardNavigation extends ExoFormDefaultNavigation {
 
             DOM[page === 1 ? "disable" : "enable"](_.buttons["prev"].element);
             DOM[page === pageCount ? "disable" : "enable"](_.buttons["next"].element);
-        })
+        });
+
+
+        // let steps = new WizardProgress(_.exo).render();
+
+        // _.exo.container.insertBefore(steps, _.exo.form);
+        
+
     }
 
 
@@ -280,8 +287,8 @@ class WizardProgress {
             </li>`
     }
 
-    constructor(generator) {
-        this.generator = generator;
+    constructor(exo) {
+        this.exo = exo;
     }
 
     render() {
@@ -291,7 +298,7 @@ class WizardProgress {
         _.ul = _.container.querySelector("ul");
 
         let nr = 0;
-        _.generator.formSchema.pages.forEach(p => {
+        _.exo.formSchema.pages.forEach(p => {
             nr++;
             _.ul.appendChild(DOM.parseHTML(DOM.format(this.templates.progressstep, {
                 step: nr,
@@ -302,9 +309,13 @@ class WizardProgress {
         _.container.querySelectorAll(".step-wizard ul button").forEach(b => {
             b.addEventListener("click", e => {
                 var step = parseInt(b.querySelector("div.step").innerText);
-                _.generator[step > 0 ? "nextPage" : "previousPage"]();
+                _.exo[step > 0 ? "nextPage" : "previousPage"]();
             })
         });
+
+        _.exo.on(window.xo.form.factory.events.page, e=>{
+            _.setClasses()
+        })
 
         return this.container;
     }
@@ -312,8 +323,8 @@ class WizardProgress {
     setClasses() {
         const _ = this;
 
-        let index = _.generator.currentPage;
-        let steps = _.generator.getLastPage();
+        let index = _.exo.currentPage;
+        let steps = _.exo.getLastPage();
 
         if (!_.container)
             return;
@@ -331,12 +342,12 @@ class WizardProgress {
             ix++;
             li.classList[ix === index ? "add" : "remove"]("active");
 
-            li.classList[_.generator.isPageValid(ix) ? "add" : "remove"]("done");
+            li.classList[_.exo.isPageValid(ix) ? "add" : "remove"]("done");
 
         });
 
         _.container.querySelectorAll(".exf-wiz-step-cnt .step-wizard li").forEach(li => {
-            li.style.width = (100 / (steps + 1)) + "%";
+            li.style.width = (100 / (steps)) + "%";
         })
 
     }

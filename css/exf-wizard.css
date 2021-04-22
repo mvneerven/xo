@@ -21,18 +21,19 @@
 
 .exf-wiz-step-cnt .step-wizard {
   display: inline-block;
-  position: relative;
-  width: 85%;
+  width: 100%;
 }
 
 .exf-wiz-step-cnt .step-wizard .progress {
   position: absolute;
-  top: 35px;
+  top: 28px;
+  left: 0;
+  width: 100%;
 }
 
 .exf-wiz-step-cnt .step-wizard .progressbar {
-  position: fixed;
-  background-color: #3b5343;
+  position: absolute;
+  background-color: var(--color-shade);
   opacity: 1;
   height: 3px;
   width: 0%;
@@ -43,21 +44,18 @@
 .exf-wiz-step-cnt .step-wizard .progressbar.empty {
   opacity: 1;
   width: 100%;
-  background-color: #d0d0d0;
+  background-color: var(-color-text);
 }
 
 .exf-wiz-step-cnt .step-wizard ul {
-  position: absolute;
   width: 100%;
   list-style-type: none;
   padding: 0;
-  left: -2%;
 }
 
 .exf-wiz-step-cnt .step-wizard li {
   display: inline-block;
   text-align: center;
-  width: 24%;
 }
 
 .exf-wiz-step-cnt .step-wizard li .step {

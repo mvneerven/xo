@@ -1792,12 +1792,31 @@
 
 
     get valid() {
-      if (this.htmlElement && this.htmlElement.reportValidity) return this.htmlElement.reportValidity();
-      return true;
+      let numInvalid = 0;
+      this.container.querySelectorAll("*").forEach(el => {
+        if (el.reportValidity) {
+          try {
+            if (!el.reportValidity()) {
+              numInvalid++;
+            }
+          } catch {}
+        }
+      }); // let input = this.container.querySelector("[name]");
+      // if (this.htmlElement && this.htmlElement.reportValidity)
+      //     return this.htmlElement.reportValidity()
+      // return true;
+
+      return numInvalid === 0;
     }
 
     get validationMessage() {
-      return this.htmlElement.validationMessage;
+      let msg = "";
+      this.container.querySelectorAll("*").forEach(el => {
+        if (el.validationMessage) {
+          msg = el.validationMessage;
+        }
+      });
+      return msg;
     }
 
     showValidationError() {
@@ -1894,7 +1913,8 @@
       const _ = this;
 
       _.htmlElement.addEventListener("keyup", e => {
-        if (e.keyCode !== 13) {
+        if (e.key !== "Enter") {
+          console.log(e.key);
           let data = [];
           ["@gmail.com", "@outlook.com", "@live.nl", "@yahoo.com", "@hotmail.com"].forEach(a => {
             data.push(e.target.value.split('@')[0] + a);
@@ -1903,6 +1923,14 @@
           if (data.length > 1) {
             _.createDataList(_.context.field, data);
           }
+        } else {
+          let dl = _.container.querySelector("datalist");
+
+          if (dl) {
+            dl.remove();
+          }
+
+          e.preventDefault();
         }
       });
     }
@@ -3592,13 +3620,11 @@
       _defineProperty(this, "fields", {
         from: {
           caption: "From",
-          type: "date",
-          required: true
+          type: "date"
         },
         to: {
           caption: "To",
-          type: "date",
-          required: true
+          type: "date"
         }
       });
     }
@@ -4180,9 +4206,9 @@
       return numInvalid === 0;
     }
 
-    reportValidity() {
+    reportValidity(page) {
       let invalidFields = this.exo.query(f => {
-        return !f._control.valid;
+        return page === undefined ? !f._control.valid : page === f._page.index && !f._control.valid;
       }).map(f => {
         return {
           field: f,
@@ -4196,7 +4222,7 @@
         });
 
         if (returnValue !== false) {
-          this.focus(invalidFields[0].field); //invalidFields[0].field._control.reportValidity()
+          this.focus(invalidFields[0].field);
         }
       }
     }
@@ -4481,7 +4507,9 @@
         let pageCount = e.detail.pageCount;
         DOM[page === 1 ? "disable" : "enable"](_.buttons["prev"].element);
         DOM[page === pageCount ? "disable" : "enable"](_.buttons["next"].element);
-      });
+      }); // let steps = new WizardProgress(_.exo).render();
+      // _.exo.container.insertBefore(steps, _.exo.form);
+
     }
 
   }

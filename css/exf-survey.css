@@ -84,12 +84,6 @@
   font-size: x-large;
 }
 
-.exf-container.exf-survey .exf-wiz-step-cnt {
-  font-size: smaller;
-  width: 100%;
-  max-width: none;
-}
-
 .exf-container.exf-survey .exf-page {
   font-size: 1.1em;
   padding-top: 3em;

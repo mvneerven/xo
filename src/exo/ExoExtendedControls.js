@@ -889,8 +889,8 @@ class ExoDateRangeControl extends MultiInputControl {
     grid = "exf-cols-10em-10em";
 
     fields = {
-        from: { caption: "From", type: "date", required: true },
-        to: { caption: "To", type: "date", required: true }
+        from: { caption: "From", type: "date" },
+        to: { caption: "To", type: "date" }
     }
 
 
