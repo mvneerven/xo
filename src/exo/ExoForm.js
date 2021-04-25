@@ -59,11 +59,12 @@ class ExoForm {
         baseUrl: document.location.origin,
         navigation: "auto",
         validation: "default",
+        progress: "auto",
+        theme: "fluent",
         runtime: {
             progress: false
         },
         form: {
-            theme: "fluent",
             class: ""
         },
 
@@ -127,15 +128,10 @@ class ExoForm {
                     _.triggerEvent(ExoFormFactory.events.schemaLoaded);
 
                     _.formSchema.totalFieldCount = _.getTotalFieldCount(_.formSchema)
+
+                    _._createComponents();
+
                     _._applyLoadedSchema();
-
-                    let nav = ExoFormFactory.navigation.getType(_);
-                    _.navigation = new nav(_);
-
-                    let vald = ExoFormFactory.validation.types[_.formSchema.validation];
-                    _.validation = new vald(_);
-
-                    console.debug("Navigation type:", _.formSchema.navigation, nav.name);
 
                     resolve(_);
                 }
@@ -163,16 +159,20 @@ class ExoForm {
 
     }
 
+    _createComponents() {
+        this.addins = {};
+
+        for (var n in ExoFormFactory.meta) {
+            let cmp = ExoFormFactory.meta[n];
+            let tp = cmp.type.getType(this);
+            this.addins[n] = new tp(this)
+        }
+    }
+
     _applyLoadedSchema() {
         const _ = this;
 
-        _.formSchema.form = _.formSchema.form || { theme: _.defaults.form.theme };
-
-        let themeClasses = _.formSchema.form.theme ? _.formSchema.form.theme.split(' ') : [_.defaults.form.theme];
-
-        themeClasses.forEach(c => {
-            _.container.classList.add(c);
-        })
+        _.formSchema.form = _.formSchema.form || {};
 
         let formClasses = _.formSchema.form.class ? _.formSchema.form.class.split(' ') : ["standard"];
 
@@ -260,7 +260,11 @@ class ExoForm {
         const _ = this;
         console.debug("Finalizing form, rendering is ready");
 
-        _.navigation.render();
+        _.addins.navigation.render();
+
+        _.addins.progress.render();
+
+        _.addins.theme.apply();
 
         _.form.addEventListener("submit", e => {
             e.preventDefault(); // preventing default behaviour
@@ -293,7 +297,7 @@ class ExoForm {
     }
 
     _cleanup() {
-        this.navigation.clear();
+        this.addins.navigation.clear();
 
         if (this.container)
             this.container.innerHTML = "";
@@ -443,21 +447,22 @@ class ExoForm {
      * @return {array} - All matched fields in the current ExoForm schema
      */
     query(matcher) {
-        if (matcher === undefined) matcher = () => { return true };        
+        if (matcher === undefined) matcher = () => { return true };
         let matches = [];
         this.formSchema.pages.forEach(p => {
+            let fieldIndex = 0
             p.fields.forEach(f => {
-                f = {
-                    _page: {
-                        index: p.index,
-                        legend: p.legend
-                    },
-                    ...f
+                f._page = {
+                    index: p.index,
+                    legend: p.legend
                 }
+                f._index = fieldIndex;
 
                 if (matcher(f)) {
                     matches.push(f)
                 }
+
+                fieldIndex++;
             });
         });
         return matches;
@@ -468,8 +473,8 @@ class ExoForm {
      * @param {string} name - name of field to get
      * @return {Object} - Field
      */
-    get(name){
-        let results = this.query(f=>{
+    get(name) {
+        let results = this.query(f => {
             return f.name === name;
         });
         return results.length ? results[0] : null;
@@ -507,9 +512,9 @@ class ExoForm {
         if (ev)
             ev.preventDefault();
 
-        if (!_.validation.checkValidity()) {
+        if (!_.addins.validation.checkValidity()) {
             console.debug("checkValidity - Form not valid");
-            _.validation.reportValidity();
+            _.addins.validation.reportValidity();
             return;
         }
 
@@ -584,7 +589,7 @@ class ExoForm {
         if (add > 0 && current > 0) {
 
             if (!this.isPageValid(_.currentPage)) {
-                this.validation.reportValidity(_.currentPage);
+                this.addins.validation.reportValidity(_.currentPage);
                 return;
             }
         }
@@ -597,7 +602,7 @@ class ExoForm {
         let pageCount = _.getLastPage();
 
         if (current > 0) {
-            if (!_.navigation.canMove(current, page))
+            if (!_.addins.navigation.canMove(current, page))
                 return;
 
             let returnValue = _.triggerEvent(ExoFormFactory.events.beforePage, {
@@ -620,7 +625,7 @@ class ExoForm {
             p.classList[i === page ? "add" : "remove"]("active");
         });
 
-        _.navigation.update();
+        _.addins.navigation.update();
 
         _.triggerEvent(ExoFormFactory.events.page, {
             from: current,

@@ -1,5 +1,5 @@
 .exf-container {
-    &.fluent {
+    &.exf-theme-fluent {
         font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 
         .exf-ctl-cnt {
@@ -9,6 +9,12 @@
             height: auto;
             padding: 2rem 0.5rem 0.5rem;
             line-height: 1;
+
+            .exf-ctl-cnt { // nested controls
+                padding-left: 0;
+                margin: 0;
+            }
+
 
             > [name] {
                 outline: none;

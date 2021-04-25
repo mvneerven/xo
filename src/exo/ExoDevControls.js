@@ -38,9 +38,12 @@ class ExoAceCodeEditor extends ExoBaseControls.controls.div.type {
 
         return new Promise((resolve, reject) => {
             DOM.require("https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/ace.js", () => {
+                
+                ace.config.set("fontSize", "14px");
+
                 var editor = ace.edit(_.htmlElement);
 
-                var beautify = ace.require("ace/ext/beautify"); // get reference to extension
+                //var beautify = ace.require("ace/ext/beautify"); // get reference to extension
 
                 editor.setTheme("ace/theme/" + _.theme);
                 editor.session.setMode("ace/mode/" + _.mode);
@@ -52,6 +55,8 @@ class ExoAceCodeEditor extends ExoBaseControls.controls.div.type {
                 }
 
                 _.htmlElement.setAttribute('data-evtarget', "true"); // set div as event target 
+
+                
 
                 editor.on("change", e => {
                     setTimeout(() => {

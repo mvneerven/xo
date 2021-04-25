@@ -761,7 +761,11 @@ class ExoButtonControl extends ExoElementControl {
             },
             {
                 name: "action",
-                description: "Possible values: 'next' (next page in Wizard)"
+                description: `Possible values: 
+                    - 'next' (next page in Wizard)
+                    - 'reset' (back to first page)
+                    - 'goto:[page]' (jump to given page)
+                `
             });
     }
 
@@ -785,7 +789,7 @@ class ExoButtonControl extends ExoElementControl {
                         if (_.context.exo.options.host) {
                             if (typeof (_.context.exo.options.host[_.click]) === "function") {
                                 f = _.context.exo.options.host[_.click];
-                                f.apply(_.context.exo.options.host, [data]);
+                                f.apply(_.context.exo.options.host, [data, e]);
                                 return;
                             }
                         }
@@ -793,15 +797,24 @@ class ExoButtonControl extends ExoElementControl {
                             throw "Not a valid function: " + _.click
                         }
                     }
-                    f.apply(_, [data]);
+                    f.apply(_, [data, e]);
                 });
 
             }
             else if (_.action) {
+                let actionParts = _.action.split(":");
 
-                switch (_.action) {
+                switch (actionParts[0]) {
                     case "next":
                         _.context.exo.nextPage();
+                        break;
+                    case "reset":
+                        _.context.exo.nextPage();
+                        break;
+
+                    case "goto":
+                       
+                        _.context.exo.gotoPage(parseInt(actionParts[1]));
                         break;
                 }
             }
@@ -819,7 +832,7 @@ class ExoButtonControl extends ExoElementControl {
 
 }
 
-class ExoNumberControl extends ExoInputControl {
+export class ExoNumberControl extends ExoInputControl {
 
     constructor(context) {
         super(context);
@@ -831,9 +844,34 @@ class ExoNumberControl extends ExoInputControl {
 
 export class ExoRangeControl extends ExoNumberControl {
 
+    showoutput = false;
+
     constructor(context) {
         super(context);
         this.context.field.type = "range";
+
+        this.acceptProperties({
+            name: "showoutput",
+            type: Boolean
+        })
+    }
+
+    async render(){
+        const me = this;
+        await super.render();
+
+        if(this.showoutput){
+            this.output= document.createElement("output");
+            const sync =  e=>{
+                me.output.value=me.htmlElement.value;
+            }
+
+            this.container.insertBefore(this.output, this.htmlElement.nextSibling);
+            this.htmlElement.addEventListener("input", sync); sync();
+            this.container.classList.add("exf-rng-output")
+        }
+
+        return this.container;
     }
 
     static returnValueType = Number;

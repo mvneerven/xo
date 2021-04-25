@@ -2,7 +2,8 @@ import Core from './Core';
 import Router from './Router';
 import RouteModule from './RouteModule';
 import PWA_UI from './PWA_UI';
-import PWA_SignalR from './PWA_SignalR';
+import PWA_EventHub from './PWA_EventHub';
+import PWA_RESTService from './PWA_RESTService';
 
 class PWA {
     static RouteModule = RouteModule;
@@ -34,8 +35,12 @@ class PWA {
         }
 
         console.debug("PWA Config", this.config);
+        
+        this.restService = new PWA_RESTService(this);
 
-        this.signalR = new PWA_SignalR(this).init().then(()=>{
+        this.eventHub = new PWA_EventHub(this);
+        
+        this.eventHub.init().then(()=>{
 
             this.asyncInit().then(() => {
                 this.UI = new PWA_UI(this);
@@ -45,7 +50,7 @@ class PWA {
             });
                 
         })
-
+       
         
         let cl = document.querySelector("html").classList;
         this.forceTheme = cl.contains("theme-dark") ? "dark" : cl.contains("theme-light") ? "light" : undefined;
@@ -61,7 +66,7 @@ class PWA {
         }
 
         ev.detail = {
-            exoForm: this,
+            app: this,
             ...(detail || {})
         };
 
@@ -136,44 +141,7 @@ class PWA {
     }
 
     rest(endpoint, options) {
-        const _ = this;
-
-        const headers = new Headers();
-        options = options || {};
-
-        endpoint = new URL(endpoint, this.config.baseUrl);
-
-        const fetchOptions = {
-            method: "GET",
-            ...options
-        };
-
-        let tokenAcquirer = (scope) => {
-            return Promise.resolve();
-        }
-        if (!options.isAnonymous) {
-            tokenAcquirer = () => {
-                return _.getToken.apply(_)
-            };
-        }
-
-        return tokenAcquirer().then(r => {
-            if (r && r.accessToken) {
-                headers.append("Authorization", `Bearer ` + r.accessToken);
-            }
-            else {
-                console.warn("No JWT Token provided. Continuing anonymously");
-            }
-
-            if (options.headers) {
-                for (var h in options.headers) {
-                    headers.append(h, options.headers[h]);
-                }
-            }
-
-            fetchOptions.headers = headers
-            return fetch(endpoint, fetchOptions).then(x => x.json())
-        })
+        return this.restService.send(endpoint, options);
     }
 
     get signedIn() {

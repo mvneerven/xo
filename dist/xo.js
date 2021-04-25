@@ -680,11 +680,12 @@
         baseUrl: document.location.origin,
         navigation: "auto",
         validation: "default",
+        progress: "auto",
+        theme: "fluent",
         runtime: {
           progress: false
         },
         form: {
-          theme: "fluent",
           class: ""
         },
         multiValueFieldTypes: ["checkboxlist", "tags"],
@@ -746,13 +747,10 @@
 
             _.formSchema.totalFieldCount = _.getTotalFieldCount(_.formSchema);
 
+            _._createComponents();
+
             _._applyLoadedSchema();
 
-            let nav = ExoFormFactory.navigation.getType(_);
-            _.navigation = new nav(_);
-            let vald = ExoFormFactory.validation.types[_.formSchema.validation];
-            _.validation = new vald(_);
-            console.debug("Navigation type:", _.formSchema.navigation, nav.name);
             resolve(_);
           }
         };
@@ -776,16 +774,20 @@
       });
     }
 
+    _createComponents() {
+      this.addins = {};
+
+      for (var n in ExoFormFactory.meta) {
+        let cmp = ExoFormFactory.meta[n];
+        let tp = cmp.type.getType(this);
+        this.addins[n] = new tp(this);
+      }
+    }
+
     _applyLoadedSchema() {
       const _ = this;
 
-      _.formSchema.form = _.formSchema.form || {
-        theme: _.defaults.form.theme
-      };
-      let themeClasses = _.formSchema.form.theme ? _.formSchema.form.theme.split(' ') : [_.defaults.form.theme];
-      themeClasses.forEach(c => {
-        _.container.classList.add(c);
-      });
+      _.formSchema.form = _.formSchema.form || {};
       let formClasses = _.formSchema.form.class ? _.formSchema.form.class.split(' ') : ["standard"];
       formClasses.forEach(c => {
         _.form.classList.add(c);
@@ -874,7 +876,11 @@
 
       console.debug("Finalizing form, rendering is ready");
 
-      _.navigation.render();
+      _.addins.navigation.render();
+
+      _.addins.progress.render();
+
+      _.addins.theme.apply();
 
       _.form.addEventListener("submit", e => {
         e.preventDefault(); // preventing default behaviour
@@ -910,7 +916,7 @@
     }
 
     _cleanup() {
-      this.navigation.clear();
+      this.addins.navigation.clear();
       if (this.container) this.container.innerHTML = "";
     }
     /**
@@ -1056,18 +1062,19 @@
       };
       let matches = [];
       this.formSchema.pages.forEach(p => {
+        let fieldIndex = 0;
         p.fields.forEach(f => {
-          f = {
-            _page: {
-              index: p.index,
-              legend: p.legend
-            },
-            ...f
+          f._page = {
+            index: p.index,
+            legend: p.legend
           };
+          f._index = fieldIndex;
 
           if (matcher(f)) {
             matches.push(f);
           }
+
+          fieldIndex++;
         });
       });
       return matches;
@@ -1119,10 +1126,10 @@
 
       if (ev) ev.preventDefault();
 
-      if (!_.validation.checkValidity()) {
+      if (!_.addins.validation.checkValidity()) {
         console.debug("checkValidity - Form not valid");
 
-        _.validation.reportValidity();
+        _.addins.validation.reportValidity();
 
         return;
       }
@@ -1203,7 +1210,7 @@
 
       if (add > 0 && current > 0) {
         if (!this.isPageValid(_.currentPage)) {
-          this.validation.reportValidity(_.currentPage);
+          this.addins.validation.reportValidity(_.currentPage);
           return;
         }
       }
@@ -1215,7 +1222,7 @@
       let pageCount = _.getLastPage();
 
       if (current > 0) {
-        if (!_.navigation.canMove(current, page)) return;
+        if (!_.addins.navigation.canMove(current, page)) return;
 
         let returnValue = _.triggerEvent(ExoFormFactory.events.beforePage, {
           from: current,
@@ -1238,7 +1245,7 @@
         p.classList[i === page ? "add" : "remove"]("active");
       });
 
-      _.navigation.update();
+      _.addins.navigation.update();
 
       _.triggerEvent(ExoFormFactory.events.page, {
         from: current,
@@ -2340,7 +2347,11 @@
         description: "Click method"
       }, {
         name: "action",
-        description: "Possible values: 'next' (next page in Wizard)"
+        description: `Possible values: 
+                    - 'next' (next page in Wizard)
+                    - 'reset' (back to first page)
+                    - 'goto:[page]' (jump to given page)
+                `
       });
     }
 
@@ -2370,7 +2381,7 @@
               if (_.context.exo.options.host) {
                 if (typeof _.context.exo.options.host[_.click] === "function") {
                   f = _.context.exo.options.host[_.click];
-                  f.apply(_.context.exo.options.host, [data]);
+                  f.apply(_.context.exo.options.host, [data, e]);
                   return;
                 }
               } else {
@@ -2378,12 +2389,24 @@
               }
             }
 
-            f.apply(_, [data]);
+            f.apply(_, [data, e]);
           });
         } else if (_.action) {
-          switch (_.action) {
+          let actionParts = _.action.split(":");
+
+          switch (actionParts[0]) {
             case "next":
               _.context.exo.nextPage();
+
+              break;
+
+            case "reset":
+              _.context.exo.nextPage();
+
+              break;
+
+            case "goto":
+              _.context.exo.gotoPage(parseInt(actionParts[1]));
 
               break;
           }
@@ -2416,7 +2439,34 @@
   class ExoRangeControl extends ExoNumberControl {
     constructor(context) {
       super(context);
+
+      _defineProperty(this, "showoutput", false);
+
       this.context.field.type = "range";
+      this.acceptProperties({
+        name: "showoutput",
+        type: Boolean
+      });
+    }
+
+    async render() {
+      const me = this;
+      await super.render();
+
+      if (this.showoutput) {
+        this.output = document.createElement("output");
+
+        const sync = e => {
+          me.output.value = me.htmlElement.value;
+        };
+
+        this.container.insertBefore(this.output, this.htmlElement.nextSibling);
+        this.htmlElement.addEventListener("input", sync);
+        sync();
+        this.container.classList.add("exf-rng-output");
+      }
+
+      return this.container;
     }
 
   }
@@ -2657,6 +2707,9 @@
   class ExoFileDropControl extends ExoBaseControls.controls.input.type {
     constructor(context) {
       super(context);
+
+      _defineProperty(this, "height", 120);
+
       this.acceptProperties({
         name: "maxSize"
       }, {
@@ -2671,6 +2724,10 @@
         name: "maxSize",
         type: Number,
         description: "Maximum filesize of files to be uploaded (in bytes) - example: 4096000"
+      }, {
+        name: "height",
+        type: Number,
+        description: "Height of drop area"
       });
     }
 
@@ -2682,6 +2739,7 @@
       _.field.data = this.field.data || [];
       await super.render();
       _.previewDiv = DOM.parseHTML(`<div class="file-preview clearable"></div>`);
+      _.previewDiv.style.height = `${this.height}px`;
 
       _.container.appendChild(_.previewDiv);
 
@@ -3137,12 +3195,22 @@
         type: String,
         description: "Key for Google reCaptcha",
         more: "https://developers.google.com/recaptcha/intro"
+      }, {
+        name: "invisible",
+        type: Boolean,
+        description: "Use invisible Captcha method",
+        more: "https://developers.google.com/recaptcha/docs/invisible"
       });
     }
 
     async render() {
       this.htmlElement.classList.add("g-recaptcha");
       this.htmlElement.setAttribute("data-sitekey", this.sitekey);
+
+      if (this.invisible) {
+        this.htmlElement.setAttribute("data-size", "invisible");
+      }
+
       return this.htmlElement;
     }
 
@@ -3152,6 +3220,14 @@
 
     get sitekey() {
       return this._sitekey;
+    }
+
+    get invisible() {
+      return this._invisible === true;
+    }
+
+    set invisible(value) {
+      this._invisible = value == true;
     }
 
   } // TODO finish
@@ -3690,9 +3766,9 @@
       this.dlgId = 'dlg_' + Core.guid().replace('-', '');
     }
 
-    hide(button) {
+    hide(button, e) {
       if (this.context.field.click) {
-        this.context.field.click.apply(this, [button]);
+        this.context.field.click.apply(this, [button, e]);
       }
     }
 
@@ -3705,9 +3781,7 @@
       dlg.classList.add(this.cancelVisible ? "dlg-cv" : "dlg-ch");
 
       const c = (e, confirm) => {
-        _.remove(); //window.location.hash = "na";
-
-
+        //window.location.hash = "na";
         var btn = "cancel",
             b = e.target;
 
@@ -3715,7 +3789,11 @@
           btn = "confirm";
         }
 
-        _.hide.apply(_, [btn]);
+        _.hide.apply(_, [btn, e]);
+
+        if (!e.cancelBubble) {
+          _.remove();
+        }
       };
 
       dlg.querySelector(".dlg-x").addEventListener("click", c);
@@ -3963,10 +4041,8 @@
 
       return new Promise((resolve, reject) => {
         DOM.require("https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/ace.js", () => {
-          var editor = ace.edit(_.htmlElement);
-
-          ace.require("ace/ext/beautify"); // get reference to extension
-
+          ace.config.set("fontSize", "14px");
+          var editor = ace.edit(_.htmlElement); //var beautify = ace.require("ace/ext/beautify"); // get reference to extension
 
           editor.setTheme("ace/theme/" + _.theme);
           editor.session.setMode("ace/mode/" + _.mode);
@@ -4165,9 +4241,9 @@
 
   }
 
-  class ExoTheme {
+  class ExoFormTheme {
     // exf-base-text
-    constructor(name) {
+    constructor(exo) {
       _defineProperty(this, "fieldTemplate",
       /*html*/
       `<div data-id="{{id}}" class="exf-ctl-cnt {{class}}">
@@ -4177,21 +4253,45 @@
     </label>
 </div>`);
 
-      this.name = name;
+      this.exo = exo;
+    }
+
+    apply() {
+      this.exo.container.classList.add("exf-theme-none");
     }
 
   }
 
-  class Fluent extends ExoTheme {
+  class ExoFormFluentTheme extends ExoFormTheme {
     constructor(name) {
       super(name);
     }
 
+    apply() {
+      this.exo.container.classList.add("exf-theme-fluent");
+    }
+
   }
 
-  class ExoThemes {}
+  class ExoFormThemes {
+    static getType(exo) {
+      let type = exo.formSchema.theme;
+      if (type === "auto" || type === undefined) type = ExoFormThemes.matchTheme(exo);
+      let theme = ExoFormThemes.types[type];
+      return theme || ExoFormTheme;
+    }
 
-  _defineProperty(ExoThemes, "fluent", new Fluent("fluent"));
+    static matchTheme(exo) {
+      return "fluent";
+    }
+
+  }
+
+  _defineProperty(ExoFormThemes, "types", {
+    auto: undefined,
+    none: ExoFormTheme,
+    fluent: ExoFormFluentTheme
+  });
 
   class ExoFormDefaultValidation {
     constructor(exo) {
@@ -4222,6 +4322,9 @@
         });
 
         if (returnValue !== false) {
+          // debugger;
+          // invalidFields.sort()
+          console.log(invalidFields);
           this.focus(invalidFields[0].field);
         }
       }
@@ -4358,10 +4461,23 @@
 
   }
 
-  class ExoFormValidation {}
+  class ExoFormValidation {
+    static getType(exo) {
+      let type = exo.formSchema.validation;
+      if (type === "auto" || typeof type === "undefined") type = ExoFormValidation.matchValidationType(exo);
+      let tp = ExoFormValidation.types[type];
+      return tp || ExoFormDefaultValidation;
+    }
+
+    static matchValidationType(exo) {
+      return "inline";
+    }
+
+  }
 
   _defineProperty(ExoFormValidation, "types", {
-    default: ExoFormDefaultValidation,
+    auto: undefined,
+    html5: ExoFormDefaultValidation,
     inline: ExoFormInlineValidation
   });
 
@@ -4423,11 +4539,6 @@
       this.container.appendChild(btn);
     }
 
-    update() {}
-
-  }
-
-  class ExoFormNoNavigation extends ExoFormNavigationBase {
     next() {
       this.exo.nextPage();
     }
@@ -4440,9 +4551,24 @@
       this.exo.gotoPage(1);
     }
 
+    update() {}
+
   }
 
-  class ExoFormDefaultNavigation extends ExoFormNoNavigation {
+  class ExoFormNoNavigation extends ExoFormNavigationBase {}
+
+  class ExoFormStaticNavigation extends ExoFormNavigationBase {
+    render() {
+      this.exo.on(ExoFormFactory.events.renderReady, e => {
+        this.exo.form.querySelectorAll(".exf-page").forEach(elm => {
+          elm.style.display = "block";
+        });
+      });
+    }
+
+  }
+
+  class ExoFormDefaultNavigation extends ExoFormNavigationBase {
     constructor(...args) {
       super(...args);
 
@@ -4639,9 +4765,163 @@
   _defineProperty(ExoFormNavigation, "types", {
     auto: undefined,
     none: ExoFormNoNavigation,
+    static: ExoFormStaticNavigation,
     default: ExoFormDefaultNavigation,
     wizard: ExoFormWizardNavigation,
     survey: ExoFormSurveyNavigation
+  });
+
+  class ExoFormNoProgress {
+    constructor(exo) {
+      this.exo = exo;
+    }
+
+    render() {
+      this.exo.on(ExoFormFactory.events.page, e => {
+        console.log("Progress - Paging ", e);
+      });
+    }
+
+  }
+
+  class ExoFormDefaultProgress extends ExoFormNoProgress {}
+
+  class ExoFormPageProgress extends ExoFormDefaultProgress {
+    render() {
+      super.render();
+      let elms = this.exo.form.querySelectorAll(".exf-page:not([data-skip='true']) > legend");
+      let index = 1;
+
+      if (elms.length > 1) {
+        elms.forEach(l => {
+          l.innerHTML += ` <span class="exf-pg-prg">(${index}/${elms.length})</span>`;
+          index++;
+        });
+      }
+    }
+
+  }
+
+  class ExoFormStepsProgress extends ExoFormDefaultProgress {
+    constructor(...args) {
+      super(...args);
+
+      _defineProperty(this, "container", null);
+
+      _defineProperty(this, "templates", {
+        progressbar:
+        /*html*/
+        `
+            <nav class="exf-wiz-step-cnt">
+                <div class="step-wizard" role="navigation">
+                <div class="progress">
+                    <div class="progressbar empty"></div>
+                    <div class="progressbar prog-pct"></div>
+                </div>
+                <ul>
+                    {{inner}}
+                </ul>
+                </div>
+                
+            </nav>`,
+        progressstep:
+        /*html*/
+        `
+            <li class="">
+                <button type="button" id="step{{step}}">
+                    <div class="step">{{step}}</div>
+                    <div class="title">{{pagetitle}}</div>
+                </button>
+            </li>`
+      });
+    }
+
+    render() {
+      super.render();
+
+      const _ = this;
+
+      _.container = DOM.parseHTML(_.templates.progressbar.replace("{{inner}}", ""));
+      _.ul = _.container.querySelector("ul");
+      let nr = 0;
+
+      _.exo.formSchema.pages.forEach(p => {
+        nr++;
+
+        _.ul.appendChild(DOM.parseHTML(DOM.format(this.templates.progressstep, {
+          step: nr,
+          pagetitle: p.legend
+        })));
+      });
+
+      _.container.querySelectorAll(".step-wizard ul button").forEach(b => {
+        b.addEventListener("click", e => {
+          var step = parseInt(b.querySelector("div.step").innerText);
+
+          _.exo[step > 0 ? "nextPage" : "previousPage"]();
+        });
+      });
+
+      _.exo.on(window.xo.form.factory.events.page, e => {
+        _.setClasses();
+      }); //return this.container;
+
+
+      this.exo.container.insertBefore(this.container, this.exo.form);
+    }
+
+    setClasses() {
+      const _ = this;
+
+      let index = _.exo.currentPage;
+
+      let steps = _.exo.getLastPage();
+
+      if (!_.container) return;
+      if (index < 0 || index > steps) return;
+      var p = (index - 1) * (100 / steps);
+
+      let pgb = _.container.querySelector(".progressbar.prog-pct");
+
+      if (pgb) pgb.style.width = p + "%";
+      var ix = 0;
+
+      _.container.querySelectorAll("ul li").forEach(li => {
+        ix++;
+        li.classList[ix === index ? "add" : "remove"]("active");
+        li.classList[_.exo.isPageValid(ix) ? "add" : "remove"]("done");
+      });
+
+      _.container.querySelectorAll(".exf-wiz-step-cnt .step-wizard li").forEach(li => {
+        li.style.width = 100 / steps + "%";
+      });
+    }
+
+  }
+
+  class ExoFormSurveyProgress extends ExoFormDefaultProgress {}
+
+  class ExoFormProgress {
+    static getType(exo) {
+      let type = exo.formSchema.progress;
+      if (type === "auto") type = ExoFormProgress.matchProgressType(exo);
+      return ExoFormProgress.types[type];
+    }
+
+    static matchProgressType(exo) {
+      if (exo.formSchema.pages.length > 1) return "page";
+      return "default";
+    }
+
+  }
+
+  _defineProperty(ExoFormProgress, "types", {
+    auto: undefined,
+    none: ExoFormNoProgress,
+    default: ExoFormDefaultProgress,
+    page: ExoFormPageProgress,
+    steps: ExoFormStepsProgress,
+    survey: ExoFormSurveyProgress
   });
 
   /**
@@ -4653,9 +4933,8 @@
 
   class ExoFormContext {
     constructor(library) {
-      this.library = this.enrichMeta(library);
-      this.themes = ExoThemes;
-      this._theme = this.themes.fluent; // default theme
+      this.library = this.enrichMeta(library); // this.themes = ExoThemes
+      // this._theme = this.themes.fluent; // default theme
     }
 
     enrichMeta(library) {
@@ -4755,19 +5034,18 @@
 
     createGenerator() {
       return new ExoSchemaGenerator();
-    }
+    } // get theme() {
+    //     return this._theme;
+    // }
+    // set theme(value) {
+    //     if (this.themes[value]) {
+    //         this._theme = this.themes[value];
+    //     }
+    //     else {
+    //         throw "Theme not registered"
+    //     }
+    // }
 
-    get theme() {
-      return this._theme;
-    }
-
-    set theme(value) {
-      if (this.themes[value]) {
-        this._theme = this.themes[value];
-      } else {
-        throw "Theme not registered";
-      }
-    }
 
   }
   /**
@@ -4993,9 +5271,24 @@
 
   });
 
-  _defineProperty(ExoFormFactory, "navigation", ExoFormNavigation);
-
-  _defineProperty(ExoFormFactory, "validation", ExoFormValidation);
+  _defineProperty(ExoFormFactory, "meta", {
+    navigation: {
+      type: ExoFormNavigation,
+      description: "Navigation component"
+    },
+    validation: {
+      type: ExoFormValidation,
+      description: "Validation component"
+    },
+    progress: {
+      type: ExoFormProgress,
+      description: "Progress display component"
+    },
+    theme: {
+      type: ExoFormThemes,
+      description: "Theme component"
+    }
+  });
 
   _defineProperty(ExoFormFactory, "Context", ExoFormContext);
 
@@ -5620,9 +5913,10 @@
 
   }
 
-  class PWA_SignalR {
+  class PWA_EventHub {
     constructor(app) {
       this.app = app;
+      Core.addEvents(this); // add simple event system
     }
 
     async init() {
@@ -5634,7 +5928,9 @@
             const signalRConnection = new signalR.HubConnectionBuilder().withUrl(sr.notificationServiceUrl + "/api").configureLogging(signalR.LogLevel[sr.logLevel]) //don't use in production
             .build();
             signalRConnection.on('newMessage', msg => {
-              this.app.triggerEvent("eventhub.topic." + msg.notificationDTO.useCase, { ...msg.notificationDTO
+              console.debug("signalR", msg);
+
+              this._triggerEvent(msg.notificationDTO.useCase, { ...msg.notificationDTO
               });
             });
             signalRConnection.onclose(() => console.log('disconnected'));
@@ -5646,6 +5942,108 @@
           resolve();
         }
       });
+    }
+
+    on(eventName, func) {
+      console.debug("Listening to event", eventName, func);
+      this.addEventListener(eventName, func);
+      return this;
+    }
+
+    _triggerEvent(eventName, detail, ev) {
+      console.debug("Triggering event", eventName, "detail: ", detail);
+
+      if (!ev) {
+        ev = new Event(eventName, {
+          "bubbles": false,
+          "cancelable": true
+        });
+      }
+
+      ev.detail = {
+        eventHub: this,
+        ...(detail || {})
+      };
+      return this.dispatchEvent(ev);
+    }
+
+  }
+
+  class PWA_RESTService {
+    constructor(app) {
+      this.app = app;
+    }
+
+    send(endpoint, options) {
+      const _ = this;
+
+      const headers = new Headers();
+      options = options || {};
+      endpoint = new URL(endpoint, this.app.config.baseUrl);
+      const fetchOptions = {
+        method: "GET",
+        ...options
+      };
+
+      let tokenAcquirer = scope => {
+        return Promise.resolve();
+      };
+
+      if (!options.isAnonymous) {
+        tokenAcquirer = () => {
+          return _.app.getToken.apply(_.app);
+        };
+      }
+
+      return tokenAcquirer().then(r => {
+        if (r && r.accessToken) {
+          headers.append("Authorization", `Bearer ` + r.accessToken);
+        } else {
+          console.warn("No JWT Token provided. Continuing anonymously");
+        }
+
+        if (options.headers) {
+          for (var h in options.headers) {
+            headers.append(h, options.headers[h]);
+          }
+        }
+
+        fetchOptions.headers = headers;
+
+        if (fetchOptions.method === "DELETE") {
+          return fetch(endpoint, fetchOptions);
+        }
+
+        return fetch(endpoint, fetchOptions).then(x => x.json());
+      });
+    }
+
+    get(endpoint, options) {
+      options = { ...(options || {}),
+        method: "GET"
+      };
+      return this.send(endpoint, options);
+    }
+
+    post(endpoint, options) {
+      options = { ...(options || {}),
+        method: "POST"
+      };
+      return this.send(endpoint, options);
+    }
+
+    put(endpoint, options) {
+      options = { ...(options || {}),
+        method: "PUT"
+      };
+      return this.send(endpoint, options);
+    }
+
+    delete(endpoint, options) {
+      options = { ...(options || {}),
+        method: "DELETE"
+      };
+      return this.send(endpoint, options);
     }
 
   }
@@ -5678,7 +6076,9 @@
       }
 
       console.debug("PWA Config", this.config);
-      this.signalR = new PWA_SignalR(this).init().then(() => {
+      this.restService = new PWA_RESTService(this);
+      this.eventHub = new PWA_EventHub(this);
+      this.eventHub.init().then(() => {
         this.asyncInit().then(() => {
           this.UI = new PWA_UI(this);
 
@@ -5703,7 +6103,7 @@
       }
 
       ev.detail = {
-        exoForm: this,
+        app: this,
         ...(detail || {})
       };
       return this.dispatchEvent(ev);
@@ -5769,42 +6169,7 @@
     }
 
     rest(endpoint, options) {
-      const _ = this;
-
-      const headers = new Headers();
-      options = options || {};
-      endpoint = new URL(endpoint, this.config.baseUrl);
-      const fetchOptions = {
-        method: "GET",
-        ...options
-      };
-
-      let tokenAcquirer = scope => {
-        return Promise.resolve();
-      };
-
-      if (!options.isAnonymous) {
-        tokenAcquirer = () => {
-          return _.getToken.apply(_);
-        };
-      }
-
-      return tokenAcquirer().then(r => {
-        if (r && r.accessToken) {
-          headers.append("Authorization", `Bearer ` + r.accessToken);
-        } else {
-          console.warn("No JWT Token provided. Continuing anonymously");
-        }
-
-        if (options.headers) {
-          for (var h in options.headers) {
-            headers.append(h, options.headers[h]);
-          }
-        }
-
-        fetchOptions.headers = headers;
-        return fetch(endpoint, fetchOptions).then(x => x.json());
-      });
+      return this.restService.send(endpoint, options);
     }
 
     get signedIn() {

@@ -7,6 +7,8 @@ import DOM from '../pwa/DOM';
 
 class ExoFileDropControl extends ExoBaseControls.controls.input.type {
 
+    height = 120;
+
     constructor(context) {
         super(context);
 
@@ -14,7 +16,8 @@ class ExoFileDropControl extends ExoBaseControls.controls.input.type {
             { name: "maxSize" },
             { name: "max", type: Number, description: "Max number of files accepted" },
             { name: "fileTypes", type: String | Array, description: 'Array of strings - example: ["image/"]' },
-            { name: "maxSize", type: Number, description: "Maximum filesize of files to be uploaded (in bytes) - example: 4096000" }
+            { name: "maxSize", type: Number, description: "Maximum filesize of files to be uploaded (in bytes) - example: 4096000" },
+            {name: "height", type: Number, description: "Height of drop area"}
         )
     }
 
@@ -28,6 +31,7 @@ class ExoFileDropControl extends ExoBaseControls.controls.input.type {
         await super.render();
 
         _.previewDiv = DOM.parseHTML(`<div class="file-preview clearable"></div>`);
+        _.previewDiv.style.height = `${this.height}px`; 
 
         _.container.appendChild(_.previewDiv);
         _.container.classList.add("exf-filedrop");
@@ -71,7 +75,6 @@ class ExoFileDropControl extends ExoBaseControls.controls.input.type {
         _.field.getCurrentValue = () => {
             return _.field.data.sort();
         }
-
 
         return _.container;
     }
@@ -502,7 +505,14 @@ class ExoCaptchaControl extends ExoBaseControls.controls.div.type {
             type: String,
             description: "Key for Google reCaptcha",
             more: "https://developers.google.com/recaptcha/intro"
-        })
+        },
+        {
+            name: "invisible",
+            type: Boolean,
+            description: "Use invisible Captcha method",
+            more: "https://developers.google.com/recaptcha/docs/invisible"
+        }
+        )
     }
 
     async render() {
@@ -510,6 +520,10 @@ class ExoCaptchaControl extends ExoBaseControls.controls.div.type {
         this.htmlElement.classList.add("g-recaptcha");
 
         this.htmlElement.setAttribute("data-sitekey", this.sitekey)
+
+        if(this.invisible){
+            this.htmlElement.setAttribute("data-size", "invisible");
+        }
 
         return this.htmlElement
     }
@@ -520,6 +534,14 @@ class ExoCaptchaControl extends ExoBaseControls.controls.div.type {
 
     get sitekey() {
         return this._sitekey;
+    }
+
+    get invisible(){
+        return this._invisible === true;
+    }
+
+    set invisible(value){
+        this._invisible = (value == true);
     }
 }
 
@@ -954,9 +976,9 @@ class ExoDialogControl extends ExoBaseControls.controls.div.type {
         this.dlgId = 'dlg_' + Core.guid().replace('-', '');
     }
 
-    hide(button) {
+    hide(button, e) {
         if (this.context.field.click) {
-            this.context.field.click.apply(this, [button])
+            this.context.field.click.apply(this, [button, e])
         }
     }
 
@@ -970,15 +992,20 @@ class ExoDialogControl extends ExoBaseControls.controls.div.type {
         dlg.classList.add(this.cancelVisible ? "dlg-cv" : "dlg-ch");
 
         const c = (e, confirm) => {
-            _.remove();
-
+            
             //window.location.hash = "na";
             var btn = "cancel", b = e.target;
             if (confirm || b.classList.contains("confirm")) {
                 btn = "confirm";
             }
 
-            _.hide.apply(_, [btn]);
+            _.hide.apply(_, [btn, e]);
+
+            if(!e.cancelBubble){
+                _.remove();
+            }
+
+
         };
 
         dlg.querySelector(".dlg-x").addEventListener("click", c);
@@ -1088,7 +1115,6 @@ class ExoStarRatingControl extends ExoBaseControls.controls.range.type {
 
 }
 
-
 class ExoExtendedControls {
     static controls = {
         filedrop: {
@@ -1118,7 +1144,5 @@ class ExoExtendedControls {
 
     }
 }
-
-
 
 export default ExoExtendedControls;

@@ -23,7 +23,7 @@ class ExoFormDefaultValidation {
         }).map(f => {
             return {
                 field: f,
-                validationMessage: f._control.validationMessage 
+                validationMessage: f._control.validationMessage
             }
         });
 
@@ -33,6 +33,12 @@ class ExoFormDefaultValidation {
             });
 
             if (returnValue !== false) {
+
+                // debugger;
+                // invalidFields.sort()
+
+                console.log(invalidFields);
+
                 this.focus(invalidFields[0].field);
             }
         }
@@ -179,8 +185,22 @@ class ExoFormInlineValidation extends ExoFormDefaultValidation {
 
 class ExoFormValidation {
     static types = {
-        default: ExoFormDefaultValidation,
+        auto: undefined,
+        html5: ExoFormDefaultValidation,
         inline: ExoFormInlineValidation
+    }
+
+    static getType(exo) {
+        let type = exo.formSchema.validation;
+        if (type === "auto" || typeof(type) === "undefined")
+            type = ExoFormValidation.matchValidationType(exo);
+
+        let tp = ExoFormValidation.types[type];
+        return tp || ExoFormDefaultValidation;
+    }
+
+    static matchValidationType(exo) {
+        return "inline";
     }
 }
 

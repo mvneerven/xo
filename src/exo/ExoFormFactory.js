@@ -4,9 +4,10 @@ import ExoExtendedControls from './ExoExtendedControls';
 import ExoDevControls from './ExoDevControls';
 import ExoChartControls from './ExoChartControls';
 import ExoSchemaGenerator from './ExoSchemaGenerator';
-import ExoThemes from './ExoThemes';
+import ExoFormThemes from './ExoFormThemes';
 import ExoFormValidation from './ExoFormValidation';
 import ExoFormNavigation from './ExoFormNavigation';
+import ExoFormProgress from './ExoFormProgress';
 
 /**
  * Hosts an ExoForm context to create forms with.
@@ -18,9 +19,9 @@ export class ExoFormContext {
     constructor(library) {
         this.library = this.enrichMeta(library)
 
-        this.themes = ExoThemes
+        // this.themes = ExoThemes
 
-        this._theme = this.themes.fluent; // default theme
+        // this._theme = this.themes.fluent; // default theme
     }
 
     enrichMeta(library) {
@@ -119,18 +120,18 @@ export class ExoFormContext {
         return new ExoSchemaGenerator();
     }
 
-    get theme() {
-        return this._theme;
-    }
+    // get theme() {
+    //     return this._theme;
+    // }
 
-    set theme(value) {
-        if (this.themes[value]) {
-            this._theme = this.themes[value];
-        }
-        else {
-            throw "Theme not registered"
-        }
-    }
+    // set theme(value) {
+    //     if (this.themes[value]) {
+    //         this._theme = this.themes[value];
+    //     }
+    //     else {
+    //         throw "Theme not registered"
+    //     }
+    // }
 
 }
 
@@ -157,8 +158,24 @@ class ExoFormFactory {
         interactive: ExoFormFactory._ev_pfx + "form-interactive" // when form is actually shown to user
     }
 
-    static navigation = ExoFormNavigation;
-    static validation = ExoFormValidation;
+    static meta = {
+        navigation: {
+            type: ExoFormNavigation,
+            description: "Navigation component"
+        },
+        validation: {
+            type: ExoFormValidation,
+            description: "Validation component"
+        },
+        progress: {
+            type: ExoFormProgress,
+            description: "Progress display component"
+        },
+        theme: {
+            type: ExoFormThemes,
+            description: "Theme component"
+        }
+    }
 
     static Context = ExoFormContext;
 
@@ -177,7 +194,7 @@ class ExoFormFactory {
 
     static library = {};
 
-    
+
     /**
      * Build {ExoFormContext} instance.
      * 
@@ -233,8 +250,6 @@ class ExoFormFactory {
         }
         return ExoFormFactory.library;
     }
-
-
 
     static lookupBaseType(name, field) {
         let type = field.type;
