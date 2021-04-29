@@ -2,15 +2,13 @@
 
 ## Validation
 
-### Inline validation scheme
+Show inline validation messages to be shown instead of the default HTML5 validation popups.
 
 ```json
 {
   "validation": "inline"
 }
 ```
-
-Results in inline validation messages to be shown instead of the default HTML5 validation popups.
 
 ## Progress
 Show the progress within form filling
@@ -20,4 +18,20 @@ Show the progress within form filling
   "progress": "steps"
 }
 ```
+
+## Material Theme
+
+```json
+{
+  "theme": "material"
+}
+```
+
+## Control Additions
+
+### Multiline: autogrow (Boolean)
+Let a textarea grow automatically when the user adds more lines.
+
+### Range: showoutput (Boolean)
+Show the value of a range control
 
