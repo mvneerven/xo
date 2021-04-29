@@ -8,7 +8,7 @@ class ExoFormNoProgress {
 
     render() {
         this.exo.on(ExoFormFactory.events.page, e => {
-            console.log("Progress - Paging ", e)
+            console.debug(this, "Paging", e);
         })
     }
 }
@@ -149,8 +149,13 @@ class ExoFormProgress {
 
 
     static matchProgressType(exo) {
-        if (exo.formSchema.pages.length > 1)
+        if (exo.formSchema.pages.length > 1){
+            if (exo.formSchema.navigation === "static")
+                return "none"
+
             return "page"
+
+        }
 
         return "default"
     }

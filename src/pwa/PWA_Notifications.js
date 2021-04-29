@@ -36,7 +36,7 @@ class PWA_Notifications {
             for (var b in options.buttons) {
                 let btn = options.buttons[b]
 
-                let btnHtml = DOM.parseHTML(DOM.format(`<button class="btn">{{caption}}</button>`, btn));
+                let btnHtml = DOM.parseHTML(DOM.format(`<button class="exf-btn">{{caption}}</button>`, btn));
                 notifBtn.appendChild(btnHtml)
                 btnHtml.addEventListener("click", e => {
                     e.stopPropagation();

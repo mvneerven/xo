@@ -29,6 +29,30 @@ class ExoControlBase {
         this.htmlElement = DOM.parseHTML('<span/>');
     }
 
+    _getContainerTemplate(obj) {
+
+        if (this.context.field.isPage) {
+            return DOM.format(this.containerTemplate, this._getContainerAttributes())
+        }
+
+        else if (this.context.field.type === "button") {
+
+            const tpl = /*html*/`<div data-id="{{id}}" class="exf-ctl-cnt {{class}"><span data-replace="true"></span></div>`;
+
+            return DOM.format(tpl, this._getContainerAttributes())
+        }
+
+        return /*html*/`<div data-id="${obj.id}" class="${obj.class}" data-field-type="${obj.type}">
+    <div class="exf-ctl">
+        <label for="${obj.id}" aria-hidden="true" class="exf-label" title="${obj.caption}">${obj.caption}</label>
+        <span data-replace="true"></span>
+    </div>
+    <div class="exf-fld-details">
+        <div class="exf-help-wrapper"></div>
+    </div>
+</div>`;
+    }
+
     set htmlElement(el) {
         this._htmlElement = el;
         this.allowedAttributes = ExoFormFactory.listNativeProps(this.htmlElement);
@@ -91,6 +115,61 @@ class ExoControlBase {
         return !this.htmlElement.disabled;
     }
 
+    _scope() {
+        let f = this.context.field;
+        return {
+            ...f,
+            caption: f.caption || "",
+            tooltip: f.tooltip || "",
+            class: "",
+            id: f.id
+        }
+    }
+
+    _addContainerClasses() {
+        this.container.classList.add(...this._getContainerClasses())
+    }
+
+    _getContainerClasses() {
+        let ar = ["exf-ctl-cnt"];
+
+        ar.push("exf-base-" + this._getBaseType())
+
+        if (this.context.field.containerClass) {
+            let cc = this.context.field.containerClass.trim().split(" ");
+            cc.forEach(c => {
+                ar.push(c);
+            })
+        }
+
+        if (this.htmlElement.tagName === "INPUT" || this.htmlElement.tagName === "TEXTAREA" )
+            ar.push("exf-input");
+
+        if (this.context.field.readOnly)
+            ar.push("exf-readonly");
+
+        if (this.context.field.disabled)
+            ar.push("exf-disabled");
+
+        return ar;
+    }
+
+    _getBaseType() {
+
+        let returns = this.context.field.returnValueType ? this.context.field.returnValueType.name : "String";
+
+        if (this.isTextInput)
+            return "text";
+
+        if (returns === "Boolean")
+            return "bool";
+
+        if (returns === "Array")
+            return "multi";
+
+        return "default";
+    }
+
     async render() {
         this.setProperties();
 
@@ -102,7 +181,9 @@ class ExoControlBase {
         }
 
         this.container = DOM.parseHTML(
-            DOM.format(this.containerTemplate, this.getContainerAttributes())
+
+            this._getContainerTemplate(this._scope())
+
         );
 
         if (this.container.getAttribute("data-replace") === "true")
@@ -115,12 +196,13 @@ class ExoControlBase {
                 DOM.replace(toReplace, this.htmlElement);
         }
 
-
         this.addEventListeners();
 
         if (this.context.field.required) {
             this.container.classList.add("exf-required");
         }
+
+        this._addContainerClasses();
 
         return this.container
     }
@@ -151,15 +233,17 @@ class ExoControlBase {
         })
     }
 
-    getContainerAttributes() {
+    _getContainerAttributes() {
         let f = this.context.field;
         return {
-            caption: f.caption,
+            ...f,
+            caption: f.caption || "",
             tooltip: f.tooltip || "",
             class: (f.containerClass || ""), //+ this.isTextInput ? " exf-base-text" : "" ,
-            id: f.id + "-container"
+            id: this.id + "-container"
         }
     }
+
 
     setProperties() {
         let f = this.context.field;
@@ -230,6 +314,44 @@ class ExoControlBase {
         return true;
     }
 
+    /**
+     * Displays a help text to the user. Pass with empty @msg to hide.
+     * @param {String} msg - The message to display
+     * @param {Object} options - The options (type: "info|error|invalid")
+     * @returns 
+     */
+    showHelp(msg, options){
+
+        if(!msg){
+            if (this._error != null) {
+                this._error.parentNode.removeChild(this._error);
+                this._error = null;
+            }
+    
+            if (this.container){
+                this.container.removeAttribute('aria-invalid');
+                this.container.classList.remove("exf-invalid");
+            }
+            return;
+        }
+
+        options = options || {type: "info"};
+
+        if (this._error != null) {
+           this._error.innerHTML = msg
+           return;
+        }
+
+        this._error = DOM.parseHTML(`<div class="exf-help exf-help-${options.type}">${msg}</div>`)
+
+        if(options.type === "invalid"){
+            this.container.setAttribute('aria-invalid', 'true');
+            this.container.classList.add('exf-invalid');
+        }
+        
+        this.container.querySelector(".exf-help-wrapper").appendChild(this._error);
+
+    }
 }
 
 export class ExoElementControl extends ExoControlBase {
@@ -300,7 +422,7 @@ class ExoLinkControl extends ExoElementControl {
 }
 
 export class ExoInputControl extends ExoElementControl {
-    containerTemplate = ExoForm.meta.templates.default;
+    //containerTemplate = ExoForm.meta.templates.default;
 
     static returnValueType = String;
 
@@ -323,6 +445,14 @@ export class ExoInputControl extends ExoElementControl {
         await super.render();
 
         this.testDataList();
+
+
+        switch(this.context.field.type){
+            case "color":
+                this.container.classList.add("exf-std-lbl");
+                break;
+        }
+
 
         return this.container
     }
@@ -503,10 +633,20 @@ export class ExoDivControl extends ExoElementControl {
 
 class ExoTextAreaControl extends ExoTextControl {
 
-    containerTemplate = ExoForm.meta.templates.text;
+    //containerTemplate = ExoForm.meta.templates.text;
+
+    autogrow = false;
 
     constructor(context) {
         super(context);
+
+        this.acceptProperties({
+            name: "autogrow",
+            type: Boolean,
+            description: "Use to automatically expand the typing area as you add lines"
+        })
+
+
         this.htmlElement = DOM.parseHTML('<textarea/>');
     }
 
@@ -518,6 +658,17 @@ class ExoTextAreaControl extends ExoTextControl {
             delete this.attributes["value"];
         }
     }
+
+    async render(){
+        await super.render();
+
+        if(this.autogrow){
+            this.htmlElement.setAttribute("onInput", "this.parentNode.dataset.replicatedValue = this.value");
+            this.htmlElement.parentNode.classList.add("autogrow");
+        }
+
+        return this.container;
+    }
 }
 
 export class ExoListControl extends ExoElementControl {
@@ -526,7 +677,7 @@ export class ExoListControl extends ExoElementControl {
 
     isMultiSelect = false;
 
-    view = "tiles";
+    view = "block";
 
     constructor(context) {
         super(context);
@@ -545,13 +696,15 @@ export class ExoListControl extends ExoElementControl {
         const _ = this;
         const f = _.context.field;
         if (f.items && Array.isArray(f.items)) {
+            let index=0;
             f.items.forEach(i => {
-                _.addListItem(f, i, tpl, containerElm);
+                _.addListItem(f, i, tpl, containerElm, index);
+                index++;
             });
         }
     }
 
-    addListItem(f, i, tpl, container) {
+    addListItem(f, i, tpl, container, index) {
         const _ = this;
 
         var dummy = DOM.parseHTML('<span/>')
@@ -564,7 +717,8 @@ export class ExoListControl extends ExoElementControl {
             type: _.optionType,
             inputname: f.name,
             checked: i.checked ? "checked" : "",
-            tooltip: (i.tooltip || i.name || "").replace('{{field}}', '')
+            tooltip: (i.tooltip || i.name || "").replace('{{field}}', ''),
+            oid: f.id + "_" + index
         }
 
         var o = {
@@ -634,13 +788,11 @@ class ExoDropdownListControl extends ExoListControl {
 
     async render() {
         let f = this.context.field;
-
-        f.containerClass = (f.containerClass || "") + " exf-" + this.context.field.type + " exf-input-group";
-
         const tpl = /*html*/`<option class="{{class}}" value="{{value}}">{{name}}</option>`;
-
         await this.populateList(this.htmlElement, tpl);
-        return super.render();
+        let elm = super.render();
+        this.container.classList.add("exf-input-group");
+        return elm;
     }
 }
 
@@ -657,22 +809,25 @@ class ExoInputListControl extends ExoListControl {
 
     async render() {
         let f = this.context.field;
-
-        f.containerClass = (f.containerClass || "") + " exf-" + this.context.field.type + " exf-input-group";
-
-        const tpl = /*html*/`<label title="{{tooltip}}"><input class="{{class}}" {{checked}} name="{{inputname}}" value="{{value}}" type="{{type}}" /><span class="exf-caption">{{name}}</span></label>`;
+        const tpl = /*html*/`<div class="exf-ilc-cnt" title="{{tooltip}}">
+            <input class="{{class}}" {{checked}} name="{{inputname}}" value="{{value}}" type="{{type}}" id="{{oid}}" />
+            <label for="{{oid}}" class="exf-caption">
+                <div class="exf-caption-main">{{name}}</div>
+                <div title="{{description}}" class="exf-caption-description">{{description}}</div>
+            </label>
+        </div>`;
         await this.populateList(this.htmlElement, tpl);
 
         super.render();
+        this.container.classList.add("exf-input-group");
         return this.container;
     }
 
     get valid() {
         if (this.context.field.required) {
-            let value = this.context.exo.getFieldValue(this.context.field);
-            if (!value || value.length === 0) {
-
-                let inp = this.htmlElement.querySelector("input");
+            let numChecked = this.container.querySelectorAll("input:checked").length;
+            if (numChecked === 0) {
+                let inp = this.container.querySelector("input");
                 try {
                     inp.setCustomValidity(this.getValidationMessage());
                     inp.reportValidity()
@@ -702,7 +857,7 @@ class ExoInputListControl extends ExoListControl {
 
     get validationMessage() {
         return this.htmlElement.querySelector("input").validationMessage;
-    }
+    }  
 }
 
 class ExoRadioButtonListControl extends ExoInputListControl {
@@ -739,16 +894,17 @@ class ExoCheckboxListControl extends ExoInputListControl {
 
         return this.container;
     }
+
+
 }
 
 class ExoButtonControl extends ExoElementControl {
 
-    containerTemplate = ExoForm.meta.templates.nolabel;
 
     constructor(context) {
         super(context);
         this.iconHtml = "";
-        this.htmlElement = DOM.parseHTML('<button />')
+        this.htmlElement = DOM.parseHTML('<button class="exf-btn" />')
 
         this.acceptProperties(
             {
@@ -771,11 +927,17 @@ class ExoButtonControl extends ExoElementControl {
 
     async render() {
         const _ = this;
+        await super.render();
+
+
+
         if (_.icon) {
             _.htmlElement.appendChild(DOM.parseHTML('<span class="' + _.icon + '"></span>'))
             this.htmlElement.appendChild(document.createTextNode(' '));
         }
-        _.htmlElement.appendChild(document.createTextNode(this.context.field.caption));
+        
+        _.htmlElement.appendChild(DOM.parseHTML(`<span class="exf-caption">${this.context.field.caption}</span>`))
+
         let elm = await super.render();
 
         _.htmlElement.addEventListener("click", e => {
@@ -813,13 +975,17 @@ class ExoButtonControl extends ExoElementControl {
                         break;
 
                     case "goto":
-                       
+
                         _.context.exo.gotoPage(parseInt(actionParts[1]));
                         break;
                 }
             }
         })
-        return elm;
+
+        this.container.classList.add("exf-btn-cnt");
+        this.htmlElement.classList.add("exf-btn");
+        
+        return this.container;
     }
 
     set icon(value) {
@@ -834,9 +1000,59 @@ class ExoButtonControl extends ExoElementControl {
 
 export class ExoNumberControl extends ExoInputControl {
 
+    buttons = false;
+
     constructor(context) {
         super(context);
         this.context.field.type = "number";
+
+        this.acceptProperties({
+            name: "buttons",
+            description: "Add plus and minus buttons",
+            type: Boolean
+        })
+    }
+
+    async render() {
+        await super.render();
+
+        if (this.buttons) {
+
+            this.minusButton = document.createElement("button");
+            this.minusButton.innerText = "-";
+            this.minusButton.classList.add("nmbr-m");
+            this.plusButton = document.createElement("button");
+            this.plusButton.innerText = "+";
+            this.plusButton.classList.add("nmbr-p");
+
+
+            this.htmlElement.parentNode.insertBefore(this.minusButton, this.htmlElement)
+            this.htmlElement.parentNode.insertBefore(this.plusButton, this.htmlElement.nextSibling)
+
+            this.container.classList.add("exf-nmbr-btns");
+            this.container.classList.add("exf-std-lbl");
+
+            this.container.addEventListener("click", e => {
+
+                e.cancelBubble = true;
+                e.preventDefault();
+
+                if (e.target === this.plusButton) {
+                    if (this.htmlElement.max === "" || parseInt(this.htmlElement.value) < parseInt(this.htmlElement.max)) {
+                        this.htmlElement.value = parseInt("0" + (this.htmlElement.value || (this.htmlElement.min != "" ? this.htmlElement.min - 1 : -1))) + 1;
+                    }
+                }
+                else if (e.target === this.minusButton) {
+                    if (this.htmlElement.min === "" || parseInt(this.htmlElement.value) > parseInt(this.htmlElement.min)) {
+                        this.htmlElement.value = parseInt("0" + (this.htmlElement.value || (this.htmlElement.max != "" ? this.htmlElement.max - 1 : 1))) - 1;
+                    }
+                }
+
+                this.triggerChange();
+            })
+        }
+
+        return this.container;
     }
 
     static returnValueType = Number;
@@ -856,20 +1072,23 @@ export class ExoRangeControl extends ExoNumberControl {
         })
     }
 
-    async render(){
+    async render() {
         const me = this;
         await super.render();
 
-        if(this.showoutput){
-            this.output= document.createElement("output");
-            const sync =  e=>{
-                me.output.value=me.htmlElement.value;
+        if (this.showoutput) {
+            this.output = document.createElement("output");
+            const sync = e => {
+                me.output.value = me.htmlElement.value;
             }
 
-            this.container.insertBefore(this.output, this.htmlElement.nextSibling);
+            this.htmlElement.parentNode.insertBefore(this.output, this.htmlElement.nextSibling);
             this.htmlElement.addEventListener("input", sync); sync();
             this.container.classList.add("exf-rng-output")
         }
+
+        // force outside label rendering
+        this.container.classList.add("exf-std-lbl");
 
         return this.container;
     }
@@ -879,7 +1098,7 @@ export class ExoRangeControl extends ExoNumberControl {
 
 class ExoProgressControl extends ExoElementControl {
 
-    containerTemplate = ExoForm.meta.templates.nolabel;
+    //containerTemplate = ExoForm.meta.templates.nolabel;
     constructor(context) {
         super(context);
         this.htmlElement = DOM.parseHTML('<progress />');

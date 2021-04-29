@@ -4,16 +4,16 @@
 
 .exf-ctl-cnt.exf-switch input[type="range"] {
   width: 2.5rem !important;
-  -webkit-appearance: none;
-  -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
-  height: 1.2rem;
-  margin: 0;
-  border: none;
-  padding: 0.1 0.2rem 0.2rem;
-  border-radius: 1.2rem;
-  background-color: #ccc;
-  -webkit-box-shadow: inset 0 1px 0 0 #ccc, inset 0 -1px 0 0 #bbb;
-          box-shadow: inset 0 1px 0 0 #ccc, inset 0 -1px 0 0 #bbb;
+  -webkit-appearance: none !important;
+  -webkit-tap-highlight-color: rgba(255, 255, 255, 0) !important;
+  height: 1.2rem !important;
+  margin: 0 !important;
+  border: none !important;
+  padding: 0 !important;
+  border-radius: 1.2rem !important;
+  background-color: #bbb !important;
+  -webkit-box-shadow: inset 0 1px 0 0 #ccc, inset 0 -1px 0 0 #aaa !important;
+          box-shadow: inset 0 1px 0 0 #ccc, inset 0 -1px 0 0 #aaa !important;
   outline: none;
   /* no focus outline */
   /* thumb */

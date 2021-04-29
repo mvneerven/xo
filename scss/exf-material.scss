@@ -1,0 +1,460 @@
+.exf-container {
+    &.exf-theme-material {
+        // Shadows
+        $shadow-inset: inset 0 2px 2px 0 rgba(0, 0, 0, 0.14);
+        $shadow-0: 0 0 1px rgba(0, 0, 0, 0);
+        $shadow-2: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+        $shadow-3: 0 3px 4px 0 rgba(0, 0, 0, 0.14), 0 3px 3px -2px rgba(0, 0, 0, 0.2), 0 1px 8px 0 rgba(0, 0, 0, 0.12);
+        $shadow-4: 0 4px 5px 0 rgba(0, 0, 0, 0.14), 0 1px 10px 0 rgba(0, 0, 0, 0.12), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
+        $shadow-6: 0 6px 10px 0 rgba(0, 0, 0, 0.14), 0 1px 18px 0 rgba(0, 0, 0, 0.12), 0 3px 5px -1px rgba(0, 0, 0, 0.2);
+        $shadow-8: 0 8px 10px 1px rgba(0, 0, 0, 0.14), 0 3px 14px 2px rgba(0, 0, 0, 0.12),
+            0 5px 5px -3px rgba(0, 0, 0, 0.2);
+
+        // Font Sizes
+        $mf-font-size: 1rem !default;
+        $mf-active-font-size: $mf-font-size * 0.8 !default;
+        $mf-active-top: -$mf-font-size !default;
+
+        // Margin & Paddings
+        $mf-gap: $mf-font-size * 1 !default;
+        $mf-spacer: $mf-font-size / 8 !default;
+        $mf-fieldset-margin: 0 0 $mf-gap * 2 !default;
+        $mf-checkbox-gap: $mf-font-size * 2 !default;
+        $mf-checkbox-top: 0 !default;
+        $mf-radio-margin: $mf-font-size / -4 !default;
+
+        // Colors
+
+        $mf-border-color: #999 !default;
+        $mf-active-color: #666;
+        $mf-focus-color: #fff;
+
+        font-family: "Roboto", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+
+        .exf-label,
+        .exf-caption {
+            color: var(--color-label);
+        }
+
+        form {
+            fieldset {
+                border: 0;
+
+                legend {
+                    font-size: 1.2rem;
+                    font-weight: 600;
+                }
+            }
+        }
+
+        .exf-ctl-cnt {
+            position: relative;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+
+            &:not(.exf-std-lbl) {
+                > .exf-ctl {
+                    > .exf-label {
+                        position: absolute;
+                        pointer-events: none;
+                        top: 0.7em;
+                        left: 0.5em;
+
+                        line-height: 1;
+                    }
+
+                    > input {
+                        color: transparent;
+                    }
+                }
+            }
+
+            > .exf-ctl {
+                position: relative;
+
+                &::before {
+                    content: "";
+                    height: 2px;
+                    width: 0;
+                    left: 50%;
+                    bottom: -2px;
+                    position: absolute;
+                    background: var(--color-label-active);
+                    transition: left 0.5s ease, width 0.5s ease;
+                    z-index: 2;
+                }
+
+                > [name] {
+                    width: 100%;
+                }
+
+                > select {
+                    width: 100%;
+                    font-size: 1rem;
+                    height: 1.6rem;
+                    padding: 0.125rem 0.125rem 0.0625rem;
+                    margin-top: 2rem;
+                    background: none;
+                    border: none;
+                    line-height: 1.6;
+                    box-shadow: none;
+                }
+
+                > [name]:focus {
+                    outline: none;
+                    border: 0;
+                }
+
+                > input,
+                > label {
+                    -webkit-transition: all 0.2s;
+                    transition: all 0.2s;
+                    font-weight: 400;
+                }
+                > input,
+                > textarea {
+                    padding: 0.5em 0.5em 0.5em 0.5em;
+                    border: 0;
+                    outline: none;
+                    border-radius: 0;
+                    appearance: none;
+                    box-sizing: border-box;
+                    background-color: transparent;
+
+                    &::-webkit-input-placeholder {
+                        /* Chrome/Opera/Safari */
+                        visibility: hidden;
+                    }
+                    &::-moz-placeholder {
+                        /* Firefox 19+ */
+                        visibility: hidden;
+                    }
+                    &:-ms-input-placeholder {
+                        /* IE 10+ */
+                        visibility: hidden;
+                    }
+                    &:-moz-placeholder {
+                        /* Firefox 18- */
+                        visibility: hidden;
+                    }
+                }
+
+                input[type="color"] {
+                    min-height: 1rem;
+                    padding: 0;
+                }
+            }
+
+            &.exf-focus {
+                > .exf-ctl {
+                    input,
+                    textarea {
+                        &::-webkit-input-placeholder {
+                            /* Chrome/Opera/Safari */
+                            visibility: visible;
+                        }
+                        &::-moz-placeholder {
+                            /* Firefox 19+ */
+                            visibility: visible;
+                        }
+                        &:-ms-input-placeholder {
+                            /* IE 10+ */
+                            visibility: visible;
+                        }
+                        &:-moz-placeholder {
+                            /* Firefox 18- */
+                            visibility: visible;
+                        }
+
+                        color: var(--color);
+                    }
+
+                    > .exf-label {
+                        color: var(--color-label-active);
+                    }
+                }
+
+                &.exf-input {
+                    > .exf-ctl {
+                        &::before {
+                            width: 100%;
+                            left: 0;
+                            transition: left 0.5s ease, width 0.5s ease;
+                        }
+                    }
+                }
+            }
+
+            &.exf-input {
+                > .exf-ctl {
+                    border-bottom: 1px solid var(--color-label);
+                    padding-bottom: 0.25rem;
+                }
+
+                &:not(.exf-std-lbl) {
+                    &.exf-filled,
+                    &.exf-focus {
+                        > .exf-ctl {
+                            input,
+                            textarea {
+                                color: var(--color);
+                            }
+
+                            > .exf-label {
+                                top: -1.2em;
+                                left: 0;
+                                font-size: 0.8rem;
+                            }
+                        }
+                    }
+                }
+
+                &.exf-rng-output {
+                    output {
+                        position: absolute;
+                        top: -1.2em;
+                        font-size: 0.8rem;
+                        right: 1rem;
+                    }
+                }
+
+                &.exf-std-lbl {
+                    > .exf-ctl {
+                        > .exf-label {
+                            position: absolute;
+                            top: -1.2em;
+                            left: 0;
+                            font-size: 0.8rem;
+                        }
+                    }
+                }
+            }
+
+            .exf-help {
+                margin-top: 0.2rem;
+                color: var(--color-text);
+                font-size: 0.8rem;
+
+                &:before {
+                    content: "i";
+                    background-color: #666;
+                    display: inline-block;
+                    padding: 0.2rem 0.5rem;
+                    color: white;
+                    border-radius: 1rem;
+                    margin-right: 0.2rem;
+                }
+
+                &.exf-help-error,
+                &.exf-help-invalid {
+                    &:before {
+                        content: "!";
+                        background-color: #cc4444;
+                    }
+                }
+            }
+
+            &.exf-invalid {
+                .exf-help {
+                    margin-top: 0.2rem;
+                    color: var(--color-text);
+                    font-size: 0.8rem;
+
+                    &:before {
+                        content: "i";
+                        background-color: #666;
+                        display: inline-block;
+                        padding: 0.2rem 0.5rem;
+                        color: white;
+                        border-radius: 1rem;
+                        margin-right: 0.2rem;
+                    }
+
+                    &.exf-help-error,
+                    &.exf-help-invalid {
+                        &:before {
+                            content: "!";
+                            background-color: #cc4444;
+                        }
+                    }
+                }
+            }
+
+            &.exf-nmbr-btns {
+                .exf-ctl {
+                    > .nmbr-m {
+                        float: left;
+                    }
+
+                    > .nmbr-p {
+                        float: right;
+                    }
+                }
+            }
+
+            &.exf-switch {
+                > .exf-ctl {
+                    > label {
+                        position: absolute !important;
+                        top: 0.1rem !important;
+                        left: 3.5em !important;
+                        font-size: 1rem !important;
+                    }
+                }
+            }
+
+            &.exf-base-embed {
+                > .exf-ctl {
+                    > label {
+                        margin-top: -2rem;
+                    }
+
+                    > .exf-embed-container {
+                        margin-top: 3rem;
+                    }
+                }
+            }
+        }
+
+        .exf-cnt {
+            .exf-ctl-group {
+                padding-top: 1rem;
+            }
+        }
+
+        .exf-input-group {
+            > .exf-ctl {
+                .exf-caption-main {
+                    color: var(--color-text);
+                    margin-bottom: 0.8rem;
+                }
+                .exf-caption-description {
+                    font-size: 0.8rem;
+                    color: var(--color-label);
+                }
+            }
+
+            &.tiles {
+                > .exf-ctl > div {
+                    display: grid;
+                    grid-gap: 2rem;
+                    grid-template-columns: 1fr 1fr 1fr;
+
+                    .exf-ilc-cnt {
+                        opacity: 0.8;
+                        transition: all 0.2s;
+                        position: relative;
+
+                        &:hover {
+                            opacity: 1;
+                            transition: all 0.2s;
+                        }
+
+                        > input {
+                            opacity: 0;
+                            position: absolute;
+                            top: 0;
+                            left: 0;
+                            margin: 0;
+                            cursor: pointer;
+                        }
+
+                        > .exf-caption {
+                            padding: 1rem;
+
+                            > .exf-caption-main {
+                                color: var(--color-text);
+                            }
+
+                            > .exf-caption-description {
+                                font-size: 0.8rem;
+                                color: var(--color-label);
+                                text-overflow: ellipsis;
+                                white-space: nowrap;
+                            }
+                        }
+
+                        > input:checked + .exf-caption {
+                            border: 2px solid var(--color-button-text);
+                            transform: scale(1, 1);
+                            > label {
+                                color: white;
+                                background-color: $mf-focus-color;
+                            }
+                        }
+                    }
+                }
+
+                &.big {
+                    > .exf-ctl > div {
+                        .exf-ilc-cnt {
+                            > .exf-caption {
+                                > .exf-caption-description {
+                                    white-space: normal;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        .exf-btn-cnt {
+            text-align: center;
+        }
+
+        .exf-btn {
+            position: relative;
+            background: var(--color-button);
+            border: 0;
+            font-size: ($mf-font-size * 1.1);
+            color: lighten($mf-focus-color, 10%);
+            margin: ($mf-gap * 2) 0;
+            padding: ($mf-gap / 2) ($mf-gap * 2);
+            cursor: pointer;
+            transition: background-color 0.28s ease, color 0.28s ease, box-shadow 0.28s ease;
+            overflow: hidden;
+            box-shadow: $shadow-2;
+
+            span {
+                color: var(--color-button-text);
+                position: relative;
+                z-index: 1;
+            }
+
+            &::before {
+                content: "";
+                position: absolute;
+                background: darken($mf-focus-color, 40%);
+                border: 50vh solid darken($mf-focus-color, 20%);
+                width: 30vh;
+                height: 30vh;
+                border-radius: 50%;
+                display: block;
+                top: 50%;
+                left: 50%;
+                z-index: 0;
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(0);
+            }
+
+            &:hover {
+                color: $mf-focus-color;
+                box-shadow: $shadow-6;
+            }
+
+            &:active,
+            &:focus {
+                &::before {
+                    transition: transform (0.28s * 4) ease, opacity 0.28s ease (0.28s * 1.3);
+                    transform: translate(-50%, -50%) scale(1);
+                    opacity: 0;
+                }
+            }
+
+            &:focus {
+                outline: none;
+            }
+        }
+    }
+}

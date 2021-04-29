@@ -10,10 +10,6 @@ class ExoSchemaGenerator {
     }
 
     defaultSchema = {
-        "form": {
-            "theme": "fluent",
-            "class": "standard"
-        },
         "pages": [
             {
                 "label": "",

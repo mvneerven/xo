@@ -244,7 +244,7 @@ html:not(.pwa-signed-in) .if-signed-out {
   background-color: #555;
 }
 
-.theme-dark .pwa-notif .pwa-cnt {
+.theme-dark .pwa-notif .pwa-cnt, .theme-dark .pwa-notif select > option {
   background-color: #444;
   color: white;
 }

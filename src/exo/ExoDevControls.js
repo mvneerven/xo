@@ -26,8 +26,7 @@ class ExoAceCodeEditor extends ExoBaseControls.controls.div.type {
     async render() {
         const _ = this;
         await super.render();
-        const me = _.htmlElement;
-
+        
         _.context.field.getCurrentValue = () => {
             return _.htmlElement.data.editor.getValue();
         }
@@ -38,26 +37,17 @@ class ExoAceCodeEditor extends ExoBaseControls.controls.div.type {
 
         return new Promise((resolve, reject) => {
             DOM.require("https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/ace.js", () => {
-                
                 ace.config.set("fontSize", "14px");
-
                 var editor = ace.edit(_.htmlElement);
-
-                //var beautify = ace.require("ace/ext/beautify"); // get reference to extension
-
                 editor.setTheme("ace/theme/" + _.theme);
                 editor.session.setMode("ace/mode/" + _.mode);
-
-                _.htmlElement.style = "min-height: 200px; width: 100%"
+                _.htmlElement.style = "min-height: 200px; width: 100%";
 
                 if (typeof (_.value) === "string" && _.value.length) {
                     editor.setValue(_.value, -1);
                 }
 
                 _.htmlElement.setAttribute('data-evtarget', "true"); // set div as event target 
-
-                
-
                 editor.on("change", e => {
                     setTimeout(() => {
                         DOM.trigger(_.htmlElement, "change", {
@@ -66,25 +56,14 @@ class ExoAceCodeEditor extends ExoBaseControls.controls.div.type {
                     }, 10);
 
                 })
-
-                // var staticWordCompleter = {
-                //     getCompletions: function(editor, session, pos, prefix, callback) {
-                //         var wordList = ["foo", "bar", "baz"];
-                //         callback(null, wordList.map(function(word) {
-                //             return {
-                //                 caption: word,
-                //                 value: word,
-                //                 meta: "static"
-                //             };
-                //         }));
-                
-                //     }
-                // }
-                
-                // editor.completers = [staticWordCompleter]
-
                 _.htmlElement.data["editor"] = editor;
 
+                if(_.htmlElement.classList.contains("full-height")){
+                    _.container.classList.add("full-height");
+                    let cc = _.container.querySelector(".exf-ctl");
+                    if(cc)
+                        cc.classList.add("full-height");
+                }
 
                 resolve(_.container);
             });

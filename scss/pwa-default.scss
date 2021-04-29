@@ -156,7 +156,7 @@
 
 .theme-dark {
     .pwa-notif {
-        .pwa-cnt {
+        .pwa-cnt, select > option {
             background-color: #444;
             color: white;
         }

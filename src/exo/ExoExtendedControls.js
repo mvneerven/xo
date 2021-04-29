@@ -33,7 +33,7 @@ class ExoFileDropControl extends ExoBaseControls.controls.input.type {
         _.previewDiv = DOM.parseHTML(`<div class="file-preview clearable"></div>`);
         _.previewDiv.style.height = `${this.height}px`; 
 
-        _.container.appendChild(_.previewDiv);
+        _.container.querySelector(".exf-ctl").appendChild(_.previewDiv);
         _.container.classList.add("exf-filedrop");
 
         _.bind(
@@ -67,7 +67,7 @@ class ExoFileDropControl extends ExoBaseControls.controls.input.type {
                     _.previewDiv.appendChild(thumb);
                 }
                 else {
-                    alert(data.error);
+                    _.showHelp(data.error, {type: "error"});
                 }
             }
         )
@@ -92,6 +92,7 @@ class ExoFileDropControl extends ExoBaseControls.controls.input.type {
 
         const loadFile = (data) => {
             var file = data.file;
+            _.showHelp();
 
             var reader = new FileReader();
 
@@ -191,6 +192,17 @@ class ExoFileDropControl extends ExoBaseControls.controls.input.type {
     getDataUrl(b64, fileType) {
         return "data:" + fileType + ";base64," + b64;
     }
+
+    get valid() {
+        debugger;
+        return true;
+    }
+
+    // Used to get localized standard validation message 
+    getValidationMessage() {
+        let msg = "";
+        return msg;
+    }
 }
 
 class ExoCKRichEditor extends ExoBaseControls.controls.div.type {
@@ -240,7 +252,6 @@ class ExoSwitchControl extends ExoBaseControls.controls.range.type {
     setProperties() {
         this.context.field.min = 0;
         this.context.field.max = 1;
-        //this.context.field.containerClass = "exf-switch";
         this.context.field.value = this.context.field.value || 0;
         super.setProperties();
 
@@ -252,6 +263,8 @@ class ExoSwitchControl extends ExoBaseControls.controls.range.type {
         let e = await super.render();
 
         this.container.classList.add("exf-switch");
+        // force outside label rendering
+        this.container.classList.add("exf-std-lbl");
 
         const check = e => {
 
@@ -283,7 +296,9 @@ class ExoSwitchControl extends ExoBaseControls.controls.range.type {
             }
             check({ target: range });
         })
-        return e;
+
+        return this.container;
+        //return e;
     }
 }
 
@@ -340,7 +355,7 @@ class ExoTaggingControl extends ExoBaseControls.controls.text.type {
 
         _.wrapper.append(_.input);
         _.wrapper.classList.add(_.wrapperClass);
-        _.container.insertBefore(_.wrapper, _.htmlElement);
+        _.htmlElement.parentNode.insertBefore(_.wrapper, _.htmlElement);
 
         _.context.field.getCurrentValue = () => {
             return _.arr;
@@ -453,45 +468,6 @@ class ExoTaggingControl extends ExoBaseControls.controls.text.type {
     }
 }
 
-// class ExoTabStripControl extends ExoBaseControls.controls.div.type {
-//     constructor(context) {
-//         super(context);
-
-//         let name = this.context.field.name || "tabStrip";
-
-//         let tabs = {}
-
-//         if(this.context.field.pages) {
-//             this.context.field.pages.forEach(p => {
-//                 tabs[p.id] = { caption: p.caption }
-//             })
-//         }
-
-//         this.tabStrip = new ULTabStrip(name, {
-//             tabs: tabs
-//         });
-//     }
-
-//     finalize(container) {
-//         let index = 0;
-//         let ar = container.querySelectorAll(".exf-page")
-
-//         for (var t in this.tabStrip.tabs) {
-//             this.tabStrip.tabs[t].replaceWith(ar[index]);
-//             index++;
-//         }
-//     }
-
-//     async render() {
-//         await super.render();
-
-//         let elm = await this.tabStrip.render();
-//         elm.classList.add("exf-tabs-wrapper")
-//         return elm;
-//     }
-
-
-// }
 
 class ExoCaptchaControl extends ExoBaseControls.controls.div.type {
 
@@ -548,7 +524,7 @@ class ExoCaptchaControl extends ExoBaseControls.controls.div.type {
 // TODO finish
 class DropDownButton extends ExoBaseControls.controls.list.type {
 
-    containerTemplate = ExoForm.meta.templates.nolabel;
+    
 
     navTemplate = /*html*/`
         <nav class="ul-drop" role='navigation'>
@@ -611,9 +587,11 @@ class ExoEmbedControl extends ExoBaseControls.controls.element.type {
         await super.render();
 
         let wrapper = document.createElement("div")
-        wrapper.classList.add("exf-embed");
+        wrapper.classList.add("exf-embed-container");
         wrapper.appendChild(this.htmlElement);
-        this.container.appendChild(wrapper);
+        this.container.querySelector(".exf-ctl").appendChild(wrapper);
+
+        this.container.classList.add("exf-base-embed");
 
         return this.container
     }
@@ -654,15 +632,10 @@ class ExoVideoControl extends ExoEmbedControl {
 
     async render() {
         const player = ExoVideoControl.players[this.player];
-        // if (!player)
-        //     throw "Unrecognized player";
 
         this.url = DOM.format(player.url, this);
-
         await super.render();
-
         return this.container;
-
     }
 }
 
@@ -676,7 +649,7 @@ class MultiInputControl extends ExoBaseControls.controls.div.type {
 
     areas = "";
 
-    gap = "inherit";
+    gap = "1rem";
 
     static returnValueType = Object;
 
@@ -825,11 +798,11 @@ class MultiInputControl extends ExoBaseControls.controls.div.type {
 }
 
 class ExoNameControl extends MultiInputControl {
+    
 
-    //grid = "exf-cols-10em-1fr";
-    grid = "";
+    columns = "10em 1fr";
 
-    "grid-template" = "'first last' auto/ 10em 1fr";
+    areas = `"first last"`;
 
     fields = {
         first: { caption: "First", type: "text", maxlength: 30, required: true, placeholder: "" },
@@ -840,7 +813,7 @@ class ExoNameControl extends MultiInputControl {
 
 class ExoNLAddressControl extends MultiInputControl {
 
-    columns = "4em 4em 10em 1fr"
+    columns = "4em 4em 10em 1fr"    
 
     areas = `
         "code code nr fill"
@@ -880,7 +853,9 @@ class ExoNLAddressControl extends MultiInputControl {
                     if (r.numFound > 0) {
                         let d = r.docs[0];
                         _._qs("street").querySelector("[name]").value = d.straatnaam_verkort;
+                        _._qs("street").classList.add("exf-filled");
                         _._qs("city").querySelector("[name]").value = d.woonplaatsnaam;
+                        _._qs("city").classList.add("exf-filled");
                     }
                 });
             }
@@ -897,7 +872,12 @@ class ExoNLAddressControl extends MultiInputControl {
 
 class ExoCreditCardControl extends MultiInputControl {
 
-    //grid = "exf-cols-50-50";
+    columns = "4em 4em 4em 1fr";    
+
+    areas = `
+        "name name number number"
+        "expiry expiry cvv fill"`;
+
 
     fields = {
         name: { caption: "Name on Card", type: "text", maxlength: 50, required: true, placeholder: "" },
@@ -964,8 +944,8 @@ class ExoDialogControl extends ExoBaseControls.controls.div.type {
     </div>
 <div class="exf-dlg-b">{{body}}</div>
 <div class="exf-dlg-f">
-    <button type="button" class="dlg-x btn btn-default dismiss" >{{cancelText}}</button>
-    <button type="button" class="dlg-x btn btn-primary confirm" >{{confirmText}}</button>
+    <button type="button" class="dlg-x btn exf-btn btn-default dismiss" >{{cancelText}}</button>
+    <button type="button" class="dlg-x btn exf-btn btn-primary confirm" >{{confirmText}}</button>
 </div>
 </div>
 </div>`;

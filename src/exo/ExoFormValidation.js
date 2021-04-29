@@ -97,43 +97,15 @@ class InlineFieldValidator {
 
     // Displays an error message and adds error styles and aria attributes
     showError() {
-        if (this._error !== null) {
-            return this.updateError();
-        }
-
-        this._error = DOM.parseHTML(DOM.format(`<div class="exf-help">{{help}}</div>`, {
-            help: this._field._control.validationMessage
-        }))
-
-        this._cnt.setAttribute('aria-invalid', 'true');
-
-
-        if (this._cnt) {
-            this._cnt.classList.add('has-error');
-            this._cnt.appendChild(this._error);
-        }
-
-    }
-
-    // Updates an existing error message
-    updateError() {
-        if (this._error === null) return;
-
-        this._error.innerHTML = this._field._control.validationMessage
+        this._field._control.showHelp(this._field._control.validationMessage, {
+            type: "invalid"
+        })
     }
 
     // Hides an error message if one is being displayed
     // and removes error styles and aria attributes
     hideError() {
-        if (this._error !== null) {
-            this._error.parentNode.removeChild(this._error);
-            this._error = null;
-        }
-
-        this._cnt.removeAttribute('aria-invalid');
-
-        if (this._cnt)
-            this._cnt.classList.remove('has-error');
+        this._field._control.showHelp();
     }
 
     // Suppress the browsers default error messages

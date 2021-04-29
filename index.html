@@ -11,15 +11,36 @@
     <meta name="color-scheme" content="dark">
 
     <!-- <link rel="stylesheet" href="https://www.xo-js.dev/css/xo-portal.css" /> -->
-    
+
     <link rel="stylesheet" href="/css/exf.css" />
     <style>
-        :root{
+        :root {
             --color-shade: #ccc;
-            --color-button: #e77;
+            --color-button: #f3578c;
+            --color-text: #333;
         }
+
         body {
-            background-color: #e2e3e4;
+            font-family: Roboto;
+        }
+
+        form {
+            width: 70%;
+            margin: auto;
+            --box-shadow: 1px 1px 50px 1px rgba(0, 0, 0, 0.15);
+            --border-radius: 1em;
+            padding: 1em;
+        }
+
+        legend {
+            background-color: #efafaf;
+            padding: 0.3em 0.7em;
+            border-radius: 0.3em;
+        }
+
+        fieldset {
+            border: 0;
+            margin-top: 1em;
         }
     </style>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/themify-icons/0.1.2/css/themify-icons.css" />
@@ -51,12 +72,10 @@
             }
         }
 
-        
+
         class ExoTest extends window.xo.form.fields.base.controls.div.type {
-
-            async render(){
+            async render() {
                 await super.render();
-
                 this.container.appendChild(DOM.parseHTML(`
                     <div>
                         <div>
@@ -64,20 +83,18 @@
                         </div>
                     </div>
                 `))
-
                 return this.container;
-
             }
         }
-        
+
         // add controls to factory (in bulk if needed)
         class MyControls {
-        static controls = {
-            test: {
-                type: ExoTest,
-                note: "Simple Control"
-            }
-        };
+            static controls = {
+                test: {
+                    type: ExoTest,
+                    note: "Simple Control"
+                }
+            };
         }
 
         const factory = window.xo.form.factory;
@@ -90,7 +107,10 @@
             async render(path) {
                 const context = await window.xo.form.factory.build();
                 const schema = {
+                    theme: "material",
                     validation: "inline",
+                    navigation: "static",
+
                     pages: [
                         {
                             legend: "Page 1",
@@ -103,7 +123,84 @@
                                     caption: "Your name",
                                     placeholder: "John Doe"
                                 },
-                                
+
+                                {
+                                    name: "number",
+                                    type: "number",
+                                    buttons: true,
+                                    required: true,
+                                    step: 1,
+                                    min: 16,
+                                    caption: "Your age"
+                                },
+
+                                {
+                                    name: "rng",
+                                    type: "range",
+                                    showoutput: true,
+                                    value: 4,
+                                    step: 1,
+                                    min: 16,
+                                    caption: "Range"
+                                },
+
+                                {
+                                    name: "swt",
+                                    type: "switch",
+                                    caption: "Switch"
+                                },
+
+
+                                {
+                                    name: "msg",
+                                    type: "multiline",
+                                    autogrow: true,
+                                    caption: "Your message"
+                                },
+
+
+                                {
+                                    name: "btn",
+                                    type: "button",
+                                    caption: "Press me!"
+                                },
+
+                                {
+                                    name: "test1",
+                                    type: "checkboxlist",
+                                    caption: "Multi select",
+                                    view: "tiles",
+                                    containerClass: "big",
+                                    required: true,
+                                    items: [
+                                        { name: "First", value: 1, description: "Might be a bit difficult to show here..." },
+                                        { name: "Second", value: 2, description: "Second best of course..." },
+                                        { name: "Third", value: 3, description: "You have to have a third option" }
+                                    ]
+                                },
+
+
+                                {
+                                    name: "test2",
+                                    type: "checkboxlist",
+                                    caption: "Another Multi select",
+                                    view: "other!!!",
+                                    required: true,
+                                    items: [
+                                        { name: "First", value: 1, description: "Might be a bit difficult to show here..." },
+                                        { name: "Second", value: 2, description: "Second best of course..." },
+                                        { name: "Third", value: 3, description: "You have to have a third option" }
+                                    ]
+                                }
+
+
+
+                            ]
+                        },
+                        {
+                            legend: "Page 2",
+                            fields: [
+
                                 {
                                     name: "email",
                                     type: "email",
@@ -114,7 +211,7 @@
                                         caption: "page.name.value"
                                     }
                                 },
-                                
+
                                 {
                                     name: "date",
                                     type: "date",
@@ -126,31 +223,16 @@
                                     type: "daterange",
                                     caption: "Worked in period"
                                 }
+                                // {
+                                //     name: "test",
+                                //     type: "test",
+                                //     caption: "Bla"
+                                // },
+
+
                             ]
-                        },
-                        {
-                            legend: "Page 2",
-                            fields: [
-                            {
-                                    name: "test",
-                                    type: "test",
-                                    caption: "Bla"
-                                },
-                                
-                                {
-                                    name: "radiobuttonlistfield1",
-                                    type: "radiobuttonlist",
-                                    caption: "Radiobuttonlist",
-                                    required: true,
-                                    items: [
-                                        "First",
-                                        "Second",
-                                        "Third",
-                                        "Fourth"
-                                    ]
-                                }
-                            ]
-                        },
+                        }
+                        ,
                         {
                             legend: "Page 3",
 

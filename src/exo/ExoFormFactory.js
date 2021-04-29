@@ -18,10 +18,6 @@ import ExoFormProgress from './ExoFormProgress';
 export class ExoFormContext {
     constructor(library) {
         this.library = this.enrichMeta(library)
-
-        // this.themes = ExoThemes
-
-        // this._theme = this.themes.fluent; // default theme
     }
 
     enrichMeta(library) {
@@ -184,11 +180,15 @@ class ExoFormFactory {
         ]
     }
 
+    //TODO: add all relevant classes
     static html = {
         classes: {
             formContainer: "exf-container",
             pageContainer: "exf-page",
-            elementContainer: "exf-ctl-cnt"
+            elementContainer: "exf-ctl-cnt",
+            groupContainer: "exf-input-group",
+            groupElementCaption: "exf-caption"
+
         }
     }
 
@@ -291,8 +291,8 @@ class ExoFormFactory {
     static listNativeProps(ctl) {
         let type = ctl.__proto__;
         let list = Object.getOwnPropertyNames(type);
-        let ar =
-            ["style", "class", "accesskey", "contenteditable",
+        let ar = /* id added 26 Apr 2021*/
+            ["id", "style", "class", "accesskey", "contenteditable",
                 "dir", "disabled", "hidefocus", "lang", "language", "tabindex", "title", "unselectable",
                 " xml:lang"];
 

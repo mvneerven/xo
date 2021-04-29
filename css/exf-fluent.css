@@ -1,2 +1,238 @@
-.exf-container.exf-theme-fluent{font-family:"Segoe UI", Tahoma, Geneva, Verdana, sans-serif}.exf-container.exf-theme-fluent .exf-ctl-cnt{-webkit-appearance:none;-moz-appearance:none;appearance:none;position:relative;min-height:2.525rem;height:auto;padding:2rem 0.5rem 0.5rem;line-height:1}.exf-container.exf-theme-fluent .exf-ctl-cnt .exf-ctl-cnt{padding-left:0;margin:0}.exf-container.exf-theme-fluent .exf-ctl-cnt>[name]{outline:none}.exf-container.exf-theme-fluent .exf-ctl-cnt>input,.exf-container.exf-theme-fluent .exf-ctl-cnt>textarea,.exf-container.exf-theme-fluent .exf-ctl-cnt>select{font-family:"Segoe UI", Tahoma, Geneva, Verdana, sans-serif;border:1px solid var(--field-box-shadow-subtle);height:2rem;padding:0.3125rem;z-index:0;width:auto}.exf-container.exf-theme-fluent .exf-ctl-cnt>input ::-webkit-input-placeholder,.exf-container.exf-theme-fluent .exf-ctl-cnt>textarea ::-webkit-input-placeholder,.exf-container.exf-theme-fluent .exf-ctl-cnt>select ::-webkit-input-placeholder{opacity:0.6}.exf-container.exf-theme-fluent .exf-ctl-cnt>input :-ms-input-placeholder,.exf-container.exf-theme-fluent .exf-ctl-cnt>textarea :-ms-input-placeholder,.exf-container.exf-theme-fluent .exf-ctl-cnt>select :-ms-input-placeholder{opacity:0.6}.exf-container.exf-theme-fluent .exf-ctl-cnt>input ::-ms-input-placeholder,.exf-container.exf-theme-fluent .exf-ctl-cnt>textarea ::-ms-input-placeholder,.exf-container.exf-theme-fluent .exf-ctl-cnt>select ::-ms-input-placeholder{opacity:0.6}.exf-container.exf-theme-fluent .exf-ctl-cnt>input ::placeholder,.exf-container.exf-theme-fluent .exf-ctl-cnt>textarea ::placeholder,.exf-container.exf-theme-fluent .exf-ctl-cnt>select ::placeholder{opacity:0.6}.exf-container.exf-theme-fluent .exf-ctl-cnt>textarea{width:100%;min-height:6em}.exf-container.exf-theme-fluent .exf-ctl-cnt>select{min-width:15rem}.exf-container.exf-theme-fluent .exf-ctl-cnt>input:not([type="color"]):not([type="date"]):not([type="time"]):not([size]){width:100%}.exf-container.exf-theme-fluent .exf-ctl-cnt>input[type="color"],.exf-container.exf-theme-fluent .exf-ctl-cnt [type="date"],.exf-container.exf-theme-fluent .exf-ctl-cnt [type="time"],.exf-container.exf-theme-fluent .exf-ctl-cnt [type="datetime"],.exf-container.exf-theme-fluent .exf-ctl-cnt [type="datetime-local"]{min-width:3rem}.exf-container.exf-theme-fluent .exf-ctl-cnt>input:focus,.exf-container.exf-theme-fluent .exf-ctl-cnt>textarea:focus,.exf-container.exf-theme-fluent .exf-ctl-cnt>select:focus,.exf-container.exf-theme-fluent .exf-ctl-cnt>input:hover,.exf-container.exf-theme-fluent .exf-ctl-cnt>textarea:hover,.exf-container.exf-theme-fluent .exf-ctl-cnt>select:hover,.exf-container.exf-theme-fluent .exf-ctl-cnt>.btn:hover{border-color:var(--field-box-shadow)}.exf-container.exf-theme-fluent .exf-ctl-cnt>input:disabled,.exf-container.exf-theme-fluent .exf-ctl-cnt>textarea:disabled,.exf-container.exf-theme-fluent .exf-ctl-cnt>select:disabled{background-color:var(--color-disabled)}.exf-container.exf-theme-fluent .exf-ctl-cnt>input:-moz-read-only,.exf-container.exf-theme-fluent .exf-ctl-cnt>textarea:-moz-read-only,.exf-container.exf-theme-fluent .exf-ctl-cnt>select:-moz-read-only{background-color:var(--color-readonly)}.exf-container.exf-theme-fluent .exf-ctl-cnt>input:read-only,.exf-container.exf-theme-fluent .exf-ctl-cnt>textarea:read-only,.exf-container.exf-theme-fluent .exf-ctl-cnt>select:read-only{background-color:var(--color-readonly)}.exf-container.exf-theme-fluent .exf-ctl-cnt>label{position:absolute;top:0.5rem;left:0.5rem}.exf-container.exf-theme-fluent .exf-ctl-cnt [type="radio"],.exf-container.exf-theme-fluent .exf-ctl-cnt [type="checkbox"]{-webkit-appearance:none;-moz-appearance:none;appearance:none;outline:none;width:20px;height:20px;border:solid 1px #cccccc;margin-right:8px;position:relative}.exf-container.exf-theme-fluent .exf-ctl-cnt [type="radio"]:checked::before,.exf-container.exf-theme-fluent .exf-ctl-cnt [type="radio"]:checked::before,.exf-container.exf-theme-fluent .exf-ctl-cnt [type="checkbox"]:checked::before,.exf-container.exf-theme-fluent .exf-ctl-cnt [type="checkbox"]:checked::before{content:"";width:14px;height:14px;background-color:#ffa500;position:absolute;top:2px;left:2px}.exf-container.exf-theme-fluent .exf-ctl-cnt [type="radio"]:checked::before,.exf-container.exf-theme-fluent .exf-ctl-cnt [type="checkbox"]:checked::before{border-radius:100%}.exf-container.exf-theme-fluent .exf-ctl-cnt [type="radio"]{border-radius:100%}.exf-container.exf-theme-fluent .exf-ctl-cnt>select{outline:0;-webkit-box-shadow:none;box-shadow:none;background-color:var(--color-background);border:1px solid var(--field-box-shadow-subtle);background-image:none;-webkit-box-flex:1;-ms-flex:1;flex:1;height:3rem;padding:0.3125rem;cursor:pointer}.exf-container.exf-theme-fluent .exf-ctl-cnt>select::-ms-expand{display:none}.exf-container.exf-theme-fluent .exf-input-group label>.exf-caption{display:inline-block;height:auto;vertical-align:text-bottom;padding:0.2rem 0.4rem 0.2rem 0.1rem;margin-right:1rem}.exf-container.exf-theme-fluent .btn{-webkit-appearance:button;cursor:pointer;padding:1rem 2rem;text-align:center;background-color:var(--color-button);border:1px var(--color-shade) solid;color:var(--color-buttontext);display:inline-block;outline:none;font-size:0.875rem;margin:0.15625rem 0;position:relative;vertical-align:middle}.exf-container.exf-theme-fluent .btn:active{background:#eeeeee;color:#262626;-webkit-box-shadow:none;box-shadow:none}.exf-container.exf-theme-fluent .btn:hover{border-color:#787878}.exf-container.exf-theme-fluent .btn.primary{background-color:var(--color-button-primary)}
+.exf-container.exf-theme-fluent {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.exf-container.exf-theme-fluent .exf-ctl-cnt {
+  border: 1px solid transparent;
+  -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none;
+  position: relative;
+  min-height: 2.525rem;
+  height: auto;
+  padding: 2rem 0.5rem 0.5rem;
+  line-height: 1;
+}
+
+.exf-container.exf-theme-fluent .exf-ctl-cnt .exf-ctl-cnt {
+  padding-left: 0;
+  margin: 0;
+}
+
+.exf-container.exf-theme-fluent .exf-ctl-cnt > [name] {
+  outline: none;
+}
+
+.exf-container.exf-theme-fluent .exf-ctl-cnt > input,
+.exf-container.exf-theme-fluent .exf-ctl-cnt > textarea,
+.exf-container.exf-theme-fluent .exf-ctl-cnt > select {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  border: 1px solid var(--field-box-shadow-subtle);
+  height: 2rem;
+  padding: 0.3125rem;
+  z-index: 0;
+}
+
+.exf-container.exf-theme-fluent .exf-ctl-cnt > input ::-webkit-input-placeholder,
+.exf-container.exf-theme-fluent .exf-ctl-cnt > textarea ::-webkit-input-placeholder,
+.exf-container.exf-theme-fluent .exf-ctl-cnt > select ::-webkit-input-placeholder {
+  opacity: 0.6;
+}
+
+.exf-container.exf-theme-fluent .exf-ctl-cnt > input :-ms-input-placeholder,
+.exf-container.exf-theme-fluent .exf-ctl-cnt > textarea :-ms-input-placeholder,
+.exf-container.exf-theme-fluent .exf-ctl-cnt > select :-ms-input-placeholder {
+  opacity: 0.6;
+}
+
+.exf-container.exf-theme-fluent .exf-ctl-cnt > input ::-ms-input-placeholder,
+.exf-container.exf-theme-fluent .exf-ctl-cnt > textarea ::-ms-input-placeholder,
+.exf-container.exf-theme-fluent .exf-ctl-cnt > select ::-ms-input-placeholder {
+  opacity: 0.6;
+}
+
+.exf-container.exf-theme-fluent .exf-ctl-cnt > input ::placeholder,
+.exf-container.exf-theme-fluent .exf-ctl-cnt > textarea ::placeholder,
+.exf-container.exf-theme-fluent .exf-ctl-cnt > select ::placeholder {
+  opacity: 0.6;
+}
+
+.exf-container.exf-theme-fluent .exf-ctl-cnt > textarea {
+  width: 100%;
+  min-height: 6em;
+}
+
+.exf-container.exf-theme-fluent .exf-ctl-cnt > select {
+  min-width: 15rem;
+}
+
+.exf-container.exf-theme-fluent .exf-ctl-cnt > input[type="color"],
+.exf-container.exf-theme-fluent .exf-ctl-cnt [type="date"],
+.exf-container.exf-theme-fluent .exf-ctl-cnt [type="time"],
+.exf-container.exf-theme-fluent .exf-ctl-cnt [type="datetime"],
+.exf-container.exf-theme-fluent .exf-ctl-cnt [type="datetime-local"] {
+  min-width: 3rem;
+}
+
+.exf-container.exf-theme-fluent .exf-ctl-cnt.exf-nmbr-btns .exf-input > .nmbr-m, .exf-container.exf-theme-fluent .exf-ctl-cnt.exf-nmbr-btns .exf-input > .nmbr-p {
+  height: 2.7rem;
+  width: 2rem;
+  padding: 0.3125rem;
+  border: 1px solid var(--field-box-shadow-subtle);
+}
+
+.exf-container.exf-theme-fluent .exf-ctl-cnt > input:focus,
+.exf-container.exf-theme-fluent .exf-ctl-cnt > textarea:focus,
+.exf-container.exf-theme-fluent .exf-ctl-cnt > select:focus,
+.exf-container.exf-theme-fluent .exf-ctl-cnt > input:hover,
+.exf-container.exf-theme-fluent .exf-ctl-cnt > textarea:hover,
+.exf-container.exf-theme-fluent .exf-ctl-cnt > select:hover,
+.exf-container.exf-theme-fluent .exf-ctl-cnt > .btn:hover {
+  border-color: var(--field-box-shadow);
+}
+
+.exf-container.exf-theme-fluent .exf-ctl-cnt > input:disabled,
+.exf-container.exf-theme-fluent .exf-ctl-cnt > textarea:disabled,
+.exf-container.exf-theme-fluent .exf-ctl-cnt > select:disabled {
+  background-color: var(--color-disabled);
+}
+
+.exf-container.exf-theme-fluent .exf-ctl-cnt > input:-moz-read-only,
+.exf-container.exf-theme-fluent .exf-ctl-cnt > textarea:-moz-read-only,
+.exf-container.exf-theme-fluent .exf-ctl-cnt > select:-moz-read-only {
+  background-color: var(--color-readonly);
+}
+
+.exf-container.exf-theme-fluent .exf-ctl-cnt > input:read-only,
+.exf-container.exf-theme-fluent .exf-ctl-cnt > textarea:read-only,
+.exf-container.exf-theme-fluent .exf-ctl-cnt > select:read-only {
+  background-color: var(--color-readonly);
+}
+
+.exf-container.exf-theme-fluent .exf-ctl-cnt > label {
+  position: absolute;
+  top: 0.5rem;
+  left: 0.5rem;
+}
+
+.exf-container.exf-theme-fluent .exf-ctl-cnt [type="radio"],
+.exf-container.exf-theme-fluent .exf-ctl-cnt [type="checkbox"] {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  outline: none;
+  width: 20px;
+  height: 20px;
+  border: solid 1px #cccccc;
+  margin-right: 8px;
+  position: relative;
+}
+
+.exf-container.exf-theme-fluent .exf-ctl-cnt [type="radio"]:checked::before, .exf-container.exf-theme-fluent .exf-ctl-cnt [type="radio"]:checked::before,
+.exf-container.exf-theme-fluent .exf-ctl-cnt [type="checkbox"]:checked::before,
+.exf-container.exf-theme-fluent .exf-ctl-cnt [type="checkbox"]:checked::before {
+  content: "";
+  width: 14px;
+  height: 14px;
+  background-color: #ffa500;
+  position: absolute;
+  top: 2px;
+  left: 2px;
+}
+
+.exf-container.exf-theme-fluent .exf-ctl-cnt [type="radio"]:checked::before,
+.exf-container.exf-theme-fluent .exf-ctl-cnt [type="checkbox"]:checked::before {
+  border-radius: 100%;
+}
+
+.exf-container.exf-theme-fluent .exf-ctl-cnt [type="radio"] {
+  border-radius: 100%;
+}
+
+.exf-container.exf-theme-fluent .exf-ctl-cnt > select {
+  outline: 0;
+  -webkit-box-shadow: none;
+          box-shadow: none;
+  background-color: var(--color-background);
+  border: 1px solid var(--field-box-shadow-subtle);
+  background-image: none;
+  -webkit-box-flex: 1;
+      -ms-flex: 1;
+          flex: 1;
+  height: 3rem;
+  padding: 0.3125rem;
+  cursor: pointer;
+  /* Remove IE arrow */
+}
+
+.exf-container.exf-theme-fluent .exf-ctl-cnt > select::-ms-expand {
+  display: none;
+}
+
+.exf-container.exf-theme-fluent .exf-ctl-cnt.exf-rng-output output {
+  padding: 0.375rem;
+  border: 1px solid var(--color-shade);
+  border-radius: 1em;
+  background-color: var(--color-background-variation);
+  margin-left: 1em;
+  margin-top: -1.7em;
+}
+
+.exf-container.exf-theme-fluent .exf-ctl-cnt.exf-invalid {
+  border-color: #cc3344;
+}
+
+.exf-container.exf-theme-fluent .exf-ctl-cnt.exf-invalid .exf-help {
+  color: #cc3344;
+  font-size: smaller;
+}
+
+.exf-container.exf-theme-fluent .exf-input-group label > .exf-caption {
+  display: inline-block;
+  height: auto;
+  vertical-align: text-bottom;
+  padding: 0.2rem 0.4rem 0.2rem 0.1rem;
+  margin-right: 1rem;
+}
+
+.exf-container.exf-theme-fluent .exf-input-group label > .exf-caption .exf-caption-description {
+  font-size: 0.9rem;
+}
+
+.exf-container.exf-theme-fluent .exf-input-group label > .exf-caption .exf-caption-main {
+  margin-bottom: .4em;
+  margin-top: -.4em;
+  font-weight: bold;
+}
+
+.exf-container.exf-theme-fluent .btn {
+  -webkit-appearance: button;
+  cursor: pointer;
+  padding: 1rem 2rem;
+  text-align: center;
+  background-color: var(--color-button);
+  border: 1px var(--color-shade) solid;
+  color: var(--color-buttontext);
+  display: inline-block;
+  outline: none;
+  font-size: 0.875rem;
+  margin: 0.15625rem 0;
+  position: relative;
+  vertical-align: middle;
+}
+
+.exf-container.exf-theme-fluent .btn:active {
+  background: #eeeeee;
+  color: #262626;
+  -webkit-box-shadow: none;
+          box-shadow: none;
+}
+
+.exf-container.exf-theme-fluent .btn:hover {
+  border-color: #787878;
+}
+
+.exf-container.exf-theme-fluent .btn.primary {
+  background-color: var(--color-button-primary);
+}
 /*# sourceMappingURL=exf-fluent.css.map */

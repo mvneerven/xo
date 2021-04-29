@@ -34,10 +34,10 @@ class ExoForm {
         templates: {
             empty: /*html*/`<span data-replace="true"></span>`,
             exocontainer: /*html*/`<div class="exf-container"></div>`,
-            default: /*html*/`<div data-id="{{id}}" class="exf-ctl-cnt {{class}}"><label title="{{caption}}">{{caption}}</label><span data-replace="true"></span></div>`,
-            nolabel: /*html*/`<div data-id="{{id}}" class="exf-ctl-cnt {{class}}"><span data-replace="true"></span></div>`,
-            text: /*html*/`<div data-id="{{id}}" class="exf-ctl-cnt exf-base-text {{class}}"><span data-replace="true"></span><label title="{{caption}}">{{caption}}</label></div>`,
-            labelcontained: /*html*/`<div data-id="{{id}}" class="exf-ctl-cnt {{class}}"><label title="{{tooltip}}"><span data-replace="true"></span> <span>{{caption}}</span></label></div>`,
+            //default: /*html*/`<div data-id="{{id}}" class="exf-ctl-cnt {{class}}"><label title="{{caption}}">{{caption}}</label><span data-replace="true"></span></div>`,
+            //nolabel: /*html*/`<div data-id="{{id}}" class="exf-ctl-cnt {{class}}"><span data-replace="true"></span></div>`,
+            //text: /*html*/`<div data-id="{{id}}" class="exf-ctl-cnt exf-base-text {{class}}"><span data-replace="true"></span><label title="{{caption}}">{{caption}}</label></div>`,
+            //labelcontained: /*html*/`<div data-id="{{id}}" class="exf-ctl-cnt {{class}}"><label title="{{tooltip}}"><span data-replace="true"></span> <span>{{caption}}</span></label></div>`,
             form: /*html*/`<form class="exf-form {{class}}" method="post"></form>`,
             static: /*html*/`<div class="{{class}}" ></div>`,
             fieldset: /*html*/`<fieldset data-page="{{pagenr}}" data-pageid="{{pageid}}" class="exf-cnt {{class}}"></fieldset>`,
@@ -60,7 +60,7 @@ class ExoForm {
         navigation: "auto",
         validation: "default",
         progress: "auto",
-        theme: "fluent",
+        theme: "material",
         runtime: {
             progress: false
         },
@@ -728,7 +728,8 @@ class ExoForm {
                 if (!f || !f.type)
                     throw "Incorrect field options. Must be object with at least 'type' property. " + JSON.stringify(f)
 
-                f.id = f.id || Core.guid();
+                
+                f.id = f.id || _._generateUniqueElementId();
 
                 let field = _.context.get(f.type);
                 if (!field)
@@ -784,6 +785,13 @@ class ExoForm {
 
             }
         });
+    }
+
+    _generateUniqueElementId(){
+        let gid = Core.guid();
+        gid = gid.split('-');
+        gid = gid[gid.length-1];
+        return "exf" + gid;
     }
 
     testValidity(e, field) {

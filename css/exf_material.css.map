@@ -1,0 +1,9 @@
+{
+    "version": 3,
+    "mappings": "",
+    "sources": [
+        "../scss/exf_material.scss"
+    ],
+    "names": [],
+    "file": "exf_material.css"
+}

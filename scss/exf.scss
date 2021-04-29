@@ -7,7 +7,10 @@
 @import "exf-charts";
 @import "exf-dlg";
 @import "exf-range-switch";
+@import "exf-filedrop";
+@import "exf-wizard-steps";
 @import "exf-def-themes";
+
 @import "exf-survey";
 
 .exf-tabs-wrapper {
@@ -22,7 +25,25 @@
     }
 }
 
-.exf-help {
-    color: #ff3344;
-    font-size: smaller;
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;900&display=swap");
+
+html {
+    line-height: 1.15;
+
+    &:root {
+        --color-input-background: transparent;
+        --color-input: #333;
+        --color-error: #cc3333;
+        --color-label: #aaa;
+        --color-label-active: #cc3333;
+        --font-size-active: 1rem;
+        --label-active-top: -1rem;
+    }
+}
+
+html.theme-dark {
+    &:root {
+        --color-input: #fefefe;
+        --color-error: #ff5555;
+    }
 }

@@ -50,7 +50,7 @@ class ExoFormNavigationBase {
             ...options || {}
         }
 
-        const tpl = /*html*/`<button name="{{name}}" type="{{type}}" class="btn {{class}}">{{caption}}</button>`;
+        const tpl = /*html*/`<button name="{{name}}" type="{{type}}" class="exf-btn {{class}}">{{caption}}</button>`;
 
         let btn = DOM.parseHTML(DOM.format(tpl, options));
         this.buttons[name].element = btn;
