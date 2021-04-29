@@ -20,6 +20,7 @@ Show the progress within form filling
 ```
 
 ## Material Theme
+A new theme, inspired by Material Design, was added.
 
 ```json
 {
