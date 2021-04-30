@@ -855,11 +855,11 @@ class ExoNLAddressControl extends MultiInputControl {
     static APIUrl = "https://geodata.nationaalgeoregister.nl/locatieserver/v3/free?q=postcode:{{code}}&huisnummer:{{nr}}";
 
     fields = {
-        code: { caption: "Postcode", type: "text", size: 7, maxlength: 7, required: true, pattern: "[1-9][0-9]{3}\s?[a-zA-Z]{2}", placeholder: "" },
-        nr: { caption: "Huisnummer", type: "number", size: 6, maxlength: 6, placeholder: "" },
-        ext: { caption: "Toevoeging", type: "text", size: 3, maxlength: 3, placeholder: "" },
-        city: { caption: "Plaats", type: "text", maxlength: 50, readonly: true, placeholder: "" },
-        street: { caption: "Straatnaam", type: "text", maxlength: 50, readonly: true, placeholder: "" }
+        code: { caption: "Postcode", type: "text", size: 7, maxlength: 7, required: "inherit", pattern: "[1-9][0-9]{3}\s?[a-zA-Z]{2}", placeholder: "1234AB" },
+        nr: { caption: "Huisnummer", type: "number", size: 6, maxlength: 6, required: "inherit", placeholder: "67" },
+        ext: { caption: "Toevoeging", type: "text", size: 3, maxlength: 3, placeholder: "F" },
+        city: { caption: "Plaats", type: "text", maxlength: 50, readonly: true, placeholder: "Den Helder" },
+        street: { caption: "Straatnaam", type: "text", maxlength: 50, readonly: true, placeholder: "Dorpstraat" }
     }
 
     async render() {

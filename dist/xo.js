@@ -855,8 +855,6 @@
 
         _.container.appendChild(_.form);
 
-        _.container.classList.add("exf-ver-" + ExoForm.version);
-
         try {
           _._renderPages().then(() => {
             _._finalizeForm();
@@ -1586,8 +1584,6 @@
   _defineProperty(ExoForm, "_staticConstructor", (() => {
     ExoForm.setup();
   })());
-
-  _defineProperty(ExoForm, "version", "0.981");
 
   class Field {
     static show(obj) {
@@ -3770,37 +3766,38 @@
           type: "text",
           size: 7,
           maxlength: 7,
-          required: true,
+          required: "inherit",
           pattern: "[1-9][0-9]{3}\s?[a-zA-Z]{2}",
-          placeholder: ""
+          placeholder: "1234AB"
         },
         nr: {
           caption: "Huisnummer",
           type: "number",
           size: 6,
           maxlength: 6,
-          placeholder: ""
+          required: "inherit",
+          placeholder: "67"
         },
         ext: {
           caption: "Toevoeging",
           type: "text",
           size: 3,
           maxlength: 3,
-          placeholder: ""
+          placeholder: "F"
         },
         city: {
           caption: "Plaats",
           type: "text",
           maxlength: 50,
           readonly: true,
-          placeholder: ""
+          placeholder: "Den Helder"
         },
         street: {
           caption: "Straatnaam",
           type: "text",
           maxlength: 50,
           readonly: true,
-          placeholder: ""
+          placeholder: "Dorpstraat"
         }
       });
     }
