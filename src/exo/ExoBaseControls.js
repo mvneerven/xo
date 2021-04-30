@@ -142,7 +142,7 @@ class ExoControlBase {
             })
         }
 
-        if (this.htmlElement.tagName === "INPUT" || this.htmlElement.tagName === "TEXTAREA" )
+        if (this.htmlElement.tagName === "INPUT" || this.htmlElement.tagName === "TEXTAREA")
             ar.push("exf-input");
 
         if (this.context.field.readOnly)
@@ -174,6 +174,10 @@ class ExoControlBase {
         this.setProperties();
 
         for (var a in this.attributes) {
+            if (a === "required") {
+                this._htmlElement.required = this.attributes[a];
+                continue;
+            }
             this._htmlElement.setAttribute(a, this.attributes[a]);
         }
         for (var a in this.dataProps) {
@@ -320,35 +324,35 @@ class ExoControlBase {
      * @param {Object} options - The options (type: "info|error|invalid")
      * @returns 
      */
-    showHelp(msg, options){
+    showHelp(msg, options) {
 
-        if(!msg){
+        if (!msg) {
             if (this._error != null) {
                 this._error.parentNode.removeChild(this._error);
                 this._error = null;
             }
-    
-            if (this.container){
+
+            if (this.container) {
                 this.container.removeAttribute('aria-invalid');
                 this.container.classList.remove("exf-invalid");
             }
             return;
         }
 
-        options = options || {type: "info"};
+        options = options || { type: "info" };
 
         if (this._error != null) {
-           this._error.innerHTML = msg
-           return;
+            this._error.innerHTML = msg
+            return;
         }
 
         this._error = DOM.parseHTML(`<div class="exf-help exf-help-${options.type}">${msg}</div>`)
 
-        if(options.type === "invalid"){
+        if (options.type === "invalid") {
             this.container.setAttribute('aria-invalid', 'true');
             this.container.classList.add('exf-invalid');
         }
-        
+
         this.container.querySelector(".exf-help-wrapper").appendChild(this._error);
 
     }
@@ -447,7 +451,7 @@ export class ExoInputControl extends ExoElementControl {
         this.testDataList();
 
 
-        switch(this.context.field.type){
+        switch (this.context.field.type) {
             case "color":
                 this.container.classList.add("exf-std-lbl");
                 break;
@@ -472,7 +476,7 @@ export class ExoInputControl extends ExoElementControl {
                 if (data.length > 1) {
                     _.createDataList(_.context.field, data);
                 }
-                else{
+                else {
                     _.destroyDataList()
                 }
             }
@@ -486,9 +490,9 @@ export class ExoInputControl extends ExoElementControl {
         })
     }
 
-    destroyDataList(){
-        let dl=this.container.querySelector("datalist")
-        if(dl){
+    destroyDataList() {
+        let dl = this.container.querySelector("datalist")
+        if (dl) {
             dl.remove();
         }
     }
@@ -668,10 +672,10 @@ class ExoTextAreaControl extends ExoTextControl {
         }
     }
 
-    async render(){
+    async render() {
         await super.render();
 
-        if(this.autogrow){
+        if (this.autogrow) {
             this.htmlElement.setAttribute("onInput", "this.parentNode.dataset.replicatedValue = this.value");
             this.htmlElement.parentNode.classList.add("autogrow");
         }
@@ -705,7 +709,7 @@ export class ExoListControl extends ExoElementControl {
         const _ = this;
         const f = _.context.field;
         if (f.items && Array.isArray(f.items)) {
-            let index=0;
+            let index = 0;
             f.items.forEach(i => {
                 _.addListItem(f, i, tpl, containerElm, index);
                 index++;
@@ -866,7 +870,7 @@ class ExoInputListControl extends ExoListControl {
 
     get validationMessage() {
         return this.htmlElement.querySelector("input").validationMessage;
-    }  
+    }
 }
 
 class ExoRadioButtonListControl extends ExoInputListControl {
@@ -942,7 +946,7 @@ class ExoButtonControl extends ExoElementControl {
             _.htmlElement.appendChild(DOM.parseHTML('<span class="' + _.icon + '"></span>'))
             this.htmlElement.appendChild(document.createTextNode(' '));
         }
-        
+
         _.htmlElement.appendChild(DOM.parseHTML(`<span class="exf-caption">${this.context.field.caption}</span>`))
 
         let elm = await super.render();
@@ -991,7 +995,7 @@ class ExoButtonControl extends ExoElementControl {
 
         this.container.classList.add("exf-btn-cnt");
         this.htmlElement.classList.add("exf-btn");
-        
+
         return this.container;
     }
 

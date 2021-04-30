@@ -469,7 +469,6 @@ class ExoTaggingControl extends ExoBaseControls.controls.text.type {
     }
 }
 
-
 class ExoCaptchaControl extends ExoBaseControls.controls.div.type {
 
     constructor(context) {
@@ -524,8 +523,6 @@ class ExoCaptchaControl extends ExoBaseControls.controls.div.type {
 
 // TODO finish
 class DropDownButton extends ExoBaseControls.controls.list.type {
-
-
 
     navTemplate = /*html*/`
         <nav class="ul-drop" role='navigation'>
@@ -684,8 +681,8 @@ class MultiInputControl extends ExoBaseControls.controls.div.type {
                 name: "fields", type: Object,
                 description: "Fields structure",
                 example: {
-                    first: { caption: "First", type: "text", maxlength: 30, required: true, placeholder: "" },
-                    last: { caption: "Last", type: "text", maxlength: 50, required: true, placeholder: "" },
+                    first: { caption: "First", type: "text", maxlength: 30},
+                    last: { caption: "Last", type: "text", maxlength: 50}
                 }
             }
 
@@ -735,12 +732,21 @@ class MultiInputControl extends ExoBaseControls.controls.div.type {
                 ...options,
                 name: f.name + "_" + n
             }
+
+            for(var o in options){
+                var v = options[o];
+                if(v==="inherit")
+                    options[o] = f[o]
+            }
+
+
             _.inputs[n] = await rs(n, options);
             _.inputs[n].setAttribute("data-multi-name", options.name);
             _.htmlElement.appendChild(_.inputs[n])
             return _.inputs[n];
         }
 
+        
         if (!this.fields && f.fields) {
             this.fields = f.fields;
         }
@@ -824,14 +830,13 @@ class MultiInputControl extends ExoBaseControls.controls.div.type {
 
 class ExoNameControl extends MultiInputControl {
 
-
     columns = "10em 1fr";
 
     areas = `"first last"`;
 
     fields = {
-        first: { caption: "First", type: "text", maxlength: 30, required: true, placeholder: "" },
-        last: { caption: "Last", type: "text", maxlength: 50, required: true, placeholder: "" },
+        first: { caption: "First", type: "text", maxlength: 30, required: "inherit"},
+        last: { caption: "Last", type: "text", maxlength: 50, required: "inherit"}
     }
 
 }
@@ -905,10 +910,10 @@ class ExoCreditCardControl extends MultiInputControl {
 
 
     fields = {
-        name: { caption: "Name on Card", type: "text", maxlength: 50, required: true, placeholder: "" },
-        number: { caption: "Credit Card Number", type: "text", size: 16, required: true, maxlength: 16, placeholder: "", pattern: "[0-9]{13,16}", },
-        expiry: { caption: "Card Expires", containerClass: "exf-label-sup", type: "month", required: true, maxlength: 3, placeholder: "", min: (new Date().getFullYear() + "-" + ('0' + (new Date().getMonth() + 1)).slice(-2)) },
-        cvv: { caption: "CVV", type: "number", required: true, minlength: 3, maxlength: 3, size: 3, placeholder: "", min: "000" }
+        name: { caption: "Name on Card", type: "text", maxlength: 50, required: "inherit", placeholder: "" },
+        number: { caption: "Credit Card Number", type: "text", size: 16, required: "inherit", maxlength: 16, placeholder: "", pattern: "[0-9]{13,16}", },
+        expiry: { caption: "Card Expires", containerClass: "exf-label-sup", type: "month", required: "inherit", maxlength: 3, placeholder: "", min: (new Date().getFullYear() + "-" + ('0' + (new Date().getMonth() + 1)).slice(-2)) },
+        cvv: { caption: "CVV", type: "number", required: "inherit", minlength: 3, maxlength: 3, size: 3, placeholder: "", min: "000" }
     }
 }
 

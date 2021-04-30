@@ -136,6 +136,29 @@ Show the value of a range control
 }
 ```
 
+### Captcha: invisible (Boolean)
+Make the Google ReCaptcha control act invisibly.
+
+```json
+{
+  "pages": [
+    {
+      "legend": "My Form",
+      "intro": "My form description",
+      "fields": [
+        {
+          "name": "captch",
+          "type": "captcha",
+          "invisible": true
+        }
+      ]
+    }
+  ]
+}
+```
+
+
+
 ## ExoForm Explorer 
 [The ExoForm Explorer](https://www.xo-js.dev/#/explore) is loaded with new functionality to experiment with all the new features.
 

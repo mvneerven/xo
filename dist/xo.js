@@ -1782,6 +1782,11 @@
       this.setProperties();
 
       for (var a in this.attributes) {
+        if (a === "required") {
+          this._htmlElement.required = this.attributes[a];
+          continue;
+        }
+
         this._htmlElement.setAttribute(a, this.attributes[a]);
       }
 
@@ -3580,16 +3585,12 @@
           first: {
             caption: "First",
             type: "text",
-            maxlength: 30,
-            required: true,
-            placeholder: ""
+            maxlength: 30
           },
           last: {
             caption: "Last",
             type: "text",
-            maxlength: 50,
-            required: true,
-            placeholder: ""
+            maxlength: 50
           }
         }
       });
@@ -3632,6 +3633,12 @@
         options = { ...options,
           name: f.name + "_" + n
         };
+
+        for (var o in options) {
+          var v = options[o];
+          if (v === "inherit") options[o] = f[o];
+        }
+
         _.inputs[n] = await rs(n, options);
 
         _.inputs[n].setAttribute("data-multi-name", options.name);
@@ -3733,15 +3740,13 @@
           caption: "First",
           type: "text",
           maxlength: 30,
-          required: true,
-          placeholder: ""
+          required: "inherit"
         },
         last: {
           caption: "Last",
           type: "text",
           maxlength: 50,
-          required: true,
-          placeholder: ""
+          required: "inherit"
         }
       });
     }
@@ -3860,14 +3865,14 @@
           caption: "Name on Card",
           type: "text",
           maxlength: 50,
-          required: true,
+          required: "inherit",
           placeholder: ""
         },
         number: {
           caption: "Credit Card Number",
           type: "text",
           size: 16,
-          required: true,
+          required: "inherit",
           maxlength: 16,
           placeholder: "",
           pattern: "[0-9]{13,16}"
@@ -3876,7 +3881,7 @@
           caption: "Card Expires",
           containerClass: "exf-label-sup",
           type: "month",
-          required: true,
+          required: "inherit",
           maxlength: 3,
           placeholder: "",
           min: new Date().getFullYear() + "-" + ('0' + (new Date().getMonth() + 1)).slice(-2)
@@ -3884,7 +3889,7 @@
         cvv: {
           caption: "CVV",
           type: "number",
-          required: true,
+          required: "inherit",
           minlength: 3,
           maxlength: 3,
           size: 3,
