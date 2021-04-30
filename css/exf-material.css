@@ -7,11 +7,11 @@
   color: var(--color-label);
 }
 
-.exf-container.exf-theme-material form fieldset {
+.exf-container.exf-theme-material .exf-cnt {
   border: 0;
 }
 
-.exf-container.exf-theme-material form fieldset legend {
+.exf-container.exf-theme-material .exf-cnt > legend {
   font-size: 1.2rem;
   font-weight: 600;
 }
@@ -26,7 +26,6 @@
   position: absolute;
   pointer-events: none;
   top: 0.7em;
-  left: 0.5em;
   line-height: 1;
 }
 

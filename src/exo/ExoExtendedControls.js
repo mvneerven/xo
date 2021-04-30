@@ -17,7 +17,7 @@ class ExoFileDropControl extends ExoBaseControls.controls.input.type {
             { name: "max", type: Number, description: "Max number of files accepted" },
             { name: "fileTypes", type: String | Array, description: 'Array of strings - example: ["image/"]' },
             { name: "maxSize", type: Number, description: "Maximum filesize of files to be uploaded (in bytes) - example: 4096000" },
-            {name: "height", type: Number, description: "Height of drop area"}
+            { name: "height", type: Number, description: "Height of drop area" }
         )
     }
 
@@ -31,7 +31,7 @@ class ExoFileDropControl extends ExoBaseControls.controls.input.type {
         await super.render();
 
         _.previewDiv = DOM.parseHTML(`<div class="file-preview clearable"></div>`);
-        _.previewDiv.style.height = `${this.height}px`; 
+        _.previewDiv.style.height = `${this.height}px`;
 
         _.container.querySelector(".exf-ctl").appendChild(_.previewDiv);
         _.container.classList.add("exf-filedrop");
@@ -67,7 +67,7 @@ class ExoFileDropControl extends ExoBaseControls.controls.input.type {
                     _.previewDiv.appendChild(thumb);
                 }
                 else {
-                    _.showHelp(data.error, {type: "error"});
+                    _.showHelp(data.error, { type: "error" });
                 }
             }
         )
@@ -194,15 +194,14 @@ class ExoFileDropControl extends ExoBaseControls.controls.input.type {
     }
 
     get valid() {
-        debugger;
-        return true;
+        return this.htmlElement,checkValidity();
     }
 
-    // Used to get localized standard validation message 
-    getValidationMessage() {
-        let msg = "";
-        return msg;
-    }
+    // // Used to get localized standard validation message 
+    // getValidationMessage() {
+    //     let msg = "";
+    //     return msg;
+    // }
 }
 
 class ExoCKRichEditor extends ExoBaseControls.controls.div.type {
@@ -394,6 +393,8 @@ class ExoTaggingControl extends ExoBaseControls.controls.text.type {
             })
         }
 
+        _.container.classList.add("exf-std-lbl");
+
         return _.container;
     }
 
@@ -482,12 +483,12 @@ class ExoCaptchaControl extends ExoBaseControls.controls.div.type {
             description: "Key for Google reCaptcha",
             more: "https://developers.google.com/recaptcha/intro"
         },
-        {
-            name: "invisible",
-            type: Boolean,
-            description: "Use invisible Captcha method",
-            more: "https://developers.google.com/recaptcha/docs/invisible"
-        }
+            {
+                name: "invisible",
+                type: Boolean,
+                description: "Use invisible Captcha method",
+                more: "https://developers.google.com/recaptcha/docs/invisible"
+            }
         )
     }
 
@@ -497,7 +498,7 @@ class ExoCaptchaControl extends ExoBaseControls.controls.div.type {
 
         this.htmlElement.setAttribute("data-sitekey", this.sitekey)
 
-        if(this.invisible){
+        if (this.invisible) {
             this.htmlElement.setAttribute("data-size", "invisible");
         }
 
@@ -512,11 +513,11 @@ class ExoCaptchaControl extends ExoBaseControls.controls.div.type {
         return this._sitekey;
     }
 
-    get invisible(){
+    get invisible() {
         return this._invisible === true;
     }
 
-    set invisible(value){
+    set invisible(value) {
         this._invisible = (value == true);
     }
 }
@@ -524,7 +525,7 @@ class ExoCaptchaControl extends ExoBaseControls.controls.div.type {
 // TODO finish
 class DropDownButton extends ExoBaseControls.controls.list.type {
 
-    
+
 
     navTemplate = /*html*/`
         <nav class="ul-drop" role='navigation'>
@@ -729,7 +730,7 @@ class MultiInputControl extends ExoBaseControls.controls.div.type {
         _.inputs = {}
 
         const add = async (n, options) => {
-            
+
             options = {
                 ...options,
                 name: f.name + "_" + n
@@ -795,10 +796,34 @@ class MultiInputControl extends ExoBaseControls.controls.div.type {
         }
         return v;
     }
+
+    showValidationError() {
+
+        for (var n in this.fields) {
+            var elm = this.getFormElement(this._qs(n));
+            console.log("Checking ", elm)
+            if (!elm.checkValidity()) {
+                console.log("Not valid: ", elm)
+                if(elm.reportValidity)
+                    elm.reportValidity();
+                
+                return false;
+            }
+        }
+        return true;
+    }
+
+    getFormElement(elm) {
+        if (elm.name && elm.form)
+            return elm;
+
+        return elm.querySelector("[name]") || elm;
+    }
+
 }
 
 class ExoNameControl extends MultiInputControl {
-    
+
 
     columns = "10em 1fr";
 
@@ -813,7 +838,7 @@ class ExoNameControl extends MultiInputControl {
 
 class ExoNLAddressControl extends MultiInputControl {
 
-    columns = "4em 4em 10em 1fr"    
+    columns = "4em 4em 10em 1fr"
 
     areas = `
         "code code nr fill"
@@ -872,7 +897,7 @@ class ExoNLAddressControl extends MultiInputControl {
 
 class ExoCreditCardControl extends MultiInputControl {
 
-    columns = "4em 4em 4em 1fr";    
+    columns = "4em 4em 4em 1fr";
 
     areas = `
         "name name number number"
@@ -972,7 +997,7 @@ class ExoDialogControl extends ExoBaseControls.controls.div.type {
         dlg.classList.add(this.cancelVisible ? "dlg-cv" : "dlg-ch");
 
         const c = (e, confirm) => {
-            
+
             //window.location.hash = "na";
             var btn = "cancel", b = e.target;
             if (confirm || b.classList.contains("confirm")) {
@@ -981,7 +1006,7 @@ class ExoDialogControl extends ExoBaseControls.controls.div.type {
 
             _.hide.apply(_, [btn, e]);
 
-            if(!e.cancelBubble){
+            if (!e.cancelBubble) {
                 _.remove();
             }
 

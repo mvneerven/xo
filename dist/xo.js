@@ -2040,6 +2040,8 @@
 
           if (data.length > 1) {
             _.createDataList(_.context.field, data);
+          } else {
+            _.destroyDataList();
           }
         } else {
           let dl = _.container.querySelector("datalist");
@@ -2051,6 +2053,14 @@
           e.preventDefault();
         }
       });
+    }
+
+    destroyDataList() {
+      let dl = this.container.querySelector("datalist");
+
+      if (dl) {
+        dl.remove();
+      }
     }
 
     testDataList() {
@@ -3081,15 +3091,13 @@
     }
 
     get valid() {
-      debugger;
-      return true;
-    } // Used to get localized standard validation message 
+      return this.htmlElement, checkValidity();
+    } // // Used to get localized standard validation message 
+    // getValidationMessage() {
+    //     let msg = "";
+    //     return msg;
+    // }
 
-
-    getValidationMessage() {
-      let msg = "";
-      return msg;
-    }
 
   }
 
@@ -3279,6 +3287,8 @@
           _.addTag(t);
         });
       }
+
+      _.container.classList.add("exf-std-lbl");
 
       return _.container;
     } // Add Tag
@@ -3684,6 +3694,26 @@
       }
 
       return v;
+    }
+
+    showValidationError() {
+      for (var n in this.fields) {
+        var elm = this.getFormElement(this._qs(n));
+        console.log("Checking ", elm);
+
+        if (!elm.checkValidity()) {
+          console.log("Not valid: ", elm);
+          if (elm.reportValidity) elm.reportValidity();
+          return false;
+        }
+      }
+
+      return true;
+    }
+
+    getFormElement(elm) {
+      if (elm.name && elm.form) return elm;
+      return elm.querySelector("[name]") || elm;
     }
 
   }
@@ -4540,8 +4570,6 @@
         });
 
         if (returnValue !== false) {
-          // debugger;
-          // invalidFields.sort()
           console.log(invalidFields);
           this.focus(invalidFields[0].field);
         }
@@ -4551,10 +4579,12 @@
     focus(field) {
       let element = field._control.htmlElement;
 
-      const f = () => {
+      const f = field => {
+        let element = field._control.htmlElement;
+
         field._control.showValidationError();
 
-        element.focus();
+        if (!element.form) element = element.querySelector("[name]");
       };
 
       if (element.offsetParent === null) {
@@ -4564,10 +4594,12 @@
         if (pgElm) {
           let page = parseInt(pgElm.getAttribute("data-page"));
           this.exo.gotoPage(page);
-          setTimeout(e => f, 20);
+          setTimeout(() => {
+            f(field);
+          }, 20);
         }
       } else {
-        f();
+        f(field);
       }
 
       return true;

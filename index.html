@@ -18,17 +18,19 @@
             --color-shade: #ccc;
             --color-button: #f3578c;
             --color-text: #333;
+            --field-box-shadow-subtle: #dedede;
         }
 
         body {
             font-family: Roboto;
+            background-color: #efefef;
         }
 
         form {
             width: 70%;
             margin: auto;
-            --box-shadow: 1px 1px 50px 1px rgba(0, 0, 0, 0.15);
-            --border-radius: 1em;
+            box-shadow: 1px 1px 50px 1px rgba(0, 0, 0, 0.15);
+            border-radius: 1em;
             padding: 1em;
         }
 
@@ -107,9 +109,9 @@
             async render(path) {
                 const context = await window.xo.form.factory.build();
                 const schema = {
-                    theme: "material",
+                    theme: "fluent",
                     validation: "inline",
-                    navigation: "static",
+                    navigation: "auto",
 
                     pages: [
                         {
@@ -124,25 +126,14 @@
                                     placeholder: "John Doe"
                                 },
 
-                                {
-                                    name: "number",
-                                    type: "number",
-                                    buttons: true,
-                                    required: true,
-                                    step: 1,
-                                    min: 16,
-                                    caption: "Your age"
-                                },
 
                                 {
-                                    name: "rng",
-                                    type: "range",
-                                    showoutput: true,
-                                    value: 4,
-                                    step: 1,
-                                    min: 16,
-                                    caption: "Range"
+                                    name: "tags",
+                                    type: "tags",
+                                    caption: "Tags",
+                                    tags: ["Hitchcock", "De Palma", "Fincher", "Truffaut", "Kubrick"]
                                 },
+
 
                                 {
                                     name: "swt",
@@ -222,13 +213,26 @@
                                     name: "daterange",
                                     type: "daterange",
                                     caption: "Worked in period"
-                                }
-                                // {
-                                //     name: "test",
-                                //     type: "test",
-                                //     caption: "Bla"
-                                // },
+                                },
+                                {
+                                    name: "number",
+                                    type: "number",
+                                    buttons: true,
+                                    required: true,
+                                    step: 1,
+                                    min: 16,
+                                    caption: "Your age"
+                                },
 
+                                {
+                                    name: "rng",
+                                    type: "range",
+                                    showoutput: true,
+                                    value: 4,
+                                    step: 1,
+                                    min: 16,
+                                    caption: "Range"
+                                },
 
                             ]
                         }

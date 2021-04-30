@@ -49,11 +49,7 @@
   height: 1.2rem;
   border: none;
   border-radius: 1.2rem;
-  /* android <= 2.2 */
-  /* older mobile safari and android > 2.2 */
-  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #333333), to(#444444));
-  background-image: linear-gradient(to bottom, #333333 0, #444444 100%);
-  /* W3C */
+  background-color: var(--color-input);
 }
 
 .exf-ctl-cnt.exf-switch input[type="range"]::-moz-range-thumb {
@@ -61,8 +57,7 @@
   height: 1.2rem;
   border: none;
   border-radius: 1.2rem;
-  background-image: linear-gradient(to bottom, #11aa11 0, #22bb22 100%);
-  /* W3C */
+  background-color: var(--color-input);
 }
 
 .exf-ctl-cnt.exf-switch input[type="range"]::-ms-thumb {
@@ -70,24 +65,19 @@
   height: 1.2rem;
   border-radius: 1.2rem;
   border: 0;
-  background-image: linear-gradient(to bottom, #11aa11 0, #22bb22 100%);
-  /* W3C */
+  background-color: var(--color-input);
 }
 
 .exf-ctl-cnt.exf-switch input[type="range"] .switch.on::-webkit-slider-thumb {
-  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #11aa11), to(#22bb22));
-  background-image: linear-gradient(to bottom, #11aa11 0, #22bb22 100%);
-  /* W3C */
+  background-color: var(--color-button);
 }
 
 .exf-ctl-cnt.exf-switch input[type="range"] .switch.on::-moz-range-thumb {
-  background-image: linear-gradient(to bottom, #11aa11 0, #22bb22 100%);
-  /* W3C */
+  background-color: var(--color-button);
 }
 
 .exf-ctl-cnt.exf-switch input[type="range"] .switch.on::-ms-thumb {
-  background-image: linear-gradient(to bottom, #11aa11 0, #22bb22 100%);
-  /* W3C */
+  background-color: var(--color-button);
 }
 
 .exf-ctl-cnt.exf-switch input[type="range"]::-webkit-slider-runnable-track {
@@ -95,9 +85,7 @@
 }
 
 .exf-ctl-cnt.exf-switch.on input[type="range"]::-webkit-slider-thumb {
-  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #11aa11), to(#22bb22));
-  background-image: linear-gradient(to bottom, #11aa11 0, #22bb22 100%);
-  /* W3C */
+  background-color: var(--color-button);
 }
 
 .exf-ctl-cnt.exf-switch label > span {

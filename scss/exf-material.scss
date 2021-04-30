@@ -36,16 +36,16 @@
             color: var(--color-label);
         }
 
-        form {
-            fieldset {
+        
+        .exf-cnt {
                 border: 0;
 
-                legend {
+                > legend {
                     font-size: 1.2rem;
                     font-weight: 600;
                 }
             }
-        }
+        
 
         .exf-ctl-cnt {
             position: relative;
@@ -58,8 +58,7 @@
                         position: absolute;
                         pointer-events: none;
                         top: 0.7em;
-                        left: 0.5em;
-
+                        //left: 0.5em;
                         line-height: 1;
                     }
 

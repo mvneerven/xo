@@ -33,12 +33,7 @@ class ExoFormDefaultValidation {
             });
 
             if (returnValue !== false) {
-
-                // debugger;
-                // invalidFields.sort()
-
                 console.log(invalidFields);
-
                 this.focus(invalidFields[0].field);
             }
         }
@@ -47,9 +42,11 @@ class ExoFormDefaultValidation {
     focus(field) {
         let element = field._control.htmlElement;
 
-        const f = () => {
+        const f = field => {
+            let element = field._control.htmlElement;
             field._control.showValidationError();
-            element.focus();
+            if(!element.form)
+                element = element.querySelector("[name]");
         };
 
         if (element.offsetParent === null) { // currently invisible
@@ -57,11 +54,13 @@ class ExoFormDefaultValidation {
             if (pgElm) {
                 let page = parseInt(pgElm.getAttribute("data-page"));
                 this.exo.gotoPage(page);
-                setTimeout(e => f, 20);
+                setTimeout(()=>{
+                    f(field)
+                }, 20);
             }
         }
         else {
-            f();
+            f(field);
         }
         return true;
     }

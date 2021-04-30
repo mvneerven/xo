@@ -472,6 +472,9 @@ export class ExoInputControl extends ExoElementControl {
                 if (data.length > 1) {
                     _.createDataList(_.context.field, data);
                 }
+                else{
+                    _.destroyDataList()
+                }
             }
             else {
                 let dl = _.container.querySelector("datalist");
@@ -483,6 +486,12 @@ export class ExoInputControl extends ExoElementControl {
         })
     }
 
+    destroyDataList(){
+        let dl=this.container.querySelector("datalist")
+        if(dl){
+            dl.remove();
+        }
+    }
 
     testDataList() {
         const _ = this;
@@ -899,8 +908,6 @@ class ExoCheckboxListControl extends ExoInputListControl {
 }
 
 class ExoButtonControl extends ExoElementControl {
-
-
     constructor(context) {
         super(context);
         this.iconHtml = "";
