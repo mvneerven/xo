@@ -1,5 +1,9 @@
 # New in 1.01
 
+A big update to ExoForm, including a rewrite of navigation, progress indicating, validation and theming engines, all of which are now implemented as separate subclassable components, and activated using form schema settings (or using JavaScript code).
+
+Also, a complete new theme has been added: material.
+
 ## Validation
 
 Show inline validation messages to be shown instead of the default HTML5 validation popups.
@@ -10,6 +14,7 @@ Show inline validation messages to be shown instead of the default HTML5 validat
 }
 ```
 
+
 ## Progress
 Show the progress within a multi-page form.
 
@@ -19,6 +24,8 @@ Show the progress within a multi-page form.
 }
 ```
 
+![Steps](img/md/progress-steps.png?raw=true "Adding step indicator using progress='steps'")
+
 ## Material Theme
 A new theme, inspired by Material Design, was added.
 
@@ -27,18 +34,58 @@ A new theme, inspired by Material Design, was added.
   "theme": "material"
 }
 ```
+![Material Theme](img/md/theme-material.png?raw=true "Setting theme to 'material'")
 
 ## Control Additions
 
 ### Multiline: autogrow (Boolean)
 Let a textarea grow automatically when the user adds more lines.
 
-### Range: showoutput (Boolean)
-Show the value of a range control
+```json
+{
+  "pages": [
+    {
+      "legend": "My Form",
+      "intro": "My form description",
+      "fields": [
+        {
+          "name": "testField",
+          "caption": "Autogrowing Textarea",
+          "type": "multiline",
+          "autogrow": true
+        }
+      ]
+    }
+  ]
+}
+```
 
+### Range: showoutput (Boolean)
+Show the value of a range control 
+
+```json
+{
+  "pages": [
+    {
+      "legend": "My Form",
+      "intro": "My form description",
+      "fields": [
+        {
+          "name": "range",
+          "caption": "Range Indicator",
+          "type": "range",
+          "showoutput": true
+        }
+      ]
+    }
+  ]
+}
+```
 
 ## ExoForm Explorer 
-The ExoForm Explorer (https://www.xo-js.dev/#/explore) is loaded with new functionality to experiment with all the new features.
+[The ExoForm Explorer](https://www.xo-js.dev/#/explore) is loaded with new functionality to experiment with all the new features.
+
+![Portal](img/md/portal.png "The new ExoForm Explorer")
 
 ## Distributable
 
