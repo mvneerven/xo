@@ -52,7 +52,7 @@ class ExoForm {
 
     static _staticConstructor = (() => { ExoForm.setup() })();
     static setup() { } // reserved for later
-    static version = "0.981";
+    
 
     defaults = {
         type: "form",
@@ -238,8 +238,6 @@ class ExoForm {
                 throw "Invalid ExoForm schema";
 
             _.container.appendChild(_.form);
-
-            _.container.classList.add("exf-ver-" + ExoForm.version);
 
             try {
                 _._renderPages().then(() => {
