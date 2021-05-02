@@ -176,3 +176,42 @@ https://xo-js.dev/v1.0/xo.min.js
 ... or get the latest NPM package
 
 https://www.npmjs.com/package/@mvneerven/xo-js
+
+
+# New in 1.0.32
+
+## Fixes
+-	Step is now taken into account in the number control with 'buttons' property set to true
+- Required fields' labels are suffixed with a '*' (using CSS ::after), based on the container class *exf-required*
+
+
+## Additions
+
+- When building an ExoFormContext object (using the factory method *ExoFormFactory.build()*, defaults for form settings can now be passed in:
+
+```javascript
+// set default validation to be 'inline' for all forms
+const context = await window.xo.form.factory.build({
+    defaults: {
+        validation: "inline"
+    }
+});
+```
+
+## Changes:
+-	Custom controls must now implement a value getter and setter, instead of setting functions on the field object
+
+```javascript
+set value(data){
+  // custom logic
+}
+
+get value() {
+  // custom logic
+}
+```
+
+## ExoForm Portal
+
+-	The current workspace is now saved, so if you're working on a form, it will be reloaded next time you open the Explorer.
+-	The dark mode switch now immediately switches Ace Editor themes
