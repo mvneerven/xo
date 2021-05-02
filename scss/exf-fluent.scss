@@ -27,13 +27,13 @@
             }
 
             > .exf-ctl {
-                > [name] {
+                 [name] {
                     outline: none;
                 }
 
-                > input,
-                > textarea,
-                > select {
+                 input,
+                 textarea,
+                 select {
                     font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
                     //appearance: none;
                     border: 1px solid var(--field-box-shadow-subtle);
@@ -47,16 +47,16 @@
                     }
                 }
 
-                > textarea {
+                textarea {
                     width: 100%;
                     min-height: 6em;
                 }
 
-                > select {
+                select {
                     min-width: 15rem;
                 }
 
-                > input[type="color"],
+                input[type="color"],
                 [type="date"],
                 [type="time"],
                 [type="datetime"],
@@ -76,25 +76,25 @@
                     }
                 }
 
-                > input:focus,
-                > textarea:focus,
-                > select:focus,
-                > input:hover,
-                > textarea:hover,
-                > select:hover,
-                > .exf-btn:hover {
+                 input:focus,
+                 textarea:focus,
+                 select:focus,
+                 input:hover,
+                 textarea:hover,
+                 select:hover,
+                 .exf-btn:hover {
                     border-color: var(--field-box-shadow);
                 }
 
-                > input:disabled,
-                > textarea:disabled,
-                > select:disabled {
+                 input:disabled,
+                 textarea:disabled,
+                 select:disabled {
                     background-color: var(--color-disabled);
                 }
 
-                > input:read-only,
-                > textarea:read-only,
-                > select:read-only {
+                 input:read-only,
+                 textarea:read-only,
+                 select:read-only {
                     background-color: var(--color-readonly);
                 }
 
@@ -136,11 +136,7 @@
                     border-radius: 100%;
                 }
 
-                > select {
-                    // -webkit-appearance: none;
-                    // -moz-appearance: none;
-                    // -ms-appearance: none;
-                    // appearance: none;
+                select {
                     outline: 0;
                     box-shadow: none;
                     background-color: var(--color-background);

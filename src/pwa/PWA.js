@@ -31,7 +31,7 @@ class PWA {
 
         console.debug("Checking for serviceWorker in config: serviceWorker.src");
         if (_.config.serviceWorker.src) {
-            _.registerWorker(_.config.serviceWorker)
+            _._registerWorker(_.config.serviceWorker)
         }
 
         console.debug("PWA Config", this.config);
@@ -59,7 +59,7 @@ class PWA {
 
     }
 
-    triggerEvent(eventName, detail, ev) {
+    _triggerEvent(eventName, detail, ev) {
         console.debug("Triggering event", eventName, "detail: ", detail)
         if (!ev) {
             ev = new Event(eventName, { "bubbles": false, "cancelable": true });
@@ -79,7 +79,7 @@ class PWA {
         return this;
     }
 
-    registerWorker(serviceWorker) {
+    _registerWorker(serviceWorker) {
         console.debug("Register PWA ServiceWoker..." + serviceWorker.src);
 
         if ('serviceWorker' in navigator) {
@@ -123,7 +123,7 @@ class PWA {
             onRoute: (mod, path) => {
                 console.debug("PWA Executes Route", mod, path);
 
-                if (!this.triggerEvent("pwa.route", {
+                if (!this._triggerEvent("pwa.route", {
                     module: mod,
                     path: path
                 })) {

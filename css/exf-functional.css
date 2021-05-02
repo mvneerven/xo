@@ -10,9 +10,11 @@
   width: auto !important;
 }
 
-.exf-container .exf-required > label::after {
+.exf-container .exf-required > .exf-ctl > label::after {
   content: " *";
-  color: red;
+  color: inherit;
+  color: var(--color-label-active);
+  vertical-align: super;
 }
 
 .exf-container .exf-info {
@@ -196,9 +198,15 @@
   vertical-align: text-top;
 }
 
+.exf-container .exf-ctl-cnt.exf-nmbr-btns > .exf-ctl {
+  text-align: center;
+}
+
 .exf-container .exf-ctl-cnt.exf-nmbr-btns > .exf-ctl > [name] {
   width: auto !important;
   min-width: 50px;
+  margin: auto;
+  text-align: center;
 }
 
 .exf-container .exf-ctl-cnt.exf-nmbr-btns > .exf-ctl > input::-webkit-outer-spin-button,
@@ -213,12 +221,16 @@
   display: inline-block;
 }
 
+.exf-container .exf-ctl-cnt.exf-nmbr-btns > .exf-ctl > .exf-label {
+  top: -1.7em !important;
+}
+
 .exf-container .exf-ctl-cnt.exf-input-group {
   margin-top: 1rem;
 }
 
 .exf-container .exf-ctl-cnt.exf-input-group > .exf-ctl > div {
-  padding-top: 3rem;
+  padding-top: 1rem;
 }
 
 .exf-container .exf-ctl-cnt.exf-input-group > .exf-ctl > div .exf-ilc-cnt {

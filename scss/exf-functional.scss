@@ -13,9 +13,11 @@
         }
     }
 
-    .exf-required > label::after {
+    .exf-required > .exf-ctl > label::after {
         content: " *";
-        color: red;
+        color: inherit;
+        color: var(--color-label-active);
+        vertical-align: super;
     }
 
     // temp - move to xo
@@ -207,9 +209,14 @@
 
         &.exf-nmbr-btns {
             > .exf-ctl {
+
+                text-align: center;
+
                 > [name] {
                     width: auto !important;
                     min-width: 50px;
+                    margin: auto;
+                    text-align: center;
                 }
 
                 > input::-webkit-outer-spin-button,
@@ -223,13 +230,19 @@
                     outline: none;
                     display: inline-block;
                 }
+
+                > .exf-label{
+
+                    top: -1.7em!important;
+    
+                }
             }
         }
 
         &.exf-input-group {
             margin-top: 1rem;
             > .exf-ctl > div {
-                padding-top: 3rem;
+                padding-top: 1rem;
 
                 .exf-ilc-cnt {
                     margin-bottom: 1rem;

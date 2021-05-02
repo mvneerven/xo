@@ -38,7 +38,7 @@ class ExoForm {
             //nolabel: /*html*/`<div data-id="{{id}}" class="exf-ctl-cnt {{class}}"><span data-replace="true"></span></div>`,
             //text: /*html*/`<div data-id="{{id}}" class="exf-ctl-cnt exf-base-text {{class}}"><span data-replace="true"></span><label title="{{caption}}">{{caption}}</label></div>`,
             //labelcontained: /*html*/`<div data-id="{{id}}" class="exf-ctl-cnt {{class}}"><label title="{{tooltip}}"><span data-replace="true"></span> <span>{{caption}}</span></label></div>`,
-            form: /*html*/`<form class="exf-form {{class}}" method="post"></form>`,
+            //form: /*html*/`<form class="exf-form {{class}}" method="post"></form>`,
             static: /*html*/`<div class="{{class}}" ></div>`,
             fieldset: /*html*/`<fieldset data-page="{{pagenr}}" data-pageid="{{pageid}}" class="exf-cnt {{class}}"></fieldset>`,
             legend: /*html*/`<legend class="exf-page-title">{{legend}}</legend>`,
@@ -52,22 +52,10 @@ class ExoForm {
 
     static _staticConstructor = (() => { ExoForm.setup() })();
     static setup() { } // reserved for later
-    
+
 
     defaults = {
-        type: "form",
-        baseUrl: document.location.origin,
-        navigation: "auto",
-        validation: "default",
-        progress: "auto",
-        theme: "material",
-        runtime: {
-            progress: false
-        },
-        form: {
-            class: ""
-        },
-
+        
         multiValueFieldTypes: ["checkboxlist", "tags"],
 
         ruleMethods: {
@@ -100,10 +88,16 @@ class ExoForm {
         _.options = { ...defOptions, ...opts };
 
         //NOTE: this is not the loaded formSchema - see load() method.
-        _.formSchema = { ..._.defaults } // set defaults
-        _.form = DOM.parseHTML(DOM.format(ExoForm.meta.templates[_.options.type], {
-            ..._.formSchema.form || { class: "" }
-        }));
+        //_.formSchema = {};// { ..._.defaults } // set defaults
+        
+        //_.form = DOM.parseHTML(DOM.format(ExoForm.meta.templates[_.options.type], {
+        //    ..._.formSchema.form || { class: "" }
+        //}));
+        
+        _.form = document.createElement("form");
+        _.form.setAttribute("method", "post");
+        _.form.classList.add("exf-form");
+        //<form class="exf-form {{class}}" method="post"></form>
 
         _.container = DOM.parseHTML(ExoForm.meta.templates.exocontainer);
     }
@@ -121,9 +115,11 @@ class ExoForm {
                 if (!schema)
                     resolve(_)
                 else {
-
-                    _.rawSchema = JSON.stringify(schema, null, 2); // keep original;
-                    _.formSchema = { ..._.defaults, ...schema };
+                    _.formSchema = { 
+                        ..._.defaults, 
+                        ..._.context.config.defaults || {},
+                        ...schema 
+                    };
 
                     _.triggerEvent(ExoFormFactory.events.schemaLoaded);
 
@@ -139,9 +135,15 @@ class ExoForm {
             let isSchema = typeof (schema) == "object";
 
             if (!isSchema) {
-                try {
-                    schema = new URL(schema, this.formSchema.baseUrl);
 
+                if(this.isValidHttpUrl(schema)){
+                    schema = new URL(schema, this.context.baseUrl);
+                }
+                else{
+                    reject("The schema parameter is not an ExoForm schema object nor a valid URL.");
+                }
+
+                try {
                     fetch(schema).then(x => x.json()).then(r => {
                         loader(r);
                     }).catch(ex => {
@@ -157,6 +159,19 @@ class ExoForm {
             }
         });
 
+    }
+
+    isValidHttpUrl(string) {
+        let url;
+
+        try {
+            url = new URL(string, window.location.toString());
+        } catch (_) {
+            return false;
+        }
+
+        return true;
+        //return url.protocol === "http:" || url.protocol === "https:";
     }
 
     _createComponents() {
@@ -489,12 +504,7 @@ class ExoForm {
             let value = mapper(f);
             if (value !== undefined) {
                 f.value = value;
-                if (f.setCurrentValue) {
-                    f.setCurrentValue(f.value);
-                }
-                else if (f._control && f._control.htmlElement) {
-                    f._control.htmlElement.value = f.value || ""
-                }
+                f._control.value = value;
             }
         });
 
@@ -532,17 +542,12 @@ class ExoForm {
         const _ = this;
         const data = {};
         return new Promise((resolve, reject) => {
-            let formData = Object.fromEntries(new FormData(_.form));
+            //let formData = Object.fromEntries(new FormData(_.form));
 
             _.formSchema.pages.forEach(p => {
                 p.fields.forEach(f => {
-                    if (f.getCurrentValue) {
-                        data[f.name] = f.getCurrentValue();
-                    }
-                    else {
-                        data[f.name] = formData[f.name];
-                        data[f.name] = ExoFormFactory.checkTypeConversion(f.type, data[f.name])
-                    }
+                    data[f.name] = f._control.value;
+
                 })
             });
             console.debug("Form data to post", data);
@@ -550,12 +555,19 @@ class ExoForm {
         });
     }
 
-    getFieldValue(f) {
-        if (f && f.getCurrentValue)
-            return f.getCurrentValue();
-        else if (f.name) {
-            return DOM.getValue(this.form.querySelector("[name='" + f.name + "']"))
+
+    getFieldValue(elementOrField) {
+
+        if (elementOrField && elementOrField._control)
+            return elementOrField._control.value;
+        else if (elementOrField.form && elementOrField.name) {
+
+            let field = ExoFormFactory.getFieldFromElement(elementOrField);
+            if (field)
+                return field._control.value; //return DOM.getValue(this.form.querySelector("[name='" + f.name + "']"))
         }
+
+        return undefined;
     }
 
     /**
@@ -726,7 +738,7 @@ class ExoForm {
                 if (!f || !f.type)
                     throw "Incorrect field options. Must be object with at least 'type' property. " + JSON.stringify(f)
 
-                
+
                 f.id = f.id || _._generateUniqueElementId();
 
                 let field = _.context.get(f.type);
@@ -785,10 +797,10 @@ class ExoForm {
         });
     }
 
-    _generateUniqueElementId(){
+    _generateUniqueElementId() {
         let gid = Core.guid();
         gid = gid.split('-');
-        gid = gid[gid.length-1];
+        gid = gid[gid.length - 1];
         return "exf" + gid;
     }
 

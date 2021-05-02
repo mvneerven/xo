@@ -71,18 +71,16 @@ class ExoFileDropControl extends ExoBaseControls.controls.input.type {
                 }
             }
         )
-
-        _.field.getCurrentValue = () => {
-            return _.field.data.sort();
-        }
-
         return _.container;
     }
 
+    get value() {
+        return this.context.field.data.sort();
+    }
+
     _change() {
-        const _ = this;
         DOM.trigger(this.htmlElement, "change", {
-            data: _.context.field.data
+            data: this.context.field.data
         })
     }
 
@@ -194,7 +192,7 @@ class ExoFileDropControl extends ExoBaseControls.controls.input.type {
     }
 
     get valid() {
-        return this.htmlElement,checkValidity();
+        return this.htmlElement, checkValidity();
     }
 
     // // Used to get localized standard validation message 
@@ -212,6 +210,14 @@ class ExoCKRichEditor extends ExoBaseControls.controls.div.type {
 
     }
 
+    get value() {
+        return this.htmlElement.data.editor.getData();
+    }
+
+    set value(data) {
+        this.htmlElement.data.editor.setData(data);
+    }
+
     async render() {
         const _ = this;
 
@@ -225,14 +231,6 @@ class ExoCKRichEditor extends ExoBaseControls.controls.div.type {
                         console.error(error);
                     }).then(ck => {
                         _.htmlElement.data["editor"] = ck;
-
-                        _.context.field.getCurrentValue = () => {
-                            return _.htmlElement.data.editor.getData();
-                        }
-
-                        _.context.field.setCurrentValue = v => {
-                            _.htmlElement.data.editor.setData(v);
-                        }
 
                     });
                 resolve(_.container);
@@ -356,10 +354,6 @@ class ExoTaggingControl extends ExoBaseControls.controls.text.type {
         _.wrapper.classList.add(_.wrapperClass);
         _.htmlElement.parentNode.insertBefore(_.wrapper, _.htmlElement);
 
-        _.context.field.getCurrentValue = () => {
-            return _.arr;
-        }
-
         _.wrapper.addEventListener('click', function () {
             _.input.focus();
         });
@@ -396,6 +390,10 @@ class ExoTaggingControl extends ExoBaseControls.controls.text.type {
         _.container.classList.add("exf-std-lbl");
 
         return _.container;
+    }
+
+    get value() {
+        return this.arr;
     }
 
     // Add Tag
@@ -638,9 +636,6 @@ class ExoVideoControl extends ExoEmbedControl {
 }
 
 class MultiInputControl extends ExoBaseControls.controls.div.type {
-
-    //grid = "exf-cols-50-50";
-
     containerTemplate = ExoForm.meta.templates.default;
 
     columns = ""
@@ -681,8 +676,8 @@ class MultiInputControl extends ExoBaseControls.controls.div.type {
                 name: "fields", type: Object,
                 description: "Fields structure",
                 example: {
-                    first: { caption: "First", type: "text", maxlength: 30},
-                    last: { caption: "Last", type: "text", maxlength: 50}
+                    first: { caption: "First", type: "text", maxlength: 30 },
+                    last: { caption: "Last", type: "text", maxlength: 50 }
                 }
             }
 
@@ -733,9 +728,9 @@ class MultiInputControl extends ExoBaseControls.controls.div.type {
                 name: f.name + "_" + n
             }
 
-            for(var o in options){
+            for (var o in options) {
                 var v = options[o];
-                if(v==="inherit")
+                if (v === "inherit")
                     options[o] = f[o]
             }
 
@@ -746,7 +741,7 @@ class MultiInputControl extends ExoBaseControls.controls.div.type {
             return _.inputs[n];
         }
 
-        
+
         if (!this.fields && f.fields) {
             this.fields = f.fields;
         }
@@ -757,39 +752,26 @@ class MultiInputControl extends ExoBaseControls.controls.div.type {
             if (this.areas)
                 elm.setAttribute("style", `grid-area: ${n}`);
         };
-
-        // custom getter
-        _._gc = e => {
-            let data = {}
-            for (var n in _.fields) {
-                var elm = _._qs(n);
-                let fld = ExoFormFactory.getFieldFromElement(elm);
-                data[n] = exo.getFieldValue(fld);
-            }
-            return data
-        }
-
-        // custom setter
-        _._sc = data => {
-            for (var n in _.fields) {
-                var elm = _._qs(n);
-                let fld = ExoFormFactory.getFieldFromElement(elm);
-                if (fld.setCurrentValue)
-                    fld.setCurrentValue(data[n]);
-
-                else {
-                    elm.querySelector("[name]").value = data[n];
-                }
-            }
-        }
-
-        this.context.field.getCurrentValue = _._gc;
-
-        this.context.field.setCurrentValue = _._sc;
-
         return this.container;
     }
 
+    get value() {
+        let data = {}
+        for (var n in this.fields) {
+            var elm = this._qs(n);
+            let fld = ExoFormFactory.getFieldFromElement(elm);
+            data[n] = fld._control.value;
+        }
+        return data
+    }
+
+    set value(data) {
+        for (var n in _.fields) {
+            var elm = _._qs(n);
+            let fld = ExoFormFactory.getFieldFromElement(elm);
+            fld._control.value = data[n];
+        }
+    }
 
     get valid() {
         let v = true;
@@ -810,9 +792,9 @@ class MultiInputControl extends ExoBaseControls.controls.div.type {
             console.log("Checking ", elm)
             if (!elm.checkValidity()) {
                 console.log("Not valid: ", elm)
-                if(elm.reportValidity)
+                if (elm.reportValidity)
                     elm.reportValidity();
-                
+
                 return false;
             }
         }
@@ -835,8 +817,8 @@ class ExoNameControl extends MultiInputControl {
     areas = `"first last"`;
 
     fields = {
-        first: { caption: "First", type: "text", maxlength: 30, required: "inherit"},
-        last: { caption: "Last", type: "text", maxlength: 50, required: "inherit"}
+        first: { caption: "First", type: "text", maxlength: 30, required: "inherit" },
+        last: { caption: "Last", type: "text", maxlength: 50, required: "inherit" }
     }
 
 }
@@ -868,7 +850,7 @@ class ExoNLAddressControl extends MultiInputControl {
         let element = await super.render();
 
         const check = () => {
-            var data = _._gc();
+            var data = this.value;
 
             if (data.code && data.nr) {
                 fetch(DOM.format(ExoNLAddressControl.APIUrl, {

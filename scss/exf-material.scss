@@ -50,7 +50,7 @@
         .exf-ctl-cnt {
             position: relative;
             margin-top: 2rem;
-            margin-bottom: 1rem;
+            //margin-bottom: 1rem;
 
             &:not(.exf-std-lbl) {
                 > .exf-ctl {
@@ -321,7 +321,11 @@
             }
         }
 
+
         .exf-input-group {
+
+           // padding-top: 2rem;
+
             > .exf-ctl {
                 .exf-caption-main {
                     color: var(--color-text);
@@ -337,7 +341,7 @@
                 > .exf-ctl > div {
                     display: grid;
                     grid-gap: 2rem;
-                    grid-template-columns: 1fr 1fr 1fr;
+                    grid-template-columns: 1fr 1fr 1fr;                
 
                     .exf-ilc-cnt {
                         opacity: 0.8;
@@ -358,7 +362,10 @@
                             cursor: pointer;
                         }
 
+                       
+
                         > .exf-caption {
+                            
                             padding: 1rem;
 
                             > .exf-caption-main {

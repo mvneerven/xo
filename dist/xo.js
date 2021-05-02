@@ -676,18 +676,6 @@
 
     constructor(context, opts) {
       _defineProperty(this, "defaults", {
-        type: "form",
-        baseUrl: document.location.origin,
-        navigation: "auto",
-        validation: "default",
-        progress: "auto",
-        theme: "material",
-        runtime: {
-          progress: false
-        },
-        form: {
-          class: ""
-        },
         multiValueFieldTypes: ["checkboxlist", "tags"],
         ruleMethods: {
           "visible": [Field.show, Field.hide],
@@ -714,14 +702,18 @@
       _.options = { ...defOptions,
         ...opts
       }; //NOTE: this is not the loaded formSchema - see load() method.
+      //_.formSchema = {};// { ..._.defaults } // set defaults
+      //_.form = DOM.parseHTML(DOM.format(ExoForm.meta.templates[_.options.type], {
+      //    ..._.formSchema.form || { class: "" }
+      //}));
 
-      _.formSchema = { ..._.defaults
-      }; // set defaults
+      _.form = document.createElement("form");
 
-      _.form = DOM.parseHTML(DOM.format(ExoForm.meta.templates[_.options.type], { ...(_.formSchema.form || {
-          class: ""
-        })
-      }));
+      _.form.setAttribute("method", "post");
+
+      _.form.classList.add("exf-form"); //<form class="exf-form {{class}}" method="post"></form>
+
+
       _.container = DOM.parseHTML(ExoForm.meta.templates.exocontainer);
     }
     /**
@@ -737,9 +729,8 @@
       return new Promise((resolve, reject) => {
         const loader = schema => {
           if (!schema) resolve(_);else {
-            _.rawSchema = JSON.stringify(schema, null, 2); // keep original;
-
             _.formSchema = { ..._.defaults,
+              ...(_.context.config.defaults || {}),
               ...schema
             };
 
@@ -758,8 +749,13 @@
         let isSchema = typeof schema == "object";
 
         if (!isSchema) {
+          if (this.isValidHttpUrl(schema)) {
+            schema = new URL(schema, this.context.baseUrl);
+          } else {
+            reject("The schema parameter is not an ExoForm schema object nor a valid URL.");
+          }
+
           try {
-            schema = new URL(schema, this.formSchema.baseUrl);
             fetch(schema).then(x => x.json()).then(r => {
               loader(r);
             }).catch(ex => {
@@ -772,6 +768,18 @@
           loader(schema);
         }
       });
+    }
+
+    isValidHttpUrl(string) {
+      let url;
+
+      try {
+        url = new URL(string, window.location.toString());
+      } catch (_) {
+        return false;
+      }
+
+      return true; //return url.protocol === "http:" || url.protocol === "https:";
     }
 
     _createComponents() {
@@ -1103,12 +1111,7 @@
 
         if (value !== undefined) {
           f.value = value;
-
-          if (f.setCurrentValue) {
-            f.setCurrentValue(f.value);
-          } else if (f._control && f._control.htmlElement) {
-            f._control.htmlElement.value = f.value || "";
-          }
+          f._control.value = value;
         }
       });
       return this;
@@ -1153,16 +1156,10 @@
 
       const data = {};
       return new Promise((resolve, reject) => {
-        let formData = Object.fromEntries(new FormData(_.form));
-
+        //let formData = Object.fromEntries(new FormData(_.form));
         _.formSchema.pages.forEach(p => {
           p.fields.forEach(f => {
-            if (f.getCurrentValue) {
-              data[f.name] = f.getCurrentValue();
-            } else {
-              data[f.name] = formData[f.name];
-              data[f.name] = ExoFormFactory.checkTypeConversion(f.type, data[f.name]);
-            }
+            data[f.name] = f._control.value;
           });
         });
 
@@ -1171,10 +1168,12 @@
       });
     }
 
-    getFieldValue(f) {
-      if (f && f.getCurrentValue) return f.getCurrentValue();else if (f.name) {
-        return DOM.getValue(this.form.querySelector("[name='" + f.name + "']"));
+    getFieldValue(elementOrField) {
+      if (elementOrField && elementOrField._control) return elementOrField._control.value;else if (elementOrField.form && elementOrField.name) {
+        let field = ExoFormFactory.getFieldFromElement(elementOrField);
+        if (field) return field._control.value; //return DOM.getValue(this.form.querySelector("[name='" + f.name + "']"))
       }
+      return undefined;
     }
     /**
      * Moves to the given page in a multi-page form.
@@ -1554,9 +1553,7 @@
       //nolabel: /*html*/`<div data-id="{{id}}" class="exf-ctl-cnt {{class}}"><span data-replace="true"></span></div>`,
       //text: /*html*/`<div data-id="{{id}}" class="exf-ctl-cnt exf-base-text {{class}}"><span data-replace="true"></span><label title="{{caption}}">{{caption}}</label></div>`,
       //labelcontained: /*html*/`<div data-id="{{id}}" class="exf-ctl-cnt {{class}}"><label title="{{tooltip}}"><span data-replace="true"></span> <span>{{caption}}</span></label></div>`,
-      form:
-      /*html*/
-      `<form class="exf-form {{class}}" method="post"></form>`,
+      //form: /*html*/`<form class="exf-form {{class}}" method="post"></form>`,
       static:
       /*html*/
       `<div class="{{class}}" ></div>`,
@@ -1668,7 +1665,9 @@
         `<div data-id="${obj.id}" class="${obj.class}" data-field-type="${obj.type}">
     <div class="exf-ctl">
         <label for="${obj.id}" aria-hidden="true" class="exf-label" title="${obj.caption}">${obj.caption}</label>
+        
         <span data-replace="true"></span>
+        
     </div>
     <div class="exf-fld-details">
         <div class="exf-help-wrapper"></div>
@@ -1689,6 +1688,19 @@
 
     appendChild(elm) {
       this.htmlElement.appendChild(elm);
+    }
+
+    typeConvert(value) {
+      return ExoFormFactory.checkTypeConversion(this.context.field.type, value);
+    }
+
+    get value() {
+      let v = this.htmlElement.value;
+      return this.typeConvert(v);
+    }
+
+    set value(data) {
+      this.htmlElement.value = data;
     }
 
     triggerChange(detail) {
@@ -1750,7 +1762,8 @@
     }
 
     _getContainerClasses() {
-      let ar = ["exf-ctl-cnt"];
+      let ar = [];
+      if (!this.isPage) ar.push("exf-ctl-cnt");
       ar.push("exf-base-" + this._getBaseType());
 
       if (this.context.field.containerClass) {
@@ -1873,11 +1886,7 @@
             }
           } catch {}
         }
-      }); // let input = this.container.querySelector("[name]");
-      // if (this.htmlElement && this.htmlElement.reportValidity)
-      //     return this.htmlElement.reportValidity()
-      // return true;
-
+      });
       return numInvalid === 0;
     }
 
@@ -2289,7 +2298,7 @@
       var dummy = DOM.parseHTML('<span/>');
       container.appendChild(dummy);
       let item = { ...i,
-        name: i.name || i,
+        name: typeof i.name === "string" ? i.name : i,
         value: i.value !== undefined ? i.value : i,
         type: _.optionType,
         inputname: f.name,
@@ -2347,6 +2356,10 @@
           break;
 
         case "list":
+          elm.classList.add("list");
+          break;
+
+        default:
           elm.classList.add("block");
           break;
       }
@@ -2399,7 +2412,7 @@
         </div>`;
       await this.populateList(this.htmlElement, tpl);
       super.render();
-      this.container.classList.add("exf-input-group");
+      this.container.classList.add("exf-input-group", "exf-std-lbl");
       return this.container;
     }
 
@@ -2419,6 +2432,14 @@
       }
 
       return true;
+    }
+
+    get value() {
+      return DOM.getValue(this.htmlElement.querySelector("[name]"));
+    }
+
+    set value(data) {
+      debugger;
     } // Used to get localized standard validation message 
 
 
@@ -2453,33 +2474,59 @@
   }
 
   class ExoCheckboxListControl extends ExoInputListControl {
-    //isMultiSelect = true;
-    constructor(context) {
-      super(context);
+    constructor(...args) {
+      super(...args);
 
       _defineProperty(this, "optionType", "checkbox");
     }
 
-    async render() {
-      const _ = this;
-
-      await super.render();
-
-      _.context.field.getCurrentValue = () => {
-        // fix checkboxlist ->  Object.fromEntries returns single value
-        let ar = [];
-        this.container.querySelectorAll(":checked").forEach(i => {
-          ar.push(i.value);
-        });
-        return ar;
-      };
-
-      return this.container;
+    get value() {
+      let ar = [];
+      this.container.querySelectorAll(":checked").forEach(i => {
+        ar.push(i.value);
+      });
+      return ar;
     }
 
   }
 
   _defineProperty(ExoCheckboxListControl, "returnValueType", Array);
+
+  class ExoCheckboxControl extends ExoCheckboxListControl {
+    constructor(context) {
+      super(context);
+
+      _defineProperty(this, "text", "");
+
+      this.acceptProperties({
+        name: "text",
+        description: "Text to display on checkbox label"
+      });
+      context.field.items = [{
+        name: this.text || context.field.caption,
+        value: true,
+        checked: context.field.value
+      }];
+    }
+
+    async render() {
+      if (!this.text) {
+        this.context.field.caption = "";
+      } else {
+        this.context.field.containerClass = ((this.context.field.containerClass || "") + " exf-std-lbl").trim();
+      }
+
+      await super.render();
+      return this.container;
+    }
+
+    get value() {
+      return this.container.querySelector(":checked") ? true : false;
+    }
+
+  }
+
+  _defineProperty(ExoCheckboxControl, "returnValueType", Boolean);
 
   class ExoButtonControl extends ExoElementControl {
     constructor(context) {
@@ -2608,14 +2655,15 @@
         this.container.addEventListener("click", e => {
           e.cancelBubble = true;
           e.preventDefault();
+          let step = parseInt("0" + this.htmlElement.step) || 1;
 
           if (e.target === this.plusButton) {
             if (this.htmlElement.max === "" || parseInt(this.htmlElement.value) < parseInt(this.htmlElement.max)) {
-              this.htmlElement.value = parseInt("0" + (this.htmlElement.value || (this.htmlElement.min != "" ? this.htmlElement.min - 1 : -1))) + 1;
+              this.htmlElement.value = parseInt("0" + (this.htmlElement.value || (this.htmlElement.min != "" ? this.htmlElement.min - 1 : -1))) + step;
             }
           } else if (e.target === this.minusButton) {
             if (this.htmlElement.min === "" || parseInt(this.htmlElement.value) > parseInt(this.htmlElement.min)) {
-              this.htmlElement.value = parseInt("0" + (this.htmlElement.value || (this.htmlElement.max != "" ? this.htmlElement.max - 1 : 1))) - 1;
+              this.htmlElement.value = parseInt("0" + (this.htmlElement.value || (this.htmlElement.max != "" ? this.htmlElement.max - 1 : 1))) - step;
             }
           }
 
@@ -2644,25 +2692,30 @@
     }
 
     async render() {
-      const me = this;
       await super.render();
 
       if (this.showoutput) {
         this.output = document.createElement("output");
-
-        const sync = e => {
-          me.output.value = me.htmlElement.value;
-        };
-
         this.htmlElement.parentNode.insertBefore(this.output, this.htmlElement.nextSibling);
-        this.htmlElement.addEventListener("input", sync);
-        sync();
+        this.htmlElement.addEventListener("input", this._sync);
+
+        this._sync();
+
         this.container.classList.add("exf-rng-output");
       } // force outside label rendering
 
 
       this.container.classList.add("exf-std-lbl");
       return this.container;
+    }
+
+    _sync() {
+      if (this.output && this.htmlElement) this.output.value = this.htmlElement.value;
+    }
+
+    set value(data) {
+      super.value = data;
+      if (this.showoutput) this._sync();
     }
 
   }
@@ -2792,7 +2845,7 @@
       }
     },
     checkbox: {
-      base: "input",
+      type: ExoCheckboxControl,
       note: "A checkbox",
       demo: {
         checked: true
@@ -2974,18 +3027,16 @@
         }
       });
 
-      _.field.getCurrentValue = () => {
-        return _.field.data.sort();
-      };
-
       return _.container;
     }
 
-    _change() {
-      const _ = this;
+    get value() {
+      return this.context.field.data.sort();
+    }
 
+    _change() {
       DOM.trigger(this.htmlElement, "change", {
-        data: _.context.field.data
+        data: this.context.field.data
       });
     }
 
@@ -3108,6 +3159,14 @@
       this.htmlElement.data = {};
     }
 
+    get value() {
+      return this.htmlElement.data.editor.getData();
+    }
+
+    set value(data) {
+      this.htmlElement.data.editor.setData(data);
+    }
+
     async render() {
       const _ = this;
 
@@ -3119,14 +3178,6 @@
             console.error(error);
           }).then(ck => {
             _.htmlElement.data["editor"] = ck;
-
-            _.context.field.getCurrentValue = () => {
-              return _.htmlElement.data.editor.getData();
-            };
-
-            _.context.field.setCurrentValue = v => {
-              _.htmlElement.data.editor.setData(v);
-            };
           });
           resolve(_.container);
         });
@@ -3250,10 +3301,6 @@
 
       _.htmlElement.parentNode.insertBefore(_.wrapper, _.htmlElement);
 
-      _.context.field.getCurrentValue = () => {
-        return _.arr;
-      };
-
       _.wrapper.addEventListener('click', function () {
         _.input.focus();
       });
@@ -3292,6 +3339,10 @@
       _.container.classList.add("exf-std-lbl");
 
       return _.container;
+    }
+
+    get value() {
+      return this.arr;
     } // Add Tag
 
 
@@ -3544,7 +3595,6 @@
   });
 
   class MultiInputControl extends ExoBaseControls.controls.div.type {
-    //grid = "exf-cols-50-50";
     constructor(context) {
       super(context);
 
@@ -3598,7 +3648,7 @@
       const _ = this;
 
       const f = _.context.field;
-      const exo = _.context.exo;
+      _.context.exo;
       this.htmlElement.classList.add("exf-cnt", "exf-ctl-group");
 
       if (this.areas && this.columns || this["grid-template"] || this.grid) {
@@ -3652,35 +3702,29 @@
         var elm = await add(n, this.fields[n]);
         if (this.areas) elm.setAttribute("style", `grid-area: ${n}`);
       }
-
-      _._gc = e => {
-        let data = {};
-
-        for (var n in _.fields) {
-          var elm = _._qs(n);
-
-          let fld = ExoFormFactory.getFieldFromElement(elm);
-          data[n] = exo.getFieldValue(fld);
-        }
-
-        return data;
-      }; // custom setter
-
-
-      _._sc = data => {
-        for (var n in _.fields) {
-          var elm = _._qs(n);
-
-          let fld = ExoFormFactory.getFieldFromElement(elm);
-          if (fld.setCurrentValue) fld.setCurrentValue(data[n]);else {
-            elm.querySelector("[name]").value = data[n];
-          }
-        }
-      };
-
-      this.context.field.getCurrentValue = _._gc;
-      this.context.field.setCurrentValue = _._sc;
       return this.container;
+    }
+
+    get value() {
+      let data = {};
+
+      for (var n in this.fields) {
+        var elm = this._qs(n);
+
+        let fld = ExoFormFactory.getFieldFromElement(elm);
+        data[n] = fld._control.value;
+      }
+
+      return data;
+    }
+
+    set value(data) {
+      for (var n in _.fields) {
+        var elm = _._qs(n);
+
+        let fld = ExoFormFactory.getFieldFromElement(elm);
+        fld._control.value = data[n];
+      }
     }
 
     get valid() {
@@ -3808,7 +3852,7 @@
       let element = await super.render();
 
       const check = () => {
-        var data = _._gc();
+        var data = this.value;
 
         if (data.code && data.nr) {
           fetch(DOM.format(ExoNLAddressControl.APIUrl, {
@@ -4218,7 +4262,10 @@
 
       _defineProperty(this, "mode", "html");
 
-      _defineProperty(this, "theme", "chrome");
+      _defineProperty(this, "defaultThemes", {
+        dark: "ambiance",
+        light: "chrome"
+      });
 
       this.htmlElement.data = {};
       this.acceptProperties({
@@ -4230,25 +4277,13 @@
         type: String,
         description: "Ace Editor theme - refer to Ace documentation"
       });
-
-      if (document.querySelector("html").classList.contains("theme-dark")) {
-        this.theme = "ambiance";
-      }
+      this.theme = document.querySelector("html").classList.contains("theme-dark") ? this.defaultThemes.dark : this.defaultThemes.light;
     }
 
     async render() {
       const _ = this;
 
       await super.render();
-
-      _.context.field.getCurrentValue = () => {
-        return _.htmlElement.data.editor.getValue();
-      };
-
-      _.context.field.setCurrentValue = value => {
-        _.htmlElement.data.editor.setValue(value, -1);
-      };
-
       return new Promise((resolve, reject) => {
         DOM.require("https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/ace.js", () => {
           ace.config.set("fontSize", "14px");
@@ -4286,6 +4321,16 @@
       });
     }
 
+    get value() {
+      if (this.htmlElement.data && this.htmlElement.data.editor) return this.htmlElement.data.editor.getValue();
+      return this.context.field.value;
+    }
+
+    set value(data) {
+      this.context.field.value = data;
+      if (this.htmlElement.data && this.htmlElement.data.editor) this.htmlElement.data.editor.setValue(data, -1);
+    }
+
     setProperties() {
       if (this.context.field.mode) {
         this.mode = this.context.field.mode;
@@ -4295,12 +4340,11 @@
       if (this.context.field.theme) {
         this.theme = this.context.field.theme;
         delete this.context.field.theme;
-      }
+      } // if (this.context.field.value) {
+      //     this.value = this.context.field.value;
+      //     delete this.context.field.value;
+      // }
 
-      if (this.context.field.value) {
-        this.value = this.context.field.value;
-        delete this.context.field.value;
-      }
 
       super.setProperties();
     }
@@ -4525,7 +4569,7 @@
   class ExoFormThemes {
     static getType(exo) {
       let type = exo.formSchema.theme;
-      if (type === "auto" || type === undefined) type = ExoFormThemes.matchTheme(exo);
+      if (typeof type === "undefined" || type === "auto") type = ExoFormThemes.matchTheme(exo);
       let theme = ExoFormThemes.types[type];
       return theme || ExoFormTheme;
     }
@@ -4977,7 +5021,7 @@
   class ExoFormNavigation {
     static getType(exo) {
       let type = exo.formSchema.navigation;
-      if (type === "auto") type = ExoFormNavigation.matchNavigationType(exo);
+      if (typeof type === "undefined" || type === "auto") type = ExoFormNavigation.matchNavigationType(exo);
       return ExoFormNavigation.types[type];
     }
 
@@ -5130,7 +5174,7 @@
   class ExoFormProgress {
     static getType(exo) {
       let type = exo.formSchema.progress;
-      if (type === "auto") type = ExoFormProgress.matchProgressType(exo);
+      if (typeof type === "undefined" || type === "auto") type = ExoFormProgress.matchProgressType(exo);
       return ExoFormProgress.types[type];
     }
 
@@ -5162,12 +5206,16 @@
    */
 
   class ExoFormContext {
-    constructor(library) {
-      this.library = this.enrichMeta(library);
+    constructor(config) {
+      this.config = config;
+      this.baseUrl = document.location.origin;
+      this.library = this._enrichMeta(config.library);
     }
 
-    enrichMeta(library) {
-      const form = this.createForm();
+    _enrichMeta(library) {
+      const form = this.createForm({
+        internal: true
+      });
       form.load({
         pages: [{}]
       });
@@ -5186,14 +5234,14 @@
         };
         field.returns = field.returnValueType ? field.returnValueType.name : "None";
         field.element = control.htmlElement ? control.htmlElement.tagName.toLowerCase() : "none";
-        field.properties = this.getProps(field, field.type, control);
+        field.properties = this._getProps(field, field.type, control);
         field._key = name;
       }
 
       return library;
     }
 
-    getProps(field, type, control) {
+    _getProps(field, type, control) {
       let ar = {};
 
       if (field.returnValueType) {
@@ -5231,8 +5279,7 @@
     }
 
     createForm(options) {
-      // the only place where an 
-      // ExoForm instance can be created
+      // the only place where an ExoForm instance can be created       
       return new ExoForm(this, options);
     }
 
@@ -5263,18 +5310,7 @@
 
     createGenerator() {
       return new ExoSchemaGenerator();
-    } // get theme() {
-    //     return this._theme;
-    // }
-    // set theme(value) {
-    //     if (this.themes[value]) {
-    //         this._theme = this.themes[value];
-    //     }
-    //     else {
-    //         throw "Theme not registered"
-    //     }
-    // }
-
+    }
 
   }
   /**
@@ -5295,7 +5331,10 @@
       options = options || {};
       return new Promise((resolve, reject) => {
         var promises = [];
-        options.imports = options.imports || this.defaults.imports; // add standard controls from Base Libraries
+        options = { ...this.defaults,
+          ...options
+        }; //options.imports = options.imports || this.defaults.imports;
+        // add standard controls from Base Libraries
 
         this.add(ExoBaseControls.controls);
         this.add(ExoExtendedControls.controls);
@@ -5312,7 +5351,9 @@
         Promise.all(promises).then(() => {
           let lib = ExoFormFactory.buildLibrary();
           console.debug("ExoFormFactory loaded library", lib, "from", options.imports);
-          resolve(new ExoFormContext(lib));
+          resolve(new ExoFormContext({ ...options,
+            library: lib
+          }));
         });
       });
     }
@@ -5526,7 +5567,13 @@
   _defineProperty(ExoFormFactory, "Context", ExoFormContext);
 
   _defineProperty(ExoFormFactory, "defaults", {
-    imports: []
+    imports: [],
+    defaults: {
+      navigation: "auto",
+      validation: "default",
+      progress: "auto",
+      theme: "material"
+    }
   });
 
   _defineProperty(ExoFormFactory, "html", {
@@ -6126,6 +6173,10 @@
       } else {
         console.warn("Theming depends on meta[name='color-scheme']");
       }
+
+      this.pwa._triggerEvent("pwa.theme", {
+        theme: value
+      });
     }
 
     addStyleSheet(url) {
@@ -6307,7 +6358,7 @@
       console.debug("Checking for serviceWorker in config: serviceWorker.src");
 
       if (_.config.serviceWorker.src) {
-        _.registerWorker(_.config.serviceWorker);
+        _._registerWorker(_.config.serviceWorker);
       }
 
       console.debug("PWA Config", this.config);
@@ -6327,7 +6378,7 @@
       cl.add("pwa-env-" + this.config.environment);
     }
 
-    triggerEvent(eventName, detail, ev) {
+    _triggerEvent(eventName, detail, ev) {
       console.debug("Triggering event", eventName, "detail: ", detail);
 
       if (!ev) {
@@ -6350,7 +6401,7 @@
       return this;
     }
 
-    registerWorker(serviceWorker) {
+    _registerWorker(serviceWorker) {
       console.debug("Register PWA ServiceWoker..." + serviceWorker.src);
 
       if ('serviceWorker' in navigator) {
@@ -6386,7 +6437,7 @@
         onRoute: (mod, path) => {
           console.debug("PWA Executes Route", mod, path);
 
-          if (!this.triggerEvent("pwa.route", {
+          if (!this._triggerEvent("pwa.route", {
             module: mod,
             path: path
           })) {

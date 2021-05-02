@@ -11,9 +11,11 @@
   width: auto !important;
 }
 
-.exf-container .exf-required > label::after {
+.exf-container .exf-required > .exf-ctl > label::after {
   content: " *";
-  color: red;
+  color: inherit;
+  color: var(--color-label-active);
+  vertical-align: super;
 }
 
 .exf-container .exf-info {
@@ -197,9 +199,15 @@
   vertical-align: text-top;
 }
 
+.exf-container .exf-ctl-cnt.exf-nmbr-btns > .exf-ctl {
+  text-align: center;
+}
+
 .exf-container .exf-ctl-cnt.exf-nmbr-btns > .exf-ctl > [name] {
   width: auto !important;
   min-width: 50px;
+  margin: auto;
+  text-align: center;
 }
 
 .exf-container .exf-ctl-cnt.exf-nmbr-btns > .exf-ctl > input::-webkit-outer-spin-button,
@@ -214,12 +222,16 @@
   display: inline-block;
 }
 
+.exf-container .exf-ctl-cnt.exf-nmbr-btns > .exf-ctl > .exf-label {
+  top: -1.7em !important;
+}
+
 .exf-container .exf-ctl-cnt.exf-input-group {
   margin-top: 1rem;
 }
 
 .exf-container .exf-ctl-cnt.exf-input-group > .exf-ctl > div {
-  padding-top: 3rem;
+  padding-top: 1rem;
 }
 
 .exf-container .exf-ctl-cnt.exf-input-group > .exf-ctl > div .exf-ilc-cnt {
@@ -1151,13 +1163,13 @@ html.theme-dark .exf-ctl-cnt.exf-switch input[type="range"] {
   margin: 0;
 }
 
-.exf-container.exf-theme-fluent .exf-ctl-cnt > .exf-ctl > [name] {
+.exf-container.exf-theme-fluent .exf-ctl-cnt > .exf-ctl [name] {
   outline: none;
 }
 
-.exf-container.exf-theme-fluent .exf-ctl-cnt > .exf-ctl > input,
-.exf-container.exf-theme-fluent .exf-ctl-cnt > .exf-ctl > textarea,
-.exf-container.exf-theme-fluent .exf-ctl-cnt > .exf-ctl > select {
+.exf-container.exf-theme-fluent .exf-ctl-cnt > .exf-ctl input,
+.exf-container.exf-theme-fluent .exf-ctl-cnt > .exf-ctl textarea,
+.exf-container.exf-theme-fluent .exf-ctl-cnt > .exf-ctl select {
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   border: 1px solid var(--field-box-shadow-subtle);
   height: 2rem;
@@ -1165,40 +1177,40 @@ html.theme-dark .exf-ctl-cnt.exf-switch input[type="range"] {
   z-index: 0;
 }
 
-.exf-container.exf-theme-fluent .exf-ctl-cnt > .exf-ctl > input ::-webkit-input-placeholder,
-.exf-container.exf-theme-fluent .exf-ctl-cnt > .exf-ctl > textarea ::-webkit-input-placeholder,
-.exf-container.exf-theme-fluent .exf-ctl-cnt > .exf-ctl > select ::-webkit-input-placeholder {
+.exf-container.exf-theme-fluent .exf-ctl-cnt > .exf-ctl input ::-webkit-input-placeholder,
+.exf-container.exf-theme-fluent .exf-ctl-cnt > .exf-ctl textarea ::-webkit-input-placeholder,
+.exf-container.exf-theme-fluent .exf-ctl-cnt > .exf-ctl select ::-webkit-input-placeholder {
   opacity: 0.6;
 }
 
-.exf-container.exf-theme-fluent .exf-ctl-cnt > .exf-ctl > input :-ms-input-placeholder,
-.exf-container.exf-theme-fluent .exf-ctl-cnt > .exf-ctl > textarea :-ms-input-placeholder,
-.exf-container.exf-theme-fluent .exf-ctl-cnt > .exf-ctl > select :-ms-input-placeholder {
+.exf-container.exf-theme-fluent .exf-ctl-cnt > .exf-ctl input :-ms-input-placeholder,
+.exf-container.exf-theme-fluent .exf-ctl-cnt > .exf-ctl textarea :-ms-input-placeholder,
+.exf-container.exf-theme-fluent .exf-ctl-cnt > .exf-ctl select :-ms-input-placeholder {
   opacity: 0.6;
 }
 
-.exf-container.exf-theme-fluent .exf-ctl-cnt > .exf-ctl > input ::-ms-input-placeholder,
-.exf-container.exf-theme-fluent .exf-ctl-cnt > .exf-ctl > textarea ::-ms-input-placeholder,
-.exf-container.exf-theme-fluent .exf-ctl-cnt > .exf-ctl > select ::-ms-input-placeholder {
+.exf-container.exf-theme-fluent .exf-ctl-cnt > .exf-ctl input ::-ms-input-placeholder,
+.exf-container.exf-theme-fluent .exf-ctl-cnt > .exf-ctl textarea ::-ms-input-placeholder,
+.exf-container.exf-theme-fluent .exf-ctl-cnt > .exf-ctl select ::-ms-input-placeholder {
   opacity: 0.6;
 }
 
-.exf-container.exf-theme-fluent .exf-ctl-cnt > .exf-ctl > input ::placeholder,
-.exf-container.exf-theme-fluent .exf-ctl-cnt > .exf-ctl > textarea ::placeholder,
-.exf-container.exf-theme-fluent .exf-ctl-cnt > .exf-ctl > select ::placeholder {
+.exf-container.exf-theme-fluent .exf-ctl-cnt > .exf-ctl input ::placeholder,
+.exf-container.exf-theme-fluent .exf-ctl-cnt > .exf-ctl textarea ::placeholder,
+.exf-container.exf-theme-fluent .exf-ctl-cnt > .exf-ctl select ::placeholder {
   opacity: 0.6;
 }
 
-.exf-container.exf-theme-fluent .exf-ctl-cnt > .exf-ctl > textarea {
+.exf-container.exf-theme-fluent .exf-ctl-cnt > .exf-ctl textarea {
   width: 100%;
   min-height: 6em;
 }
 
-.exf-container.exf-theme-fluent .exf-ctl-cnt > .exf-ctl > select {
+.exf-container.exf-theme-fluent .exf-ctl-cnt > .exf-ctl select {
   min-width: 15rem;
 }
 
-.exf-container.exf-theme-fluent .exf-ctl-cnt > .exf-ctl > input[type="color"],
+.exf-container.exf-theme-fluent .exf-ctl-cnt > .exf-ctl input[type="color"],
 .exf-container.exf-theme-fluent .exf-ctl-cnt > .exf-ctl [type="date"],
 .exf-container.exf-theme-fluent .exf-ctl-cnt > .exf-ctl [type="time"],
 .exf-container.exf-theme-fluent .exf-ctl-cnt > .exf-ctl [type="datetime"],
@@ -1214,31 +1226,31 @@ html.theme-dark .exf-ctl-cnt.exf-switch input[type="range"] {
   border: 1px solid var(--field-box-shadow-subtle);
 }
 
-.exf-container.exf-theme-fluent .exf-ctl-cnt > .exf-ctl > input:focus,
-.exf-container.exf-theme-fluent .exf-ctl-cnt > .exf-ctl > textarea:focus,
-.exf-container.exf-theme-fluent .exf-ctl-cnt > .exf-ctl > select:focus,
-.exf-container.exf-theme-fluent .exf-ctl-cnt > .exf-ctl > input:hover,
-.exf-container.exf-theme-fluent .exf-ctl-cnt > .exf-ctl > textarea:hover,
-.exf-container.exf-theme-fluent .exf-ctl-cnt > .exf-ctl > select:hover,
-.exf-container.exf-theme-fluent .exf-ctl-cnt > .exf-ctl > .exf-btn:hover {
+.exf-container.exf-theme-fluent .exf-ctl-cnt > .exf-ctl input:focus,
+.exf-container.exf-theme-fluent .exf-ctl-cnt > .exf-ctl textarea:focus,
+.exf-container.exf-theme-fluent .exf-ctl-cnt > .exf-ctl select:focus,
+.exf-container.exf-theme-fluent .exf-ctl-cnt > .exf-ctl input:hover,
+.exf-container.exf-theme-fluent .exf-ctl-cnt > .exf-ctl textarea:hover,
+.exf-container.exf-theme-fluent .exf-ctl-cnt > .exf-ctl select:hover,
+.exf-container.exf-theme-fluent .exf-ctl-cnt > .exf-ctl .exf-btn:hover {
   border-color: var(--field-box-shadow);
 }
 
-.exf-container.exf-theme-fluent .exf-ctl-cnt > .exf-ctl > input:disabled,
-.exf-container.exf-theme-fluent .exf-ctl-cnt > .exf-ctl > textarea:disabled,
-.exf-container.exf-theme-fluent .exf-ctl-cnt > .exf-ctl > select:disabled {
+.exf-container.exf-theme-fluent .exf-ctl-cnt > .exf-ctl input:disabled,
+.exf-container.exf-theme-fluent .exf-ctl-cnt > .exf-ctl textarea:disabled,
+.exf-container.exf-theme-fluent .exf-ctl-cnt > .exf-ctl select:disabled {
   background-color: var(--color-disabled);
 }
 
-.exf-container.exf-theme-fluent .exf-ctl-cnt > .exf-ctl > input:-moz-read-only,
-.exf-container.exf-theme-fluent .exf-ctl-cnt > .exf-ctl > textarea:-moz-read-only,
-.exf-container.exf-theme-fluent .exf-ctl-cnt > .exf-ctl > select:-moz-read-only {
+.exf-container.exf-theme-fluent .exf-ctl-cnt > .exf-ctl input:-moz-read-only,
+.exf-container.exf-theme-fluent .exf-ctl-cnt > .exf-ctl textarea:-moz-read-only,
+.exf-container.exf-theme-fluent .exf-ctl-cnt > .exf-ctl select:-moz-read-only {
   background-color: var(--color-readonly);
 }
 
-.exf-container.exf-theme-fluent .exf-ctl-cnt > .exf-ctl > input:read-only,
-.exf-container.exf-theme-fluent .exf-ctl-cnt > .exf-ctl > textarea:read-only,
-.exf-container.exf-theme-fluent .exf-ctl-cnt > .exf-ctl > select:read-only {
+.exf-container.exf-theme-fluent .exf-ctl-cnt > .exf-ctl input:read-only,
+.exf-container.exf-theme-fluent .exf-ctl-cnt > .exf-ctl textarea:read-only,
+.exf-container.exf-theme-fluent .exf-ctl-cnt > .exf-ctl select:read-only {
   background-color: var(--color-readonly);
 }
 
@@ -1282,7 +1294,7 @@ html.theme-dark .exf-ctl-cnt.exf-switch input[type="range"] {
   border-radius: 100%;
 }
 
-.exf-container.exf-theme-fluent .exf-ctl-cnt > .exf-ctl > select {
+.exf-container.exf-theme-fluent .exf-ctl-cnt > .exf-ctl select {
   outline: 0;
   -webkit-box-shadow: none;
           box-shadow: none;
@@ -1298,7 +1310,7 @@ html.theme-dark .exf-ctl-cnt.exf-switch input[type="range"] {
   /* Remove IE arrow */
 }
 
-.exf-container.exf-theme-fluent .exf-ctl-cnt > .exf-ctl > select::-ms-expand {
+.exf-container.exf-theme-fluent .exf-ctl-cnt > .exf-ctl select::-ms-expand {
   display: none;
 }
 
@@ -1389,7 +1401,6 @@ html.theme-dark .exf-ctl-cnt.exf-switch input[type="range"] {
 .exf-container.exf-theme-material .exf-ctl-cnt {
   position: relative;
   margin-top: 2rem;
-  margin-bottom: 1rem;
 }
 
 .exf-container.exf-theme-material .exf-ctl-cnt:not(.exf-std-lbl) > .exf-ctl > .exf-label {

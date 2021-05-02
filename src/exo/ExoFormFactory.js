@@ -16,12 +16,16 @@ import ExoFormProgress from './ExoFormProgress';
  * @hideconstructor
  */
 export class ExoFormContext {
-    constructor(library) {
-        this.library = this.enrichMeta(library)
+    constructor(config) {
+        this.config = config;
+        this.baseUrl = document.location.origin;
+        this.library = this._enrichMeta(config.library)
     }
 
-    enrichMeta(library) {
-        const form = this.createForm();
+    _enrichMeta(library) {
+        const form = this.createForm({
+            internal: true
+        });
         form.load({ pages: [{}] });
 
         for (var name in library) {
@@ -36,14 +40,14 @@ export class ExoFormContext {
             let control = name !== "base" ? new field.type(context) : { acceptedProperties: [] };
             field.returns = field.returnValueType ? field.returnValueType.name : "None";
             field.element = control.htmlElement ? control.htmlElement.tagName.toLowerCase() : "none";
-            field.properties = this.getProps(field, field.type, control);
+            field.properties = this._getProps(field, field.type, control);
             field._key = name;
         }
 
         return library;
     }
 
-    getProps(field, type, control) {
+    _getProps(field, type, control) {
         let ar = {};
 
         if (field.returnValueType) {
@@ -80,8 +84,7 @@ export class ExoFormContext {
     }
 
     createForm(options) {
-        // the only place where an 
-        // ExoForm instance can be created
+        // the only place where an ExoForm instance can be created       
         return new ExoForm(this, options)
     }
 
@@ -115,20 +118,6 @@ export class ExoFormContext {
     createGenerator() {
         return new ExoSchemaGenerator();
     }
-
-    // get theme() {
-    //     return this._theme;
-    // }
-
-    // set theme(value) {
-    //     if (this.themes[value]) {
-    //         this._theme = this.themes[value];
-    //     }
-    //     else {
-    //         throw "Theme not registered"
-    //     }
-    // }
-
 }
 
 /**
@@ -176,8 +165,13 @@ class ExoFormFactory {
     static Context = ExoFormContext;
 
     static defaults = {
-        imports: [
-        ]
+        imports: [ ],
+        defaults: {
+            navigation: "auto",
+            validation: "default",
+            progress: "auto",
+            theme: "material"
+        }
     }
 
     //TODO: add all relevant classes
@@ -204,9 +198,14 @@ class ExoFormFactory {
 
         return new Promise((resolve, reject) => {
             var promises = [];
-            options.imports = options.imports || this.defaults.imports;
+            options = {
+                ...this.defaults,
+                ...options
+            }
+            //options.imports = options.imports || this.defaults.imports;
 
             // add standard controls from Base Libraries
+            
             this.add(ExoBaseControls.controls);
             this.add(ExoExtendedControls.controls);
             this.add(ExoDevControls.controls);
@@ -221,13 +220,15 @@ class ExoFormFactory {
                     ExoFormFactory.loadLib(imp)
                 )
             });
-
+            
             Promise.all(promises).then(() => {
                 let lib = ExoFormFactory.buildLibrary();
                 console.debug("ExoFormFactory loaded library", lib, "from", options.imports);
-                resolve(new ExoFormContext(lib));
+                resolve(new ExoFormContext({
+                    ...options,
+                    library:lib
+                }));
             });
-
         })
     }
 
@@ -318,6 +319,7 @@ class ExoFormFactory {
     static checkTypeConversion(type, rawValue) {
         let fieldMeta = ExoFormFactory.library[type];
         let value = undefined;
+
         if (fieldMeta) {
             try {
                 const parse = ExoFormFactory.getTypeParser(fieldMeta);

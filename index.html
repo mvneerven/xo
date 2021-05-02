@@ -107,12 +107,12 @@
 
         class DefMod extends window.xo.route {
             async render(path) {
-                const context = await window.xo.form.factory.build();
+                const context = await window.xo.form.factory.build({
+                    defaults: {
+                        validation: "inline"
+                    }
+                });
                 const schema = {
-                    theme: "fluent",
-                    validation: "inline",
-                    navigation: "auto",
-
                     pages: [
                         {
                             legend: "Page 1",
@@ -126,6 +126,12 @@
                                     placeholder: "John Doe"
                                 },
 
+                                {
+                                    name: "check",
+                                    type: "checkbox",
+                                    caption: "Check me",
+                                    value: false
+                                },
 
                                 {
                                     name: "tags",
@@ -285,8 +291,6 @@
                 let result = await x.renderForm();
 
                 this.app.UI.areas.main.add(result.container);
-
-                //this.app.UI.notifications.add("Welcome to ExoForm - the coolest place to play to play  to play  to play  to play  to play  to play  to play  to play  to play  to play  to play  to play  to play  to play  to play  to play  to play  to play  to play ")
             }
         }
 

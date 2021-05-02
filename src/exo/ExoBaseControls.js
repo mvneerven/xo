@@ -45,7 +45,9 @@ class ExoControlBase {
         return /*html*/`<div data-id="${obj.id}" class="${obj.class}" data-field-type="${obj.type}">
     <div class="exf-ctl">
         <label for="${obj.id}" aria-hidden="true" class="exf-label" title="${obj.caption}">${obj.caption}</label>
+        
         <span data-replace="true"></span>
+        
     </div>
     <div class="exf-fld-details">
         <div class="exf-help-wrapper"></div>
@@ -71,6 +73,21 @@ class ExoControlBase {
     appendChild(elm) {
         this.htmlElement.appendChild(elm);
     }
+
+    typeConvert(value){
+        return ExoFormFactory.checkTypeConversion(this.context.field.type, value)
+    }
+
+
+    get value(){
+        let v = this.htmlElement.value;
+        return this.typeConvert(v);
+    }
+
+    set value(data){
+        this.htmlElement.value = data;
+    }
+
 
     triggerChange(detail) {
         var evt = document.createEvent("HTMLEvents");
@@ -131,7 +148,10 @@ class ExoControlBase {
     }
 
     _getContainerClasses() {
-        let ar = ["exf-ctl-cnt"];
+        let ar = [];
+
+        if (!this.isPage)
+            ar.push("exf-ctl-cnt")
 
         ar.push("exf-base-" + this._getBaseType())
 
@@ -278,7 +298,6 @@ class ExoControlBase {
 
     // returns valid state of the control - can be subclassed
     get valid() {
-
         let numInvalid = 0;
         this.container.querySelectorAll("*").forEach(el => {
             if (el.reportValidity) {
@@ -290,14 +309,6 @@ class ExoControlBase {
                 catch { }
             }
         })
-
-        // let input = this.container.querySelector("[name]");
-
-        // if (this.htmlElement && this.htmlElement.reportValidity)
-        //     return this.htmlElement.reportValidity()
-
-        // return true;
-
         return numInvalid === 0;
     }
 
@@ -725,7 +736,7 @@ export class ExoListControl extends ExoElementControl {
 
         let item = {
             ...i,
-            name: i.name || i,
+            name: typeof (i.name) === "string" ? i.name : i,
             value: (i.value !== undefined) ? i.value : i,
             type: _.optionType,
             inputname: f.name,
@@ -778,12 +789,17 @@ export class ExoListControl extends ExoElementControl {
     }
 
     async render() {
-        let elm = await super.render();
+        let elm = await super.render();       
+
         switch (this.view) {
             case "tiles":
-                elm.classList.add("tiles");
+                elm.classList.add("tiles");        
+                
                 break;
             case "list":
+                elm.classList.add("list");
+                break;
+            default:
                 elm.classList.add("block");
                 break;
         }
@@ -822,6 +838,7 @@ class ExoInputListControl extends ExoListControl {
 
     async render() {
         let f = this.context.field;
+        
         const tpl = /*html*/`<div class="exf-ilc-cnt" title="{{tooltip}}">
             <input class="{{class}}" {{checked}} name="{{inputname}}" value="{{value}}" type="{{type}}" id="{{oid}}" />
             <label for="{{oid}}" class="exf-caption">
@@ -832,7 +849,7 @@ class ExoInputListControl extends ExoListControl {
         await this.populateList(this.htmlElement, tpl);
 
         super.render();
-        this.container.classList.add("exf-input-group");
+        this.container.classList.add("exf-input-group", "exf-std-lbl");
         return this.container;
     }
 
@@ -850,6 +867,14 @@ class ExoInputListControl extends ExoListControl {
             }
         }
         return true;
+    }
+
+    get value(){
+        return DOM.getValue(this.htmlElement.querySelector("[name]"));
+    }
+
+    set value(data){
+        debugger;
     }
 
     // Used to get localized standard validation message 
@@ -885,27 +910,48 @@ class ExoCheckboxListControl extends ExoInputListControl {
 
     optionType = "checkbox";
 
-    //isMultiSelect = true;
     static returnValueType = Array;
+
+    get value(){
+        let ar = [];
+        this.container.querySelectorAll(":checked").forEach(i => {
+            ar.push(i.value);
+        });
+        return ar;
+    }
+
+}
+
+class ExoCheckboxControl extends ExoCheckboxListControl {
+
+    text = "";
+
+    static returnValueType = Boolean;
 
     constructor(context) {
         super(context);
+
+        this.acceptProperties({
+            name: "text",
+            description: "Text to display on checkbox label"
+        });
+        context.field.items = [{ name: this.text || context.field.caption, value: true, checked: context.field.value }]
     }
 
     async render() {
-        const _ = this;
-        await super.render();
-
-        _.context.field.getCurrentValue = () => {
-            // fix checkboxlist ->  Object.fromEntries returns single value
-            let ar = [];
-            this.container.querySelectorAll(":checked").forEach(i => {
-                ar.push(i.value);
-            });
-            return ar;
+        if (!this.text) {
+            this.context.field.caption = "";
+        }
+        else {
+            this.context.field.containerClass = ((this.context.field.containerClass || "") + " exf-std-lbl").trim();
         }
 
+        await super.render();
         return this.container;
+    }
+
+    get value(){
+        return this.container.querySelector(":checked") ? true : false;
     }
 
 
@@ -1048,14 +1094,16 @@ export class ExoNumberControl extends ExoInputControl {
                 e.cancelBubble = true;
                 e.preventDefault();
 
+                let step = parseInt("0" + this.htmlElement.step) || 1;
+
                 if (e.target === this.plusButton) {
                     if (this.htmlElement.max === "" || parseInt(this.htmlElement.value) < parseInt(this.htmlElement.max)) {
-                        this.htmlElement.value = parseInt("0" + (this.htmlElement.value || (this.htmlElement.min != "" ? this.htmlElement.min - 1 : -1))) + 1;
+                        this.htmlElement.value = parseInt("0" + (this.htmlElement.value || (this.htmlElement.min != "" ? this.htmlElement.min - 1 : -1))) + step;
                     }
                 }
                 else if (e.target === this.minusButton) {
                     if (this.htmlElement.min === "" || parseInt(this.htmlElement.value) > parseInt(this.htmlElement.min)) {
-                        this.htmlElement.value = parseInt("0" + (this.htmlElement.value || (this.htmlElement.max != "" ? this.htmlElement.max - 1 : 1))) - 1;
+                        this.htmlElement.value = parseInt("0" + (this.htmlElement.value || (this.htmlElement.max != "" ? this.htmlElement.max - 1 : 1))) - step;
                     }
                 }
 
@@ -1073,6 +1121,8 @@ export class ExoRangeControl extends ExoNumberControl {
 
     showoutput = false;
 
+    static returnValueType = Number;
+
     constructor(context) {
         super(context);
         this.context.field.type = "range";
@@ -1084,17 +1134,15 @@ export class ExoRangeControl extends ExoNumberControl {
     }
 
     async render() {
-        const me = this;
+        
         await super.render();
 
         if (this.showoutput) {
             this.output = document.createElement("output");
-            const sync = e => {
-                me.output.value = me.htmlElement.value;
-            }
-
+            
             this.htmlElement.parentNode.insertBefore(this.output, this.htmlElement.nextSibling);
-            this.htmlElement.addEventListener("input", sync); sync();
+            this.htmlElement.addEventListener("input", this._sync); 
+            this._sync();
             this.container.classList.add("exf-rng-output")
         }
 
@@ -1104,7 +1152,16 @@ export class ExoRangeControl extends ExoNumberControl {
         return this.container;
     }
 
-    static returnValueType = Number;
+    _sync() {
+        if(this.output && this.htmlElement)
+            this.output.value = this.htmlElement.value;
+    }
+    
+    set value(data){
+        super.value = data;
+        if (this.showoutput) 
+            this._sync()
+    }
 }
 
 class ExoProgressControl extends ExoElementControl {
@@ -1164,7 +1221,7 @@ class ExoBaseControls {
         number: { caption: "Numeric Control", type: ExoNumberControl, note: "A text input that is used to input phone numbers", demo: { min: 1, max: 99 } },
         range: { caption: "Range Slider", type: ExoRangeControl, note: "A range slider input", demo: { min: 1, max: 10, value: 5 } },
         color: { caption: "Color Input", base: "input", note: "A control to select a color", demo: { value: "#cc4433" } },
-        checkbox: { base: "input", note: "A checkbox", demo: { checked: true } },
+        checkbox: { type: ExoCheckboxControl, note: "A checkbox", demo: { checked: true } },
         email: { caption: "Email Address", base: "text", note: "A text input that validates email addresses", demo: { required: true } },
         date: { base: "input", note: "A date input that is used to input phone numbers" },
         month: { base: "input", note: "A month selector input" },

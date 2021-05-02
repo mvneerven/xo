@@ -141,7 +141,7 @@ class ExoFormProgress {
 
     static getType(exo) {
         let type = exo.formSchema.progress;
-        if (type === "auto")
+        if (typeof(type) === "undefined" || type === "auto")
             type = ExoFormProgress.matchProgressType(exo);
 
         return ExoFormProgress.types[type];

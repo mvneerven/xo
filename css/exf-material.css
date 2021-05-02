@@ -19,7 +19,6 @@
 .exf-container.exf-theme-material .exf-ctl-cnt {
   position: relative;
   margin-top: 2rem;
-  margin-bottom: 1rem;
 }
 
 .exf-container.exf-theme-material .exf-ctl-cnt:not(.exf-std-lbl) > .exf-ctl > .exf-label {

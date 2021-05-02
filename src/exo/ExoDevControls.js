@@ -4,7 +4,11 @@ import DOM from '../pwa/DOM';
 
 class ExoAceCodeEditor extends ExoBaseControls.controls.div.type {
     mode = "html";
-    theme = "chrome";
+
+    defaultThemes = {
+        dark: "ambiance",
+        light: "chrome"
+    }
 
     static returnValueType = String;
 
@@ -17,23 +21,12 @@ class ExoAceCodeEditor extends ExoBaseControls.controls.div.type {
             { name: "theme", type: String, description: "Ace Editor theme - refer to Ace documentation" }
         )
 
-        if (document.querySelector("html").classList.contains("theme-dark")) {
-            this.theme = "ambiance";
-        }
-
+        this.theme = document.querySelector("html").classList.contains("theme-dark") ? this.defaultThemes.dark : this.defaultThemes.light;
     }
 
     async render() {
         const _ = this;
         await super.render();
-        
-        _.context.field.getCurrentValue = () => {
-            return _.htmlElement.data.editor.getValue();
-        }
-
-        _.context.field.setCurrentValue = value => {
-            _.htmlElement.data.editor.setValue(value, -1);
-        }
 
         return new Promise((resolve, reject) => {
             DOM.require("https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/ace.js", () => {
@@ -58,10 +51,10 @@ class ExoAceCodeEditor extends ExoBaseControls.controls.div.type {
                 })
                 _.htmlElement.data["editor"] = editor;
 
-                if(_.htmlElement.classList.contains("full-height")){
+                if (_.htmlElement.classList.contains("full-height")) {
                     _.container.classList.add("full-height");
                     let cc = _.container.querySelector(".exf-ctl");
-                    if(cc)
+                    if (cc)
                         cc.classList.add("full-height");
                 }
 
@@ -69,6 +62,20 @@ class ExoAceCodeEditor extends ExoBaseControls.controls.div.type {
             });
         })
     }
+
+    get value() {
+        if (this.htmlElement.data && this.htmlElement.data.editor)
+            return this.htmlElement.data.editor.getValue();
+
+        return this.context.field.value;
+    }
+
+    set value(data) {
+        this.context.field.value = data;
+        if (this.htmlElement.data && this.htmlElement.data.editor)
+            this.htmlElement.data.editor.setValue(data, -1);
+    }
+
 
     setProperties() {
 
@@ -82,10 +89,10 @@ class ExoAceCodeEditor extends ExoBaseControls.controls.div.type {
             delete this.context.field.theme;
         }
 
-        if (this.context.field.value) {
-            this.value = this.context.field.value;
-            delete this.context.field.value;
-        }
+        // if (this.context.field.value) {
+        //     this.value = this.context.field.value;
+        //     delete this.context.field.value;
+        // }
 
         super.setProperties();
     }
