@@ -894,7 +894,7 @@ class ExoCreditCardControl extends MultiInputControl {
     fields = {
         name: { caption: "Name on Card", type: "text", maxlength: 50, required: "inherit", placeholder: "" },
         number: { caption: "Credit Card Number", type: "text", size: 16, required: "inherit", maxlength: 16, placeholder: "", pattern: "[0-9]{13,16}", },
-        expiry: { caption: "Card Expires", containerClass: "exf-label-sup", type: "month", required: "inherit", maxlength: 3, placeholder: "", min: (new Date().getFullYear() + "-" + ('0' + (new Date().getMonth() + 1)).slice(-2)) },
+        expiry: { caption: "Card Expires", class: "exf-label-sup", type: "month", required: "inherit", maxlength: 3, placeholder: "", min: (new Date().getFullYear() + "-" + ('0' + (new Date().getMonth() + 1)).slice(-2)) },
         cvv: { caption: "CVV", type: "number", required: "inherit", minlength: 3, maxlength: 3, size: 3, placeholder: "", min: "000" }
     }
 }
@@ -1114,7 +1114,7 @@ class ExoExtendedControls {
                 max: 1, "fileTypes": ["image/"],
                 maxSize: 4096000,
                 caption: "Select your profile image",
-                containerClass: "image-upload"
+                class: "image-upload"
             }
         },
         switch: { type: ExoSwitchControl },

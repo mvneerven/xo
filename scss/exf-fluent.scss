@@ -29,6 +29,7 @@
             > .exf-ctl {
                  [name] {
                     outline: none;
+                    width: 100%;
                 }
 
                  input,
@@ -101,7 +102,7 @@
                 > label {
                     position: absolute;
                     top: 0.5rem;
-                    left: 0.5rem;
+                    left: 0;
                 }
 
                 [type="radio"],

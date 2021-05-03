@@ -28,7 +28,7 @@ class ExoForm {
                 "minlength": "minLength",
                 "maxlength": "maxLength"
             },
-            reserved: ["containerClass", "caption", "template", "elm", "ctl", "tagname"]
+            reserved: ["caption", "template", "elm", "ctl", "tagname"]
         },
 
         templates: {
@@ -457,28 +457,42 @@ class ExoForm {
     /**
      * query all fields using matcher and return matches
      * @param {function} matcher - function to use to filter
+     * @param {object} options - query options. e.g. {inScope: true} for querying only fields that are currenttly in scope.
      * @return {array} - All matched fields in the current ExoForm schema
      */
-    query(matcher) {
+    query(matcher, options) {        
         if (matcher === undefined) matcher = () => { return true };
+        options = options || {};
         let matches = [];
         this.formSchema.pages.forEach(p => {
-            let fieldIndex = 0
-            p.fields.forEach(f => {
-                f._page = {
-                    index: p.index,
-                    legend: p.legend
-                }
-                f._index = fieldIndex;
+            if(!options.inScope || this.isPageInScope(p)){
+                let fieldIndex = 0
+                p.fields.forEach(f => {
+                    f._page = {
+                        index: p.index,
+                        legend: p.legend
+                    }
+                    f._index = fieldIndex;
 
-                if (matcher(f)) {
-                    matches.push(f)
-                }
+                    if (matcher(f)) {
+                        matches.push(f)
+                    }
 
-                fieldIndex++;
-            });
+                    fieldIndex++;
+                });
+            }
         });
         return matches;
+    }
+
+    /**
+     * Returns true if the given page is in scope (not descoped by active rules)
+     * @param {object} p - Page object (with index numeric property)
+     * @returns {boolean} - true if page is in scope
+     */
+    isPageInScope(p){
+        let pageElm = this.form.querySelector(".exf-page[data-page='" + p.index +"']:not([data-skip='true'])");
+        return pageElm !== null;
     }
 
     /**

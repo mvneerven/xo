@@ -263,7 +263,7 @@ class ExoControlBase {
             ...f,
             caption: f.caption || "",
             tooltip: f.tooltip || "",
-            class: (f.containerClass || ""), //+ this.isTextInput ? " exf-base-text" : "" ,
+            //class: (f.containerClass || ""), //+ this.isTextInput ? " exf-base-text" : "" ,
             id: this.id + "-container"
         }
     }
@@ -943,7 +943,7 @@ class ExoCheckboxControl extends ExoCheckboxListControl {
             this.context.field.caption = "";
         }
         else {
-            this.context.field.containerClass = ((this.context.field.containerClass || "") + " exf-std-lbl").trim();
+            this.context.field.class = ((this.context.field.class || "") + " exf-std-lbl").trim();
         }
 
         await super.render();

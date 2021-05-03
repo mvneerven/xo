@@ -26,7 +26,7 @@ class ExoCircularChart extends ExoBaseControls.controls.div.type {
         const _ = this;
         
         const me = _.htmlElement;
-        let elm = await super.render();
+        await super.render();
 
         const tpl = /*html*/`<svg class="circle-chart" viewbox="0 0 33.83098862 33.83098862" width="{{size}}" height="{{size}}" xmlns="http://www.w3.org/2000/svg">
             <circle class="circle-chart__background" stroke="{{backgroundColor}}" stroke-width="2" fill="none" cx="16.91549431" cy="16.91549431" r="15.91549431" />
@@ -39,7 +39,8 @@ class ExoCircularChart extends ExoBaseControls.controls.div.type {
 
         me.appendChild(DOM.parseHTML(DOM.format(tpl, this)));
 
-        return elm;
+        this.container.classList.add("exf-std-lbl");
+        return this.container;
     }
 }
 

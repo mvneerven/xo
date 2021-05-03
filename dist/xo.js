@@ -1058,32 +1058,47 @@
     /**
      * query all fields using matcher and return matches
      * @param {function} matcher - function to use to filter
+     * @param {object} options - query options. e.g. {inScope: true} for querying only fields that are currenttly in scope.
      * @return {array} - All matched fields in the current ExoForm schema
      */
 
 
-    query(matcher) {
+    query(matcher, options) {
       if (matcher === undefined) matcher = () => {
         return true;
       };
+      options = options || {};
       let matches = [];
       this.formSchema.pages.forEach(p => {
-        let fieldIndex = 0;
-        p.fields.forEach(f => {
-          f._page = {
-            index: p.index,
-            legend: p.legend
-          };
-          f._index = fieldIndex;
+        if (!options.inScope || this.isPageInScope(p)) {
+          let fieldIndex = 0;
+          p.fields.forEach(f => {
+            f._page = {
+              index: p.index,
+              legend: p.legend
+            };
+            f._index = fieldIndex;
 
-          if (matcher(f)) {
-            matches.push(f);
-          }
+            if (matcher(f)) {
+              matches.push(f);
+            }
 
-          fieldIndex++;
-        });
+            fieldIndex++;
+          });
+        }
       });
       return matches;
+    }
+    /**
+     * Returns true if the given page is in scope (not descoped by active rules)
+     * @param {object} p - Page object (with index numeric property)
+     * @returns {boolean} - true if page is in scope
+     */
+
+
+    isPageInScope(p) {
+      let pageElm = this.form.querySelector(".exf-page[data-page='" + p.index + "']:not([data-skip='true'])");
+      return pageElm !== null;
     }
     /**
      * Get field with given name
@@ -1540,7 +1555,7 @@
         "minlength": "minLength",
         "maxlength": "maxLength"
       },
-      reserved: ["containerClass", "caption", "template", "elm", "ctl", "tagname"]
+      reserved: ["caption", "template", "elm", "ctl", "tagname"]
     },
     templates: {
       empty:
@@ -1847,8 +1862,7 @@
       return { ...f,
         caption: f.caption || "",
         tooltip: f.tooltip || "",
-        class: f.containerClass || "",
-        //+ this.isTextInput ? " exf-base-text" : "" ,
+        //class: (f.containerClass || ""), //+ this.isTextInput ? " exf-base-text" : "" ,
         id: this.id + "-container"
       };
     }
@@ -2513,7 +2527,7 @@
       if (!this.text) {
         this.context.field.caption = "";
       } else {
-        this.context.field.containerClass = ((this.context.field.containerClass || "") + " exf-std-lbl").trim();
+        this.context.field.class = ((this.context.field.class || "") + " exf-std-lbl").trim();
       }
 
       await super.render();
@@ -3920,7 +3934,7 @@
         },
         expiry: {
           caption: "Card Expires",
-          containerClass: "exf-label-sup",
+          class: "exf-label-sup",
           type: "month",
           required: "inherit",
           maxlength: 3,
@@ -4162,7 +4176,7 @@
         "fileTypes": ["image/"],
         maxSize: 4096000,
         caption: "Select your profile image",
-        containerClass: "image-upload"
+        class: "image-upload"
       }
     },
     switch: {
@@ -4398,7 +4412,7 @@
       const _ = this;
 
       const me = _.htmlElement;
-      let elm = await super.render();
+      await super.render();
       const tpl =
       /*html*/
       `<svg class="circle-chart" viewbox="0 0 33.83098862 33.83098862" width="{{size}}" height="{{size}}" xmlns="http://www.w3.org/2000/svg">
@@ -4410,7 +4424,8 @@
             </g>
           </svg>`;
       me.appendChild(DOM.parseHTML(DOM.format(tpl, this)));
-      return elm;
+      this.container.classList.add("exf-std-lbl");
+      return this.container;
     }
 
   }
@@ -4596,6 +4611,8 @@
     checkValidity() {
       let numInvalid = this.exo.query(f => {
         return !f._control.valid;
+      }, {
+        inScope: true
       }).length;
       return numInvalid === 0;
     }

@@ -18,6 +18,215 @@
   vertical-align: super;
 }
 
+.exf-container .exf-cnt.exf-ctl-group.grid .exf-ctl-cnt > [name] {
+  width: 100%;
+}
+
+.exf-container .exf-wrapper {
+  height: 100%;
+}
+
+.exf-container .exf-wrapper .exf-page {
+  display: none;
+}
+
+.exf-container .exf-wrapper .exf-page.active {
+  display: block;
+}
+
+.exf-container .exf-embed-container {
+  position: relative;
+  overflow: hidden;
+  padding-top: 56.25% !important;
+  /* 16:9*/
+}
+
+.exf-container .exf-embed-container.ar-4x3 {
+  padding-top: 75% !important;
+  /* 4:3 */
+}
+
+.exf-container .exf-embed-container > iframe {
+  border: 0;
+  height: 100%;
+  left: 0;
+  position: absolute;
+  top: 0;
+  width: 100%;
+}
+
+.exf-container .exf-info {
+  -webkit-box-shadow: -3px 3px 10px -2px rgba(255, 255, 255, 0.1);
+          box-shadow: -3px 3px 10px -2px rgba(255, 255, 255, 0.1);
+  padding: 1em;
+}
+
+.exf-container .exf-nav-cnt {
+  clear: both;
+}
+
+.exf-container.single-page .exf-page {
+  display: block;
+}
+
+.exf-container.single-page .exf-nav-cnt [name="prev"],
+.exf-container.single-page .exf-nav-cnt [name="next"] {
+  display: none;
+}
+
+.exf-container .exf-error {
+  display: inline-block;
+  padding: 0.2em;
+  margin-top: 2rem;
+  color: red;
+  border: 1px solid red;
+}
+
+.exf-container .exf-page {
+  padding-top: 1rem;
+}
+
+.exf-container .exf-page > .exf-ctl-cnt {
+  position: relative;
+  margin-bottom: 2em;
+}
+
+.exf-container .exf-page > .exf-ctl-cnt .exf-ctl-cnt {
+  margin-bottom: 1em;
+}
+
+.exf-container .exf-page > .exf-ctl-cnt.exf-input-group .exf-ctl > div {
+  clear: both;
+  margin: auto;
+  white-space: normal;
+}
+
+.exf-container .exf-page > .exf-ctl-cnt.exf-input-group .exf-ctl > div > label {
+  display: inline-block;
+  width: 30%;
+  overflow: hidden;
+  padding: 5px;
+}
+
+.exf-container .exf-page > .exf-ctl-cnt.exf-input-group .exf-ctl > div > label > input {
+  width: 30px;
+  height: auto;
+}
+
+.exf-container .exf-page > .exf-ctl-cnt.exf-input-group .exf-ctl > div > label > .exf-caption {
+  display: inline-block;
+  height: auto;
+  width: calc(100% - 70px);
+  vertical-align: text-top;
+  padding: 0.2rem 0.4rem 0.2rem 0.1rem;
+  margin-right: 1rem;
+}
+
+.exf-container .exf-page > .exf-ctl-cnt.exf-input-group .exf-ctl > div > label > .exf-caption .exf-caption-description {
+  height: 5em;
+}
+
+.exf-container .exf-page > .exf-ctl-cnt.exf-input-group .exf-ctl > div > label > .exf-caption .exf-caption-description:empty {
+  height: 0;
+}
+
+.exf-container .exf-page > .exf-ctl-cnt.exf-input-group .exf-ctl.block > div > label {
+  display: block;
+  width: auto;
+}
+
+.exf-container .exf-page > .exf-ctl-cnt.exf-rng-output output {
+  display: inline-block;
+  vertical-align: text-top;
+}
+
+.exf-container .exf-page > .exf-ctl-cnt.exf-nmbr-btns > .exf-ctl {
+  text-align: center;
+}
+
+.exf-container .exf-page > .exf-ctl-cnt.exf-nmbr-btns > .exf-ctl > [name] {
+  width: auto !important;
+  min-width: 50px;
+  margin: auto;
+  text-align: center;
+}
+
+.exf-container .exf-page > .exf-ctl-cnt.exf-nmbr-btns > .exf-ctl > input::-webkit-outer-spin-button,
+.exf-container .exf-page > .exf-ctl-cnt.exf-nmbr-btns > .exf-ctl > input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.exf-container .exf-page > .exf-ctl-cnt.exf-nmbr-btns > .exf-ctl > .nmbr-m,
+.exf-container .exf-page > .exf-ctl-cnt.exf-nmbr-btns > .exf-ctl > .nmbr-p {
+  outline: none;
+  display: inline-block;
+}
+
+.exf-container .exf-page > .exf-ctl-cnt.exf-nmbr-btns > .exf-ctl > .exf-label {
+  top: -1.7em !important;
+}
+
+.exf-container .exf-page > .exf-ctl-cnt.exf-input-group {
+  margin-top: 1rem;
+}
+
+.exf-container .exf-page > .exf-ctl-cnt.exf-input-group > .exf-ctl > div {
+  padding-top: 1rem;
+}
+
+.exf-container .exf-page > .exf-ctl-cnt.exf-input-group > .exf-ctl > div .exf-ilc-cnt {
+  margin-bottom: 1rem;
+  display: block;
+  width: 100%;
+}
+
+.exf-container .exf-page > .exf-ctl-cnt.exf-input-group > .exf-ctl > div .exf-ilc-cnt > input {
+  float: left;
+}
+
+.exf-container .exf-page > .exf-ctl-cnt.exf-input-group > .exf-ctl > div .exf-ilc-cnt .exf-caption {
+  padding-left: 1rem;
+  display: inline-block;
+}
+
+.exf-container .exf-page > .exf-ctl-cnt.exf-input-group > .exf-ctl > div .exf-ilc-cnt .exf-caption .exf-caption-description {
+  font-size: 0.8rem;
+}
+
+.exf-container .exf-page > .exf-ctl-cnt .exf-ctl.autogrow {
+  /* easy way to plop the elements on top of each other and have them both sized based on the tallest one's height */
+  display: -ms-grid;
+  display: grid;
+}
+
+.exf-container .exf-page > .exf-ctl-cnt .exf-ctl.autogrow::after {
+  /* Note the weird space! Needed to preventy jumpy behavior */
+  content: attr(data-replicated-value) " ";
+  /* This is how textarea text behaves */
+  white-space: pre-wrap;
+  /* Hidden from view, clicks, and screen readers */
+  visibility: hidden;
+}
+
+.exf-container .exf-page > .exf-ctl-cnt .exf-ctl.autogrow textarea {
+  /* You could leave this, but after a user resizes, then it ruins the auto sizing */
+  resize: none;
+  /* Firefox shows scrollbar on growth, you can hide like this. */
+  overflow: hidden;
+}
+
+.exf-container .exf-page > .exf-ctl-cnt .exf-ctl.autogrow textarea, .exf-container .exf-page > .exf-ctl-cnt .exf-ctl.autogrow::after {
+  /* Identical styling required!! */
+  font: inherit;
+  /* Place on top of each other */
+  -ms-grid-row: 1;
+  -ms-grid-row-span: 1;
+  -ms-grid-column: 1;
+  -ms-grid-column-span: 1;
+  grid-area: 1 / 1 / 2 / 2;
+}
+
 .exf-container .exf-info {
   font-size: 1.1rem;
   background-color: var(--color-shade);
@@ -83,207 +292,6 @@
 .exf-container .exf-cols-20em-20em-1fr {
   -ms-grid-columns: 20em 20em 1fr;
       grid-template-columns: 20em 20em 1fr;
-}
-
-.exf-container .exf-cnt.exf-ctl-group.grid .exf-ctl-cnt > [name] {
-  width: 100%;
-}
-
-.exf-container .exf-wrapper {
-  height: 100%;
-}
-
-.exf-container .exf-wrapper .exf-page {
-  display: none;
-}
-
-.exf-container .exf-wrapper .exf-page.active {
-  display: block;
-}
-
-.exf-container .exf-embed-container {
-  position: relative;
-  overflow: hidden;
-  padding-top: 56.25% !important;
-  /* 16:9*/
-}
-
-.exf-container .exf-embed-container.ar-4x3 {
-  padding-top: 75% !important;
-  /* 4:3 */
-}
-
-.exf-container .exf-embed-container > iframe {
-  border: 0;
-  height: 100%;
-  left: 0;
-  position: absolute;
-  top: 0;
-  width: 100%;
-}
-
-.exf-container .exf-info {
-  -webkit-box-shadow: -3px 3px 10px -2px rgba(255, 255, 255, 0.1);
-          box-shadow: -3px 3px 10px -2px rgba(255, 255, 255, 0.1);
-  padding: 1em;
-}
-
-.exf-container .exf-nav-cnt {
-  clear: both;
-}
-
-.exf-container.single-page .exf-page {
-  display: block;
-}
-
-.exf-container.single-page .exf-nav-cnt [name="prev"],
-.exf-container.single-page .exf-nav-cnt [name="next"] {
-  display: none;
-}
-
-.exf-container .exf-error {
-  display: inline-block;
-  padding: 0.2em;
-  margin-top: 2rem;
-  color: red;
-  border: 1px solid red;
-}
-
-.exf-container .exf-ctl-cnt {
-  position: relative;
-  margin-bottom: 1em;
-}
-
-.exf-container .exf-ctl-cnt.exf-input-group .exf-ctl > div {
-  clear: both;
-  margin: auto;
-  white-space: normal;
-}
-
-.exf-container .exf-ctl-cnt.exf-input-group .exf-ctl > div > label {
-  display: inline-block;
-  width: 30%;
-  overflow: hidden;
-  padding: 5px;
-}
-
-.exf-container .exf-ctl-cnt.exf-input-group .exf-ctl > div > label > input {
-  width: 30px;
-  height: auto;
-}
-
-.exf-container .exf-ctl-cnt.exf-input-group .exf-ctl > div > label > .exf-caption {
-  display: inline-block;
-  height: auto;
-  width: calc(100% - 70px);
-  vertical-align: text-top;
-  padding: 0.2rem 0.4rem 0.2rem 0.1rem;
-  margin-right: 1rem;
-}
-
-.exf-container .exf-ctl-cnt.exf-input-group .exf-ctl > div > label > .exf-caption .exf-caption-description {
-  height: 5em;
-}
-
-.exf-container .exf-ctl-cnt.exf-input-group .exf-ctl > div > label > .exf-caption .exf-caption-description:empty {
-  height: 0;
-}
-
-.exf-container .exf-ctl-cnt.exf-input-group .exf-ctl.block > div > label {
-  display: block;
-  width: auto;
-}
-
-.exf-container .exf-ctl-cnt.exf-rng-output output {
-  display: inline-block;
-  vertical-align: text-top;
-}
-
-.exf-container .exf-ctl-cnt.exf-nmbr-btns > .exf-ctl {
-  text-align: center;
-}
-
-.exf-container .exf-ctl-cnt.exf-nmbr-btns > .exf-ctl > [name] {
-  width: auto !important;
-  min-width: 50px;
-  margin: auto;
-  text-align: center;
-}
-
-.exf-container .exf-ctl-cnt.exf-nmbr-btns > .exf-ctl > input::-webkit-outer-spin-button,
-.exf-container .exf-ctl-cnt.exf-nmbr-btns > .exf-ctl > input::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
-
-.exf-container .exf-ctl-cnt.exf-nmbr-btns > .exf-ctl > .nmbr-m,
-.exf-container .exf-ctl-cnt.exf-nmbr-btns > .exf-ctl > .nmbr-p {
-  outline: none;
-  display: inline-block;
-}
-
-.exf-container .exf-ctl-cnt.exf-nmbr-btns > .exf-ctl > .exf-label {
-  top: -1.7em !important;
-}
-
-.exf-container .exf-ctl-cnt.exf-input-group {
-  margin-top: 1rem;
-}
-
-.exf-container .exf-ctl-cnt.exf-input-group > .exf-ctl > div {
-  padding-top: 1rem;
-}
-
-.exf-container .exf-ctl-cnt.exf-input-group > .exf-ctl > div .exf-ilc-cnt {
-  margin-bottom: 1rem;
-  display: block;
-  width: 100%;
-}
-
-.exf-container .exf-ctl-cnt.exf-input-group > .exf-ctl > div .exf-ilc-cnt > input {
-  float: left;
-}
-
-.exf-container .exf-ctl-cnt.exf-input-group > .exf-ctl > div .exf-ilc-cnt .exf-caption {
-  padding-left: 1rem;
-  display: inline-block;
-}
-
-.exf-container .exf-ctl-cnt.exf-input-group > .exf-ctl > div .exf-ilc-cnt .exf-caption .exf-caption-description {
-  font-size: 0.8rem;
-}
-
-.exf-container .exf-ctl-cnt .exf-ctl.autogrow {
-  /* easy way to plop the elements on top of each other and have them both sized based on the tallest one's height */
-  display: -ms-grid;
-  display: grid;
-}
-
-.exf-container .exf-ctl-cnt .exf-ctl.autogrow::after {
-  /* Note the weird space! Needed to preventy jumpy behavior */
-  content: attr(data-replicated-value) " ";
-  /* This is how textarea text behaves */
-  white-space: pre-wrap;
-  /* Hidden from view, clicks, and screen readers */
-  visibility: hidden;
-}
-
-.exf-container .exf-ctl-cnt .exf-ctl.autogrow textarea {
-  /* You could leave this, but after a user resizes, then it ruins the auto sizing */
-  resize: none;
-  /* Firefox shows scrollbar on growth, you can hide like this. */
-  overflow: hidden;
-}
-
-.exf-container .exf-ctl-cnt .exf-ctl.autogrow textarea, .exf-container .exf-ctl-cnt .exf-ctl.autogrow::after {
-  /* Identical styling required!! */
-  font: inherit;
-  /* Place on top of each other */
-  -ms-grid-row: 1;
-  -ms-grid-row-span: 1;
-  -ms-grid-column: 1;
-  -ms-grid-column-span: 1;
-  grid-area: 1 / 1 / 2 / 2;
 }
 
 nav.ul-drop {
@@ -1165,6 +1173,7 @@ html.theme-dark .exf-ctl-cnt.exf-switch input[type="range"] {
 
 .exf-container.exf-theme-fluent .exf-ctl-cnt > .exf-ctl [name] {
   outline: none;
+  width: 100%;
 }
 
 .exf-container.exf-theme-fluent .exf-ctl-cnt > .exf-ctl input,
@@ -1257,7 +1266,7 @@ html.theme-dark .exf-ctl-cnt.exf-switch input[type="range"] {
 .exf-container.exf-theme-fluent .exf-ctl-cnt > .exf-ctl > label {
   position: absolute;
   top: 0.5rem;
-  left: 0.5rem;
+  left: 0;
 }
 
 .exf-container.exf-theme-fluent .exf-ctl-cnt > .exf-ctl [type="radio"],
@@ -1400,7 +1409,11 @@ html.theme-dark .exf-ctl-cnt.exf-switch input[type="range"] {
 
 .exf-container.exf-theme-material .exf-ctl-cnt {
   position: relative;
-  margin-top: 2rem;
+  margin-top: 1rem;
+}
+
+.exf-container.exf-theme-material .exf-ctl-cnt .exf-ctl {
+  text-align: left;
 }
 
 .exf-container.exf-theme-material .exf-ctl-cnt:not(.exf-std-lbl) > .exf-ctl > .exf-label {
@@ -1436,7 +1449,6 @@ html.theme-dark .exf-ctl-cnt.exf-switch input[type="range"] {
 }
 
 .exf-container.exf-theme-material .exf-ctl-cnt > .exf-ctl > select {
-  width: 100%;
   font-size: 1rem;
   height: 1.6rem;
   padding: 0.125rem 0.125rem 0.0625rem;
@@ -1640,7 +1652,7 @@ html.theme-dark .exf-ctl-cnt.exf-switch input[type="range"] {
 }
 
 .exf-container.exf-theme-material .exf-cnt .exf-ctl-group {
-  padding-top: 1rem;
+  padding-top: 2rem;
 }
 
 .exf-container.exf-theme-material .exf-input-group > .exf-ctl .exf-caption-main {
@@ -1699,7 +1711,7 @@ html.theme-dark .exf-ctl-cnt.exf-switch input[type="range"] {
 }
 
 .exf-container.exf-theme-material .exf-input-group.tiles > .exf-ctl > div .exf-ilc-cnt > input:checked + .exf-caption {
-  border: 2px solid var(--color-button-text);
+  border: 2px solid var(--color-button);
   -webkit-transform: scale(1, 1);
           transform: scale(1, 1);
 }

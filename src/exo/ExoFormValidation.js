@@ -13,6 +13,9 @@ class ExoFormDefaultValidation {
     checkValidity() {
         let numInvalid = this.exo.query(f => {
             return !f._control.valid;
+
+        }, {
+            inScope: true
         }).length;
         return numInvalid === 0;
     }

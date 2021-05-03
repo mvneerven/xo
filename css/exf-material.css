@@ -18,7 +18,11 @@
 
 .exf-container.exf-theme-material .exf-ctl-cnt {
   position: relative;
-  margin-top: 2rem;
+  margin-top: 1rem;
+}
+
+.exf-container.exf-theme-material .exf-ctl-cnt .exf-ctl {
+  text-align: left;
 }
 
 .exf-container.exf-theme-material .exf-ctl-cnt:not(.exf-std-lbl) > .exf-ctl > .exf-label {
@@ -54,7 +58,6 @@
 }
 
 .exf-container.exf-theme-material .exf-ctl-cnt > .exf-ctl > select {
-  width: 100%;
   font-size: 1rem;
   height: 1.6rem;
   padding: 0.125rem 0.125rem 0.0625rem;
@@ -258,7 +261,7 @@
 }
 
 .exf-container.exf-theme-material .exf-cnt .exf-ctl-group {
-  padding-top: 1rem;
+  padding-top: 2rem;
 }
 
 .exf-container.exf-theme-material .exf-input-group > .exf-ctl .exf-caption-main {
@@ -317,7 +320,7 @@
 }
 
 .exf-container.exf-theme-material .exf-input-group.tiles > .exf-ctl > div .exf-ilc-cnt > input:checked + .exf-caption {
-  border: 2px solid var(--color-button-text);
+  border: 2px solid var(--color-button);
   -webkit-transform: scale(1, 1);
           transform: scale(1, 1);
 }
