@@ -742,7 +742,8 @@ export class ExoListControl extends ExoElementControl {
             value: (i.value !== undefined) ? i.value : i,
             type: _.optionType,
             inputname: f.name,
-            checked: i.checked ? "checked" : "",
+            checked: (i.checked || i.selected) ? "checked" : "",
+            selected: (i.checked || i.selected) ? "selected" : "",
             tooltip: (i.tooltip || i.name || "").replace('{{field}}', ''),
             oid: f.id + "_" + index
         }
@@ -819,7 +820,7 @@ class ExoDropdownListControl extends ExoListControl {
 
     async render() {
         let f = this.context.field;
-        const tpl = /*html*/`<option class="{{class}}" value="{{value}}">{{name}}</option>`;
+        const tpl = /*html*/`<option class="{{class}}" {{selected}} value="{{value}}">{{name}}</option>`;
         await this.populateList(this.htmlElement, tpl);
         let elm = super.render();
         this.container.classList.add("exf-input-group", "exf-std-lbl");

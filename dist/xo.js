@@ -663,6 +663,23 @@
     DOM.setupGrid();
   }());
 
+  class ExoFormModel {
+    constructor(exo) {
+      _defineProperty(this, "_data", {});
+
+      this.exo = exo;
+
+      if (exo.formSchema.model) {
+        this._data = exo.formSchema.model;
+      } else {
+        this._data = this.exo.getFormValues();
+      }
+
+      console.log("Model", this._data);
+    }
+
+  }
+
   /**
    * ExoForm class. 
    * Created using ExoFormContext create() method
@@ -736,6 +753,8 @@
 
             _._applyLoadedSchema();
 
+            _._setupModel();
+
             resolve(_);
           }
         };
@@ -762,6 +781,10 @@
           loader(schema);
         }
       });
+    }
+
+    _setupModel() {
+      this.dataModel = new ExoFormModel(this);
     }
 
     isValidHttpUrl(string) {
@@ -1165,14 +1188,16 @@
 
       const data = {};
       return new Promise((resolve, reject) => {
-        //let formData = Object.fromEntries(new FormData(_.form));
-        _.formSchema.pages.forEach(p => {
-          p.fields.forEach(f => {
-            data[f.name] = f._control.value;
+        if (Array.isArray(_.formSchema.pages)) {
+          _.formSchema.pages.forEach(p => {
+            if (Array.isArray(p.fields)) {
+              p.fields.forEach(f => {
+                data[f.name] = f._control.value;
+              });
+            }
           });
-        });
+        }
 
-        console.debug("Form data to post", data);
         resolve(data);
       });
     }
@@ -2310,7 +2335,8 @@
         value: i.value !== undefined ? i.value : i,
         type: _.optionType,
         inputname: f.name,
-        checked: i.checked ? "checked" : "",
+        checked: i.checked || i.selected ? "checked" : "",
+        selected: i.checked || i.selected ? "selected" : "",
         tooltip: (i.tooltip || i.name || "").replace('{{field}}', ''),
         oid: f.id + "_" + index
       };
@@ -2389,7 +2415,7 @@
       this.context.field;
       const tpl =
       /*html*/
-      `<option class="{{class}}" value="{{value}}">{{name}}</option>`;
+      `<option class="{{class}}" {{selected}} value="{{value}}">{{name}}</option>`;
       await this.populateList(this.htmlElement, tpl);
       let elm = super.render();
       this.container.classList.add("exf-input-group", "exf-std-lbl");

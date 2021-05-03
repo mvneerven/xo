@@ -6,6 +6,7 @@
 import Core from '../pwa/Core';
 import DOM from '../pwa/DOM';
 import ExoFormFactory from './ExoFormFactory';
+import ExoFormModel from './ExoFormModel';
 
 /**
  * ExoForm class. 
@@ -34,7 +35,7 @@ class ExoForm {
         templates: {
             empty: /*html*/`<span data-replace="true"></span>`,
             exocontainer: /*html*/`<div class="exf-container"></div>`,
-           // static: /*html*/`<div class="{{class}}" ></div>`,
+            // static: /*html*/`<div class="{{class}}" ></div>`,
             fieldset: /*html*/`<fieldset data-page="{{pagenr}}" data-pageid="{{pageid}}" class="exf-cnt {{class}}"></fieldset>`,
             legend: /*html*/`<legend class="exf-page-title">{{legend}}</legend>`,
             pageIntro: /*html*/`<p class="exf-page-intro">{{intro}}</p>`,
@@ -50,7 +51,7 @@ class ExoForm {
 
 
     defaults = {
-        
+
         multiValueFieldTypes: ["checkboxlist", "tags"],
 
         ruleMethods: {
@@ -99,10 +100,10 @@ class ExoForm {
                 if (!schema)
                     resolve(_)
                 else {
-                    _.formSchema = { 
-                        ..._.defaults, 
+                    _.formSchema = {
+                        ..._.defaults,
                         ..._.context.config.defaults || {},
-                        ...schema 
+                        ...schema
                     };
 
                     _.triggerEvent(ExoFormFactory.events.schemaLoaded);
@@ -113,6 +114,8 @@ class ExoForm {
 
                     _._applyLoadedSchema();
 
+                    _._setupModel();
+
                     resolve(_);
                 }
             }
@@ -120,10 +123,10 @@ class ExoForm {
 
             if (!isSchema) {
 
-                if(this.isValidHttpUrl(schema)){
+                if (this.isValidHttpUrl(schema)) {
                     schema = new URL(schema, this.context.baseUrl);
                 }
-                else{
+                else {
                     reject("The schema parameter is not an ExoForm schema object nor a valid URL.");
                 }
 
@@ -143,6 +146,10 @@ class ExoForm {
             }
         });
 
+    }
+
+    _setupModel() {
+        //this.dataModel = new ExoFormModel(this);
     }
 
     isValidHttpUrl(string) {
@@ -444,12 +451,12 @@ class ExoForm {
      * @param {object} options - query options. e.g. {inScope: true} for querying only fields that are currenttly in scope.
      * @return {array} - All matched fields in the current ExoForm schema
      */
-    query(matcher, options) {        
+    query(matcher, options) {
         if (matcher === undefined) matcher = () => { return true };
         options = options || {};
         let matches = [];
         this.formSchema.pages.forEach(p => {
-            if(!options.inScope || this.isPageInScope(p)){
+            if (!options.inScope || this.isPageInScope(p)) {
                 let fieldIndex = 0
                 p.fields.forEach(f => {
                     f._page = {
@@ -474,8 +481,8 @@ class ExoForm {
      * @param {object} p - Page object (with index numeric property)
      * @returns {boolean} - true if page is in scope
      */
-    isPageInScope(p){
-        let pageElm = this.form.querySelector(".exf-page[data-page='" + p.index +"']:not([data-skip='true'])");
+    isPageInScope(p) {
+        let pageElm = this.form.querySelector(".exf-page[data-page='" + p.index + "']:not([data-skip='true'])");
         return pageElm !== null;
     }
 
@@ -540,19 +547,18 @@ class ExoForm {
         const _ = this;
         const data = {};
         return new Promise((resolve, reject) => {
-            //let formData = Object.fromEntries(new FormData(_.form));
-
-            _.formSchema.pages.forEach(p => {
-                p.fields.forEach(f => {
-                    data[f.name] = f._control.value;
-
-                })
-            });
-            console.debug("Form data to post", data);
+            if (Array.isArray(_.formSchema.pages)) {
+                _.formSchema.pages.forEach(p => {
+                    if (Array.isArray(p.fields)) {
+                        p.fields.forEach(f => {
+                            data[f.name] = f._control.value;
+                        })
+                    }
+                });
+            }
             resolve(data)
         });
     }
-
 
     getFieldValue(elementOrField) {
 
