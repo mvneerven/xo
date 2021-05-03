@@ -112,7 +112,7 @@
                         validation: "inline"
                     }
                 });
-                const schema = {
+                const schema1 = {
                     pages: [
                         {
                             legend: "Page 1",
@@ -282,6 +282,31 @@
                         }
                     ]
                 };
+
+                const schema = {
+                        "model": {
+                            "person": {
+                            "name": {
+                                "type": "string",
+                                "required": true
+                            }
+                            }
+                        },
+                        "pages": [
+                            {
+                            "legend": "My Form",
+                            "intro": "My form description",
+                            "fields": [
+                                {
+                                "name": "testField",
+                                "caption": "Test Field",
+                                "bind": "person.name"
+                                }
+                            ]
+                            }
+                        ]
+                }
+
 
                 const x = context.createForm();
                 x.on(window.xo.form.factory.events.post, e => {

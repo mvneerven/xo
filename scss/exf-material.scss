@@ -36,23 +36,28 @@
             color: var(--color-label);
         }
 
-
         .exf-cnt {
-                border: 0;
+            border: 0;
 
-                > legend {
-                    font-size: 1.2rem;
-                    font-weight: 600;
-                }
+            > legend {
+                font-size: 1.2rem;
+                font-weight: 600;
             }
-        
+        }
+
+        .exf-page {
+            margin: 0;
+        }
+
+        [data-field-type="multiinput"] {
+            padding-top: 1rem;
+        }
 
         .exf-ctl-cnt {
             position: relative;
             margin-top: 1rem;
-            //margin-bottom: 1rem;
 
-            .exf-ctl{
+            .exf-ctl {
                 text-align: left;
             }
 
@@ -62,13 +67,22 @@
                         position: absolute;
                         pointer-events: none;
                         top: 0.7em;
-                        //left: 0.5em;
                         line-height: 1;
                     }
 
                     > input {
                         color: transparent;
                     }
+                }
+            }
+
+            .exf-ctl-group {
+                padding-top: 2rem;
+            }
+
+            &.exf-lbl-empty {
+                .exf-ctl-group {
+                    padding-top: 0;
                 }
             }
 
@@ -95,7 +109,7 @@
                     font-size: 1rem;
                     height: 1.6rem;
                     padding: 0.125rem 0.125rem 0.0625rem;
-                    margin-top: 2rem;
+                    margin-top: 0.15rem;
                     background: none;
                     border: none;
                     line-height: 1.6;
@@ -187,7 +201,8 @@
                 }
             }
 
-            &.exf-input {
+            &.exf-input,
+            &[data-field-type="dropdown"] {
                 > .exf-ctl {
                     border-bottom: 1px solid var(--color-label);
                     padding-bottom: 0.25rem;
@@ -318,17 +333,7 @@
             }
         }
 
-        .exf-cnt {
-            .exf-ctl-group {
-                padding-top: 2rem;
-            }
-        }
-
-
         .exf-input-group {
-
-           // padding-top: 2rem;
-
             > .exf-ctl {
                 .exf-caption-main {
                     color: var(--color-text);
@@ -344,7 +349,7 @@
                 > .exf-ctl > div {
                     display: grid;
                     grid-gap: 2rem;
-                    grid-template-columns: 1fr 1fr 1fr;                
+                    grid-template-columns: 1fr 1fr 1fr;
 
                     .exf-ilc-cnt {
                         opacity: 0.8;
@@ -365,10 +370,7 @@
                             cursor: pointer;
                         }
 
-                       
-
                         > .exf-caption {
-                            
                             padding: 1rem;
 
                             > .exf-caption-main {

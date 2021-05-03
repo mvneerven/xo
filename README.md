@@ -215,3 +215,10 @@ get value() {
 
 -	The current workspace is now saved, so if you're working on a form, it will be reloaded next time you open the Explorer.
 -	The dark mode switch now immediately switches Ace Editor themes
+
+
+# New in 1.0.33
+
+## Changes
+- containerClass removed. Use 'class' on schema fields to set class names. All classes are added to the containing div (div.exf-ctl-cnt)
+

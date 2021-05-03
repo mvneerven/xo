@@ -34,12 +34,7 @@ class ExoForm {
         templates: {
             empty: /*html*/`<span data-replace="true"></span>`,
             exocontainer: /*html*/`<div class="exf-container"></div>`,
-            //default: /*html*/`<div data-id="{{id}}" class="exf-ctl-cnt {{class}}"><label title="{{caption}}">{{caption}}</label><span data-replace="true"></span></div>`,
-            //nolabel: /*html*/`<div data-id="{{id}}" class="exf-ctl-cnt {{class}}"><span data-replace="true"></span></div>`,
-            //text: /*html*/`<div data-id="{{id}}" class="exf-ctl-cnt exf-base-text {{class}}"><span data-replace="true"></span><label title="{{caption}}">{{caption}}</label></div>`,
-            //labelcontained: /*html*/`<div data-id="{{id}}" class="exf-ctl-cnt {{class}}"><label title="{{tooltip}}"><span data-replace="true"></span> <span>{{caption}}</span></label></div>`,
-            //form: /*html*/`<form class="exf-form {{class}}" method="post"></form>`,
-            static: /*html*/`<div class="{{class}}" ></div>`,
+           // static: /*html*/`<div class="{{class}}" ></div>`,
             fieldset: /*html*/`<fieldset data-page="{{pagenr}}" data-pageid="{{pageid}}" class="exf-cnt {{class}}"></fieldset>`,
             legend: /*html*/`<legend class="exf-page-title">{{legend}}</legend>`,
             pageIntro: /*html*/`<p class="exf-page-intro">{{intro}}</p>`,
@@ -84,21 +79,10 @@ class ExoForm {
             type: "form",
             customMethods: {},
         }
-
         _.options = { ...defOptions, ...opts };
-
-        //NOTE: this is not the loaded formSchema - see load() method.
-        //_.formSchema = {};// { ..._.defaults } // set defaults
-        
-        //_.form = DOM.parseHTML(DOM.format(ExoForm.meta.templates[_.options.type], {
-        //    ..._.formSchema.form || { class: "" }
-        //}));
-        
         _.form = document.createElement("form");
         _.form.setAttribute("method", "post");
         _.form.classList.add("exf-form");
-        //<form class="exf-form {{class}}" method="post"></form>
-
         _.container = DOM.parseHTML(ExoForm.meta.templates.exocontainer);
     }
 

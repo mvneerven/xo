@@ -204,11 +204,13 @@ class ExoControlBase {
             this._htmlElement.setAttribute("data-" + a, this.dataProps[a]);
         }
 
+        let obj = this._scope();
         this.container = DOM.parseHTML(
-
-            this._getContainerTemplate(this._scope())
-
+            this._getContainerTemplate(obj)           
         );
+        if(!obj.caption || obj.caption.length === 0){
+            this.container.classList.add("exf-lbl-empty");
+        }
 
         if (this.container.getAttribute("data-replace") === "true")
             this.container = this.htmlElement;
@@ -820,7 +822,8 @@ class ExoDropdownListControl extends ExoListControl {
         const tpl = /*html*/`<option class="{{class}}" value="{{value}}">{{name}}</option>`;
         await this.populateList(this.htmlElement, tpl);
         let elm = super.render();
-        this.container.classList.add("exf-input-group");
+        this.container.classList.add("exf-input-group", "exf-std-lbl");
+
         return elm;
     }
 }

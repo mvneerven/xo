@@ -16,6 +16,14 @@
   font-weight: 600;
 }
 
+.exf-container.exf-theme-material .exf-page {
+  margin: 0;
+}
+
+.exf-container.exf-theme-material [data-field-type="multiinput"] {
+  padding-top: 1rem;
+}
+
 .exf-container.exf-theme-material .exf-ctl-cnt {
   position: relative;
   margin-top: 1rem;
@@ -34,6 +42,14 @@
 
 .exf-container.exf-theme-material .exf-ctl-cnt:not(.exf-std-lbl) > .exf-ctl > input {
   color: transparent;
+}
+
+.exf-container.exf-theme-material .exf-ctl-cnt .exf-ctl-group {
+  padding-top: 2rem;
+}
+
+.exf-container.exf-theme-material .exf-ctl-cnt.exf-lbl-empty .exf-ctl-group {
+  padding-top: 0;
 }
 
 .exf-container.exf-theme-material .exf-ctl-cnt > .exf-ctl {
@@ -61,7 +77,7 @@
   font-size: 1rem;
   height: 1.6rem;
   padding: 0.125rem 0.125rem 0.0625rem;
-  margin-top: 2rem;
+  margin-top: 0.15rem;
   background: none;
   border: none;
   line-height: 1.6;
@@ -164,31 +180,33 @@
   transition: left 0.5s ease, width 0.5s ease;
 }
 
-.exf-container.exf-theme-material .exf-ctl-cnt.exf-input > .exf-ctl {
+.exf-container.exf-theme-material .exf-ctl-cnt.exf-input > .exf-ctl, .exf-container.exf-theme-material .exf-ctl-cnt[data-field-type="dropdown"] > .exf-ctl {
   border-bottom: 1px solid var(--color-label);
   padding-bottom: 0.25rem;
 }
 
 .exf-container.exf-theme-material .exf-ctl-cnt.exf-input:not(.exf-std-lbl).exf-filled > .exf-ctl input,
 .exf-container.exf-theme-material .exf-ctl-cnt.exf-input:not(.exf-std-lbl).exf-filled > .exf-ctl textarea, .exf-container.exf-theme-material .exf-ctl-cnt.exf-input:not(.exf-std-lbl).exf-focus > .exf-ctl input,
-.exf-container.exf-theme-material .exf-ctl-cnt.exf-input:not(.exf-std-lbl).exf-focus > .exf-ctl textarea {
+.exf-container.exf-theme-material .exf-ctl-cnt.exf-input:not(.exf-std-lbl).exf-focus > .exf-ctl textarea, .exf-container.exf-theme-material .exf-ctl-cnt[data-field-type="dropdown"]:not(.exf-std-lbl).exf-filled > .exf-ctl input,
+.exf-container.exf-theme-material .exf-ctl-cnt[data-field-type="dropdown"]:not(.exf-std-lbl).exf-filled > .exf-ctl textarea, .exf-container.exf-theme-material .exf-ctl-cnt[data-field-type="dropdown"]:not(.exf-std-lbl).exf-focus > .exf-ctl input,
+.exf-container.exf-theme-material .exf-ctl-cnt[data-field-type="dropdown"]:not(.exf-std-lbl).exf-focus > .exf-ctl textarea {
   color: var(--color);
 }
 
-.exf-container.exf-theme-material .exf-ctl-cnt.exf-input:not(.exf-std-lbl).exf-filled > .exf-ctl > .exf-label, .exf-container.exf-theme-material .exf-ctl-cnt.exf-input:not(.exf-std-lbl).exf-focus > .exf-ctl > .exf-label {
+.exf-container.exf-theme-material .exf-ctl-cnt.exf-input:not(.exf-std-lbl).exf-filled > .exf-ctl > .exf-label, .exf-container.exf-theme-material .exf-ctl-cnt.exf-input:not(.exf-std-lbl).exf-focus > .exf-ctl > .exf-label, .exf-container.exf-theme-material .exf-ctl-cnt[data-field-type="dropdown"]:not(.exf-std-lbl).exf-filled > .exf-ctl > .exf-label, .exf-container.exf-theme-material .exf-ctl-cnt[data-field-type="dropdown"]:not(.exf-std-lbl).exf-focus > .exf-ctl > .exf-label {
   top: -1.2em;
   left: 0;
   font-size: 0.8rem;
 }
 
-.exf-container.exf-theme-material .exf-ctl-cnt.exf-input.exf-rng-output output {
+.exf-container.exf-theme-material .exf-ctl-cnt.exf-input.exf-rng-output output, .exf-container.exf-theme-material .exf-ctl-cnt[data-field-type="dropdown"].exf-rng-output output {
   position: absolute;
   top: -1.2em;
   font-size: 0.8rem;
   right: 1rem;
 }
 
-.exf-container.exf-theme-material .exf-ctl-cnt.exf-input.exf-std-lbl > .exf-ctl > .exf-label {
+.exf-container.exf-theme-material .exf-ctl-cnt.exf-input.exf-std-lbl > .exf-ctl > .exf-label, .exf-container.exf-theme-material .exf-ctl-cnt[data-field-type="dropdown"].exf-std-lbl > .exf-ctl > .exf-label {
   position: absolute;
   top: -1.2em;
   left: 0;
@@ -258,10 +276,6 @@
 
 .exf-container.exf-theme-material .exf-ctl-cnt.exf-base-embed > .exf-ctl > .exf-embed-container {
   margin-top: 3rem;
-}
-
-.exf-container.exf-theme-material .exf-cnt .exf-ctl-group {
-  padding-top: 2rem;
 }
 
 .exf-container.exf-theme-material .exf-input-group > .exf-ctl .exf-caption-main {

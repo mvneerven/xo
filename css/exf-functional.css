@@ -10,7 +10,10 @@
   width: auto !important;
 }
 
-.exf-container .exf-required > .exf-ctl > label::after {
+.exf-container .exf-required:not(.exf-lbl-empty) > .exf-ctl > label::after {
+  position: absolute;
+  margin-left: .2rem;
+  margin-top: -.2rem;
   content: " *";
   color: inherit;
   color: var(--color-label-active);
