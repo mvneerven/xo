@@ -222,3 +222,66 @@ get value() {
 ## Changes
 - containerClass removed. Use 'class' on schema fields to set class names. All classes are added to the containing div (div.exf-ctl-cnt)
 
+# New in 1.1.0
+
+## Model Binding
+
+You can now bind your ExoForm data to a model.
+
+```json
+{
+  "model": {
+    "instance": {
+      "person": {
+        "name": "Marc",
+        "age": 57,
+        "gender": "m"
+      }
+    }
+  },
+  "pages": [
+    {
+      "legend": "My Form",
+      "intro": "My form description",
+      "fields": [
+        {
+          "name": "testField1",
+          "type": "text",
+          "caption": "Name",
+          "bind": "person.name"
+        },
+        {
+          "name": "testField2",
+          "type": "number",
+          "caption": "Age",
+          "bind": "person.age"
+        },
+        {
+          "name": "testField3",
+          "type": "dropdown",
+          "caption": "Your age please, @person.name",
+          "bind": "person.gender",
+          "items": [
+            {
+              "name": "Please choose",
+              "value": ""
+            },
+            {
+              "name": "Male",
+              "value": "m"
+            },
+            {
+              "name": "Female",
+              "value": "f"
+            },
+            {
+              "name": "Wish not to share",
+              "value": "u"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+```
