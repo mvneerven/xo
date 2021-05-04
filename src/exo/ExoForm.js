@@ -7,6 +7,7 @@ import Core from '../pwa/Core';
 import DOM from '../pwa/DOM';
 import ExoFormFactory from './ExoFormFactory';
 import ExoFormModel from './ExoFormModel';
+import ExoFormBindingResolver from './ExoFormBindingResolver';
 
 /**
  * ExoForm class. 
@@ -35,7 +36,6 @@ class ExoForm {
         templates: {
             empty: /*html*/`<span data-replace="true"></span>`,
             exocontainer: /*html*/`<div class="exf-container"></div>`,
-            // static: /*html*/`<div class="{{class}}" ></div>`,
             fieldset: /*html*/`<fieldset data-page="{{pagenr}}" data-pageid="{{pageid}}" class="exf-cnt {{class}}"></fieldset>`,
             legend: /*html*/`<legend class="exf-page-title">{{legend}}</legend>`,
             pageIntro: /*html*/`<p class="exf-page-intro">{{intro}}</p>`,
@@ -43,7 +43,6 @@ class ExoForm {
             datalistItem: /*html*/`<option label="{{label}}" value="{{value}}" >`,
             button: /*html*/`<button name="{{name}}" type="{{type}}" class="btn {{class}}">{{caption}}</button>`,
         }
-
     }
 
     static _staticConstructor = (() => { ExoForm.setup() })();
@@ -65,26 +64,24 @@ class ExoForm {
     }
 
     constructor(context, opts) {
-        const _ = this;
-
         Core.addEvents(this); // add simple event system
 
-        // Use const factory = await ExoFormFactory.build() and factory.createForm()"
+        // Use const context = await ExoFormFactory.build() and context.createForm()
         if (!context || !(context instanceof ExoFormFactory.Context))
             throw "Invalid instantiation of ExoForm: need ExoFormContext instance";
 
-        _.context = context;
+        this.context = context;
 
         opts = opts || {};
         const defOptions = {
             type: "form",
             customMethods: {},
         }
-        _.options = { ...defOptions, ...opts };
-        _.form = document.createElement("form");
-        _.form.setAttribute("method", "post");
-        _.form.classList.add("exf-form");
-        _.container = DOM.parseHTML(ExoForm.meta.templates.exocontainer);
+        this.options = { ...defOptions, ...opts };
+        this.form = document.createElement("form");
+        this.form.setAttribute("method", "post");
+        this.form.classList.add("exf-form");
+        this.container = DOM.parseHTML(ExoForm.meta.templates.exocontainer);
     }
 
     /**
@@ -106,16 +103,19 @@ class ExoForm {
                         ...schema
                     };
 
+                    this.dataModel = new ExoFormModel(this, this._mappedInstance);
+                    this.dataModel.on("change", e => {
+                        e.detail.state = "change";
+                        this.triggerEvent(ExoFormFactory.events.dataModelChange, e.detail)
+                    }).on("ready", e => {
+                        e.detail.state = "ready";
+                        this.triggerEvent(ExoFormFactory.events.dataModelChange, e.detail)
+                    });
+
                     _.triggerEvent(ExoFormFactory.events.schemaLoaded);
-
                     _.formSchema.totalFieldCount = _.getTotalFieldCount(_.formSchema)
-
                     _._createComponents();
-
                     _._applyLoadedSchema();
-
-                    _._setupModel();
-
                     resolve(_);
                 }
             }
@@ -123,7 +123,7 @@ class ExoForm {
 
             if (!isSchema) {
 
-                if (this.isValidHttpUrl(schema)) {
+                if (Core.isUrl(schema)) {
                     schema = new URL(schema, this.context.baseUrl);
                 }
                 else {
@@ -148,26 +148,12 @@ class ExoForm {
 
     }
 
-    _setupModel() {
-        //this.dataModel = new ExoFormModel(this);
-    }
-
-    isValidHttpUrl(string) {
-        let url;
-
-        try {
-            url = new URL(string, window.location.toString());
-        } catch (_) {
-            return false;
-        }
-
-        return true;
-        //return url.protocol === "http:" || url.protocol === "https:";
+    bind(instance) {
+        this._mappedInstance = instance;
     }
 
     _createComponents() {
         this.addins = {};
-
         for (var n in ExoFormFactory.meta) {
             let cmp = ExoFormFactory.meta[n];
             let tp = cmp.type.getType(this);
@@ -176,21 +162,17 @@ class ExoForm {
     }
 
     _applyLoadedSchema() {
-        const _ = this;
-
-        _.formSchema.form = _.formSchema.form || {};
-
-        let formClasses = _.formSchema.form.class ? _.formSchema.form.class.split(' ') : ["standard"];
-
+        this.formSchema.form = this.formSchema.form || {};
+        let formClasses = this.formSchema.form.class ? this.formSchema.form.class.split(' ') : ["standard"];
         formClasses.forEach(c => {
-            _.form.classList.add(c);
+            this.form.classList.add(c);
         })
     }
 
     triggerEvent(eventName, detail, ev) {
         console.debug("Triggering event", eventName, "detail: ", detail)
         if (!ev) {
-            ev = new Event(eventName, { "bubbles": false, "cancelable": true });
+            ev = new Event(eventName, { bubbles: false, cancelable: true });
         }
 
         ev.detail = {
@@ -202,15 +184,17 @@ class ExoForm {
     }
 
     getTotalFieldCount(schema) {
-        let totalFieldCount = 0;
-        if (!schema || !schema.pages || schema.pages.length === 0)
-            return 0;
+        // let totalFieldCount = 0;
+        // if (!schema || !schema.pages || schema.pages.length === 0)
+        //     return 0;
 
-        schema.pages.forEach(p => {
-            if (p && p.fields)
-                totalFieldCount += p.fields.length;
-        })
-        return totalFieldCount;
+        // schema.pages.forEach(p => {
+        //     if (p && p.fields)
+        //         totalFieldCount += p.fields.length;
+        // })
+        // return totalFieldCount;
+
+        return this.query().length
     }
 
     isPageValid(index) {
@@ -261,43 +245,52 @@ class ExoForm {
     }
 
     _finalizeForm() {
-        const _ = this;
         console.debug("Finalizing form, rendering is ready");
 
-        _.addins.navigation.render();
+        this.addins.navigation.render();
 
-        _.addins.progress.render();
+        this.addins.progress.render();
 
-        _.addins.theme.apply();
+        this.addins.theme.apply();
 
-        _.form.addEventListener("submit", e => {
+        this.form.addEventListener("submit", e => {
             e.preventDefault(); // preventing default behaviour
             e.stopPropagation();
-            _.submitForm(e);
+            this.submitForm(e);
         });
 
         // stop propagating events to above form 
         // in case for is embedded in another one (such as ExoFormBuilder)
-        _.form.addEventListener("change", e => {
+        this.form.addEventListener("change", e => {
             e.stopPropagation();
         })
 
-        _._checkRules();
-        _._updateView(0);
-        _.triggerEvent(ExoFormFactory.events.renderReady);
-
+        this._checkRules();
+        this._updateView(0);
+        this.triggerEvent(ExoFormFactory.events.renderReady);
+        this.listenFormModelChanges();
 
         // Test for fom becoming user-interactive 
         var observer = new IntersectionObserver((entries, observer) => {
-            if (_.container.offsetHeight) {
+            if (this.container.offsetHeight) {
                 observer = null;
                 console.debug("Form is now interactive");
-                _.triggerEvent(ExoFormFactory.events.interactive);
+                this.triggerEvent(ExoFormFactory.events.interactive);
             }
 
         }, { root: document.documentElement });
 
-        observer.observe(_.container);
+        observer.observe(this.container);
+    }
+
+    listenFormModelChanges() {
+        const resolver = new ExoFormBindingResolver(this);
+
+        this.on(ExoFormFactory.events.dataModelChange, e => {
+            resolver.resolve();
+        })
+
+        resolver.resolve();
     }
 
     _cleanup() {
@@ -455,22 +448,28 @@ class ExoForm {
         if (matcher === undefined) matcher = () => { return true };
         options = options || {};
         let matches = [];
+
+        if (!this.formSchema || !this.formSchema.pages || !Array.isArray(this.formSchema.pages))
+            return matches;
+
         this.formSchema.pages.forEach(p => {
             if (!options.inScope || this.isPageInScope(p)) {
                 let fieldIndex = 0
-                p.fields.forEach(f => {
-                    f._page = {
-                        index: p.index,
-                        legend: p.legend
-                    }
-                    f._index = fieldIndex;
+                if (Array.isArray(p.fields)) {
+                    p.fields.forEach(f => {
+                        f._page = {
+                            index: p.index,
+                            legend: p.legend
+                        }
+                        f._index = fieldIndex;
 
-                    if (matcher(f)) {
-                        matches.push(f)
-                    }
+                        if (matcher(f)) {
+                            matches.push(f)
+                        }
 
-                    fieldIndex++;
-                });
+                        fieldIndex++;
+                    });
+                }
             }
         });
         return matches;
@@ -533,31 +532,36 @@ class ExoForm {
 
         let e = { target: _.form };
 
-        _.getFormValues(ev).then(data => {
-            _.triggerEvent(ExoFormFactory.events.post, { postData: data })
-            e.returnValue = false;
-        })
+        let data = _.getFormValues(ev);
+        _.triggerEvent(ExoFormFactory.events.post, { postData: data })
+        e.returnValue = false;
     }
 
     /**
      * Gets the current form's values
-     * @return {promise} - A promise with the typed data posted
+     * @return {object} - The typed data posted
      */
     getFormValues() {
-        const _ = this;
         const data = {};
-        return new Promise((resolve, reject) => {
-            if (Array.isArray(_.formSchema.pages)) {
-                _.formSchema.pages.forEach(p => {
-                    if (Array.isArray(p.fields)) {
-                        p.fields.forEach(f => {
-                            data[f.name] = f._control.value;
-                        })
-                    }
-                });
+        // if (Array.isArray(this.formSchema.pages)) {
+        //     this.formSchema.pages.forEach(p => {
+        //         if (Array.isArray(p.fields)) {
+        //             p.fields.forEach(f => {
+        //                 if (f._control) {
+        //                     data[f.name] = f._control.value;
+        //                 }
+        //             })
+        //         }
+        //     });
+        // }
+
+        this.query().forEach(f => {
+            if (f._control) {
+                data[f.name] = f._control.value;
             }
-            resolve(data)
-        });
+        })
+
+        return data;
     }
 
     getFieldValue(elementOrField) {
@@ -741,7 +745,6 @@ class ExoForm {
 
                 if (!f || !f.type)
                     throw "Incorrect field options. Must be object with at least 'type' property. " + JSON.stringify(f)
-
 
                 f.id = f.id || _._generateUniqueElementId();
 

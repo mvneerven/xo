@@ -332,26 +332,7 @@ class DOM {
 
     }
 
-    static getObjectValue(obj, path, def) {
-        const _ = this;
-        // Get the path as an array
-        path = DOM.stringToPath(path);
-
-        // Cache the current object
-        var current = obj;
-
-        // For each item in the path, dig into the object
-        for (var i = 0; i < path.length; i++) {
-
-            // If the item isn't found, return the default (or null)
-            if (!current[path[i]]) return def;
-
-            // Otherwise, update the current  value
-            current = current[path[i]];
-
-        }
-        return current;
-    }
+    
 
     static format(template, data, settings) {
         settings = settings || { empty: '' };
@@ -370,7 +351,7 @@ class DOM {
             match = match.slice(2, -2);
 
             // Get the value
-            var val = DOM.getObjectValue(data, match.trim());
+            var val = Core.getObjectValue(data, match.trim());
 
             // Replace
             if (!val) return settings.empty !== undefined ? settings.empty : '{{' + match + '}}';
@@ -380,28 +361,7 @@ class DOM {
         return template;
     }
 
-    static stringToPath(path) {
-
-        // If the path isn't a string, return it
-        if (typeof path !== 'string') return path;
-
-        // Create new array
-        var output = [];
-
-        // Split to an array with dot notation
-        path.split('.').forEach(function (item) {
-
-            // Split to an array with bracket notation
-            item.split(/\[([^}]+)\]/g).forEach(function (key) {
-
-                // Push to the new array
-                if (key.length > 0) {
-                    output.push(key);
-                }
-            });
-        });
-        return output;
-    }
+    
 
     static replace(oldElm, newElm) {
         let dummy = oldElm;

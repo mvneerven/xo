@@ -60,20 +60,19 @@
         <section data-pwa-area="main"></section>
         <section data-pwa-area="panel" class="pwa-pinnable"></section>
     </main>
-    <footer>&copy; 2021 Neerventure</footer>
+
 
     <script type="module" src="/dist/xo.js"></script>
 
     <script type="module">
+
         class App extends window.xo.pwa {
             routerReady() {
                 this.router.on(window.xo.pwa.Router.events.route, e => {
                     document.title = "ExoForm - " + e.detail.module.title
                 })
-
             }
         }
-
 
         class ExoTest extends window.xo.form.fields.base.controls.div.type {
             async render() {
@@ -107,6 +106,9 @@
 
         class DefMod extends window.xo.route {
             async render(path) {
+
+                this.app.UI.areas.main.add(DOM.parseHTML('<code cols="80" style="width: 70%; height: 200px"  class="code" id="model"></code>'));
+
                 const context = await window.xo.form.factory.build({
                     defaults: {
                         validation: "inline"
@@ -284,37 +286,69 @@
                 };
 
                 const schema = {
-                        "model": {
-                            "person": {
-                            "name": {
-                                "type": "string",
-                                "required": true
-                            }
-                            }
-                        },
-                        "pages": [
-                            {
+                    // model: {
+                    //     instance: {
+                    //         person: {
+                    //             name: "Marc",
+                    //             age: 57,
+                    //             gender: "m"
+                    //         }
+                    //     }
+                    // },
+
+                    pages: [
+                        {
                             "legend": "My Form",
                             "intro": "My form description",
                             "fields": [
                                 {
-                                "name": "testField",
-                                "caption": "Test Field",
-                                "bind": "person.name"
+                                    "name": "name",
+                                    "type": "text",
+                                    "caption": "Name",
+                                    "bind": "person.name",
+                                    "value": "Piet"
+                                },
+
+                                {
+                                    "name": "age",
+                                    "type": "number",
+                                    "caption": "Age",
+                                    "bind": "person.age"
+                                },
+
+                                {
+                                    "name": "gender",
+                                    "type": "radiobuttonlist",
+                                    "caption": "Gender",
+                                    "items": [{ name: "Male", value: "m" }, { name: "Female", value: "f" }],
+                                    "bind": "person.gender"
                                 }
                             ]
-                            }
-                        ]
+                        }
+                    ]
                 }
 
-
                 const x = context.createForm();
+
                 x.on(window.xo.form.factory.events.post, e => {
                     alert(JSON.stringify(e.detail.postData, null, 2))
-                })
-                await x.load(schema);
-                let result = await x.renderForm();
+                }).on(window.xo.form.factory.events.dataModelChange, e => {
+                    document.getElementById("model").innerText = x.dataModel.toString();
+                });
 
+                const model = {
+                    person: {
+                        name: "Marc",
+                        age: 57,
+                        gender: "m"
+                    }
+                }
+
+                x.bind(model);
+
+                await x.load(schema);
+
+                let result = await x.renderForm();
                 this.app.UI.areas.main.add(result.container);
             }
         }

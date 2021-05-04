@@ -94,6 +94,12 @@
   margin-bottom: 2em;
 }
 
+.exf-container .exf-page > .exf-ctl-cnt .exf-label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+}
+
 .exf-container .exf-page > .exf-ctl-cnt .exf-ctl-cnt {
   margin-bottom: 1em;
 }

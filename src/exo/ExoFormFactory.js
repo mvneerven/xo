@@ -140,7 +140,8 @@ class ExoFormFactory {
         change: ExoFormFactory._ev_pfx + "change", // when any control on the form changes
         reportValidity: ExoFormFactory._ev_pfx + "report-validity", // when form control validity is reported
         schemaLoaded: ExoFormFactory._ev_pfx + "form-loaded", // when loading the form schema is complete
-        interactive: ExoFormFactory._ev_pfx + "form-interactive" // when form is actually shown to user
+        interactive: ExoFormFactory._ev_pfx + "form-interactive", // when form is actually shown to user
+        dataModelChange: ExoFormFactory._ev_pfx + "datamodel-change" // when the underlying datamodel to which the form is bound changes
     }
 
     static meta = {
@@ -359,7 +360,11 @@ class ExoFormFactory {
         return parseInt(value) > 0 || value === "1" || value === "true" || value === "on";
     }
 
-    static getFieldFromElement(e) {
+    static getFieldFromElement(e, options) {
+        options = {
+            master: false,
+            ...(options || {})
+        }
         let field = null;
         if (e.getAttribute("data-exf")) {
             field = e.data["field"];
@@ -376,6 +381,15 @@ class ExoFormFactory {
                 field = e.data["field"];
             }
         }
+
+        if(e && options.master){
+            let masterElement = e.closest("[data-type='multiinput']");
+            if(masterElement){
+                e = masterElement;
+                field = e.data["field"];
+            }
+        } 
+
         return field;
     }
 

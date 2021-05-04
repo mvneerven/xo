@@ -36,7 +36,7 @@ class ExoFileDropControl extends ExoBaseControls.controls.input.type {
         _.container.querySelector(".exf-ctl").appendChild(_.previewDiv);
         _.container.classList.add("exf-filedrop");
 
-        _.bind(
+        _.bindEvents(
             data => {
                 if (!data.error) {
                     var thumb = DOM.parseHTML('<div data-id="' + data.fileName + '" class="thumb ' + data.type.replace('/', ' ') + '"></div>');
@@ -84,7 +84,7 @@ class ExoFileDropControl extends ExoBaseControls.controls.input.type {
         })
     }
 
-    bind(cb) {
+    bindEvents(cb) {
 
         const _ = this;
 
@@ -194,12 +194,6 @@ class ExoFileDropControl extends ExoBaseControls.controls.input.type {
     get valid() {
         return this.htmlElement, checkValidity();
     }
-
-    // // Used to get localized standard validation message 
-    // getValidationMessage() {
-    //     let msg = "";
-    //     return msg;
-    // }
 }
 
 class ExoCKRichEditor extends ExoBaseControls.controls.div.type {
@@ -766,8 +760,8 @@ class MultiInputControl extends ExoBaseControls.controls.div.type {
     }
 
     set value(data) {
-        for (var n in _.fields) {
-            var elm = _._qs(n);
+        for (var n in this.fields) {
+            var elm = this._qs(n);
             let fld = ExoFormFactory.getFieldFromElement(elm);
             fld._control.value = data[n];
         }

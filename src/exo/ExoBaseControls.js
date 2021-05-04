@@ -74,17 +74,17 @@ class ExoControlBase {
         this.htmlElement.appendChild(elm);
     }
 
-    typeConvert(value){
+    typeConvert(value) {
         return ExoFormFactory.checkTypeConversion(this.context.field.type, value)
     }
 
 
-    get value(){
+    get value() {
         let v = this.htmlElement.value;
         return this.typeConvert(v);
     }
 
-    set value(data){
+    set value(data) {
         this.htmlElement.value = data;
     }
 
@@ -206,9 +206,9 @@ class ExoControlBase {
 
         let obj = this._scope();
         this.container = DOM.parseHTML(
-            this._getContainerTemplate(obj)           
+            this._getContainerTemplate(obj)
         );
-        if(!obj.caption || obj.caption.length === 0){
+        if (!obj.caption || obj.caption.length === 0) {
             this.container.classList.add("exf-lbl-empty");
         }
 
@@ -226,6 +226,13 @@ class ExoControlBase {
 
         if (this.context.field.required) {
             this.container.classList.add("exf-required");
+        }
+
+        // apply value if set in field
+        if(this.context.field.value){
+            this.value = this.context.field.value;
+            if (this.value)
+                this.container.classList.add("exf-filled");
         }
 
         this._addContainerClasses();
@@ -460,7 +467,7 @@ export class ExoInputControl extends ExoElementControl {
         }
 
         await super.render();
-
+                
         this.testDataList();
 
 
@@ -792,12 +799,12 @@ export class ExoListControl extends ExoElementControl {
     }
 
     async render() {
-        let elm = await super.render();       
-
+        let elm = await super.render();
+        
         switch (this.view) {
             case "tiles":
-                elm.classList.add("tiles");        
-                
+                elm.classList.add("tiles");
+
                 break;
             case "list":
                 elm.classList.add("list");
@@ -842,7 +849,7 @@ class ExoInputListControl extends ExoListControl {
 
     async render() {
         let f = this.context.field;
-        
+
         const tpl = /*html*/`<div class="exf-ilc-cnt" title="{{tooltip}}">
             <input class="{{class}}" {{checked}} name="{{inputname}}" value="{{value}}" type="{{type}}" id="{{oid}}" />
             <label for="{{oid}}" class="exf-caption">
@@ -873,12 +880,14 @@ class ExoInputListControl extends ExoListControl {
         return true;
     }
 
-    get value(){
+    get value() {
         return DOM.getValue(this.htmlElement.querySelector("[name]"));
     }
 
-    set value(data){
-        debugger;
+    set value(data) {
+        let inp = this.htmlElement.querySelector("[name]");
+        if(inp)
+            inp.value = data;
     }
 
     // Used to get localized standard validation message 
@@ -908,6 +917,18 @@ class ExoRadioButtonListControl extends ExoInputListControl {
     constructor(context) {
         super(context);
     }
+
+    set value(data) {
+        let inp = this.htmlElement.querySelectorAll("[name]").forEach(el=>{
+            if(el.value == data)
+                el.checked = true;
+        });
+    }
+
+    get value() {
+        let inp = this.htmlElement.querySelector("[name]:checked");
+        return inp ? inp.value : "";
+    }
 }
 
 class ExoCheckboxListControl extends ExoInputListControl {
@@ -916,7 +937,7 @@ class ExoCheckboxListControl extends ExoInputListControl {
 
     static returnValueType = Array;
 
-    get value(){
+    get value() {
         let ar = [];
         this.container.querySelectorAll(":checked").forEach(i => {
             ar.push(i.value);
@@ -954,7 +975,7 @@ class ExoCheckboxControl extends ExoCheckboxListControl {
         return this.container;
     }
 
-    get value(){
+    get value() {
         return this.container.querySelector(":checked") ? true : false;
     }
 
@@ -1003,26 +1024,24 @@ class ExoButtonControl extends ExoElementControl {
 
         _.htmlElement.addEventListener("click", e => {
             if (_.click) {
-                _.context.exo.getFormValues().then(data => {
-                    let f = _.click;
-                    if (typeof (f) !== "function") {
-                        f = _.context.exo.options.customMethods[f];
-                    }
-                    if (typeof (f) !== "function") {
-                        if (_.context.exo.options.host) {
-                            if (typeof (_.context.exo.options.host[_.click]) === "function") {
-                                f = _.context.exo.options.host[_.click];
-                                f.apply(_.context.exo.options.host, [data, e]);
-                                return;
-                            }
-                        }
-                        else {
-                            throw "Not a valid function: " + _.click
+                let data = _.context.exo.getFormValues();
+                let f = _.click;
+                if (typeof (f) !== "function") {
+                    f = _.context.exo.options.customMethods[f];
+                }
+                if (typeof (f) !== "function") {
+                    if (_.context.exo.options.host) {
+                        if (typeof (_.context.exo.options.host[_.click]) === "function") {
+                            f = _.context.exo.options.host[_.click];
+                            f.apply(_.context.exo.options.host, [data, e]);
+                            return;
                         }
                     }
-                    f.apply(_, [data, e]);
-                });
-
+                    else {
+                        throw "Not a valid function: " + _.click
+                    }
+                }
+                f.apply(_, [data, e]);
             }
             else if (_.action) {
                 let actionParts = _.action.split(":");
@@ -1138,14 +1157,14 @@ export class ExoRangeControl extends ExoNumberControl {
     }
 
     async render() {
-        
+
         await super.render();
 
         if (this.showoutput) {
             this.output = document.createElement("output");
-            
+
             this.htmlElement.parentNode.insertBefore(this.output, this.htmlElement.nextSibling);
-            this.htmlElement.addEventListener("input", this._sync); 
+            this.htmlElement.addEventListener("input", this._sync);
             this._sync();
             this.container.classList.add("exf-rng-output")
         }
@@ -1157,13 +1176,13 @@ export class ExoRangeControl extends ExoNumberControl {
     }
 
     _sync() {
-        if(this.output && this.htmlElement)
+        if (this.output && this.htmlElement)
             this.output.value = this.htmlElement.value;
     }
-    
-    set value(data){
+
+    set value(data) {
         super.value = data;
-        if (this.showoutput) 
+        if (this.showoutput)
             this._sync()
     }
 }

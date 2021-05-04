@@ -96,6 +96,13 @@
             position: relative;
             margin-bottom: 2em;
 
+            .exf-label{
+                overflow: hidden;
+                text-overflow: ellipsis;
+                width: 100%;
+            }
+
+
             // nested
             .exf-ctl-cnt {
                 margin-bottom: 1em;
@@ -182,6 +189,7 @@
 
                     > .exf-label {
                         top: -1.7em !important;
+                        
                     }
                 }
             }

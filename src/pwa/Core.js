@@ -66,6 +66,71 @@ class Core {
         new Emitter(obj);
     }
 
+    static getObjectValue(obj, path, def) {
+        // Get the path as an array
+        path = Core.stringToPath(path);
+        // Cache the current object
+        var current = obj;
+
+        // For each item in the path, dig into the object
+        for (var i = 0; i < path.length; i++) {
+            // If the item isn't found, return the default (or null)
+            if (!current[path[i]]) return def;
+            // Otherwise, update the current  value
+            current = current[path[i]];
+        }
+        return current;
+    }
+
+    static isUrl(str) {
+        try {
+            new URL(str, window.location.toString());
+        } catch {
+            return false;
+        }
+        return true;
+    }
+
+    static setObjectValue(obj, path, value) {
+        // Get the path as an array
+        path = Core.stringToPath(path);
+
+        // Cache the current object
+        var current = obj;
+
+        // For each item in the path, dig into the object
+        for (var i = 0; i < path.length; i++) {
+            current = current[path[i]];
+
+            if (i === path.length - 2) {
+                current[path[i+1]] = value;
+            }
+        }
+    }
+
+    static stringToPath(path) {
+
+        // If the path isn't a string, return it
+        if (typeof path !== 'string') return path;
+
+        // Create new array
+        var output = [];
+
+        // Split to an array with dot notation
+        path.split('.').forEach(function (item) {
+
+            // Split to an array with bracket notation
+            item.split(/\[([^}]+)\]/g).forEach(function (key) {
+
+                // Push to the new array
+                if (key.length > 0) {
+                    output.push(key);
+                }
+            });
+        });
+        return output;
+    }
+
     static compare(operator, a, b) {
         return this.operatorTable[operator](a, b);
     }

@@ -10,6 +10,8 @@ class ExoAceCodeEditor extends ExoBaseControls.controls.div.type {
         light: "chrome"
     }
 
+    fontSize = 14;
+
     static returnValueType = String;
 
     constructor(context) {
@@ -18,10 +20,12 @@ class ExoAceCodeEditor extends ExoBaseControls.controls.div.type {
 
         this.acceptProperties(
             { name: "mode", type: String, description: "Ace Editor mode - refer to Ace documentation" },
-            { name: "theme", type: String, description: "Ace Editor theme - refer to Ace documentation" }
+            { name: "theme", type: String, description: "Ace Editor theme - refer to Ace documentation" },
+            { name: "fontSize", type: Number }
         )
 
         this.theme = document.querySelector("html").classList.contains("theme-dark") ? this.defaultThemes.dark : this.defaultThemes.light;
+
     }
 
     async render() {
@@ -34,7 +38,7 @@ class ExoAceCodeEditor extends ExoBaseControls.controls.div.type {
                 var editor = ace.edit(_.htmlElement);
                 editor.setTheme("ace/theme/" + _.theme);
                 editor.session.setMode("ace/mode/" + _.mode);
-                _.htmlElement.style = "min-height: 200px; width: 100%";
+                _.htmlElement.style = "min-height: 200px; width: 100%; font-size: " + this.fontSize + "px;";
 
                 if (typeof (_.value) === "string" && _.value.length) {
                     editor.setValue(_.value, -1);
