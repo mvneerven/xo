@@ -78,7 +78,7 @@ class DragDropSorter {
             sortContainer.classList.remove("drag-sort-in-process");
         }
         else {
-            debugger
+            //TODO
         }
 
         this.triggerEvent("sort", {

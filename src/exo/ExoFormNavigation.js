@@ -161,6 +161,8 @@ class ExoFormWizardNavigation extends ExoFormDefaultNavigation {
 
 class ExoFormSurveyNavigation extends ExoFormWizardNavigation {
 
+    multiValueFieldTypes =  ["checkboxlist", "tags"]; // TODO better solution
+
     render() {
         const _ = this;
         super.render();
@@ -223,50 +225,41 @@ class ExoFormSurveyNavigation extends ExoFormWizardNavigation {
     }
 
     checkForward(f, eventName, e) {
-        const _ = this.exo;
-
-        if (!_.container) {
+        if (!this.exo.container) {
             return;
         }
 
-        _.container.classList.remove("end-reached");
-        _.container.classList.remove("step-ready");
-
-
+        this.exo.container.classList.remove("end-reached");
+        this.exo.container.classList.remove("step-ready");
 
         //var isValid = f._control.htmlElement.reportValidity ? f._control.htmlElement.reportValidity() : true;
         var isValid = f._control.valid;
-        if (isValid || !_.formSchema.multiValueFieldTypes.includes(f.type)) {
-            if (_.currentPage == _.getLastPage()) {
-
-                _.container.classList.add("end-reached");
-
-                _.form.appendChild(
-                    _.container.querySelector(".exf-nav-cnt")
+        if (isValid || !this.multiValueFieldTypes.includes(f.type)) {
+            if (this.exo.currentPage == this.exo.getLastPage()) {
+                this.exo.container.classList.add("end-reached");
+                this.exo.form.appendChild(
+                    this.exo.container.querySelector(".exf-nav-cnt")
                 );
             }
             else {
-
                 // special case: detail.field included - workaround 
                 let type = f.type;
                 if (e.detail && e.detail.field)
                     type = e.detail.field;
 
                 if (!["checkboxlist", "tags"].includes(type)) { // need metadata from controls
-                    _.nextPage();
+                    this.exo.nextPage();
                 }
 
                 else {
-                    _.container.classList.add("step-ready");
+                    this.exo.container.classList.add("step-ready");
                 }
 
                 f._control.container.appendChild(
-                    _.container.querySelector(".exf-nav-cnt")
+                    this.exo.container.querySelector(".exf-nav-cnt")
                 );
-
             }
         }
-
     }
 }
 

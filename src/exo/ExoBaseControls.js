@@ -254,7 +254,7 @@ class ExoControlBase {
                 return false;
             }
             else
-                return exo.testValidity(e, f);
+                return exo.addins.validation.testValidity(e, f);
 
         });
 
@@ -945,6 +945,13 @@ class ExoCheckboxListControl extends ExoInputListControl {
         return ar;
     }
 
+    set value(data){
+        debugger;
+        this.container.querySelectorAll("[name]").forEach(i => {
+            
+        });
+    }
+
 }
 
 class ExoCheckboxControl extends ExoCheckboxListControl {
@@ -978,6 +985,12 @@ class ExoCheckboxControl extends ExoCheckboxListControl {
     get value() {
         return this.container.querySelector(":checked") ? true : false;
     }
+
+    set value(data) {
+        this.container.querySelector("[name]").checked = data;
+    }
+
+    
 
 
 }

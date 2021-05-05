@@ -705,10 +705,7 @@ class MultiInputControl extends ExoBaseControls.controls.div.type {
             }
         }
 
-        _._qs = (name) => {
-            return this.htmlElement.querySelector('[data-multi-name="' + f.name + "_" + name + '"]')
-        }
-
+        
         const rs = async (name, options) => {
             return _.context.exo.renderSingleControl(options)
         }
@@ -746,24 +743,45 @@ class MultiInputControl extends ExoBaseControls.controls.div.type {
             if (this.areas)
                 elm.setAttribute("style", `grid-area: ${n}`);
         };
+        
+        // inform system that this is the master control 
+        // See: ExoFormFactory.getFieldFromElement(... , {master: true})
+        this.htmlElement.setAttribute("exf-data-master", "multiinput");
         return this.container;
+
+    }
+
+    _qs(name){
+        const f = this.context.field;
+        if(this.htmlElement){
+            return this.htmlElement.querySelector('[data-multi-name="' + f.name + "_" + name + '"]')
+        }
+        return "";
     }
 
     get value() {
-        let data = {}
+        let data = this.context.field.value || {};
+
         for (var n in this.fields) {
             var elm = this._qs(n);
-            let fld = ExoFormFactory.getFieldFromElement(elm);
-            data[n] = fld._control.value;
+            if(elm){
+                let fld = ExoFormFactory.getFieldFromElement(elm);
+                data[n] = fld._control.value;
+            }
         }
         return data
     }
 
     set value(data) {
+        
+        this.context.field.value = data
         for (var n in this.fields) {
+            this.fields[n].value = data[n];
             var elm = this._qs(n);
-            let fld = ExoFormFactory.getFieldFromElement(elm);
-            fld._control.value = data[n];
+            if(elm){
+                let fld = ExoFormFactory.getFieldFromElement(elm);
+                fld._control.value = data[n];
+            }
         }
     }
 

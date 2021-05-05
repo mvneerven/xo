@@ -114,7 +114,7 @@ class ExoFormStepsProgress extends ExoFormDefaultProgress {
             ix++;
             li.classList[ix === index ? "add" : "remove"]("active");
 
-            li.classList[_.exo.isPageValid(ix) ? "add" : "remove"]("done");
+            li.classList[_.exo.addins.validation.isPageValid(ix) ? "add" : "remove"]("done");
 
         });
 

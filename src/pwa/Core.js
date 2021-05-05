@@ -91,6 +91,11 @@ class Core {
         return true;
     }
 
+    static scopeEval(scope, script) {
+        return Function('"use strict";' + script).bind(scope)();
+    }
+
+
     static setObjectValue(obj, path, value) {
         // Get the path as an array
         path = Core.stringToPath(path);

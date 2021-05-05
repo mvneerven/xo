@@ -77,6 +77,10 @@
   display: none;
 }
 
+.exf-container .exf-hidden {
+  display: none !important;
+}
+
 .exf-container .exf-error {
   display: inline-block;
   padding: 0.2em;

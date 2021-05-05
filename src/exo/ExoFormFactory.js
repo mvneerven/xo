@@ -8,6 +8,7 @@ import ExoFormThemes from './ExoFormThemes';
 import ExoFormValidation from './ExoFormValidation';
 import ExoFormNavigation from './ExoFormNavigation';
 import ExoFormProgress from './ExoFormProgress';
+import ExoFormRules from './ExoFormRules'
 
 /**
  * Hosts an ExoForm context to create forms with.
@@ -137,11 +138,12 @@ class ExoFormFactory {
         post: ExoFormFactory._ev_pfx + "post", // on form post/submit
         renderStart: ExoFormFactory._ev_pfx + "render-start", // when form rendering starts
         renderReady: ExoFormFactory._ev_pfx + "render-ready", // when form rendering is complete
-        change: ExoFormFactory._ev_pfx + "change", // when any control on the form changes
+        //change: ExoFormFactory._ev_pfx + "change", // when any control on the form changes
         reportValidity: ExoFormFactory._ev_pfx + "report-validity", // when form control validity is reported
         schemaLoaded: ExoFormFactory._ev_pfx + "form-loaded", // when loading the form schema is complete
         interactive: ExoFormFactory._ev_pfx + "form-interactive", // when form is actually shown to user
-        dataModelChange: ExoFormFactory._ev_pfx + "datamodel-change" // when the underlying datamodel to which the form is bound changes
+        dataModelChange: ExoFormFactory._ev_pfx + "datamodel-change", // when the underlying datamodel to which the form is bound changes
+        error: ExoFormFactory._ev_pfx + "error" // when any error occurs
     }
 
     static meta = {
@@ -160,6 +162,10 @@ class ExoFormFactory {
         theme: {
             type: ExoFormThemes,
             description: "Theme component"
+        },
+        rules: {
+            type: ExoFormRules,
+            description: "Rules component"
         }
     }
 
@@ -383,7 +389,7 @@ class ExoFormFactory {
         }
 
         if(e && options.master){
-            let masterElement = e.closest("[data-type='multiinput']");
+            let masterElement = e.closest("[exf-data-master]");
             if(masterElement){
                 e = masterElement;
                 field = e.data["field"];

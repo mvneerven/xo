@@ -46,22 +46,7 @@ class ExoForm {
     }
 
     static _staticConstructor = (() => { ExoForm.setup() })();
-    static setup() { } // reserved for later
-
-
-    defaults = {
-
-        multiValueFieldTypes: ["checkboxlist", "tags"],
-
-        ruleMethods: {
-            "visible": [Field.show, Field.hide],
-            "enabled": [Field.enable, Field.disable],
-            "scope": [Page.scope, Page.descope],
-            "customMethod": [Field.callCustomMethod, () => { }],
-            "goto": [Page.goto, () => { }],
-            "dialog": [Dialog.show, () => { }]
-        }
-    }
+    static setup() { } // reserved for later  
 
     constructor(context, opts) {
         Core.addEvents(this); // add simple event system
@@ -98,7 +83,7 @@ class ExoForm {
                     resolve(_)
                 else {
                     _.formSchema = {
-                        ..._.defaults,
+                        //..._.defaults,
                         ..._.context.config.defaults || {},
                         ...schema
                     };
@@ -113,7 +98,7 @@ class ExoForm {
                     });
 
                     _.triggerEvent(ExoFormFactory.events.schemaLoaded);
-                    _.formSchema.totalFieldCount = _.getTotalFieldCount(_.formSchema)
+                    _.formSchema.totalFieldCount = _.query().length;
                     _._createComponents();
                     _._applyLoadedSchema();
                     resolve(_);
@@ -183,35 +168,6 @@ class ExoForm {
         return this.dispatchEvent(ev);
     }
 
-    getTotalFieldCount(schema) {
-        // let totalFieldCount = 0;
-        // if (!schema || !schema.pages || schema.pages.length === 0)
-        //     return 0;
-
-        // schema.pages.forEach(p => {
-        //     if (p && p.fields)
-        //         totalFieldCount += p.fields.length;
-        // })
-        // return totalFieldCount;
-
-        return this.query().length
-    }
-
-    isPageValid(index) {
-        const _ = this;
-        let hasInvalid = false;
-        try {
-            this.runValidCheck = true; // prevent reportValidity() showing messages on controls 
-            hasInvalid = this.formSchema.pages[index - 1].fields.filter(f => {
-                return !f._control.valid;
-            }).length > 0;
-        }
-        finally {
-            _.runValidCheck = false;
-        }
-        return !hasInvalid;
-    }
-
     /**
      * Render ExoForm schema into a form
      * Returns a Promise
@@ -265,10 +221,12 @@ class ExoForm {
             e.stopPropagation();
         })
 
-        this._checkRules();
+        // TODO reimplement rules using model binding
+        this.addins.rules.checkRules();
+
         this._updateView(0);
         this.triggerEvent(ExoFormFactory.events.renderReady);
-        this.listenFormModelChanges();
+        this._listenFormModelChanges();
 
         // Test for fom becoming user-interactive 
         var observer = new IntersectionObserver((entries, observer) => {
@@ -283,7 +241,7 @@ class ExoForm {
         observer.observe(this.container);
     }
 
-    listenFormModelChanges() {
+    _listenFormModelChanges() {
         const resolver = new ExoFormBindingResolver(this);
 
         this.on(ExoFormFactory.events.dataModelChange, e => {
@@ -347,8 +305,11 @@ class ExoForm {
                                 pageFieldsRendered = this._addRendered(f, rendered, pageFieldsRendered, p, page);
 
                             }).catch(ex => {
+                                let showError = !this.triggerEvent(ExoFormFactory.events.error, { error: ex });
+                                console.error(ex);
                                 let rendered = DOM.parseHTML(DOM.format('<span class="exf-error exf-render-error" title="{{title}}">ERROR</span>', {
                                     title: "Error rendering field " + ExoFormFactory.fieldToString(f) + ": " + ex.toString()
+
                                 }))
                                 pageFieldsRendered = this._addRendered(f, rendered, pageFieldsRendered, p, page);
 
@@ -434,7 +395,7 @@ class ExoForm {
         p.pagenr = pageNr;
         p.pageid = p.id || "page" + pageNr;
         p.class = "exf-cnt exf-page" + (p.class ? " " + p.class : "");
-        p.dummy = DOM.parseHTML('<span/>');
+        p.dummy = document.createElement('span');
         return p;
     }
 
@@ -543,24 +504,11 @@ class ExoForm {
      */
     getFormValues() {
         const data = {};
-        // if (Array.isArray(this.formSchema.pages)) {
-        //     this.formSchema.pages.forEach(p => {
-        //         if (Array.isArray(p.fields)) {
-        //             p.fields.forEach(f => {
-        //                 if (f._control) {
-        //                     data[f.name] = f._control.value;
-        //                 }
-        //             })
-        //         }
-        //     });
-        // }
-
         this.query().forEach(f => {
             if (f._control) {
                 data[f.name] = f._control.value;
             }
         })
-
         return data;
     }
 
@@ -606,7 +554,7 @@ class ExoForm {
 
         if (add > 0 && current > 0) {
 
-            if (!this.isPageValid(_.currentPage)) {
+            if (!this.addins.validation.isPageValid(_.currentPage)) {
                 this.addins.validation.reportValidity(_.currentPage);
                 return;
             }
@@ -725,8 +673,6 @@ class ExoForm {
 
     createControl(f) {
         const _ = this;
-
-
         return new Promise((resolve, reject) => {
 
             const doResolve = (f, c) => {
@@ -739,10 +685,7 @@ class ExoForm {
                 resolve(c);
             }
 
-
             try {
-
-
                 if (!f || !f.type)
                     throw "Incorrect field options. Must be object with at least 'type' property. " + JSON.stringify(f)
 
@@ -791,15 +734,19 @@ class ExoForm {
                     }
                 });
 
+                let showError = !_.triggerEvent(ExoFormFactory.events.error, {
+                    stage: "Create",
+                    error: ex
+                });
+
+                console.error(ex);
                 control.htmlElement.appendChild(DOM.parseHTML(DOM.format('<span class="exf-error exf-create-error" title="{{title}}">ERROR</span>', {
                     title: "Error creating " + ExoFormFactory.fieldToString(f) + ": " + ex.toString()
                 })));
-
+                //if(!showError)
+                //    control.container.classList.add("exf-hidden")
 
                 doResolve(f, control);
-
-
-
             }
         });
     }
@@ -811,151 +758,6 @@ class ExoForm {
         return "exf" + gid;
     }
 
-    testValidity(e, field) {
-        if (this.runValidCheck)
-            e.preventDefault();
-    }
-
-    _checkRules() {
-        const _ = this;
-
-        if (_.options.type !== "form")
-            return;
-
-
-        _.formSchema.pages.forEach(p => {
-
-            if (Array.isArray(p.rules)) {
-
-                console.debug("Checking page rules", p);
-
-                p.rules.forEach(r => {
-                    if (Array.isArray(r.expression)) {
-
-                        _._interpretRule("page", p, r);
-                    }
-                })
-            }
-
-            p.fields.forEach(f => {
-                if (Array.isArray(f.rules)) {
-                    console.debug("Checking field rules", f);
-
-                    f.rules.forEach(r => {
-                        if (Array.isArray(r.expression)) {
-                            _._interpretRule("field", f, r);
-                        }
-                    })
-                }
-            });
-        });
-    }
-
-    getRenderedControl(id) {
-        return this.form.querySelector('[data-id="' + id + '"]')
-    }
-
-    getFieldFromElementId(id) {
-        var e = this.getRenderedControl(id), field = null;
-        return ExoFormFactory.getFieldFromElement(e);
-    }
-
-    // Interpret rules like "msg_about,change,value,!,''"
-    _interpretRule(objType, f, rule) {
-        const _ = this;
-
-        let obj = ExoFormFactory.fieldToString(f)
-
-        console.debug("Running rule on " + obj + " -> [", rule.expression.join(', ') + "]");
-
-
-        if (rule.expression.length === 5) {
-
-            let method = _.formSchema.ruleMethods[rule.type];
-            if (method) {
-                let dependencyField = _.getRenderedControl(rule.expression[0]);
-
-                if (dependencyField) {
-                    let dependencyControl = dependencyField.querySelector("[name]");
-                    if (!dependencyControl) dependencyControl = dependencyField;
-                    if (!dependencyControl) {
-                        console.error("Dependency control for rule on '" + obj + "' not found");
-                    }
-                    else {
-                        console.debug("Dependency control for rule on '" + obj + "': ", dependencyControl.name);
-
-                        const func = (e) => {
-                            console.debug("Event '" + rule.expression[1] + "' fired on ", DOM.elementPath(e));
-
-                            let ruleArgs = rule.expression.slice(2, 5);
-                            let expressionMatched = _._testRule(f, dependencyControl, ...ruleArgs);
-                            console.debug("Rule", ruleArgs, "matched: ", expressionMatched);
-
-                            let index = expressionMatched ? 0 : 1;
-
-                            const rf = method[index];
-                            console.debug("Applying rule", rule.expression[1], obj);
-                            rf.apply(f._control.htmlElement, [{
-                                event: e,
-                                field: f,
-                                exoForm: _,
-                                rule: rule,
-                                dependency: dependencyControl
-                            }])
-
-                            let host = _._getEventHost(dependencyControl);
-
-                            _._setupEventEventListener({
-                                field: f,
-                                host: host,
-                                rule: rule,
-                                eventType: rule.expression[1],
-                                method: func
-                            })
-                        }
-                        func({ target: dependencyControl });
-                    };
-                }
-                else {
-                    console.warn("Dependency field for", f, "not found with id '" + rule.expression[0] + "'");
-                }
-            }
-            else {
-                console.error("Rule method for rule type", rule.type, "on field", f);
-            }
-        }
-    }
-
-    _setupEventEventListener(settings) {
-        const _ = this;
-
-        if (settings.eventType === "livechange") {
-            settings.eventType = "input";
-        }
-
-        console.debug("Setting up event listener of type '" + settings.eventType + "' on ", DOM.elementToString(settings.host));
-        settings.host.addEventListener(settings.eventType, settings.method);
-    }
-
-    _getEventHost(ctl) {
-        let eh = ctl.closest('[data-evtarget="true"]');
-        return eh || ctl;
-    }
-
-    _testRule(f, control, value, compare, rawValue) {
-        var t = undefined;
-        let v = this.getFieldValue(control);
-        try {
-            t = eval(rawValue);
-        }
-        catch (ex) {
-            console.error("Error evaluating rule control value for ", control, compare, v, rawValue);
-            throw "Error evaluating " + rawValue;
-        }
-        console.debug("Value of '" + control.name + "' =", v);
-        return Core.compare(compare, v, t)
-    }
-
     clear() {
         this.form.reset();
         this.form.querySelectorAll(".clearable").forEach(c => {
@@ -965,50 +767,4 @@ class ExoForm {
     }
 }
 
-class Field {
-    static show(obj) {
-        DOM.show(obj.field._control.container);
-    }
-    static hide(obj) {
-        DOM.hide(obj.field._control.container);
-    }
-    static enable(obj) {
-        DOM.enable(obj.field._control.htmlElement);
-    }
-    static disable(obj) {
-        DOM.disable(obj.field._control.htmlElement);
-    }
-    static callCustomMethod(obj) {
-        if (!obj || !obj.exoForm)
-            throw "Invalid invocation of callCustomMethod";
-
-        let method = obj.rule.method;
-        if (method) {
-            let f = obj.exoForm.options.customMethods[method];
-            f.apply(obj.exoForm, [obj])
-        }
-    }
-}
-
-class Page {
-    static scope(obj) {
-        obj.field._control.container.removeAttribute("data-skip");
-    }
-    static descope(obj) {
-        obj.field._control.container.setAttribute("data-skip", "true");
-    }
-
-    static goto(obj) {
-        return obj.exoForm.gotoPage(obj.rule.page);
-    }
-}
-
-//TODO
-class Dialog {
-    static show(obj) {
-        debugger;
-    }
-}
-
 export default ExoForm;
-

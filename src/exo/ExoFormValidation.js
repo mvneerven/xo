@@ -67,6 +67,27 @@ class ExoFormDefaultValidation {
         }
         return true;
     }
+
+    isPageValid(index) {
+        
+        let hasInvalid = false;
+        try {
+            this.runValidCheck = true; // prevent reportValidity() showing messages on controls 
+            hasInvalid = this.exo.formSchema.pages[index - 1].fields.filter(f => {
+                return !f._control.valid;
+            }).length > 0;
+        }
+        finally {
+            this.runValidCheck = false;
+        }
+        return !hasInvalid;
+    }
+
+
+    testValidity(e, field) {
+        if (this.runValidCheck)
+            e.preventDefault();
+    }
 }
 
 class InlineFieldValidator {

@@ -51,14 +51,16 @@
 </head>
 
 <body>
-    <header>
-        <section data-pwa-area="headerleft"></section>
-        <section data-pwa-area="headerright"></section>
-    </header>
+
     <main>
-        <section data-pwa-area="menu"></section>
+
         <section data-pwa-area="main"></section>
-        <section data-pwa-area="panel" class="pwa-pinnable"></section>
+
+
+        <section data-pwa-area="code" style="text-align: center; padding-top: 1rem">
+            <textarea cols="80" style="width: 70%; height: 200px; outline: none; border: 1px solid #ccc; padding: .5rem"
+                class="code" id="model"></textarea>
+        </section>
     </main>
 
 
@@ -106,8 +108,6 @@
 
         class DefMod extends window.xo.route {
             async render(path) {
-
-                this.app.UI.areas.main.add(DOM.parseHTML('<code cols="80" style="width: 70%; height: 200px"  class="code" id="model"></code>'));
 
                 const context = await window.xo.form.factory.build({
                     defaults: {
@@ -286,15 +286,21 @@
                 };
 
                 const schema = {
-                    // model: {
-                    //     instance: {
-                    //         person: {
-                    //             name: "Marc",
-                    //             age: 57,
-                    //             gender: "m"
-                    //         }
-                    //     }
-                    // },
+                    model: {
+                        instance: {
+                            person: {
+                                name: {
+                                    first: "John",
+                                    last: "Doe"
+                                },
+                                age: 57,
+                                gender: "m"
+                            }
+                        },
+                        bindings: {
+
+                        }
+                    },
 
                     pages: [
                         {
@@ -303,25 +309,32 @@
                             "fields": [
                                 {
                                     "name": "name",
-                                    "type": "text",
-                                    "caption": "Name",
-                                    "bind": "person.name",
-                                    "value": "Piet"
+                                    "type": "name",
+                                    "caption": "Your name",
+                                    "bind": "instance.person.name"
                                 },
-
                                 {
                                     "name": "age",
                                     "type": "number",
-                                    "caption": "Age",
-                                    "bind": "person.age"
+                                    "caption": "Your age",
+                                    "bind": "instance.person.age"
                                 },
-
                                 {
                                     "name": "gender",
-                                    "type": "radiobuttonlist",
+                                    "type": "dropdown",
                                     "caption": "Gender",
-                                    "items": [{ name: "Male", value: "m" }, { name: "Female", value: "f" }],
-                                    "bind": "person.gender"
+                                    "items": [
+                                        { name: "Please choose", value: "" },
+                                        { name: "Male", value: "m" },
+                                        { name: "Female", value: "f" },
+                                        { name: "Not important", value: "u" }
+                                    ],
+                                    "bind": "instance.person.gender"
+                                },
+                                {
+                                    "name": "why",
+                                    "type": "multiline",
+                                    "caption": "@bindings.title, let us know what you think..."
                                 }
                             ]
                         }
@@ -333,23 +346,22 @@
                 x.on(window.xo.form.factory.events.post, e => {
                     alert(JSON.stringify(e.detail.postData, null, 2))
                 }).on(window.xo.form.factory.events.dataModelChange, e => {
-                    document.getElementById("model").innerText = x.dataModel.toString();
+
+                    this.applyRules(e.detail.model)
+
+                    document.getElementById("model").value = JSON.stringify(e.detail.model, null, 2)
                 });
-
-                const model = {
-                    person: {
-                        name: "Marc",
-                        age: 57,
-                        gender: "m"
-                    }
-                }
-
-                x.bind(model);
 
                 await x.load(schema);
 
                 let result = await x.renderForm();
                 this.app.UI.areas.main.add(result.container);
+            }
+
+            applyRules(model) {
+                model.bindings.genderUnknown = !["m", "f"].includes(model.instance.person.gender);
+                model.bindings.title = (model.bindings.genderUnknown ? '' : (model.instance.person.gender === 'm' ? 'Mr ' : 'Mrs '))
+                    + model.instance.person.name.first + " " + model.instance.person.name.last;
             }
         }
 
