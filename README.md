@@ -248,19 +248,19 @@ You can now bind your ExoForm data to a model.
           "name": "testField1",
           "type": "text",
           "caption": "Name",
-          "bind": "person.name"
+          "bind": "instance.person.name"
         },
         {
           "name": "testField2",
           "type": "number",
           "caption": "Age",
-          "bind": "person.age"
+          "bind": "instance.person.age"
         },
         {
           "name": "testField3",
           "type": "dropdown",
           "caption": "Your age please, @person.name",
-          "bind": "person.gender",
+          "bind": "instance.person.gender",
           "items": [
             {
               "name": "Please choose",

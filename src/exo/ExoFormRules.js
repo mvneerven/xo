@@ -3,7 +3,16 @@ import DOM from '../pwa/DOM';
 import Core from '../pwa/Core';
 import ExoFormFactory from './ExoFormFactory';
 
-class ExoRuleEngine {
+class ExoRuleEngineBase {
+
+    constructor(exo) {
+        this.exo = exo;
+    }
+
+    checkRules() {} // for subclassing
+}
+
+class ExoRuleEngine extends ExoRuleEngineBase {
 
     ruleMethods = {
         visible: [Field.show, Field.hide],
@@ -13,12 +22,7 @@ class ExoRuleEngine {
         goto: [Page.goto, () => { }],
         dialog: [Dialog.show, () => { }]
     }
-
-    constructor(exo) {
-        this.exo = exo;
-
-    }
-
+    
     // Interpret rules like "msg_about,change,value,!,''"
     interpretRule(objType, f, rule) {
         const _ = this;
@@ -128,7 +132,7 @@ class ExoRuleEngine {
         
         let v = this.exo.getFieldValue(control);
         try {
-            t = Core.scopeEval(this, "return " + rawValue); // TODO replace eval
+            t = Core.scopeEval(this, "return " + rawValue);
         }
         catch (ex) {
             console.error("Error evaluating rule control value for ", control, compare, v, rawValue, ex);
@@ -147,7 +151,7 @@ class ExoFormRules {
 
     static types = {
         auto: undefined,
-        none: ExoRuleEngine,
+        none: ExoRuleEngineBase,
         default: ExoRuleEngine
     }
 

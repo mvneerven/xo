@@ -6,8 +6,8 @@
 import Core from '../pwa/Core';
 import DOM from '../pwa/DOM';
 import ExoFormFactory from './ExoFormFactory';
-import ExoFormModel from './ExoFormModel';
-import ExoFormBindingResolver from './ExoFormBindingResolver';
+import ExoFormDataBinding from './ExoFormDataBinding';
+
 
 /**
  * ExoForm class. 
@@ -88,8 +88,8 @@ class ExoForm {
                         ...schema
                     };
 
-                    this.dataModel = new ExoFormModel(this, this._mappedInstance);
-                    this.dataModel.on("change", e => {
+                    this._dataBinding = new ExoFormDataBinding(this, this._mappedInstance);
+                    this.dataBinding.on("change", e => {
                         e.detail.state = "change";
                         this.triggerEvent(ExoFormFactory.events.dataModelChange, e.detail)
                     }).on("ready", e => {
@@ -131,6 +131,14 @@ class ExoForm {
             }
         });
 
+    }
+
+    /**
+    * Gets the data binding object
+    * @return {object} - The ExoFormDataBinding instance associated with the form.
+    */
+    get dataBinding(){
+        return this._dataBinding;
     }
 
     bind(instance) {
@@ -226,7 +234,7 @@ class ExoForm {
 
         this._updateView(0);
         this.triggerEvent(ExoFormFactory.events.renderReady);
-        this._listenFormModelChanges();
+        //this._listenFormModelChanges();
 
         // Test for fom becoming user-interactive 
         var observer = new IntersectionObserver((entries, observer) => {
@@ -241,15 +249,15 @@ class ExoForm {
         observer.observe(this.container);
     }
 
-    _listenFormModelChanges() {
-        const resolver = new ExoFormBindingResolver(this);
+    // _listenFormModelChanges() {
+    //     const resolver = new ExoFormDataBindingResolver(this);
 
-        this.on(ExoFormFactory.events.dataModelChange, e => {
-            resolver.resolve();
-        })
+    //     this.on(ExoFormFactory.events.dataModelChange, e => {
+    //         resolver.resolve();
+    //     })
 
-        resolver.resolve();
-    }
+    //     resolver.resolve();
+    // }
 
     _cleanup() {
         this.addins.navigation.clear();

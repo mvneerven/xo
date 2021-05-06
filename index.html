@@ -1,20 +1,17 @@
 <!DOCTYPE html>
-<html lang="en" class="nsp-grid nsp-grid-3rc theme-dark">
+<html lang="en" class="nsp-grid nsp-grid-3rc theme-light">
 
 <head>
     <meta charset="utf-8" />
     <title>ExoForm - Flexible Vanilla JavaScript Form Generation</title>
-
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-
-    <meta name="color-scheme" content="dark">
-
-    <!-- <link rel="stylesheet" href="https://www.xo-js.dev/css/xo-portal.css" /> -->
-
+    <meta name="color-scheme" content="light">
     <link rel="stylesheet" href="/css/exf.css" />
     <style>
         :root {
+            --color: #333;
+            --color-text: #333;
             --color-shade: #ccc;
             --color-button: #f3578c;
             --color-text: #333;
@@ -22,6 +19,8 @@
         }
 
         body {
+            color: #333;
+            color: var(--color);
             font-family: Roboto;
             background-color: #efefef;
         }
@@ -47,332 +46,28 @@
     </style>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/themify-icons/0.1.2/css/themify-icons.css" />
     <link rel="shortcut icon" href="/favicon.ico" />
-
 </head>
 
 <body>
-
-    <main>
-
-        <section data-pwa-area="main"></section>
-
-
-        <section data-pwa-area="code" style="text-align: center; padding-top: 1rem">
-            <textarea cols="80" style="width: 70%; height: 200px; outline: none; border: 1px solid #ccc; padding: .5rem"
-                class="code" id="model"></textarea>
-        </section>
-    </main>
-
-
+    <main></main>
     <script type="module" src="/dist/xo.js"></script>
+    
+    <script src="/form.js"></script>
 
     <script type="module">
-
-        class App extends window.xo.pwa {
-            routerReady() {
-                this.router.on(window.xo.pwa.Router.events.route, e => {
-                    document.title = "ExoForm - " + e.detail.module.title
-                })
-            }
+        async function run(context){
+            const x = context.createForm();
+            await x.load(schema);
+            let result = await x.renderForm();
+            document.body.querySelector("main").appendChild(result.container);
         }
-
-        class ExoTest extends window.xo.form.fields.base.controls.div.type {
-            async render() {
-                await super.render();
-                this.container.appendChild(DOM.parseHTML(`
-                    <div>
-                        <div>
-                            <input name="${this.context.field.name}" required/>
-                        </div>
-                    </div>
-                `))
-                return this.container;
-            }
-        }
-
-        // add controls to factory (in bulk if needed)
-        class MyControls {
-            static controls = {
-                test: {
-                    type: ExoTest,
-                    note: "Simple Control"
-                }
-            };
-        }
-
-        const factory = window.xo.form.factory;
-        const DOM = window.xo.dom;
-
-        // add custom control(s)
-        factory.add(MyControls.controls);
-
-        class DefMod extends window.xo.route {
-            async render(path) {
-
-                const context = await window.xo.form.factory.build({
-                    defaults: {
-                        validation: "inline"
-                    }
-                });
-                const schema1 = {
-                    pages: [
-                        {
-                            legend: "Page 1",
-                            fields: [
-                                {
-                                    name: "name",
-                                    type: "text",
-                                    minlength: 3,
-                                    required: true,
-                                    caption: "Your name",
-                                    placeholder: "John Doe"
-                                },
-
-                                {
-                                    name: "check",
-                                    type: "checkbox",
-                                    caption: "Check me",
-                                    value: false
-                                },
-
-                                {
-                                    name: "tags",
-                                    type: "tags",
-                                    caption: "Tags",
-                                    tags: ["Hitchcock", "De Palma", "Fincher", "Truffaut", "Kubrick"]
-                                },
-
-
-                                {
-                                    name: "swt",
-                                    type: "switch",
-                                    caption: "Switch"
-                                },
-
-
-                                {
-                                    name: "msg",
-                                    type: "multiline",
-                                    autogrow: true,
-                                    caption: "Your message"
-                                },
-
-
-                                {
-                                    name: "btn",
-                                    type: "button",
-                                    caption: "Press me!"
-                                },
-
-                                {
-                                    name: "test1",
-                                    type: "checkboxlist",
-                                    caption: "Multi select",
-                                    view: "tiles",
-                                    class: "big",
-                                    required: true,
-                                    items: [
-                                        { name: "First", value: 1, description: "Might be a bit difficult to show here..." },
-                                        { name: "Second", value: 2, description: "Second best of course..." },
-                                        { name: "Third", value: 3, description: "You have to have a third option" }
-                                    ]
-                                },
-
-
-                                {
-                                    name: "test2",
-                                    type: "checkboxlist",
-                                    caption: "Another Multi select",
-                                    view: "other!!!",
-                                    required: true,
-                                    items: [
-                                        { name: "First", value: 1, description: "Might be a bit difficult to show here..." },
-                                        { name: "Second", value: 2, description: "Second best of course..." },
-                                        { name: "Third", value: 3, description: "You have to have a third option" }
-                                    ]
-                                }
-
-
-
-                            ]
-                        },
-                        {
-                            legend: "Page 2",
-                            fields: [
-
-                                {
-                                    name: "email",
-                                    type: "email",
-                                    required: true,
-                                    caption: "Your email adress",
-                                    placeholder: "john@doe.com",
-                                    bindings: {
-                                        caption: "page.name.value"
-                                    }
-                                },
-
-                                {
-                                    name: "date",
-                                    type: "date",
-                                    required: true,
-                                    caption: "Your birthdate"
-                                },
-                                {
-                                    name: "daterange",
-                                    type: "daterange",
-                                    caption: "Worked in period"
-                                },
-                                {
-                                    name: "number",
-                                    type: "number",
-                                    buttons: true,
-                                    required: true,
-                                    step: 1,
-                                    min: 16,
-                                    caption: "Your age"
-                                },
-
-                                {
-                                    name: "rng",
-                                    type: "range",
-                                    showoutput: true,
-                                    value: 4,
-                                    step: 1,
-                                    min: 16,
-                                    caption: "Range"
-                                },
-
-                            ]
-                        }
-                        ,
-                        {
-                            legend: "Page 3",
-
-                            fields: [
-
-                                {
-                                    name: "cklist",
-                                    type: "checkboxlist",
-                                    required: true,
-                                    caption: "Good or bad",
-                                    items: ["Good", "Bad", "Ugly"]
-                                },
-                                {
-                                    name: "address",
-                                    type: "nladdress",
-                                    caption: "Address"
-                                },
-                                {
-                                    name: "comments",
-                                    type: "multline",
-                                    caption: "Comments"
-                                },
-                                {
-                                    name: "role",
-                                    type: "dropdown",
-                                    caption: "Your role",
-                                    items: [
-                                        { value: "", name: "Please select..." },
-                                        "Architect",
-                                        "CEO",
-                                        "CTO",
-                                        "COO",
-                                        "Developer"
-                                    ]
-                                }
-                            ]
-                        }
-                    ]
-                };
-
-                const schema = {
-                    model: {
-                        instance: {
-                            person: {
-                                name: {
-                                    first: "John",
-                                    last: "Doe"
-                                },
-                                age: 57,
-                                gender: "m"
-                            }
-                        },
-                        bindings: {
-
-                        }
-                    },
-
-                    pages: [
-                        {
-                            "legend": "My Form",
-                            "intro": "My form description",
-                            "fields": [
-                                {
-                                    "name": "name",
-                                    "type": "name",
-                                    "caption": "Your name",
-                                    "bind": "instance.person.name"
-                                },
-                                {
-                                    "name": "age",
-                                    "type": "number",
-                                    "caption": "Your age",
-                                    "bind": "instance.person.age"
-                                },
-                                {
-                                    "name": "gender",
-                                    "type": "dropdown",
-                                    "caption": "Gender",
-                                    "items": [
-                                        { name: "Please choose", value: "" },
-                                        { name: "Male", value: "m" },
-                                        { name: "Female", value: "f" },
-                                        { name: "Not important", value: "u" }
-                                    ],
-                                    "bind": "instance.person.gender"
-                                },
-                                {
-                                    "name": "why",
-                                    "type": "multiline",
-                                    "caption": "@bindings.title, let us know what you think..."
-                                }
-                            ]
-                        }
-                    ]
-                }
-
-                const x = context.createForm();
-
-                x.on(window.xo.form.factory.events.post, e => {
-                    alert(JSON.stringify(e.detail.postData, null, 2))
-                }).on(window.xo.form.factory.events.dataModelChange, e => {
-
-                    this.applyRules(e.detail.model)
-
-                    document.getElementById("model").value = JSON.stringify(e.detail.model, null, 2)
-                });
-
-                await x.load(schema);
-
-                let result = await x.renderForm();
-                this.app.UI.areas.main.add(result.container);
-            }
-
-            applyRules(model) {
-                model.bindings.genderUnknown = !["m", "f"].includes(model.instance.person.gender);
-                model.bindings.title = (model.bindings.genderUnknown ? '' : (model.instance.person.gender === 'm' ? 'Mr ' : 'Mrs '))
-                    + model.instance.person.name.first + " " + model.instance.person.name.last;
-            }
-        }
-
-        new App({
-            routes: {
-                "/": DefMod
-            }
-        });
-
+        
+        const context = await window.xo.form.factory.build({ defaults: { validation: "inline" } });
+        
+        run(context);
+        
+        
     </script>
-
 </body>
 
 </html>

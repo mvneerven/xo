@@ -1,10 +1,14 @@
-class ExoFormBindingResolver {
+import Core from '../pwa/Core';
 
-    constructor(exo) {
-        this.exo = exo;
+class ExoFormDataBindingResolver {
+
+    constructor(dataBinding) {
+        this.dataBinding = dataBinding;
+        this.exo = dataBinding.exo;
     }
 
     resolve() {
+        this._checkSchemaLogic();
         this._replaceVars(this.exo.container);
     }
 
@@ -53,8 +57,47 @@ class ExoFormBindingResolver {
     }
 
     _getVar(path) {
-        return this.exo.dataModel.get(path, "");
+        return this.dataBinding.get(path, "");
+    }
+
+    _checkSchemaLogic() {
+        const model = this.exo.dataBinding.model;
+        if (model && model.logic) {
+            if (typeof (model.logic) === "function") {
+                this.applyJSLogic(model.logic, null, model)
+            }
+            else if (model.logic && model.logic.type === "JavaScript") {
+                let script = this.assembleScript(model.logic)
+                this.applyJSLogic(null, script, model)
+            }
+        }
+    }
+
+    assembleScript(logic) {
+        if (logic && Array.isArray(logic.lines)) {
+
+            return `let model = this.dataBinding.model;\n` + logic.lines.join('\n');
+        }
+        return "";
+    }
+
+    applyJSLogic(f, js, model) {
+        try {
+            if (f) {
+                model.logic.bind(this.exo)(model);
+            }
+            else {
+                Core.scopeEval(this.exo, js)
+            }
+        }
+        catch (ex) {
+            console.error(ex);
+            this.dataBinding._signalDataBindingError(ex);
+        }
+        finally {
+
+        }
     }
 }
 
-export default ExoFormBindingResolver;
+export default ExoFormDataBindingResolver;

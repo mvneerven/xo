@@ -1,8 +1,9 @@
 
 import ExoFormFactory from './ExoFormFactory';
 import Core from '../pwa/Core';
+import ExoFormDataBindingResolver from './ExoFormDataBindingResolver';
 
-class ExoFormModel {
+class ExoFormDataBinding {
 
     static origins = {
         schema: "schema",
@@ -20,6 +21,18 @@ class ExoFormModel {
         Core.addEvents(this); // add simple event system
 
         this._init(exo, instance);
+
+        exo.on(ExoFormFactory.events.renderReady, e => {
+
+            const resolver = new ExoFormDataBindingResolver(this);
+
+            exo.on(ExoFormFactory.events.dataModelChange, e => {
+                resolver.resolve();
+            })
+
+            resolver.resolve();
+
+        })
         this._ready();
     }
 
@@ -33,22 +46,20 @@ class ExoFormModel {
                 if (f.name) {
                     f.bind = f.bind || "instance.data." + f.name; // use default model binding if no binding is specified
                     f.value = this.get(f.bind, f.value);
-
-
                     console.log("Applying instance." + f.name, f.bind, f.value);
                     data[f.name] = f.value
                 }
             });
 
             // make sure we have a model if it wasn't passed in
-            if (this._origin === ExoFormModel.origins.none) {
+            if (this._origin === ExoFormDataBinding.origins.none) {
                 console.log("Fill initial model", data);
                 this._model.instance.data = data;
             }
 
             console.log("Firing Model ready event ", this._model.instance);
 
-            this._triggerEvent("ready", {model: this._model});
+            this._triggerEvent("ready", { model: this._model });
         })
             .on(ExoFormFactory.events.interactive, () => {
                 exo.form.addEventListener("change", e => {
@@ -90,6 +101,10 @@ class ExoFormModel {
         return this.dispatchEvent(ev);
     }
 
+    _signalDataBindingError(ex){
+        this._triggerEvent("error", {exo: this.exo, error: ex});
+    }
+
     get(path, defaultValue) {
         return Core.getObjectValue(this._model, path, defaultValue);
     }
@@ -105,17 +120,17 @@ class ExoFormModel {
         if (model) {
             this._mapped = model;
             this._model.instance = model;
-            this._origin = ExoFormModel.origins.bind;
+            this._origin = ExoFormDataBinding.origins.bind;
         }
         else if (exo.formSchema.model) {
-            this._origin = ExoFormModel.origins.schema;
+            this._origin = ExoFormDataBinding.origins.schema;
             this._model = {
                 ...exo.formSchema.model
             };
             this._model.bindings = this._model.bindings || {}
         }
         else {
-            this._origin = ExoFormModel.origins.none;
+            this._origin = ExoFormDataBinding.origins.none;
         }
     }
 
@@ -127,7 +142,7 @@ class ExoFormModel {
 
         if (!this._instanceInitialized) {
             try {
-                if (this._origin === ExoFormModel.origins.none) {
+                if (this._origin === ExoFormDataBinding.origins.none) {
                     let obj = this.exo.getFormValues();
                     this._model.instance = { data: obj }
                 }
@@ -141,7 +156,7 @@ class ExoFormModel {
 
         return this._model;
     }
-    
+
 }
 
-export default ExoFormModel;
+export default ExoFormDataBinding;

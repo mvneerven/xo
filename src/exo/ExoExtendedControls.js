@@ -760,6 +760,7 @@ class MultiInputControl extends ExoBaseControls.controls.div.type {
     }
 
     get value() {
+        
         let data = this.context.field.value || {};
 
         for (var n in this.fields) {

@@ -132,17 +132,16 @@ class ExoFormFactory {
     static _ev_pfx = "exf-ev-";
 
     static events = {
+        schemaLoaded: ExoFormFactory._ev_pfx + "form-loaded", // when loading the form schema is complete
+        renderStart: ExoFormFactory._ev_pfx + "render-start", // when form rendering starts
+        getListItem: ExoFormFactory._ev_pfx + "get-list-item", // 
+        renderReady: ExoFormFactory._ev_pfx + "render-ready", // when form rendering is complete
+        interactive: ExoFormFactory._ev_pfx + "form-interactive", // when form is actually shown to user
+        reportValidity: ExoFormFactory._ev_pfx + "report-validity", // when form control validity is reported
+        dataModelChange: ExoFormFactory._ev_pfx + "datamodel-change", // when the underlying datamodel to which the form is bound changes
         beforePage: ExoFormFactory._ev_pfx + "before-page", // cancellable - called just before paging
         page: ExoFormFactory._ev_pfx + "page", // after moving to other page
-        getListItem: ExoFormFactory._ev_pfx + "get-list-item", // 
         post: ExoFormFactory._ev_pfx + "post", // on form post/submit
-        renderStart: ExoFormFactory._ev_pfx + "render-start", // when form rendering starts
-        renderReady: ExoFormFactory._ev_pfx + "render-ready", // when form rendering is complete
-        //change: ExoFormFactory._ev_pfx + "change", // when any control on the form changes
-        reportValidity: ExoFormFactory._ev_pfx + "report-validity", // when form control validity is reported
-        schemaLoaded: ExoFormFactory._ev_pfx + "form-loaded", // when loading the form schema is complete
-        interactive: ExoFormFactory._ev_pfx + "form-interactive", // when form is actually shown to user
-        dataModelChange: ExoFormFactory._ev_pfx + "datamodel-change", // when the underlying datamodel to which the form is bound changes
         error: ExoFormFactory._ev_pfx + "error" // when any error occurs
     }
 

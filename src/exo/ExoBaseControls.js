@@ -308,7 +308,7 @@ class ExoControlBase {
     // returns valid state of the control - can be subclassed
     get valid() {
         let numInvalid = 0;
-        this.container.querySelectorAll("*").forEach(el => {
+        const rv = el => {
             if (el.reportValidity) {
                 try {
                     if (!el.reportValidity()) {
@@ -317,7 +317,10 @@ class ExoControlBase {
                 }
                 catch { }
             }
-        })
+        };
+        let elm = this.container || this.htmlElement;
+        rv(elm);
+        elm.querySelectorAll("*").forEach(rv);
         return numInvalid === 0;
     }
 
@@ -945,8 +948,9 @@ class ExoCheckboxListControl extends ExoInputListControl {
         return ar;
     }
 
+    //TODO
     set value(data){
-        debugger;
+        //debugger;
         this.container.querySelectorAll("[name]").forEach(i => {
             
         });
@@ -967,7 +971,7 @@ class ExoCheckboxControl extends ExoCheckboxListControl {
             name: "text",
             description: "Text to display on checkbox label"
         });
-        context.field.items = [{ name: this.text || context.field.caption, value: true, checked: context.field.value }]
+        context.field.items = [{ name: this.text || context.field.caption, value: true, checked: context.field.value, tooltip: context.field.tooltip || "" }]
     }
 
     async render() {
