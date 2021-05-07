@@ -30,13 +30,12 @@ class ExoForm {
                 "minlength": "minLength",
                 "maxlength": "maxLength"
             },
-            reserved: ["caption", "template", "elm", "ctl", "tagname"]
+            reserved: ["caption", "template", "elm", "ctl", "tagname", "ispage"]
         },
 
         templates: {
             empty: /*html*/`<span data-replace="true"></span>`,
             exocontainer: /*html*/`<div class="exf-container"></div>`,
-            fieldset: /*html*/`<fieldset data-page="{{pagenr}}" data-pageid="{{pageid}}" class="exf-cnt {{class}}"></fieldset>`,
             legend: /*html*/`<legend class="exf-page-title">{{legend}}</legend>`,
             pageIntro: /*html*/`<p class="exf-page-intro">{{intro}}</p>`,
             datalist: /*html*/`<datalist id="{{id}}"></datalist>`,
@@ -83,7 +82,6 @@ class ExoForm {
                     resolve(_)
                 else {
                     _.formSchema = {
-                        //..._.defaults,
                         ..._.context.config.defaults || {},
                         ...schema
                     };
@@ -95,6 +93,8 @@ class ExoForm {
                     }).on("ready", e => {
                         e.detail.state = "ready";
                         this.triggerEvent(ExoFormFactory.events.dataModelChange, e.detail)
+                    }).on("error", e => {
+                        this.triggerEvent(ExoFormFactory.events.error, e.detail);
                     });
 
                     _.triggerEvent(ExoFormFactory.events.schemaLoaded);
@@ -137,7 +137,7 @@ class ExoForm {
     * Gets the data binding object
     * @return {object} - The ExoFormDataBinding instance associated with the form.
     */
-    get dataBinding(){
+    get dataBinding() {
         return this._dataBinding;
     }
 
@@ -232,9 +232,9 @@ class ExoForm {
         // TODO reimplement rules using model binding
         this.addins.rules.checkRules();
 
-        this._updateView(0);
+        this.addins.navigation.restart();
         this.triggerEvent(ExoFormFactory.events.renderReady);
-        //this._listenFormModelChanges();
+
 
         // Test for fom becoming user-interactive 
         var observer = new IntersectionObserver((entries, observer) => {
@@ -248,16 +248,6 @@ class ExoForm {
 
         observer.observe(this.container);
     }
-
-    // _listenFormModelChanges() {
-    //     const resolver = new ExoFormDataBindingResolver(this);
-
-    //     this.on(ExoFormFactory.events.dataModelChange, e => {
-    //         resolver.resolve();
-    //     })
-
-    //     resolver.resolve();
-    // }
 
     _cleanup() {
         this.addins.navigation.clear();
@@ -283,7 +273,7 @@ class ExoForm {
 
         return new Promise((resolve, reject) => {
             var pageNr = 0;
-            _.form.setAttribute("data-current-page", pageNr + 1);
+            
             let totalFieldsRendered = 0;
 
             _.pageContainer = DOM.parseHTML('<div class="exf-wrapper" />');
@@ -397,11 +387,11 @@ class ExoForm {
 
     _enrichPageSettings(p, pageNr) {
         p.index = pageNr;
-        console.debug("Rendering page " + p.index)
+        //console.debug("Rendering page " + p.index)
         p.isPage = true;
         p.type = p.type || "fieldset";
-        p.pagenr = pageNr;
-        p.pageid = p.id || "page" + pageNr;
+        //p.pagenr = pageNr;
+        //p.pageid = p.id || "page" + pageNr;
         p.class = "exf-cnt exf-page" + (p.class ? " " + p.class : "");
         p.dummy = document.createElement('span');
         return p;
@@ -535,135 +525,6 @@ class ExoForm {
     }
 
     /**
-     * Moves to the given page in a multi-page form.
-     */
-    gotoPage(page) {
-        return this._updateView(0, page);
-    }
-
-    /**
-     * Moves to the next page in a multi-page form.
-     */
-    nextPage() {
-        this._updateView(+1);
-    }
-
-    /**
-     * Moves to the previous page in a multi-page form.
-     */
-    previousPage() {
-        this._updateView(-1);
-    }
-
-    _updateView(add, page) {
-        const _ = this;
-
-        let current = _.currentPage;
-
-        if (add > 0 && current > 0) {
-
-            if (!this.addins.validation.isPageValid(_.currentPage)) {
-                this.addins.validation.reportValidity(_.currentPage);
-                return;
-            }
-        }
-
-        page = page || 1;
-        if (add !== 0)
-            page = parseInt(_.form.getAttribute("data-current-page") || "0");
-
-        page = _._getNextPage(add, page)
-        let pageCount = _.getLastPage();
-
-        if (current > 0) {
-            if (!_.addins.navigation.canMove(current, page))
-                return;
-
-            let returnValue = _.triggerEvent(ExoFormFactory.events.beforePage, {
-                from: current,
-                page: page,
-                pageCount: pageCount
-            });
-
-            if (returnValue === false)
-                return;
-        }
-
-        _.form.setAttribute("data-current-page", page);
-        _.form.setAttribute("data-page-count", _.formSchema.pages.length);
-        _.currentPage = page;
-
-        let i = 0;
-        _.form.querySelectorAll('.exf-page[data-page]').forEach(p => {
-            i++;
-            p.classList[i === page ? "add" : "remove"]("active");
-        });
-
-        _.addins.navigation.update();
-
-        _.triggerEvent(ExoFormFactory.events.page, {
-            from: current,
-            page: page,
-            pageCount: pageCount
-        });
-
-        return page;
-    }
-
-    _getNextPage(add, page) {
-        const _ = this;
-        let ok = false;
-
-        var skip;
-        do {
-            page += add;
-
-            if (page > _.formSchema.pages.length) {
-                return undefined;
-            };
-
-            let pgElm = _.form.querySelector('.exf-page[data-page="' + page + '"]');
-            if (pgElm) {
-                skip = pgElm.getAttribute("data-skip") === "true";
-
-                console.debug("Wizard Page " + page + " currently " + (skip ? "OUT OF" : "in") + " scope");
-                if (!skip) {
-                    ok = true;
-                }
-            }
-            else {
-                ok = true;
-                return undefined;
-            }
-
-            if (add === 0)
-                break;
-
-        } while (!ok)
-
-        if (page < 1) page = 1;
-
-        return page;
-    }
-
-    getLastPage() {
-        const _ = this;
-        let pageNr = parseInt(_.form.getAttribute("data-current-page"));
-        let lastPage = 0;
-        let nextPage = -1;
-        do {
-            nextPage = _._getNextPage(+1, pageNr);
-            if (nextPage) {
-                lastPage = nextPage;
-                pageNr = nextPage;
-            }
-
-        } while (nextPage)
-
-        return lastPage || pageNr || 1;
-    }
-
-    /**
      * Renders a single ExoForm control 
      * @param {object} field - field structure sub-schema. 
      * @return {promise} - A promise with the typed rendered element
@@ -685,9 +546,8 @@ class ExoForm {
 
             const doResolve = (f, c) => {
                 f._control = c;
-                // keep field in element data
-                c.htmlElement.data = c.htmlElement.data || {};
-                c.htmlElement.data.field = f;
+
+                c.htmlElement.data = c.htmlElement.data || {}; c.htmlElement.data.field = f; // keep field in element data
                 c.htmlElement.setAttribute("data-exf", "1"); // mark as element holding data
                 console.debug("Resolving ", ExoFormFactory.fieldToString(f));
                 resolve(c);
@@ -732,8 +592,6 @@ class ExoForm {
 
             }
             catch (ex) {
-
-                //reject("Error in createControl(): " + ex.toString())
                 let field = _.context.get("div");
                 let control = new field.type({
                     exo: _,
@@ -751,8 +609,6 @@ class ExoForm {
                 control.htmlElement.appendChild(DOM.parseHTML(DOM.format('<span class="exf-error exf-create-error" title="{{title}}">ERROR</span>', {
                     title: "Error creating " + ExoFormFactory.fieldToString(f) + ": " + ex.toString()
                 })));
-                //if(!showError)
-                //    control.container.classList.add("exf-hidden")
 
                 doResolve(f, control);
             }

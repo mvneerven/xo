@@ -224,12 +224,16 @@
                 box-shadow: none;
             }
 
-            &:hover {
+            &:hover:not(:disabled) {
                 border-color: #787878;
             }
 
             &.primary {
                 background-color: var(--color-button-primary);
+            }
+
+            &:disabled{
+                background-color: var(--color-button-disabled);
             }
         }
     }

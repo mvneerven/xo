@@ -13,7 +13,7 @@ class ExoWizardRouteModule extends ExoRouteModule {
     wizardRendered() {  } // for subclassing
 
     post(obj) {
-        alert(JSON.stringify(obj, null, 2))
+        ///alert(JSON.stringify(obj, null, 2))
     }
 
     event(e) { }

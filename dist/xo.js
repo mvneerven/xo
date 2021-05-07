@@ -74,7 +74,7 @@
 
       for (var i = 0; i < path.length; i++) {
         // If the item isn't found, return the default (or null)
-        if (!current[path[i]]) return def; // Otherwise, update the current  value
+        if (typeof current[path[i]] === undefined) return def; // Otherwise, update the current  value
 
         current = current[path[i]];
       }
@@ -693,12 +693,19 @@
     constructor(dataBinding) {
       this.dataBinding = dataBinding;
       this.exo = dataBinding.exo;
+      this._boundControlState = [];
+    }
+
+    addBoundControl(settings) {
+      this._boundControlState.push(settings);
     }
 
     resolve() {
       this._checkSchemaLogic();
 
       this._replaceVars(this.exo.container);
+
+      this._bindControlStateToUpdatedModel();
     }
 
     _resolveVars(str, cb, ar) {
@@ -721,8 +728,7 @@
         }
 
         s = this._resolveVars(s, e => {
-          let value = this._getVar(e);
-
+          let value = this.dataBinding.get(e, "");
           return value;
         }, ar);
 
@@ -741,10 +747,6 @@
           this._replaceVars(node.childNodes[i]);
         }
       }
-    }
-
-    _getVar(path) {
-      return this.dataBinding.get(path, "");
     }
 
     _checkSchemaLogic() {
@@ -771,7 +773,7 @@
     applyJSLogic(f, js, model) {
       try {
         if (f) {
-          model.logic.bind(this.exo)(model);
+          model.logic.bind(this.exo)(model, this.exo);
         } else {
           Core.scopeEval(this.exo, js);
         }
@@ -780,6 +782,16 @@
 
         this.dataBinding._signalDataBindingError(ex);
       } finally {}
+    }
+
+    _bindControlStateToUpdatedModel() {
+      console.log("bindControlStateToUpdatedModel called");
+
+      this._boundControlState.forEach(obj => {
+        let value = this.dataBinding.get(obj.path);
+        console.debug("bindControlStateToUpdatedModel", obj.propertyName, "on", ExoFormFactory.fieldToString(obj.field), "to", value, obj.path);
+        obj.control[obj.propertyName] = value;
+      });
     }
 
   }
@@ -796,32 +808,46 @@
 
       this._init(exo, instance);
 
+      this._resolver = new ExoFormDataBindingResolver(this);
+      exo.on(ExoFormFactory.events.renderStart, e => {
+        // run logic for initial state of controls
+        this.resolver._checkSchemaLogic();
+      });
       exo.on(ExoFormFactory.events.renderReady, e => {
-        const resolver = new ExoFormDataBindingResolver(this);
         exo.on(ExoFormFactory.events.dataModelChange, e => {
-          resolver.resolve();
+          this.resolver.resolve();
         });
-        resolver.resolve();
+        this.resolver.resolve();
       });
 
       this._ready();
+    }
+
+    get resolver() {
+      return this._resolver;
     }
 
     _ready() {
       const exo = this.exo;
       exo.on(ExoFormFactory.events.schemaLoaded, () => {
         let data = {};
+        const modelSetup = [ExoFormDataBinding.origins.bind, ExoFormDataBinding.origins.schema].includes(this._origin);
+        console.log("Model set up: " + modelSetup);
         exo.query(f => {
           if (f.name) {
-            f.bind = f.bind || "instance.data." + f.name; // use default model binding if no binding is specified
+            if (!f.bind && !modelSetup) {
+              f.bind = "instance.data." + f.name; // use default model binding if no binding is specified
+            }
 
-            f.value = this.get(f.bind, f.value);
-            console.log("Applying instance." + f.name, f.bind, f.value);
-            data[f.name] = f.value;
+            if (f.bind) {
+              f.value = this.get(f.bind, f.value);
+              console.log("Applying instance." + f.name, f.bind, f.value);
+              data[f.name] = f.value;
+            }
           }
         }); // make sure we have a model if it wasn't passed in
 
-        if (this._origin === ExoFormDataBinding.origins.none) {
+        if (!modelSetup) {
           console.log("Fill initial model", data);
           this._model.instance.data = data;
         }
@@ -883,7 +909,15 @@
     }
 
     get(path, defaultValue) {
-      return Core.getObjectValue(this._model, path, defaultValue);
+      let returnValue = null;
+
+      try {
+        returnValue = Core.getObjectValue(this._model, path, defaultValue);
+      } catch (ex) {
+        this._signalDataBindingError(ex);
+      }
+
+      return returnValue;
     }
 
     on(eventName, func) {
@@ -929,6 +963,31 @@
       }
 
       return this._model;
+    }
+
+    _processFieldProperty(control, name, value) {
+      let returnValue = value;
+
+      if (typeof value === "string" && value.startsWith("@")) {
+        let path = value.substring(1);
+        console.debug("Resolving databound control property", name, value, "path:", path);
+        returnValue = this.get(path, undefined);
+
+        if (returnValue === undefined) {
+          returnValue = value; // return original string, don't resolve
+        } else {
+          console.debug("Resolved databound control property", name, value, returnValue);
+          this.resolver.addBoundControl({
+            control: control,
+            field: control.context.field,
+            path: path,
+            propertyName: name,
+            originalBoundValue: returnValue
+          });
+        }
+      }
+
+      return returnValue;
     }
 
   }
@@ -982,8 +1041,7 @@
       return new Promise((resolve, reject) => {
         const loader = schema => {
           if (!schema) resolve(_);else {
-            _.formSchema = { //..._.defaults,
-              ...(_.context.config.defaults || {}),
+            _.formSchema = { ...(_.context.config.defaults || {}),
               ...schema
             };
             this._dataBinding = new ExoFormDataBinding(this, this._mappedInstance);
@@ -993,6 +1051,8 @@
             }).on("ready", e => {
               e.detail.state = "ready";
               this.triggerEvent(ExoFormFactory.events.dataModelChange, e.detail);
+            }).on("error", e => {
+              this.triggerEvent(ExoFormFactory.events.error, e.detail);
             });
 
             _.triggerEvent(ExoFormFactory.events.schemaLoaded);
@@ -1128,11 +1188,8 @@
       }); // TODO reimplement rules using model binding
 
       this.addins.rules.checkRules();
-
-      this._updateView(0);
-
-      this.triggerEvent(ExoFormFactory.events.renderReady); //this._listenFormModelChanges();
-      // Test for fom becoming user-interactive 
+      this.addins.navigation.restart();
+      this.triggerEvent(ExoFormFactory.events.renderReady); // Test for fom becoming user-interactive 
 
       var observer = new IntersectionObserver((entries, observer) => {
         if (this.container.offsetHeight) {
@@ -1143,14 +1200,7 @@
         root: document.documentElement
       });
       observer.observe(this.container);
-    } // _listenFormModelChanges() {
-    //     const resolver = new ExoFormDataBindingResolver(this);
-    //     this.on(ExoFormFactory.events.dataModelChange, e => {
-    //         resolver.resolve();
-    //     })
-    //     resolver.resolve();
-    // }
-
+    }
 
     _cleanup() {
       this.addins.navigation.clear();
@@ -1175,9 +1225,6 @@
 
       return new Promise((resolve, reject) => {
         var pageNr = 0;
-
-        _.form.setAttribute("data-current-page", pageNr + 1);
-
         let totalFieldsRendered = 0;
         _.pageContainer = DOM.parseHTML('<div class="exf-wrapper" />');
 
@@ -1280,12 +1327,12 @@
     }
 
     _enrichPageSettings(p, pageNr) {
-      p.index = pageNr;
-      console.debug("Rendering page " + p.index);
+      p.index = pageNr; //console.debug("Rendering page " + p.index)
+
       p.isPage = true;
-      p.type = p.type || "fieldset";
-      p.pagenr = pageNr;
-      p.pageid = p.id || "page" + pageNr;
+      p.type = p.type || "fieldset"; //p.pagenr = pageNr;
+      //p.pageid = p.id || "page" + pageNr;
+
       p.class = "exf-cnt exf-page" + (p.class ? " " + p.class : "");
       p.dummy = document.createElement('span');
       return p;
@@ -1423,136 +1470,6 @@
       return undefined;
     }
     /**
-     * Moves to the given page in a multi-page form.
-     */
-
-
-    gotoPage(page) {
-      return this._updateView(0, page);
-    }
-    /**
-     * Moves to the next page in a multi-page form.
-     */
-
-
-    nextPage() {
-      this._updateView(+1);
-    }
-    /**
-     * Moves to the previous page in a multi-page form.
-     */
-
-
-    previousPage() {
-      this._updateView(-1);
-    }
-
-    _updateView(add, page) {
-      const _ = this;
-
-      let current = _.currentPage;
-
-      if (add > 0 && current > 0) {
-        if (!this.addins.validation.isPageValid(_.currentPage)) {
-          this.addins.validation.reportValidity(_.currentPage);
-          return;
-        }
-      }
-
-      page = page || 1;
-      if (add !== 0) page = parseInt(_.form.getAttribute("data-current-page") || "0");
-      page = _._getNextPage(add, page);
-
-      let pageCount = _.getLastPage();
-
-      if (current > 0) {
-        if (!_.addins.navigation.canMove(current, page)) return;
-
-        let returnValue = _.triggerEvent(ExoFormFactory.events.beforePage, {
-          from: current,
-          page: page,
-          pageCount: pageCount
-        });
-
-        if (returnValue === false) return;
-      }
-
-      _.form.setAttribute("data-current-page", page);
-
-      _.form.setAttribute("data-page-count", _.formSchema.pages.length);
-
-      _.currentPage = page;
-      let i = 0;
-
-      _.form.querySelectorAll('.exf-page[data-page]').forEach(p => {
-        i++;
-        p.classList[i === page ? "add" : "remove"]("active");
-      });
-
-      _.addins.navigation.update();
-
-      _.triggerEvent(ExoFormFactory.events.page, {
-        from: current,
-        page: page,
-        pageCount: pageCount
-      });
-
-      return page;
-    }
-
-    _getNextPage(add, page) {
-      const _ = this;
-
-      let ok = false;
-      var skip;
-
-      do {
-        page += add;
-
-        if (page > _.formSchema.pages.length) {
-          return undefined;
-        }
-
-        let pgElm = _.form.querySelector('.exf-page[data-page="' + page + '"]');
-
-        if (pgElm) {
-          skip = pgElm.getAttribute("data-skip") === "true";
-          console.debug("Wizard Page " + page + " currently " + (skip ? "OUT OF" : "in") + " scope");
-
-          if (!skip) {
-            ok = true;
-          }
-        } else {
-          ok = true;
-          return undefined;
-        }
-
-        if (add === 0) break;
-      } while (!ok);
-
-      if (page < 1) page = 1;
-      return page;
-    }
-
-    getLastPage() {
-      const _ = this;
-
-      let pageNr = parseInt(_.form.getAttribute("data-current-page"));
-      let lastPage = 0;
-      let nextPage = -1;
-
-      do {
-        nextPage = _._getNextPage(+1, pageNr);
-
-        if (nextPage) {
-          lastPage = nextPage;
-          pageNr = nextPage;
-        }
-      } while (nextPage);
-
-      return lastPage || pageNr || 1;
-    }
-    /**
      * Renders a single ExoForm control 
      * @param {object} field - field structure sub-schema. 
      * @return {promise} - A promise with the typed rendered element
@@ -1573,10 +1490,10 @@
 
       return new Promise((resolve, reject) => {
         const doResolve = (f, c) => {
-          f._control = c; // keep field in element data
-
+          f._control = c;
           c.htmlElement.data = c.htmlElement.data || {};
-          c.htmlElement.data.field = f;
+          c.htmlElement.data.field = f; // keep field in element data
+
           c.htmlElement.setAttribute("data-exf", "1"); // mark as element holding data
 
           console.debug("Resolving ", ExoFormFactory.fieldToString(f));
@@ -1610,7 +1527,6 @@
             doResolve(f, control);
           }
         } catch (ex) {
-          //reject("Error in createControl(): " + ex.toString())
           let field = _.context.get("div");
 
           let control = new field.type({
@@ -1625,9 +1541,7 @@
           console.error(ex);
           control.htmlElement.appendChild(DOM.parseHTML(DOM.format('<span class="exf-error exf-create-error" title="{{title}}">ERROR</span>', {
             title: "Error creating " + ExoFormFactory.fieldToString(f) + ": " + ex.toString()
-          }))); //if(!showError)
-          //    control.container.classList.add("exf-hidden")
-
+          })));
           doResolve(f, control);
         }
       });
@@ -1659,7 +1573,7 @@
         "minlength": "minLength",
         "maxlength": "maxLength"
       },
-      reserved: ["caption", "template", "elm", "ctl", "tagname"]
+      reserved: ["caption", "template", "elm", "ctl", "tagname", "ispage"]
     },
     templates: {
       empty:
@@ -1668,9 +1582,6 @@
       exocontainer:
       /*html*/
       `<div class="exf-container"></div>`,
-      fieldset:
-      /*html*/
-      `<fieldset data-page="{{pagenr}}" data-pageid="{{pageid}}" class="exf-cnt {{class}}"></fieldset>`,
       legend:
       /*html*/
       `<legend class="exf-page-title">{{legend}}</legend>`,
@@ -1697,21 +1608,32 @@
     constructor(context) {
       _defineProperty(this, "attributes", {});
 
+      _defineProperty(this, "_visible", true);
+
+      _defineProperty(this, "_disabled", false);
+
+      _defineProperty(this, "_rendered", false);
+
       _defineProperty(this, "acceptedProperties", []);
 
       _defineProperty(this, "dataProps", {});
 
-      _defineProperty(this, "containerTemplate", ExoForm.meta.templates.empty);
-
       if (this.constructor === ExoControlBase) throw new Error("Can't instantiate abstract class!");
       this.context = context;
       if (!context || !context.field || !context.exo) throw "Invalid instantiation of ExoControlBase";
-      this.htmlElement = DOM.parseHTML('<span/>');
+      this.htmlElement = document.createElement('span');
+      this.acceptProperties({
+        name: "visible"
+      }, {
+        name: "disabled"
+      });
     }
 
     _getContainerTemplate(obj) {
       if (this.context.field.isPage) {
-        return DOM.format(this.containerTemplate, this._getContainerAttributes());
+        return DOM.format(
+        /*html*/
+        `<span data-replace="true"></span>`, this._getContainerAttributes());
       } else if (this.context.field.type === "button") {
         const tpl =
         /*html*/
@@ -1769,14 +1691,39 @@
       this.htmlElement.dispatchEvent(evt);
     }
 
-    set enabled(value) {
-      let inp = this.htmlElement;
-      inp.disabled = !value;
-      let cnt = inp.closest(".exf-ctl-cnt");
+    set visible(value) {
+      this._visible = value;
 
-      if (cnt) {
-        cnt.classList[value ? "remove" : "add"]("disabled");
+      if (this.rendered) {
+        var elm = this.container || this.htmlElement;
+        elm.style.display = value ? "block" : "none";
       }
+    }
+
+    get visible() {
+      return this._visible;
+    }
+
+    set disabled(value) {
+      this._disabled = value;
+
+      if (this.rendered) {
+        if (value) {
+          this.htmlElement.setAttribute("disabled", "disabled");
+          this.container.classList.add("exf-disabled");
+        } else {
+          this.htmlElement.removeAttribute("disabled");
+          this.container.classList.remove("exf-disabled");
+        }
+      }
+    }
+
+    get rendered() {
+      return this._rendered;
+    }
+
+    get disabled() {
+      return this._disabled;
     }
     /*
     * Tell system which properties to take from the configured field schema
@@ -1797,13 +1744,12 @@
 
         if (!prop) {
           this.acceptedProperties.push(p);
-          if (this.context.field[p.name] !== undefined) this[p.name] = this.context.field[p.name];
+
+          if (this.context.field[p.name] !== undefined) {
+            this[p.name] = this._processProp(p.name, this.context.field[p.name]);
+          }
         }
       });
-    }
-
-    get enabled() {
-      return !this.htmlElement.disabled;
     }
 
     _scope() {
@@ -1888,6 +1834,7 @@
 
       this._addContainerClasses();
 
+      this._rendered = true;
       return this.container;
     }
 
@@ -1929,21 +1876,36 @@
 
       for (var prop in f) {
         if (ExoForm.meta.properties.reserved.includes(prop)) continue;
-        let value = f[prop.toLowerCase()];
+        let name = prop.toLowerCase();
+        let value = f[name];
         let useName = prop; // ExoForm.meta.properties.map[prop] || prop;
 
+        let isSet = this.acceptedProperties.find(e => {
+          return e.name === useName;
+        });
+        if (isSet) continue;
+
         if (this.allowedAttributes.includes(useName)) {
-          this.attributes[useName] = value;
+          this.attributes[useName] = this._processProp(name, value);
         } else {
           if (typeof value === "object") {
             this[useName] = value;
           } else {
-            if (!this.acceptedProperties || !this.acceptedProperties.includes(useName)) {
-              this.dataProps[useName] = value;
-            }
+            this.dataProps[useName] = this._processProp(name, value);
           }
         }
       }
+    }
+
+    _processProp(name, value) {
+      // resolve bound state 
+      let db = this.context.exo.dataBinding;
+
+      if (db) {
+        return db._processFieldProperty(this, name, value);
+      }
+
+      return value;
     } // returns valid state of the control - can be subclassed
 
 
@@ -2031,8 +1993,6 @@
     constructor(context) {
       super(context);
 
-      _defineProperty(this, "containerTemplate", ExoForm.meta.templates.empty);
-
       if (context.field.tagName) {
         try {
           this.htmlElement = DOM.parseHTML('<' + context.field.tagName + '/>');
@@ -2084,14 +2044,9 @@
   }
 
   class ExoInputControl extends ExoElementControl {
-    //containerTemplate = ExoForm.meta.templates.default;
     constructor(context) {
       super(context);
       this.htmlElement = document.createElement('input');
-
-      if (context.field.type === "hidden") {
-        this.containerTemplate = ExoForm.meta.templates.empty;
-      }
     }
 
     async render() {
@@ -2107,6 +2062,9 @@
       switch (this.context.field.type) {
         case "color":
           this.container.classList.add("exf-std-lbl");
+
+        case "hidden":
+          this.container.classList.add("exf-hidden");
           break;
       }
 
@@ -2238,12 +2196,8 @@
   _defineProperty(ExoInputControl, "returnValueType", String);
 
   class ExoTextControl extends ExoInputControl {
-    // "exocontainer, default, nolabel, text, group, form, page, navigation, datalist, datalistItem, button"
     constructor(context) {
       super(context);
-
-      _defineProperty(this, "containerTemplate", ExoForm.meta.templates.text);
-
       this.isTextInput = true;
       this.htmlElement = DOM.parseHTML('<input type="text"/>');
     }
@@ -2299,7 +2253,6 @@
   }
 
   class ExoTextAreaControl extends ExoTextControl {
-    //containerTemplate = ExoForm.meta.templates.text;
     constructor(context) {
       super(context);
 
@@ -2336,10 +2289,9 @@
   }
 
   class ExoListControl extends ExoElementControl {
+    //containerTemplate = ExoForm.meta.templates.default;
     constructor(context) {
       super(context);
-
-      _defineProperty(this, "containerTemplate", ExoForm.meta.templates.default);
 
       _defineProperty(this, "isMultiSelect", false);
 
@@ -2460,9 +2412,9 @@
       /*html*/
       `<option class="{{class}}" {{selected}} value="{{value}}">{{name}}</option>`;
       await this.populateList(this.htmlElement, tpl);
-      let elm = super.render();
+      await super.render();
       this.container.classList.add("exf-input-group", "exf-std-lbl");
-      return elm;
+      return this.container;
     }
 
   }
@@ -2488,7 +2440,7 @@
             </label>
         </div>`;
       await this.populateList(this.htmlElement, tpl);
-      super.render();
+      await super.render();
       this.container.classList.add("exf-input-group", "exf-std-lbl");
       return this.container;
     }
@@ -2692,17 +2644,17 @@
 
           switch (actionParts[0]) {
             case "next":
-              _.context.exo.nextPage();
+              _.context.exo.addins.navigation.nextPage();
 
               break;
 
             case "reset":
-              _.context.exo.nextPage();
+              _.context.exo.addins.navigation.gotoPage(1);
 
               break;
 
             case "goto":
-              _.context.exo.gotoPage(parseInt(actionParts[1]));
+              _.context.exo.addins.navigation.gotoPage(parseInt(actionParts[1]));
 
               break;
           }
@@ -2823,7 +2775,6 @@
   _defineProperty(ExoRangeControl, "returnValueType", Number);
 
   class ExoProgressControl extends ExoElementControl {
-    //containerTemplate = ExoForm.meta.templates.nolabel;
     constructor(context) {
       super(context);
       this.htmlElement = DOM.parseHTML('<progress />');
@@ -2832,6 +2783,56 @@
   }
 
   class ExoFormPageControl extends ExoDivControl {
+    constructor(context) {
+      super(context);
+      this._relevant = true;
+      this._previouslyRelevant = true;
+      this.acceptProperties({
+        name: "relevant",
+        description: "Specifies whether the page is currently relevant/in scope",
+        type: Boolean
+      });
+    }
+
+    async render() {
+      await super.render();
+
+      this._setRelevantState();
+
+      return this.container;
+    }
+
+    set relevant(value) {
+      if (value !== this._previouslyRelevant) {
+        this._relevant = value;
+
+        if (this.container) {
+          this._setRelevantState();
+        }
+
+        this._previouslyRelevant = this._relevant;
+      }
+    }
+
+    get relevant() {
+      return this._relevant;
+    }
+
+    _setRelevantState() {
+      console.log("Set relevancy for page ", this.index, this.relevant);
+
+      if (this.relevant) {
+        this.container.removeAttribute("data-skip");
+      } else {
+        this.container.setAttribute("data-skip", "true");
+      }
+
+      this.context.exo.triggerEvent(ExoFormFactory.events.pageRelevancyChange, {
+        index: this.index,
+        relevant: this.relevant
+      });
+    }
+
     finalize() {}
 
   }
@@ -2839,19 +2840,54 @@
   class ExoFieldSetControl extends ExoFormPageControl {
     constructor(context) {
       super(context);
-      this.htmlElement = DOM.parseHTML(DOM.format(ExoForm.meta.templates.fieldset, context.field));
+      this._index = context.field.index;
+      this.acceptProperties({
+        name: "legend",
+        description: "The legend of the page",
+        type: String
+      }, {
+        name: "intro",
+        description: "The intro of the page",
+        type: String
+      }, {
+        name: "index",
+        description: "Number of the page (1-based)",
+        type: Number
+      });
+      this.htmlElement = DOM.parseHTML(`<fieldset class="exf-cnt exf-page"></fieldset>`);
 
-      if (context.field.legend) {
+      if (this.legend) {
         this.appendChild(DOM.parseHTML(DOM.format(ExoForm.meta.templates.legend, {
-          legend: context.field.legend
+          legend: this.legend
         })));
       }
 
-      if (context.field.intro) {
+      if (this.intro) {
         this.appendChild(DOM.parseHTML(DOM.format(ExoForm.meta.templates.pageIntro, {
-          intro: context.field.intro
+          intro: this.intro
         })));
       }
+    }
+
+    get index() {
+      return this._index;
+    }
+
+    set index(value) {
+      if (typeof value !== "number") throw "Page index must be a number";
+      if (value < 1 || value > this.context.exo.formSchema.pages.length) throw "Invalid page index";
+      this._index = value;
+    }
+
+    async render() {
+      await super.render();
+
+      if (this.index === this.context.exo.addins.navigation.currentPage) {
+        this.htmlElement.classList.add("active");
+      }
+
+      this.htmlElement.setAttribute("data-page", this.index);
+      return this.container;
     }
 
   } //#endregion
@@ -3134,6 +3170,9 @@
       return this.context.field.data.sort();
     }
 
+    set value(data) {// TODO 
+    }
+
     _change() {
       DOM.trigger(this.htmlElement, "change", {
         data: this.context.field.data
@@ -3282,12 +3321,6 @@
   }
 
   class ExoSwitchControl extends ExoBaseControls.controls.range.type {
-    constructor(...args) {
-      super(...args);
-
-      _defineProperty(this, "containerTemplate", ExoForm.meta.templates.labelcontained);
-    }
-
     setProperties() {
       this.context.field.min = 0;
       this.context.field.max = 1;
@@ -3307,15 +3340,16 @@
       const check = e => {
         let sw = e.target.closest(".exf-switch");
         let range = sw.querySelector("[type='range']");
-        sw.classList[range.value === "1" ? "add" : "remove"]("on"); //DOM.trigger(range, "change")
+        sw.classList[range.value === "1" ? "add" : "remove"]("on");
 
         _.triggerChange();
       };
 
       check({
         target: e
-      });
-      if (this.context.field.disabled) this.enabled = false;
+      }); // if (this.context.field.disabled)
+      //     this.enabled = false;
+
       e.addEventListener("click", e => {
         e.stopImmediatePropagation();
         e.cancelBubble = true;
@@ -3604,8 +3638,6 @@
     constructor(context) {
       super(context);
 
-      _defineProperty(this, "containerTemplate", ExoForm.meta.templates.default);
-
       _defineProperty(this, "width", 600);
 
       _defineProperty(this, "height", 400);
@@ -3692,8 +3724,6 @@
   class MultiInputControl extends ExoBaseControls.controls.div.type {
     constructor(context) {
       super(context);
-
-      _defineProperty(this, "containerTemplate", ExoForm.meta.templates.default);
 
       _defineProperty(this, "columns", "");
 
@@ -3825,9 +3855,11 @@
     }
 
     set value(data) {
+      data = data || {};
       this.context.field.value = data;
 
       for (var n in this.fields) {
+        data[n] = data[n] || "";
         this.fields[n].value = data[n];
 
         var elm = this._qs(n);
@@ -4104,6 +4136,8 @@
 
       _defineProperty(this, "title", "Dialog");
 
+      _defineProperty(this, "_visible", false);
+
       _defineProperty(this, "confirmText", "OK");
 
       _defineProperty(this, "cancelText", "Cancel");
@@ -4136,6 +4170,18 @@
     hide(button, e) {
       if (this.context.field.click) {
         this.context.field.click.apply(this, [button, e]);
+      }
+    }
+
+    set visible(value) {
+      this._visible = value;
+
+      if (this.rendered) {
+        if (value) {
+          this.show();
+        } else {
+          this.hide();
+        }
       }
     }
 
@@ -4605,30 +4651,7 @@
   }
 
   class ExoFormTheme {
-    // exf-base-text
     constructor(exo) {
-      _defineProperty(this, "containerTemplate1",
-      /*html*/
-      `<div data-id="{{id}}" class="exf-ctl-cnt {{class}}">
-    <label title="{{caption}}">
-        <div class="exf-caption">{{caption}}</div>
-        
-        <span data-replace="true"></span>
-    </label>
-</div>`);
-
-      _defineProperty(this, "containerTemplate",
-      /*html*/
-      `<div data-id="{{id}}" class="exf-ctl-cnt {{class}}">
-    <div class="exf-ctl">
-        <label aria-hidden="true" class="exf-label" title="{{caption}}">Key</label>
-        <span data-replace="true"></span>
-    </div>
-    <div class="exf-fld-details">
-        <div class="exf-help-wrapper"></div>
-    </div>
-</div>`);
-
       this.exo = exo;
     }
 
@@ -4759,7 +4782,7 @@
 
         if (pgElm) {
           let page = parseInt(pgElm.getAttribute("data-page"));
-          this.exo.gotoPage(page);
+          this.exo.addins.navigation.gotoPage(page);
           setTimeout(() => {
             f(field);
           }, 20);
@@ -4897,6 +4920,8 @@
 
       this.exo = exo;
       this._visible = true;
+      this._currentPage = 1;
+      this.form = exo.form;
     }
 
     get visible() {
@@ -4905,12 +4930,12 @@
 
     set visible(value) {
       this._visible = value;
-      let cnt = this.exo.form.querySelector(".exf-nav-cnt");
+      let cnt = this.form.querySelector(".exf-nav-cnt");
       if (cnt) DOM[this._visible ? "show" : "hide"]();
     }
 
     clear() {
-      let cnt = this.exo.form.querySelector(".exf-nav-cnt");
+      let cnt = this.form.querySelector(".exf-nav-cnt");
       if (cnt) cnt.remove();
     }
 
@@ -4924,7 +4949,30 @@
         this.addButton(b, this.buttons[b]);
       }
 
-      this.exo.form.appendChild(this.container);
+      this.form.appendChild(this.container);
+      this.form.setAttribute("data-current-page", this.currentPage);
+      this.form.querySelector(".exf-cnt.exf-nav-cnt").addEventListener("click", e => {
+        console.log("nav click: " + e.target.name);
+
+        switch (e.target.name) {
+          case "next":
+            e.preventDefault();
+            this.next();
+            break;
+
+          case "prev":
+            e.preventDefault();
+            this.back();
+            break;
+        }
+      });
+      this.exo.on(ExoFormFactory.events.page, e => {
+        this.updateButtonStates();
+      });
+      this.exo.on(ExoFormFactory.events.pageRelevancyChange, e => {
+        this._pageCount = this.getLastPage();
+        this.updateButtonStates();
+      });
     }
 
     canMove(fromPage, toPage) {
@@ -4948,17 +4996,146 @@
       this.buttons[name].element = btn;
       this.container.appendChild(btn);
     }
+    /**
+     * Moves to the next page in a multi-page form.
+     */
+
 
     next() {
-      this.exo.nextPage();
+      this._updateView(+1);
     }
+    /**
+     * Moves to the previous page in a multi-page form.
+     */
+
 
     back() {
-      this.exo.previousPage();
+      this._updateView(-1);
     }
+    /**
+     * Moves to the first page in a multi-page form.
+     */
+
 
     restart() {
-      this.exo.gotoPage(1);
+      this.goto(1);
+    }
+    /**
+     * Moves to the given page in a multi-page form.
+     */
+
+
+    goto(page) {
+      return this._updateView(0, page);
+    }
+
+    _updateView(add, page) {
+      let current = this.currentPage;
+
+      if (add > 0 && current > 0) {
+        if (!this.exo.addins.validation.isPageValid(this.currentPage)) {
+          this.exo.addins.validation.reportValidity(this.currentPage);
+          return;
+        }
+      }
+
+      if (add !== 0) page = parseInt(this.form.getAttribute("data-current-page") || "0");
+      console.log("updateview 1 -> ", add, page, "current", current);
+      page = this._getNextPage(add, page);
+      console.log("updateview 2 -> ", add, page, "current", current);
+      this._pageCount = this.getLastPage();
+      this._currentPage = page;
+
+      if (current > 0) {
+        if (!this.canMove(current, page)) return;
+        let returnValue = this.exo.triggerEvent(ExoFormFactory.events.beforePage, {
+          from: current,
+          page: page,
+          pageCount: this.pageCount
+        });
+        if (returnValue === false) return;
+      }
+
+      this.form.setAttribute("data-current-page", this.currentPage);
+      this.form.setAttribute("data-page-count", this.exo.formSchema.pages.length);
+      this._currentPage = page;
+      let i = 0;
+      this.form.querySelectorAll('.exf-page[data-page]').forEach(p => {
+        i++;
+        p.classList[i === page ? "add" : "remove"]("active");
+      });
+      this.update();
+      this.exo.triggerEvent(ExoFormFactory.events.page, {
+        from: current,
+        page: page,
+        pageCount: this.pageCount
+      });
+      return page;
+    }
+
+    get currentPage() {
+      if (!this._currentPage) this._currentPage = 1;
+      return this._currentPage;
+    }
+
+    get pageCount() {
+      if (!this._pageCount) this._pageCount = this.getLastPage();
+      return this._pageCount;
+    }
+
+    _getNextPage(add, page) {
+      let ok = false;
+      var skip;
+
+      do {
+        page += add;
+
+        if (page > this.exo.formSchema.pages.length) {
+          return undefined;
+        }
+        let pgElm = this.form.querySelector('.exf-page[data-page="' + page + '"]');
+
+        if (pgElm) {
+          skip = pgElm.getAttribute("data-skip") === "true";
+          console.debug("Wizard Page " + page + " currently " + (skip ? "OUT OF" : "in") + " scope");
+
+          if (!skip) {
+            ok = true;
+          }
+        } else {
+          ok = true;
+          return undefined;
+        }
+
+        if (add === 0) break;
+      } while (!ok);
+
+      if (page < 1) page = 1;
+      return page;
+    }
+
+    getLastPage() {
+      let pageNr = parseInt(this.form.getAttribute("data-current-page"));
+      let lastPage = 0;
+      let nextPage = -1;
+
+      do {
+        nextPage = this._getNextPage(+1, pageNr);
+
+        if (nextPage) {
+          lastPage = nextPage;
+          pageNr = nextPage;
+        }
+      } while (nextPage);
+
+      return lastPage || pageNr || 1;
+    }
+
+    updateButtonStates() {
+      let prev = this.buttons["prev"];
+      if (prev && prev.element) DOM[this.currentPage === 1 ? "disable" : "enable"](prev.element);
+      let nxt = this.buttons["next"];
+      if (nxt && nxt.element) DOM[this.currentPage === this.pageCount ? "disable" : "enable"](nxt.element);
     }
 
     update() {}
@@ -4969,8 +5146,9 @@
 
   class ExoFormStaticNavigation extends ExoFormNavigationBase {
     render() {
+      super.render();
       this.exo.on(ExoFormFactory.events.renderReady, e => {
-        this.exo.form.querySelectorAll(".exf-page").forEach(elm => {
+        this.form.querySelectorAll(".exf-page").forEach(elm => {
           elm.style.display = "block";
         });
       });
@@ -4991,13 +5169,10 @@
     }
 
     render() {
-      const _ = this;
-
       super.render();
       this.buttons["send"].element.addEventListener("click", e => {
         e.preventDefault();
-
-        _.exo.submitForm();
+        this.exo.submitForm();
       });
     }
 
@@ -5021,31 +5196,6 @@
           class: "form-post"
         }
       });
-    }
-
-    render() {
-      const _ = this;
-
-      super.render();
-      this.buttons["prev"].element.addEventListener("click", e => {
-        e.preventDefault();
-
-        _.back();
-      });
-      this.buttons["next"].element.addEventListener("click", e => {
-        e.preventDefault();
-
-        _.next();
-      });
-
-      _.exo.on(ExoFormFactory.events.page, e => {
-        let page = e.detail.page;
-        let pageCount = e.detail.pageCount;
-        DOM[page === 1 ? "disable" : "enable"](_.buttons["prev"].element);
-        DOM[page === pageCount ? "disable" : "enable"](_.buttons["next"].element);
-      }); // let steps = new WizardProgress(_.exo).render();
-      // _.exo.container.insertBefore(steps, _.exo.form);
-
     }
 
   }
@@ -5077,7 +5227,7 @@
         if (e.keyCode === 8) {
           // backspace - TODO: Fix 
           if (e.target.value === "" && !e.target.selectionStart || e.target.selectionStart === 0) {
-            _.exo.previousPage();
+            _.this.back();
 
             e.preventDefault();
             e.returnValue = false;
@@ -5114,9 +5264,7 @@
     }
 
     focusFirstControl() {
-      const _ = this;
-
-      var first = _.exo.form.querySelector(".exf-page.active .exf-ctl-cnt");
+      var first = this.exo.form.querySelector(".exf-page.active .exf-ctl-cnt");
 
       if (first && first.offsetParent !== null) {
         first.closest(".exf-page").scrollIntoView();
@@ -5138,9 +5286,9 @@
       var isValid = f._control.valid;
 
       if (isValid || !this.multiValueFieldTypes.includes(f.type)) {
-        if (this.exo.currentPage == this.exo.getLastPage()) {
+        if (this._currentPage == this.getLastPage()) {
           this.exo.container.classList.add("end-reached");
-          this.exo.form.appendChild(this.exo.container.querySelector(".exf-nav-cnt"));
+          this.form.appendChild(this.exo.container.querySelector(".exf-nav-cnt"));
         } else {
           // special case: detail.field included - workaround 
           let type = f.type;
@@ -5186,6 +5334,7 @@
   class ExoFormNoProgress {
     constructor(exo) {
       this.exo = exo;
+      this.nav = exo.addins.navigation;
     }
 
     render() {
@@ -5270,7 +5419,7 @@
         b.addEventListener("click", e => {
           var step = parseInt(b.querySelector("div.step").innerText);
 
-          _.exo[step > 0 ? "nextPage" : "previousPage"]();
+          _.exo.addins.navigation[step > 0 ? "next" : "back"]();
         });
       });
 
@@ -5285,9 +5434,9 @@
     setClasses() {
       const _ = this;
 
-      let index = _.exo.currentPage;
+      let index = _.nav.currentPage;
 
-      let steps = _.exo.getLastPage();
+      let steps = _.nav.getLastPage();
 
       if (!_.container) return;
       if (index < 0 || index > steps) return;
@@ -5311,7 +5460,8 @@
 
   }
 
-  class ExoFormSurveyProgress extends ExoFormDefaultProgress {}
+  class ExoFormSurveyProgress extends ExoFormDefaultProgress {//TODO
+  }
 
   class ExoFormProgress {
     static getType(exo) {
@@ -5547,7 +5697,7 @@
     }
 
     static goto(obj) {
-      return obj.exoForm.gotoPage(obj.rule.page);
+      return obj.exoForm.addins.navigation.gotoPage(obj.rule.page);
     }
 
   } //TODO
@@ -5915,6 +6065,8 @@
     // cancellable - called just before paging
     page: ExoFormFactory._ev_pfx + "page",
     // after moving to other page
+    pageRelevancyChange: ExoFormFactory._ev_pfx + "page-relevancy-change",
+    // when a page's relevancy state changes (e.g. moves in/out of scope)
     post: ExoFormFactory._ev_pfx + "post",
     // on form post/submit
     error: ExoFormFactory._ev_pfx + "error" // when any error occurs
@@ -6883,8 +7035,7 @@
     wizardRendered() {} // for subclassing
 
 
-    post(obj) {
-      alert(JSON.stringify(obj, null, 2));
+    post(obj) {///alert(JSON.stringify(obj, null, 2))
     }
 
     event(e) {}

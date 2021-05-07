@@ -449,7 +449,7 @@
                 transform: translate(-50%, -50%) scale(0);
             }
 
-            &:hover {
+            &:hover:not(:disabled) {
                 color: $mf-focus-color;
                 box-shadow: $shadow-6;
             }
@@ -465,6 +465,10 @@
 
             &:focus {
                 outline: none;
+            }
+
+            &:disabled{
+                background-color: var(--color-button-disabled);
             }
         }
     }

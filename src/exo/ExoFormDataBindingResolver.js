@@ -1,15 +1,23 @@
 import Core from '../pwa/Core';
+import ExoFormFactory from './ExoFormFactory';
 
 class ExoFormDataBindingResolver {
 
     constructor(dataBinding) {
         this.dataBinding = dataBinding;
         this.exo = dataBinding.exo;
+        this._boundControlState = [];
+    }
+
+    addBoundControl(settings) {
+        this._boundControlState.push(settings);
     }
 
     resolve() {
         this._checkSchemaLogic();
+
         this._replaceVars(this.exo.container);
+        this._bindControlStateToUpdatedModel()
     }
 
     _resolveVars(str, cb, ar) {
@@ -35,7 +43,7 @@ class ExoFormDataBindingResolver {
             }
 
             s = this._resolveVars(s, e => {
-                let value = this._getVar(e);
+                let value = this.dataBinding.get(e, "");
                 return value;
             }, ar);
 
@@ -56,11 +64,9 @@ class ExoFormDataBindingResolver {
         }
     }
 
-    _getVar(path) {
-        return this.dataBinding.get(path, "");
-    }
 
     _checkSchemaLogic() {
+
         const model = this.exo.dataBinding.model;
         if (model && model.logic) {
             if (typeof (model.logic) === "function") {
@@ -84,7 +90,7 @@ class ExoFormDataBindingResolver {
     applyJSLogic(f, js, model) {
         try {
             if (f) {
-                model.logic.bind(this.exo)(model);
+                model.logic.bind(this.exo)(model, this.exo);
             }
             else {
                 Core.scopeEval(this.exo, js)
@@ -97,6 +103,17 @@ class ExoFormDataBindingResolver {
         finally {
 
         }
+    }
+
+    _bindControlStateToUpdatedModel() {
+        console.log("bindControlStateToUpdatedModel called");
+
+        this._boundControlState.forEach(obj => {
+            let value = this.dataBinding.get(obj.path);
+            console.debug("bindControlStateToUpdatedModel", obj.propertyName, "on", ExoFormFactory.fieldToString(obj.field), "to", value, obj.path);
+            obj.control[obj.propertyName] = value;
+        });
+
     }
 }
 

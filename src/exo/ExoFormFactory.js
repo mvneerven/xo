@@ -141,6 +141,7 @@ class ExoFormFactory {
         dataModelChange: ExoFormFactory._ev_pfx + "datamodel-change", // when the underlying datamodel to which the form is bound changes
         beforePage: ExoFormFactory._ev_pfx + "before-page", // cancellable - called just before paging
         page: ExoFormFactory._ev_pfx + "page", // after moving to other page
+        pageRelevancyChange: ExoFormFactory._ev_pfx + "page-relevancy-change", // when a page's relevancy state changes (e.g. moves in/out of scope)
         post: ExoFormFactory._ev_pfx + "post", // on form post/submit
         error: ExoFormFactory._ev_pfx + "error" // when any error occurs
     }

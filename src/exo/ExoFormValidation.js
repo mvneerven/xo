@@ -56,7 +56,7 @@ class ExoFormDefaultValidation {
             let pgElm = element.closest('[data-page]');
             if (pgElm) {
                 let page = parseInt(pgElm.getAttribute("data-page"));
-                this.exo.gotoPage(page);
+                this.exo.addins.navigation.gotoPage(page);
                 setTimeout(()=>{
                     f(field)
                 }, 20);

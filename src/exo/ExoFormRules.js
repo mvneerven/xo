@@ -202,7 +202,7 @@ class Page {
     }
 
     static goto(obj) {
-        return obj.exoForm.gotoPage(obj.rule.page);
+        return obj.exoForm.addins.navigation.gotoPage(obj.rule.page);
     }
 }
 

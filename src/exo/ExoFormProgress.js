@@ -4,6 +4,7 @@ import ExoFormFactory from './ExoFormFactory';
 class ExoFormNoProgress {
     constructor(exo) {
         this.exo = exo;
+        this.nav = exo.addins.navigation;
     }
 
     render() {
@@ -79,7 +80,7 @@ class ExoFormStepsProgress extends ExoFormDefaultProgress {
         _.container.querySelectorAll(".step-wizard ul button").forEach(b => {
             b.addEventListener("click", e => {
                 var step = parseInt(b.querySelector("div.step").innerText);
-                _.exo[step > 0 ? "nextPage" : "previousPage"]();
+                _.exo.addins.navigation[step > 0 ? "next" : "back"]();
             })
         });
 
@@ -95,8 +96,8 @@ class ExoFormStepsProgress extends ExoFormDefaultProgress {
     setClasses() {
         const _ = this;
 
-        let index = _.exo.currentPage;
-        let steps = _.exo.getLastPage();
+        let index = _.nav.currentPage;
+        let steps = _.nav.getLastPage();
 
         if (!_.container)
             return;
@@ -126,7 +127,7 @@ class ExoFormStepsProgress extends ExoFormDefaultProgress {
 }
 
 class ExoFormSurveyProgress extends ExoFormDefaultProgress {
-
+    //TODO
 }
 
 class ExoFormProgress {
@@ -141,7 +142,7 @@ class ExoFormProgress {
 
     static getType(exo) {
         let type = exo.formSchema.progress;
-        if (typeof(type) === "undefined" || type === "auto")
+        if (typeof (type) === "undefined" || type === "auto")
             type = ExoFormProgress.matchProgressType(exo);
 
         return ExoFormProgress.types[type];
@@ -149,7 +150,7 @@ class ExoFormProgress {
 
 
     static matchProgressType(exo) {
-        if (exo.formSchema.pages.length > 1){
+        if (exo.formSchema.pages.length > 1) {
             if (exo.formSchema.navigation === "static")
                 return "none"
 

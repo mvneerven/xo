@@ -1,5 +1,8 @@
 const schema = {
     model: {
+        schemas: {
+            person: "/data/json/schemas/person-schema.json",
+        },
         instance: {
             person: {
                 name: {
@@ -7,25 +10,25 @@ const schema = {
                     last: "Doe"
                 },
                 age: 57,
-                gender: "m"
+                gender: "male"
             },
             contract: {
                 agree: false
             }
         },
-        logic: model => {
-            const exo = model.exo,
-                person = model.instance.person,
+        logic: (model, exo) => {
+            const person = model.instance.person,
                 b = model.bindings;
 
-            b.genderUnknown = !['m', 'f'].includes(person.gender);
+            b.genderUnknown = !['male', 'female'].includes(person.gender);
             b.title =
-                (b.genderUnknown ? '' : (person.gender === 'm' ? 'Mr ' : 'Mrs '))
+                (b.genderUnknown ? '' : (person.gender === 'male' ? 'Mr ' : 'Mrs '))
                 + person.name.first + ' ' + person.name.last;
-            b.over18 = model.instance.person.age >= 18;
-            b.continue = b.over18 && model.instance.contract.agree;
+            b.under18 = model.instance.person.age <= 17;
+            b.continue = !b.under18 && model.instance.contract.agree;
+
             b.info = 'agree to proceed'
-            if (b.continue) { exo.nextPage() } else { if (!b.over18) b.info = 'You have to be 18' }
+            //if (b.continue) { exo.addins.navigation.next() } 
 
         }
     },
@@ -43,29 +46,33 @@ const schema = {
                 {
                     name: "age",
                     type: "number",
+                    min: 16,
+                    max: 110,
+                    step: 1,
                     caption: "Your age",
                     bind: "instance.person.age"
                 },
                 {
                     name: "gender",
                     type: "dropdown",
+                    disabled: "@bindings.under18",
                     caption: "Gender",
                     items: [
                         {
                             name: "Please choose",
-                            value: ""
+                            value: "unknown"
                         },
                         {
                             name: "Male",
-                            value: "m"
+                            value: "male"
                         },
                         {
                             name: "Female",
-                            value: "f"
+                            value: "female"
                         },
                         {
                             name: "Not important",
-                            value: "u"
+                            value: "unspecified"
                         }
                     ],
                     bind: "instance.person.gender"
@@ -79,16 +86,17 @@ const schema = {
                 },
                 {
                     name: "info",
-                    type: "info",
+                    visible: "@bindings.under18",
+                    type: "dialog",
                     title: "Info",
-                    body: "You have to be over 18 and agree",
+                    body: "You have to be over 18 to continue",
                     bind: "instance.contract.info"
                 }
             ]
         },
         {
             legend: "Page 2",
-            relevant: "@bindings.continue",
+            relevant: "@instance.contract.agree",
             fields: [
                 {
                     name: "why",

@@ -238,11 +238,15 @@
           box-shadow: none;
 }
 
-.exf-container.exf-theme-fluent .exf-btn:hover {
+.exf-container.exf-theme-fluent .exf-btn:hover:not(:disabled) {
   border-color: #787878;
 }
 
 .exf-container.exf-theme-fluent .exf-btn.primary {
   background-color: var(--color-button-primary);
+}
+
+.exf-container.exf-theme-fluent .exf-btn:disabled {
+  background-color: var(--color-button-disabled);
 }
 /*# sourceMappingURL=exf-fluent.css.map */

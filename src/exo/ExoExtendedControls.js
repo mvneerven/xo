@@ -78,6 +78,11 @@ class ExoFileDropControl extends ExoBaseControls.controls.input.type {
         return this.context.field.data.sort();
     }
 
+    set value(data) {
+        // TODO 
+    }
+
+
     _change() {
         DOM.trigger(this.htmlElement, "change", {
             data: this.context.field.data
@@ -236,8 +241,6 @@ class ExoCKRichEditor extends ExoBaseControls.controls.div.type {
 
 class ExoSwitchControl extends ExoBaseControls.controls.range.type {
 
-    containerTemplate = ExoForm.meta.templates.labelcontained;
-
     static returnValueType = Boolean;
 
     setProperties() {
@@ -262,15 +265,13 @@ class ExoSwitchControl extends ExoBaseControls.controls.range.type {
             let sw = e.target.closest(".exf-switch");
             let range = sw.querySelector("[type='range']");
             sw.classList[range.value === "1" ? "add" : "remove"]("on");
-            //DOM.trigger(range, "change")
-
             _.triggerChange()
         };
 
         check({ target: e });
 
-        if (this.context.field.disabled)
-            this.enabled = false;
+        // if (this.context.field.disabled)
+        //     this.enabled = false;
 
         e.addEventListener("click", e => {
             e.stopImmediatePropagation();
@@ -547,11 +548,7 @@ class DropDownButton extends ExoBaseControls.controls.list.type {
 }
 
 class ExoEmbedControl extends ExoBaseControls.controls.element.type {
-
-    containerTemplate = ExoForm.meta.templates.default;
-
     width = 600;
-
     height = 400;
 
     constructor(context) {
@@ -630,8 +627,6 @@ class ExoVideoControl extends ExoEmbedControl {
 }
 
 class MultiInputControl extends ExoBaseControls.controls.div.type {
-    containerTemplate = ExoForm.meta.templates.default;
-
     columns = ""
 
     areas = "";
@@ -705,7 +700,7 @@ class MultiInputControl extends ExoBaseControls.controls.div.type {
             }
         }
 
-        
+
         const rs = async (name, options) => {
             return _.context.exo.renderSingleControl(options)
         }
@@ -743,7 +738,7 @@ class MultiInputControl extends ExoBaseControls.controls.div.type {
             if (this.areas)
                 elm.setAttribute("style", `grid-area: ${n}`);
         };
-        
+
         // inform system that this is the master control 
         // See: ExoFormFactory.getFieldFromElement(... , {master: true})
         this.htmlElement.setAttribute("exf-data-master", "multiinput");
@@ -751,21 +746,21 @@ class MultiInputControl extends ExoBaseControls.controls.div.type {
 
     }
 
-    _qs(name){
+    _qs(name) {
         const f = this.context.field;
-        if(this.htmlElement){
+        if (this.htmlElement) {
             return this.htmlElement.querySelector('[data-multi-name="' + f.name + "_" + name + '"]')
         }
         return "";
     }
 
     get value() {
-        
+
         let data = this.context.field.value || {};
 
         for (var n in this.fields) {
             var elm = this._qs(n);
-            if(elm){
+            if (elm) {
                 let fld = ExoFormFactory.getFieldFromElement(elm);
                 data[n] = fld._control.value;
             }
@@ -774,12 +769,13 @@ class MultiInputControl extends ExoBaseControls.controls.div.type {
     }
 
     set value(data) {
-        
+        data = data || {};
         this.context.field.value = data
         for (var n in this.fields) {
+            data[n] = data[n] || "";
             this.fields[n].value = data[n];
             var elm = this._qs(n);
-            if(elm){
+            if (elm) {
                 let fld = ExoFormFactory.getFieldFromElement(elm);
                 fld._control.value = data[n];
             }
@@ -952,6 +948,8 @@ class ExoDialogControl extends ExoBaseControls.controls.div.type {
 
     title = "Dialog";
 
+    _visible = false;
+
     confirmText = "OK";
 
     cancelText = "Cancel";
@@ -984,6 +982,19 @@ class ExoDialogControl extends ExoBaseControls.controls.div.type {
     hide(button, e) {
         if (this.context.field.click) {
             this.context.field.click.apply(this, [button, e])
+        }
+    }
+
+    set visible(value) {
+        this._visible = value;
+
+        if (this.rendered) {
+            if (value) {
+                this.show()
+            }
+            else {
+                this.hide();
+            }
         }
     }
 

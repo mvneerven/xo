@@ -8,31 +8,37 @@ import DOM from '../pwa/DOM';
 class ExoControlBase {
     attributes = {};
 
+    _visible = true;
+    _disabled = false;
+    _rendered = false;
+
     acceptedProperties = [];
 
     dataProps = {};
 
     static returnValueType = undefined;
 
-    containerTemplate = ExoForm.meta.templates.empty;
-
     constructor(context) {
-
         if (this.constructor === ExoControlBase)
             throw new Error("Can't instantiate abstract class!");
-
 
         this.context = context;
         if (!context || !context.field || !context.exo)
             throw "Invalid instantiation of ExoControlBase";
 
-        this.htmlElement = DOM.parseHTML('<span/>');
+        this.htmlElement = document.createElement('span');
+
+        this.acceptProperties(
+            { name: "visible" },
+            { name: "disabled" }
+        );
+
     }
 
     _getContainerTemplate(obj) {
 
         if (this.context.field.isPage) {
-            return DOM.format(this.containerTemplate, this._getContainerAttributes())
+            return DOM.format( /*html*/`<span data-replace="true"></span>`, this._getContainerAttributes())
         }
 
         else if (this.context.field.type === "button") {
@@ -78,7 +84,6 @@ class ExoControlBase {
         return ExoFormFactory.checkTypeConversion(this.context.field.type, value)
     }
 
-
     get value() {
         let v = this.htmlElement.value;
         return this.typeConvert(v);
@@ -88,7 +93,6 @@ class ExoControlBase {
         this.htmlElement.value = data;
     }
 
-
     triggerChange(detail) {
         var evt = document.createEvent("HTMLEvents");
         evt.initEvent("change", true, true);
@@ -96,13 +100,40 @@ class ExoControlBase {
         this.htmlElement.dispatchEvent(evt);
     }
 
-    set enabled(value) {
-        let inp = this.htmlElement;
-        inp.disabled = !value;
-        let cnt = inp.closest(".exf-ctl-cnt");
-        if (cnt) {
-            cnt.classList[value ? "remove" : "add"]("disabled");
+    set visible(value) {
+        this._visible = value;
+        if (this.rendered) {
+            var elm = this.container || this.htmlElement;
+            elm.style.display = value ? "block" : "none";
         }
+    }
+
+    get visible() {
+        return this._visible;
+    }
+
+    set disabled(value) {
+        this._disabled = value;
+
+        if (this.rendered) {
+            if (value) {
+                this.htmlElement.setAttribute("disabled", "disabled")
+                this.container.classList.add("exf-disabled");
+            }
+            else {
+
+                this.htmlElement.removeAttribute("disabled");
+                this.container.classList.remove("exf-disabled");
+            }
+        }
+    }
+
+    get rendered() {
+        return this._rendered;
+    }
+
+    get disabled() {
+        return this._disabled;
     }
 
     /*
@@ -122,14 +153,11 @@ class ExoControlBase {
             })
             if (!prop) {
                 this.acceptedProperties.push(p);
-                if (this.context.field[p.name] !== undefined)
-                    this[p.name] = this.context.field[p.name];
+                if (this.context.field[p.name] !== undefined) {
+                    this[p.name] = this._processProp(p.name, this.context.field[p.name]);
+                }
             }
         });
-    }
-
-    get enabled() {
-        return !this.htmlElement.disabled;
     }
 
     _scope() {
@@ -229,14 +257,14 @@ class ExoControlBase {
         }
 
         // apply value if set in field
-        if(this.context.field.value){
+        if (this.context.field.value) {
             this.value = this.context.field.value;
             if (this.value)
                 this.container.classList.add("exf-filled");
         }
 
         this._addContainerClasses();
-
+        this._rendered = true;
         return this.container
     }
 
@@ -285,11 +313,19 @@ class ExoControlBase {
             if (ExoForm.meta.properties.reserved.includes(prop))
                 continue;
 
-            let value = f[prop.toLowerCase()];
+            let name = prop.toLowerCase();
+            let value = f[name];
+
             let useName = prop;// ExoForm.meta.properties.map[prop] || prop;
 
+            let isSet = this.acceptedProperties.find(e => {
+                return e.name === useName
+            })
+            if (isSet)
+                continue;
+
             if (this.allowedAttributes.includes(useName)) {
-                this.attributes[useName] = value;
+                this.attributes[useName] = this._processProp(name, value);
             }
             else {
 
@@ -297,12 +333,19 @@ class ExoControlBase {
                     this[useName] = value;
                 }
                 else {
-                    if (!this.acceptedProperties || !this.acceptedProperties.includes(useName)) {
-                        this.dataProps[useName] = value;
-                    }
+                    this.dataProps[useName] = this._processProp(name, value);
                 }
             }
         }
+    }
+
+    _processProp(name, value) {
+        // resolve bound state 
+        let db = this.context.exo.dataBinding;
+        if (db) {
+            return db._processFieldProperty(this, name, value);
+        }
+        return value;
     }
 
     // returns valid state of the control - can be subclassed
@@ -382,10 +425,7 @@ class ExoControlBase {
 }
 
 export class ExoElementControl extends ExoControlBase {
-
     static returnValueType = undefined;
-
-    containerTemplate = ExoForm.meta.templates.empty;
 
     constructor(context) {
         super(context);
@@ -449,17 +489,12 @@ class ExoLinkControl extends ExoElementControl {
 }
 
 export class ExoInputControl extends ExoElementControl {
-    //containerTemplate = ExoForm.meta.templates.default;
 
     static returnValueType = String;
 
     constructor(context) {
         super(context);
         this.htmlElement = document.createElement('input');
-
-        if (context.field.type === "hidden") {
-            this.containerTemplate = ExoForm.meta.templates.empty;
-        }
     }
 
     async render() {
@@ -470,16 +505,17 @@ export class ExoInputControl extends ExoElementControl {
         }
 
         await super.render();
-                
+
         this.testDataList();
 
 
         switch (this.context.field.type) {
             case "color":
                 this.container.classList.add("exf-std-lbl");
+            case "hidden":
+                this.container.classList.add("exf-hidden");
                 break;
         }
-
 
         return this.container
     }
@@ -601,10 +637,6 @@ export class ExoInputControl extends ExoElementControl {
 }
 
 export class ExoTextControl extends ExoInputControl {
-
-    // "exocontainer, default, nolabel, text, group, form, page, navigation, datalist, datalistItem, button"
-    containerTemplate = ExoForm.meta.templates.text;
-
     constructor(context) {
         super(context);
 
@@ -668,9 +700,6 @@ export class ExoDivControl extends ExoElementControl {
 }
 
 class ExoTextAreaControl extends ExoTextControl {
-
-    //containerTemplate = ExoForm.meta.templates.text;
-
     autogrow = false;
 
     constructor(context) {
@@ -709,7 +738,7 @@ class ExoTextAreaControl extends ExoTextControl {
 
 export class ExoListControl extends ExoElementControl {
 
-    containerTemplate = ExoForm.meta.templates.default;
+    //containerTemplate = ExoForm.meta.templates.default;
 
     isMultiSelect = false;
 
@@ -803,7 +832,7 @@ export class ExoListControl extends ExoElementControl {
 
     async render() {
         let elm = await super.render();
-        
+
         switch (this.view) {
             case "tiles":
                 elm.classList.add("tiles");
@@ -832,10 +861,10 @@ class ExoDropdownListControl extends ExoListControl {
         let f = this.context.field;
         const tpl = /*html*/`<option class="{{class}}" {{selected}} value="{{value}}">{{name}}</option>`;
         await this.populateList(this.htmlElement, tpl);
-        let elm = super.render();
+        await super.render();
         this.container.classList.add("exf-input-group", "exf-std-lbl");
 
-        return elm;
+        return this.container;
     }
 }
 
@@ -862,7 +891,7 @@ class ExoInputListControl extends ExoListControl {
         </div>`;
         await this.populateList(this.htmlElement, tpl);
 
-        super.render();
+        await super.render();
         this.container.classList.add("exf-input-group", "exf-std-lbl");
         return this.container;
     }
@@ -889,7 +918,7 @@ class ExoInputListControl extends ExoListControl {
 
     set value(data) {
         let inp = this.htmlElement.querySelector("[name]");
-        if(inp)
+        if (inp)
             inp.value = data;
     }
 
@@ -922,8 +951,8 @@ class ExoRadioButtonListControl extends ExoInputListControl {
     }
 
     set value(data) {
-        let inp = this.htmlElement.querySelectorAll("[name]").forEach(el=>{
-            if(el.value == data)
+        let inp = this.htmlElement.querySelectorAll("[name]").forEach(el => {
+            if (el.value == data)
                 el.checked = true;
         });
     }
@@ -949,10 +978,10 @@ class ExoCheckboxListControl extends ExoInputListControl {
     }
 
     //TODO
-    set value(data){
+    set value(data) {
         //debugger;
         this.container.querySelectorAll("[name]").forEach(i => {
-            
+
         });
     }
 
@@ -994,7 +1023,7 @@ class ExoCheckboxControl extends ExoCheckboxListControl {
         this.container.querySelector("[name]").checked = data;
     }
 
-    
+
 
 
 }
@@ -1065,15 +1094,14 @@ class ExoButtonControl extends ExoElementControl {
 
                 switch (actionParts[0]) {
                     case "next":
-                        _.context.exo.nextPage();
+                        _.context.exo.addins.navigation.nextPage();
                         break;
                     case "reset":
-                        _.context.exo.nextPage();
+                        _.context.exo.addins.navigation.gotoPage(1);
                         break;
 
                     case "goto":
-
-                        _.context.exo.gotoPage(parseInt(actionParts[1]));
+                        _.context.exo.addins.navigation.gotoPage(parseInt(actionParts[1]));
                         break;
                 }
             }
@@ -1206,7 +1234,6 @@ export class ExoRangeControl extends ExoNumberControl {
 
 class ExoProgressControl extends ExoElementControl {
 
-    //containerTemplate = ExoForm.meta.templates.nolabel;
     constructor(context) {
         super(context);
         this.htmlElement = DOM.parseHTML('<progress />');
@@ -1214,6 +1241,61 @@ class ExoProgressControl extends ExoElementControl {
 }
 
 class ExoFormPageControl extends ExoDivControl {
+
+    constructor(context) {
+        super(context);
+
+        this._relevant = true;
+        this._previouslyRelevant = true;
+
+        this.acceptProperties(
+            {
+                name: "relevant",
+                description: "Specifies whether the page is currently relevant/in scope",
+                type: Boolean
+            }
+        )
+    }
+
+    async render() {
+        await super.render();
+
+        this._setRelevantState();
+
+        return this.container;
+    }
+
+    set relevant(value) {
+
+        if (value !== this._previouslyRelevant) {
+            this._relevant = value;
+            if (this.container) {
+                this._setRelevantState();
+            }
+            this._previouslyRelevant = this._relevant;
+        }
+    }
+
+    get relevant() {
+        return this._relevant
+    }
+
+    _setRelevantState() {
+        console.log("Set relevancy for page ", this.index, this.relevant)
+
+        if (this.relevant) {
+            this.container.removeAttribute("data-skip");
+        }
+        else {
+            this.container.setAttribute("data-skip", "true");
+        }
+
+        this.context.exo.triggerEvent(ExoFormFactory.events.pageRelevancyChange, {
+            index: this.index,
+            relevant: this.relevant
+        });
+    }
+
     finalize() { }
 }
 
@@ -1221,26 +1303,74 @@ class ExoFieldSetControl extends ExoFormPageControl {
     constructor(context) {
         super(context);
 
-        this.htmlElement = DOM.parseHTML(DOM.format(ExoForm.meta.templates.fieldset, context.field));
 
-        if (context.field.legend) {
+        this._index = context.field.index;
+
+        this.acceptProperties(
+            {
+                name: "legend",
+                description: "The legend of the page",
+                type: String
+            },
+            {
+                name: "intro",
+                description: "The intro of the page",
+                type: String
+            },
+            {
+                name: "index",
+                description: "Number of the page (1-based)",
+                type: Number
+            }
+        )
+
+        this.htmlElement = DOM.parseHTML(`<fieldset class="exf-cnt exf-page"></fieldset>`);
+
+        if (this.legend) {
             this.appendChild(
                 DOM.parseHTML(DOM.format(ExoForm.meta.templates.legend, {
-                    legend: context.field.legend
+                    legend: this.legend
                 }))
             );
         }
 
-        if (context.field.intro) {
+        if (this.intro) {
             this.appendChild(
                 DOM.parseHTML(DOM.format(ExoForm.meta.templates.pageIntro, {
-                    intro: context.field.intro
+                    intro: this.intro
                 }))
             );
         }
     }
-}
 
+    get index() {
+        return this._index;
+    }
+
+    set index(value) {
+        if (typeof (value) !== "number")
+            throw "Page index must be a number";
+
+        if (value < 1 || value > this.context.exo.formSchema.pages.length)
+            throw "Invalid page index";
+
+        this._index = value;
+    }
+
+    async render() {
+        await super.render();
+
+
+
+        if (this.index === this.context.exo.addins.navigation.currentPage) {
+            this.htmlElement.classList.add("active");
+        }
+
+        this.htmlElement.setAttribute("data-page", this.index)
+
+        return this.container;
+    }
+}
 
 //#endregion
 

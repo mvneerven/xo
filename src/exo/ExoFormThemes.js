@@ -1,27 +1,6 @@
 import DOM from '../pwa/DOM';
 
 class ExoFormTheme {
-    // exf-base-text
-    containerTemplate1 = /*html*/
-        `<div data-id="{{id}}" class="exf-ctl-cnt {{class}}">
-    <label title="{{caption}}">
-        <div class="exf-caption">{{caption}}</div>
-        
-        <span data-replace="true"></span>
-    </label>
-</div>`;
-
-    containerTemplate = /*html*/
-        `<div data-id="{{id}}" class="exf-ctl-cnt {{class}}">
-    <div class="exf-ctl">
-        <label aria-hidden="true" class="exf-label" title="{{caption}}">Key</label>
-        <span data-replace="true"></span>
-    </div>
-    <div class="exf-fld-details">
-        <div class="exf-help-wrapper"></div>
-    </div>
-</div>`;
-
     constructor(exo) {
         this.exo = exo;
     }
