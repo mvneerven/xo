@@ -24,7 +24,7 @@
   margin: 10% auto;
   padding: 10px;
   border-radius: 4px;
-  background: #fff;
+  background: var(--color-background-variation);
   -webkit-box-shadow: 10px 10px 25px -13px rgba(0, 0, 0, 0.75);
   box-shadow: 10px 10px 25px -13px rgba(0, 0, 0, 0.75);
 }
@@ -32,7 +32,7 @@
 .exf-dlg .exf-dlg-b {
   padding-top: 10px;
   padding-bottom: 10px;
-  border-bottom: 1px solid #aaa;
+  border-bottom: 1px solid var(--color-shade);
   margin-bottom: 1em;
 }
 

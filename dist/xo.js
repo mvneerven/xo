@@ -1223,6 +1223,10 @@
         })) {
           if (Array.isArray(p.fields)) {
             p.fields.forEach(f => {
+              f._page = {
+                index: pageIndex
+              };
+
               if (matcher(f, {
                 type: "field",
                 fieldIndex: fieldIndex
@@ -5240,6 +5244,12 @@
         this._pageCount = this.getLastPage();
         this.updateButtonStates();
       });
+      this.exo.on(ExoFormFactory.events.interactive, this._ready.bind(this));
+    }
+
+    _ready(e) {
+      this._pageCount = this.getLastPage();
+      this.updateButtonStates();
     }
 
     canMove(fromPage, toPage) {
@@ -5256,10 +5266,9 @@
         name: name,
         ...(options || {})
       };
-      const tpl =
+      let btn = DOM.parseHTML(
       /*html*/
-      `<button name="{{name}}" type="{{type}}" class="exf-btn {{class}}">{{caption}}</button>`;
-      let btn = DOM.parseHTML(DOM.format(tpl, options));
+      `<button name="${options.name}" type="${options.type}" class="exf-btn ${options.class}">${options.caption}</button>`);
       this.buttons[name].element = btn;
       this.container.appendChild(btn);
     }
@@ -5274,7 +5283,7 @@
         }
       }
 
-      if (add !== 0) page = parseInt(this.form.getAttribute("data-current-page") || "0");
+      if (add !== 0) page = parseInt("0" + this.form.getAttribute("data-current-page")) || 1;
       console.log("updateview 1 -> ", add, page, "current", current);
       page = this._getNextPage(add, page);
       console.log("updateview 2 -> ", add, page, "current", current);
@@ -5382,7 +5391,7 @@
     }
 
     getLastPage() {
-      let pageNr = parseInt(this.form.getAttribute("data-current-page"));
+      let pageNr = parseInt("0" + this.form.getAttribute("data-current-page")) || 1;
       let lastPage = 0;
       let nextPage = -1;
 

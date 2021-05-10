@@ -173,6 +173,9 @@ class ExoFormSchema {
             if (matcher(p, {type: "page", pageIndex: pageIndex})) {
                 if (Array.isArray(p.fields)) {
                     p.fields.forEach(f => {
+                        f._page = {
+                            index: pageIndex
+                        }
                         if (matcher(f, {type: "field", fieldIndex: fieldIndex})) {
                             matches.push(f)
                         }

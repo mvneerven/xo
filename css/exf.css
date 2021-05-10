@@ -1,4 +1,3 @@
-@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;900&display=swap");
 .exf-container [class^="exf-cols-"],
 .exf-container [class*=" exf-cols-"] {
   display: -ms-grid;
@@ -812,7 +811,7 @@ html.theme-light nav.ul-drop ul li > ul {
   margin: 10% auto;
   padding: 10px;
   border-radius: 4px;
-  background: #fff;
+  background: var(--color-background-variation);
   -webkit-box-shadow: 10px 10px 25px -13px rgba(0, 0, 0, 0.75);
   box-shadow: 10px 10px 25px -13px rgba(0, 0, 0, 0.75);
 }
@@ -820,7 +819,7 @@ html.theme-light nav.ul-drop ul li > ul {
 .exf-dlg .exf-dlg-b {
   padding-top: 10px;
   padding-bottom: 10px;
-  border-bottom: 1px solid #aaa;
+  border-bottom: 1px solid var(--color-shade);
   margin-bottom: 1em;
 }
 
@@ -1951,32 +1950,5 @@ html.theme-dark .exf-ctl-cnt.exf-switch input[type="range"] {
 .exf-container.exf-survey :-moz-placeholder {
   /* Firefox 18- */
   color: #ccc;
-}
-
-.exf-tabs-wrapper fieldset.exf-page > legend {
-  display: none;
-}
-
-.exf-tabs-wrapper fieldset.exf-page .exf-page-intro {
-  display: none;
-}
-
-html {
-  line-height: 1.15;
-}
-
-html:root {
-  --color-input-background: transparent;
-  --color-input: #333;
-  --color-error: #cc3333;
-  --color-label: #aaa;
-  --color-label-active: #cc3333;
-  --font-size-active: 1rem;
-  --label-active-top: -1rem;
-}
-
-html.theme-dark:root {
-  --color-input: #fefefe;
-  --color-error: #ff5555;
 }
 /*# sourceMappingURL=exf.css.map */

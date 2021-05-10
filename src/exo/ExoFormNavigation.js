@@ -10,6 +10,7 @@ class ExoFormNavigationBase {
         this._visible = true;
         this._currentPage = 1;
         this.form = exo.form;
+        
     }
 
     get visible() {
@@ -29,12 +30,14 @@ class ExoFormNavigationBase {
 
     render() {
         const tpl = /*html*/`<fieldset class="exf-cnt exf-nav-cnt"></fieldset>`;
-        this.container = DOM.parseHTML(tpl);
+       
 
+        this.container = DOM.parseHTML(tpl);
+        
         for (var b in this.buttons) {
             this.addButton(b, this.buttons[b])
         }
-
+ 
         this.form.appendChild(this.container);
 
         this.form.setAttribute("data-current-page", this.currentPage);
@@ -65,6 +68,13 @@ class ExoFormNavigationBase {
             this.updateButtonStates()
         })
 
+        this.exo.on(ExoFormFactory.events.interactive, this._ready.bind(this));
+    }
+
+    _ready(e){
+        this._pageCount = this.getLastPage();
+        
+        this.updateButtonStates()
     }
 
     canMove(fromPage, toPage) { // to be subclassed
@@ -81,9 +91,9 @@ class ExoFormNavigationBase {
             ...options || {}
         }
 
-        const tpl = /*html*/`<button name="{{name}}" type="{{type}}" class="exf-btn {{class}}">{{caption}}</button>`;
+        
+        let btn = DOM.parseHTML(/*html*/`<button name="${options.name}" type="${options.type}" class="exf-btn ${options.class}">${options.caption}</button>`);
 
-        let btn = DOM.parseHTML(DOM.format(tpl, options));
         this.buttons[name].element = btn;
 
         this.container.appendChild(btn);
@@ -102,7 +112,7 @@ class ExoFormNavigationBase {
         }
 
         if (add !== 0)
-            page = parseInt(this.form.getAttribute("data-current-page") || "0");
+            page = parseInt("0" + this.form.getAttribute("data-current-page")) || 1;
 
         console.log("updateview 1 -> ", add, page, "current", current)
 
@@ -228,7 +238,7 @@ class ExoFormNavigationBase {
 
     getLastPage() {
 
-        let pageNr = parseInt(this.form.getAttribute("data-current-page"));
+        let pageNr = parseInt("0" + this.form.getAttribute("data-current-page")) || 1
         let lastPage = 0;
         let nextPage = -1;
         do {

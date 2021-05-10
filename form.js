@@ -28,8 +28,6 @@ const schema = {
             b.continue = !b.under18 && model.instance.contract.agree;
 
             b.info = 'agree to proceed'
-            //if (b.continue) { exo.addins.navigation.next() } 
-
         }
     },
     pages: [
