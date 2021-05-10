@@ -7,7 +7,7 @@ import Core from '../pwa/Core';
 import DOM from '../pwa/DOM';
 import ExoFormFactory from './ExoFormFactory';
 import ExoFormDataBinding from './ExoFormDataBinding';
-
+import ExoFormSchema from './ExoFormSchema';
 
 /**
  * ExoForm class. 
@@ -52,7 +52,7 @@ class ExoForm {
 
         // Use const context = await ExoFormFactory.build() and context.createForm()
         if (!context || !(context instanceof ExoFormFactory.Context))
-            throw "Invalid instantiation of ExoForm: need ExoFormContext instance";
+            throw "ExoForm: invalid instantiation of ExoForm: need ExoFormContext instance";
 
         this.context = context;
 
@@ -68,55 +68,39 @@ class ExoForm {
         this.container = DOM.parseHTML(ExoForm.meta.templates.exocontainer);
     }
 
+    get schema() {
+        return this._schema;
+    }
+
     /**
-     * load ExoForm schema 
-     * @param {any} schema - A JSON ExoForm Schema object or a URL to fetch it from.
-     * @return {Promise} - A Promise
+     * load ExoForm schema (string or )
+     * @param {any} schema - A JSON ExoForm Schema string or object, or URL to fetch it from.
+     * @return {Promise} - A Promise returning the ExoForm Object with the loaded schema
      */
-    load(schema) {
+    load(schema, options) {
+        options = options || { mode: "async" };
         const _ = this;
+
+        if (options.mode.startsWith("sync")) {
+            return this.loadSchema(schema);
+        }
 
         return new Promise((resolve, reject) => {
             const loader = schema => {
                 if (!schema)
                     resolve(_)
                 else {
-                    _.formSchema = {
-                        ..._.context.config.defaults || {},
-                        ...schema
-                    };
-
-                    this._dataBinding = new ExoFormDataBinding(this, this._mappedInstance);
-                    this.dataBinding.on("change", e => {
-                        e.detail.state = "change";
-                        this.triggerEvent(ExoFormFactory.events.dataModelChange, e.detail)
-                    }).on("ready", e => {
-                        e.detail.state = "ready";
-                        this.triggerEvent(ExoFormFactory.events.dataModelChange, e.detail)
-                    }).on("error", e => {
-                        this.triggerEvent(ExoFormFactory.events.error, e.detail);
-                    });
-
-                    _.triggerEvent(ExoFormFactory.events.schemaLoaded);
-                    _.formSchema.totalFieldCount = _.query().length;
-                    _._createComponents();
-                    _._applyLoadedSchema();
+                    this.loadSchema(schema);
                     resolve(_);
                 }
             }
-            let isSchema = typeof (schema) == "object";
 
-            if (!isSchema) {
-
-                if (Core.isUrl(schema)) {
-                    schema = new URL(schema, this.context.baseUrl);
-                }
-                else {
-                    reject("The schema parameter is not an ExoForm schema object nor a valid URL.");
-                }
+            if (Core.isUrl(schema)) {
+                let url = new URL(schema, this.context.baseUrl);
 
                 try {
-                    fetch(schema).then(x => x.json()).then(r => {
+                    fetch(url).then(x => x.json()).then(r => {
+
                         loader(r);
                     }).catch(ex => {
                         reject(ex);
@@ -130,7 +114,40 @@ class ExoForm {
                 loader(schema);
             }
         });
+    }
 
+    /**
+     * load ExoForm schema from object
+     * @param {any} schema - A JSON ExoForm Schema object.
+     * @return {any} - the loaded schema
+     */
+    loadSchema(schema) {
+
+        this._schema = this.context.createSchema();
+
+        this._schema.parse(schema);
+
+        this._dataBinding = new ExoFormDataBinding(this, this._mappedInstance);
+        this.dataBinding.on("change", e => {
+            e.detail.state = "change";
+            this.triggerEvent(ExoFormFactory.events.dataModelChange, e.detail)
+        }).on("ready", e => {
+            e.detail.state = "ready";
+            this.triggerEvent(ExoFormFactory.events.dataModelChange, e.detail)
+        }).on("error", e => {
+            this.triggerEvent(ExoFormFactory.events.error, e.detail);
+        });
+
+        this.triggerEvent(ExoFormFactory.events.schemaLoaded);
+
+        this._createComponents();
+
+        if (this.schema.form) {
+            let formClasses = this.schema.form.class ? this.schema.form.class.split(' ') : ["standard"];
+            formClasses.forEach(c => {
+                this.form.classList.add(c);
+            })
+        }
     }
 
     /**
@@ -142,6 +159,7 @@ class ExoForm {
     }
 
     bind(instance) {
+        //TODO
         this._mappedInstance = instance;
     }
 
@@ -150,20 +168,13 @@ class ExoForm {
         for (var n in ExoFormFactory.meta) {
             let cmp = ExoFormFactory.meta[n];
             let tp = cmp.type.getType(this);
+            console.debug("ExoForm:", n, "component used:", tp.name);
             this.addins[n] = new tp(this)
         }
     }
 
-    _applyLoadedSchema() {
-        this.formSchema.form = this.formSchema.form || {};
-        let formClasses = this.formSchema.form.class ? this.formSchema.form.class.split(' ') : ["standard"];
-        formClasses.forEach(c => {
-            this.form.classList.add(c);
-        })
-    }
-
     triggerEvent(eventName, detail, ev) {
-        console.debug("Triggering event", eventName, "detail: ", detail)
+        console.debug("ExoForm: triggering event", eventName, "detail: ", detail)
         if (!ev) {
             ev = new Event(eventName, { bubbles: false, cancelable: true });
         }
@@ -188,9 +199,6 @@ class ExoForm {
 
         return new Promise((resolve, reject) => {
 
-            if (!_.formSchema || !_.formSchema.pages || _.formSchema.pages.length == undefined)
-                throw "Invalid ExoForm schema";
-
             _.container.appendChild(_.form);
 
             try {
@@ -209,8 +217,6 @@ class ExoForm {
     }
 
     _finalizeForm() {
-        console.debug("Finalizing form, rendering is ready");
-
         this.addins.navigation.render();
 
         this.addins.progress.render();
@@ -233,14 +239,14 @@ class ExoForm {
         this.addins.rules.checkRules();
 
         this.addins.navigation.restart();
-        this.triggerEvent(ExoFormFactory.events.renderReady);
 
+        this.triggerEvent(ExoFormFactory.events.renderReady);
 
         // Test for fom becoming user-interactive 
         var observer = new IntersectionObserver((entries, observer) => {
             if (this.container.offsetHeight) {
                 observer = null;
-                console.debug("Form is now interactive");
+                console.debug("ExoForm: interactive event");
                 this.triggerEvent(ExoFormFactory.events.interactive);
             }
 
@@ -250,7 +256,8 @@ class ExoForm {
     }
 
     _cleanup() {
-        this.addins.navigation.clear();
+        if (this.addins && this.addins.navigation)
+            this.addins.navigation.clear();
 
         if (this.container)
             this.container.innerHTML = "";
@@ -263,7 +270,7 @@ class ExoForm {
     * @return {object} - The ExoForm instance
     */
     on(eventName, func) {
-        console.debug("Listening to event", eventName, func);
+        console.debug("ExoForm: added event listener", eventName, func);
         this.addEventListener(eventName, func);
         return this;
     }
@@ -273,12 +280,12 @@ class ExoForm {
 
         return new Promise((resolve, reject) => {
             var pageNr = 0;
-            
+
             let totalFieldsRendered = 0;
 
             _.pageContainer = DOM.parseHTML('<div class="exf-wrapper" />');
 
-            _.formSchema.pages.forEach(p => {
+            _.schema.pages.forEach(p => {
                 pageNr++;
 
                 p = _._enrichPageSettings(p, pageNr);
@@ -289,7 +296,7 @@ class ExoForm {
                     let pageFieldsRendered = 0;
 
                     p.fields.forEach(f => {
-                        console.debug("Rendering field", f.name, f);
+                        console.debug("ExoForm: rendering field", f.name, f);
                         f.dummy = DOM.parseHTML('<span/>');
 
                         page.appendChild(f.dummy);
@@ -298,7 +305,7 @@ class ExoForm {
                             f._control.render().then(rendered => {
 
                                 if (!rendered)
-                                    throw ExoFormFactory.fieldToString(f) + " does not render an HTML element";
+                                    throw "ExoForm: " + ExoFormFactory.fieldToString(f) + " does not render an HTML element";
 
                                 pageFieldsRendered = this._addRendered(f, rendered, pageFieldsRendered, p, page);
 
@@ -306,7 +313,7 @@ class ExoForm {
                                 let showError = !this.triggerEvent(ExoFormFactory.events.error, { error: ex });
                                 console.error(ex);
                                 let rendered = DOM.parseHTML(DOM.format('<span class="exf-error exf-render-error" title="{{title}}">ERROR</span>', {
-                                    title: "Error rendering field " + ExoFormFactory.fieldToString(f) + ": " + ex.toString()
+                                    title: "ExoForm: error rendering field " + ExoFormFactory.fieldToString(f) + ": " + ex.toString()
 
                                 }))
                                 pageFieldsRendered = this._addRendered(f, rendered, pageFieldsRendered, p, page);
@@ -314,11 +321,11 @@ class ExoForm {
                             }).finally(r => {
                                 totalFieldsRendered++;
 
-                                if (totalFieldsRendered === _.formSchema.totalFieldCount) {
+                                if (totalFieldsRendered === _.schema.fieldCount) {
                                     _.container.classList.add(pageNr > 1 ? "exf-multi-page" : "exf-single-page");
 
                                     // check for custom container
-                                    if (_.formSchema.form.container) {
+                                    if (_.schema.form.container) {
                                         let cf = _._getFormContainerProps(_)
 
                                         _.createControl(cf).then(cx => {
@@ -358,7 +365,7 @@ class ExoForm {
         pageFieldsRendered++;
         if (pageFieldsRendered === p.fields.length) {
 
-            console.debug("Page " + p.pagenr + " rendered with " + pageFieldsRendered + " controls");
+            console.debug("ExoForm: page", p.index + "rendered with", pageFieldsRendered, " controls");
 
             page.render().then(pageElm => {
                 DOM.replace(p.dummy, pageElm);
@@ -372,9 +379,9 @@ class ExoForm {
         let p = {
             type: "div",
             class: "exf-wrapper",
-            ...this.formSchema.form.container,
+            ...this.schema.form.container,
             ...{
-                pages: this.formSchema.pages && this.formSchema.pages.length ? this.formSchema.pages.map(y => {
+                pages: this.schema.pages && this.schema.pages.length ? this.schema.pages.map(y => {
                     return {
                         id: "page" + y.id,
                         caption: y.legend
@@ -387,11 +394,8 @@ class ExoForm {
 
     _enrichPageSettings(p, pageNr) {
         p.index = pageNr;
-        //console.debug("Rendering page " + p.index)
         p.isPage = true;
         p.type = p.type || "fieldset";
-        //p.pagenr = pageNr;
-        //p.pageid = p.id || "page" + pageNr;
         p.class = "exf-cnt exf-page" + (p.class ? " " + p.class : "");
         p.dummy = document.createElement('span');
         return p;
@@ -403,35 +407,17 @@ class ExoForm {
      * @param {object} options - query options. e.g. {inScope: true} for querying only fields that are currenttly in scope.
      * @return {array} - All matched fields in the current ExoForm schema
      */
-    query(matcher, options) {
+     query(matcher, options) {
         if (matcher === undefined) matcher = () => { return true };
         options = options || {};
-        let matches = [];
 
-        if (!this.formSchema || !this.formSchema.pages || !Array.isArray(this.formSchema.pages))
-            return matches;
-
-        this.formSchema.pages.forEach(p => {
-            if (!options.inScope || this.isPageInScope(p)) {
-                let fieldIndex = 0
-                if (Array.isArray(p.fields)) {
-                    p.fields.forEach(f => {
-                        f._page = {
-                            index: p.index,
-                            legend: p.legend
-                        }
-                        f._index = fieldIndex;
-
-                        if (matcher(f)) {
-                            matches.push(f)
-                        }
-
-                        fieldIndex++;
-                    });
-                }
+        return this.schema.query((item, data) => {
+            if(data.type === "page"){
+                return !options.inScope || this.isPageInScope(data.pageIndex)
             }
+            
+            return matcher(item, data)
         });
-        return matches;
     }
 
     /**
@@ -479,20 +465,19 @@ class ExoForm {
      * @param {event} ev - event object to pass onto the submit handler
      */
     submitForm(ev) {
-        const _ = this;
         if (ev)
             ev.preventDefault();
 
-        if (!_.addins.validation.checkValidity()) {
+        if (!this.addins.validation.checkValidity()) {
             console.debug("checkValidity - Form not valid");
-            _.addins.validation.reportValidity();
+            this.addins.validation.reportValidity();
             return;
         }
 
-        let e = { target: _.form };
+        let e = { target: this.form };
 
-        let data = _.getFormValues(ev);
-        _.triggerEvent(ExoFormFactory.events.post, { postData: data })
+        let data = this.getFormValues(ev);
+        this.triggerEvent(ExoFormFactory.events.post, { postData: data })
         e.returnValue = false;
     }
 
@@ -549,27 +534,27 @@ class ExoForm {
 
                 c.htmlElement.data = c.htmlElement.data || {}; c.htmlElement.data.field = f; // keep field in element data
                 c.htmlElement.setAttribute("data-exf", "1"); // mark as element holding data
-                console.debug("Resolving ", ExoFormFactory.fieldToString(f));
+                console.debug("ExoForm: resolving ", ExoFormFactory.fieldToString(f));
                 resolve(c);
             }
 
             try {
                 if (!f || !f.type)
-                    throw "Incorrect field options. Must be object with at least 'type' property. " + JSON.stringify(f)
+                    throw "ExoForm: incorrect field options. Must be object with at least 'type' property. " + JSON.stringify(f)
 
                 f.id = f.id || _._generateUniqueElementId();
 
                 let field = _.context.get(f.type);
                 if (!field)
-                    throw f.type + " is not a registered ExoForm field type";
+                    throw "ExoForm: " + f.type + " is not a registered ExoForm field type";
 
                 let baseType = field.type;
 
                 if (!baseType)
-                    throw "Class for " + f.type + " not defined";
+                    throw "ExoForm: class for " + f.type + " not defined";
 
                 if (!_.context.isExoFormControl(f))
-                    throw "Cannot create control: class for " + f.type + " is not derived from ExoControlBase";
+                    throw "ExoForm: cannot create control: class for " + f.type + " is not derived from ExoControlBase";
 
                 let control = null;
 

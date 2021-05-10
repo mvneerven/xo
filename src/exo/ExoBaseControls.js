@@ -569,9 +569,9 @@ export class ExoInputControl extends ExoElementControl {
                 let query = (q) => {
                     // TODO: query REST 
                     let url = f.lookup.replace(".json", "_" + q + ".json");
-                    url = new URL(url, _.formSchema.baseUrl);
+                    url = new URL(url, _.context.baseUrl);
 
-                    fetch(url).then(x => x.json()).then(data => {
+                    fetch(url).then(x => x.json()).then(data => {1
                         _.createDataList(f, data);
                     })
                 };
@@ -1097,11 +1097,11 @@ class ExoButtonControl extends ExoElementControl {
                         _.context.exo.addins.navigation.nextPage();
                         break;
                     case "reset":
-                        _.context.exo.addins.navigation.gotoPage(1);
+                        _.context.exo.addins.navigation.goto(1);
                         break;
 
                     case "goto":
-                        _.context.exo.addins.navigation.gotoPage(parseInt(actionParts[1]));
+                        _.context.exo.addins.navigation.goto(parseInt(actionParts[1]));
                         break;
                 }
             }
@@ -1281,12 +1281,13 @@ class ExoFormPageControl extends ExoDivControl {
     }
 
     _setRelevantState() {
-        console.log("Set relevancy for page ", this.index, this.relevant)
+        
 
         if (this.relevant) {
             this.container.removeAttribute("data-skip");
         }
         else {
+            console.debug("ExoFormBaseControls: page", this.index, "not relevant")
             this.container.setAttribute("data-skip", "true");
         }
 
@@ -1351,7 +1352,7 @@ class ExoFieldSetControl extends ExoFormPageControl {
         if (typeof (value) !== "number")
             throw "Page index must be a number";
 
-        if (value < 1 || value > this.context.exo.formSchema.pages.length)
+        if (value < 1 || value > this.context.exo.schema.pages.length)
             throw "Invalid page index";
 
         this._index = value;

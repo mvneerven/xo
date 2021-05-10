@@ -9,6 +9,8 @@ import ExoFormValidation from './ExoFormValidation';
 import ExoFormNavigation from './ExoFormNavigation';
 import ExoFormProgress from './ExoFormProgress';
 import ExoFormRules from './ExoFormRules'
+import Core from '../pwa/Core';
+import ExoFormSchema from './ExoFormSchema';
 
 /**
  * Hosts an ExoForm context to create forms with.
@@ -87,6 +89,10 @@ export class ExoFormContext {
     createForm(options) {
         // the only place where an ExoForm instance can be created       
         return new ExoForm(this, options)
+    }
+
+    createSchema(){
+        return new ExoFormSchema(this);
     }
 
     get(type) {
@@ -172,7 +178,7 @@ class ExoFormFactory {
     static Context = ExoFormContext;
 
     static defaults = {
-        imports: [ ],
+        imports: [],
         defaults: {
             navigation: "auto",
             validation: "default",
@@ -212,7 +218,7 @@ class ExoFormFactory {
             //options.imports = options.imports || this.defaults.imports;
 
             // add standard controls from Base Libraries
-            
+
             this.add(ExoBaseControls.controls);
             this.add(ExoExtendedControls.controls);
             this.add(ExoDevControls.controls);
@@ -227,13 +233,13 @@ class ExoFormFactory {
                     ExoFormFactory.loadLib(imp)
                 )
             });
-            
+
             Promise.all(promises).then(() => {
                 let lib = ExoFormFactory.buildLibrary();
-                console.debug("ExoFormFactory loaded library", lib, "from", options.imports);
+                console.debug("ExoFormFactory: loaded library", lib, "from", options.imports);
                 resolve(new ExoFormContext({
                     ...options,
-                    library:lib
+                    library: lib
                 }));
             });
         })
@@ -288,8 +294,6 @@ class ExoFormFactory {
 
     // called from library implementations
     static add(lib) {
-        //console.debug("Loading ", lib);
-
         for (var name in lib) {
             var field = lib[name];
             ExoFormFactory.library[name] = field;
@@ -323,6 +327,22 @@ class ExoFormFactory {
         return await import(src);
     }
 
+    static tryScriptLiteral(scriptLiteral) {
+        let schema;
+        if (typeof (scriptLiteral) === "string" && scriptLiteral.trim().startsWith("const")) {
+            try {
+                const f = new Function("function s(){" + scriptLiteral + "; return schema};return s()");
+                schema = f.call();
+            }
+            catch (ex) {
+                //
+            };
+            return schema;
+        }
+    }
+
+    
+
     static checkTypeConversion(type, rawValue) {
         let fieldMeta = ExoFormFactory.library[type];
         let value = undefined;
@@ -332,7 +352,7 @@ class ExoFormFactory {
                 const parse = ExoFormFactory.getTypeParser(fieldMeta);
                 value = parse(rawValue);
                 if (value !== rawValue)
-                    console.debug("Value '", rawValue, "' for field", type, " converted to", value, typeof (value));
+                    console.debug("ExoFormFactory: value '", rawValue, "' for field", type, " converted to", value, typeof (value));
             }
             catch (ex) {
                 console.error("Error converting '" + value + "'to " + fieldMeta.returnValueType, ex);
@@ -388,13 +408,13 @@ class ExoFormFactory {
             }
         }
 
-        if(e && options.master){
+        if (e && options.master) {
             let masterElement = e.closest("[exf-data-master]");
-            if(masterElement){
+            if (masterElement) {
                 e = masterElement;
                 field = e.data["field"];
             }
-        } 
+        }
 
         return field;
     }

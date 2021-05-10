@@ -548,19 +548,20 @@ class DropDownButton extends ExoBaseControls.controls.list.type {
 }
 
 class ExoEmbedControl extends ExoBaseControls.controls.element.type {
-    width = 600;
-    height = 400;
+    _width = "600px";
+    _height = "400px";
 
     constructor(context) {
         super(context);
+
+        this.htmlElement = document.createElement("iframe");
 
         this.acceptProperties(
             { name: "url", description: "Url of the page to embed" },
             { name: "width" },
             { name: "height" }
         )
-
-        this.htmlElement = document.createElement("iframe");
+        
     }
 
     async render() {
@@ -582,6 +583,26 @@ class ExoEmbedControl extends ExoBaseControls.controls.element.type {
 
         return this.container
     }
+
+    get width(){
+        return this._width;
+    }
+
+    set width(value){
+        this._width = value;
+        this.htmlElement.style.width = value;
+    }
+
+    get height(){
+        return this._height;
+    }
+
+    set height(value){
+        this._height = value;
+        this.htmlElement.style.height = value;
+    }
+
+
 }
 
 class ExoVideoControl extends ExoEmbedControl {

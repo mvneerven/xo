@@ -56,7 +56,7 @@ class ExoFormDefaultValidation {
             let pgElm = element.closest('[data-page]');
             if (pgElm) {
                 let page = parseInt(pgElm.getAttribute("data-page"));
-                this.exo.addins.navigation.gotoPage(page);
+                this.exo.addins.navigation.goto(page);
                 setTimeout(()=>{
                     f(field)
                 }, 20);
@@ -73,7 +73,7 @@ class ExoFormDefaultValidation {
         let hasInvalid = false;
         try {
             this.runValidCheck = true; // prevent reportValidity() showing messages on controls 
-            hasInvalid = this.exo.formSchema.pages[index - 1].fields.filter(f => {
+            hasInvalid = this.exo.schema.pages[index - 1].fields.filter(f => {
                 return !f._control.valid;
             }).length > 0;
         }
@@ -186,7 +186,7 @@ class ExoFormValidation {
     }
 
     static getType(exo) {
-        let type = exo.formSchema.validation;
+        let type = exo.schema.validation;
         if (type === "auto" || typeof(type) === "undefined")
             type = ExoFormValidation.matchValidationType(exo);
 

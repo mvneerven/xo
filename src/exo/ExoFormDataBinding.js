@@ -34,6 +34,7 @@ class ExoFormDataBinding {
             })
             this.resolver.resolve();
         })
+        
         this._ready();
     }
 
@@ -45,7 +46,7 @@ class ExoFormDataBinding {
         const exo = this.exo;
         exo.on(ExoFormFactory.events.schemaLoaded, () => {
             let data = {};
-            
+
             const modelSetup = [ExoFormDataBinding.origins.bind, ExoFormDataBinding.origins.schema].includes(this._origin);
             console.log("Model set up: " + modelSetup);
 
@@ -55,9 +56,9 @@ class ExoFormDataBinding {
                     if (!f.bind && !modelSetup) {
                         f.bind = "instance.data." + f.name; // use default model binding if no binding is specified
                     }
-                    if (f.bind) {
-                        f.value = this.get(f.bind, f.value);
-                        console.log("Applying instance." + f.name, f.bind, f.value);
+                    if (f.bind) { // field uses databinding to model
+                        f.value = (modelSetup ? this.get(f.bind) : f.value) || "";
+                        console.debug("ExoFormDatabinding: applying instance." + f.name, f.bind, f.value);
                         data[f.name] = f.value
                     }
                 }
@@ -99,7 +100,7 @@ class ExoFormDataBinding {
     }
 
     _triggerEvent(eventName, detail, ev) {
-        console.debug("Triggering event", eventName, "detail: ", detail)
+        console.debug("ExoFormDatabinding: triggering event", eventName, "detail: ", detail)
         if (!ev) {
             ev = new Event(eventName, { bubbles: false, cancelable: true });
         }
@@ -128,22 +129,23 @@ class ExoFormDataBinding {
     }
 
     on(eventName, func) {
-        console.debug("Listening to event", eventName, func);
+        console.debug("ExoFormDatabinding: listening to event", eventName, func);
         this.addEventListener(eventName, func);
         return this;
     }
 
-    _init(exo, model) {
+    _init(exo, instance) {
 
-        if (model) {
-            this._mapped = model;
-            this._model.instance = model;
+        if (instance) {
+            this._mapped =  instance;
+            this._model.instance = instance;
             this._origin = ExoFormDataBinding.origins.bind;
         }
-        else if (exo.formSchema.model) {
+        else if (exo.schema.model) {
+        
             this._origin = ExoFormDataBinding.origins.schema;
             this._model = {
-                ...exo.formSchema.model
+                ...exo.schema.model
             };
             this._model.bindings = this._model.bindings || {}
         }
@@ -178,15 +180,15 @@ class ExoFormDataBinding {
     _processFieldProperty(control, name, value) {
         let returnValue = value;
         if (typeof (value) === "string" && value.startsWith("@")) {
-            
+
             let path = value.substring(1);
-            console.debug("Resolving databound control property", name, value, "path:", path);
+            console.debug("ExoFormDatabinding: resolving databound control property", name, value, "path:", path);
             returnValue = this.get(path, undefined);
             if (returnValue === undefined) {
                 returnValue = value  // return original string, don't resolve
             }
             else {
-                console.debug("Resolved databound control property", name, value, returnValue);
+                console.debug("ExoFormDatabinding: resolved databound control property", name, value, returnValue);
 
                 this.resolver.addBoundControl({
                     control: control,

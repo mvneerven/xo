@@ -69,7 +69,7 @@ class ExoFormStepsProgress extends ExoFormDefaultProgress {
         _.ul = _.container.querySelector("ul");
 
         let nr = 0;
-        _.exo.formSchema.pages.forEach(p => {
+        _.exo.schema.pages.forEach(p => {
             nr++;
             _.ul.appendChild(DOM.parseHTML(DOM.format(this.templates.progressstep, {
                 step: nr,
@@ -141,7 +141,7 @@ class ExoFormProgress {
     }
 
     static getType(exo) {
-        let type = exo.formSchema.progress;
+        let type = exo.schema.progress;
         if (typeof (type) === "undefined" || type === "auto")
             type = ExoFormProgress.matchProgressType(exo);
 
@@ -150,8 +150,8 @@ class ExoFormProgress {
 
 
     static matchProgressType(exo) {
-        if (exo.formSchema.pages.length > 1) {
-            if (exo.formSchema.navigation === "static")
+        if (exo.schema.pages.length > 1) {
+            if (exo.schema.navigation === "static")
                 return "none"
 
             return "page"

@@ -29,7 +29,7 @@ class ExoRuleEngine extends ExoRuleEngineBase {
 
         let obj = ExoFormFactory.fieldToString(f)
 
-        console.debug("Running rule on " + obj + " -> [", rule.expression.join(', ') + "]");
+        console.debug("Rules: running rule on " + obj + " -> [", rule.expression.join(', ') + "]");
 
 
         if (rule.expression.length === 5) {
@@ -42,22 +42,22 @@ class ExoRuleEngine extends ExoRuleEngineBase {
                     let dependencyControl = dependencyField.querySelector("[name]");
                     if (!dependencyControl) dependencyControl = dependencyField;
                     if (!dependencyControl) {
-                        console.error("Dependency control for rule on '" + obj + "' not found");
+                        console.error("Rules: dependency control for rule on '" + obj + "' not found");
                     }
                     else {
-                        console.debug("Dependency control for rule on '" + obj + "': ", dependencyControl.name);
+                        console.debug("Rules: dependency control for rule on '" + obj + "': ", dependencyControl.name);
 
                         const func = (e) => {
                             console.debug("Event '" + rule.expression[1] + "' fired on ", DOM.elementPath(e));
 
                             let ruleArgs = rule.expression.slice(2, 5);
                             let expressionMatched = _.testRule(f, dependencyControl, ...ruleArgs);
-                            console.debug("Rule", ruleArgs, "matched: ", expressionMatched);
+                            console.debug("Rules: rule", ruleArgs, "matched: ", expressionMatched);
 
                             let index = expressionMatched ? 0 : 1;
 
                             const rf = method[index];
-                            console.debug("Applying rule", rule.expression[1], obj);
+                            console.debug("Rules: applying rule", rule.expression[1], obj);
                             rf.apply(f._control.htmlElement, [{
                                 event: e,
                                 field: f,
@@ -104,7 +104,7 @@ class ExoRuleEngine extends ExoRuleEngineBase {
 
     checkRules() {
         const _ = this;
-        _.exo.formSchema.pages.forEach(p => {
+        _.exo.schema.pages.forEach(p => {
             if (Array.isArray(p.rules)) {
                 console.debug("Checking page rules", p);
                 p.rules.forEach(r => {
@@ -156,7 +156,7 @@ class ExoFormRules {
     }
 
     static getType(exo) {
-        let type = exo.formSchema.rules;
+        let type = exo.schema.rules;
         if (typeof (type) === "undefined" || type === "auto")
             type = ExoFormRules.matchRuleEngineType(exo);
 
@@ -202,7 +202,7 @@ class Page {
     }
 
     static goto(obj) {
-        return obj.exoForm.addins.navigation.gotoPage(obj.rule.page);
+        return obj.exoForm.addins.navigation.goto(obj.rule.page);
     }
 }
 

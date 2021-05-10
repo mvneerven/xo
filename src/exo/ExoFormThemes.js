@@ -66,7 +66,7 @@ class ExoFormThemes {
     }
 
     static getType(exo) {
-        let type = exo.formSchema.theme;
+        let type = exo.schema.theme;
         if (typeof(type) === "undefined" || type === "auto" )
             type = ExoFormThemes.matchTheme(exo);
 

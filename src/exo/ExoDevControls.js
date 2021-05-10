@@ -3,14 +3,14 @@ import Core from '../pwa/Core';
 import DOM from '../pwa/DOM';
 
 class ExoAceCodeEditor extends ExoBaseControls.controls.div.type {
-    mode = "html";
+    _mode = "html";
 
     defaultThemes = {
         dark: "ambiance",
         light: "chrome"
     }
 
-    fontSize = 14;
+    _fontSize = 14;
 
     static returnValueType = String;
 
@@ -29,57 +29,86 @@ class ExoAceCodeEditor extends ExoBaseControls.controls.div.type {
     }
 
     async render() {
-        const _ = this;
+
         await super.render();
 
         return new Promise((resolve, reject) => {
             DOM.require("https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/ace.js", () => {
-                ace.config.set("fontSize", "14px");
-                var editor = ace.edit(_.htmlElement);
-                editor.setTheme("ace/theme/" + _.theme);
-                editor.session.setMode("ace/mode/" + _.mode);
-                _.htmlElement.style = "min-height: 200px; width: 100%; font-size: " + this.fontSize + "px;";
 
-                if (typeof (_.value) === "string" && _.value.length) {
-                    editor.setValue(_.value, -1);
+                var editor = ace.edit(this.htmlElement);
+                editor.setTheme("ace/theme/" + this.theme);
+                editor.session.setMode("ace/mode/" + this.mode);
+
+                this.htmlElement.style = "min-height: 200px; width: 100%; font-size: " + this.fontSize + "px;";
+
+
+                if (typeof (this.value) === "string" && this.value.length) {
+                    editor.setValue(this.value, -1);
                 }
 
-                _.htmlElement.setAttribute('data-evtarget', "true"); // set div as event target 
+                this.htmlElement.setAttribute('data-evtarget', "true"); // set div as event target 
                 editor.on("change", e => {
                     setTimeout(() => {
-                        DOM.trigger(_.htmlElement, "change", {
-                            target: _.htmlElement
+                        DOM.trigger(this.htmlElement, "change", {
+                            target: this.htmlElement
                         })
                     }, 10);
 
                 })
-                _.htmlElement.data["editor"] = editor;
+                this.htmlElement.data.editor = editor;
 
-                if (_.htmlElement.classList.contains("full-height")) {
-                    _.container.classList.add("full-height");
-                    let cc = _.container.querySelector(".exf-ctl");
+                if (this.htmlElement.classList.contains("full-height")) {
+                    this.container.classList.add("full-height");
+                    let cc = this.container.querySelector(".exf-ctl");
                     if (cc)
                         cc.classList.add("full-height");
                 }
 
-                resolve(_.container);
+                resolve(this.container);
             });
         })
     }
 
+    get mode() {
+        return this._mode;
+    }
+
+    set mode(value) {
+        this._mode = value;
+        if (this.ace)
+            this.ace.session.setMode("ace/mode/" + this._mode);
+    }
+
     get value() {
-        if (this.htmlElement.data && this.htmlElement.data.editor)
-            return this.htmlElement.data.editor.getValue();
+        if (this.ace)
+            return this.ace.getValue();
 
         return this.context.field.value;
     }
 
-    set value(data) {
-        this.context.field.value = data;
-        if (this.htmlElement.data && this.htmlElement.data.editor)
-            this.htmlElement.data.editor.setValue(data, -1);
+    set fontSize(value) {
+        this._fontSize = value;
+        ace.config.set("fontSize", this._fontSize + "px;");
+        this.htmlElement.style.fontSize = this._fontSize + "px;"
     }
 
+    get fontSize() {
+        return this._fontSize;
+    }
+
+    set value(data) {
+        data = data || "";
+        this.context.field.value = data;
+        if (this.ace)
+            this.ace.setValue(data, -1);
+    }
+
+    get ace() {
+        if (this.htmlElement.data && this.htmlElement.data.editor)
+            return this.htmlElement.data.editor;
+
+        return null;
+    }
 
     setProperties() {
 

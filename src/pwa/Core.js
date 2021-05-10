@@ -75,26 +75,98 @@ class Core {
         // For each item in the path, dig into the object
         for (var i = 0; i < path.length; i++) {
             // If the item isn't found, return the default (or null)
-            if (typeof(current[path[i]]) === undefined) return def;
+            if (typeof (current[path[i]]) === undefined) return def;
             // Otherwise, update the current  value
             current = current[path[i]];
         }
         return current;
     }
 
-    static isUrl(str) {
-        try {
-            new URL(str, window.location.toString());
-        } catch {
-            return false;
-        }
-        return true;
+    // static stringifyJs(obj_from_json, replacer, indent) {
+    //     if (typeof obj_from_json !== "object" ) { // || Array.isArray(obj_from_json)
+    //         // not an object, stringify using native function
+    //         return JSON.stringify(obj_from_json, replacer, indent);
+    //     }
+    //     // Implements recursive object serialization according to JSON spec
+    //     // but without quotes around the keys.
+    //     let props = Object
+    //         .keys(obj_from_json)
+    //         .map(key => ' '.repeat(indent) + `${key}:${Core.stringifyJs(obj_from_json[key], replacer, indent)}`)
+    //         .join(",\n");
+    //     return `{${props}}\n`;
+    // }
+
+    static stringifyJs(o, replacer, indent) {
+        const sfy = (o, replacer, indent, level) => {
+            let type = typeof o,
+                tpl,
+                tab = (lvl) => " ".repeat(indent * lvl);
+
+            if (type === "function") {
+                return o.toString();
+            }
+
+            if (type !== "object") {
+                return JSON.stringify(o, replacer);
+            } else if (Array.isArray(o)) {
+                let s = "[\n";
+
+                let ar = [];
+                level++;
+                s += tab(level);
+
+                o.forEach((i) => {
+                    ar.push(sfy(i, replacer, indent, level));
+                });
+
+                s += ar.join(',');
+                level--;
+                s += "\n" + tab(level) + "]";
+                return s;
+            }
+
+
+            let result = "";
+            level++;
+            result += "{\n" + tab(level);
+
+
+            let props = Object.keys(o)
+                .filter(key=>{
+                    return !key.startsWith("_")
+                })
+                .map((key) => {
+                    
+                    return `${key}: ${sfy(o[key], replacer, indent, level)}`;
+                })
+                .join(',\n' + tab(level));
+
+            result += props + "\n";
+            level--;
+            result += tab(level) + "}"
+            return result;
+        };
+
+        let level = 0;
+        return sfy(o, replacer, indent, level);
     }
 
     static scopeEval(scope, script) {
         return Function('"use strict";' + script).bind(scope)();
     }
 
+    static isUrl(txt) {
+        try {
+            if (typeof (txt) !== "string")
+                return false;
+            if (txt.indexOf("\n") !== -1 || txt.indexOf(" ") !== -1)
+                return false;
+            new URL(txt, window.location.origin)
+            return true;
+        }
+        catch { }
+        return false;
+    }
 
     static setObjectValue(obj, path, value) {
         // Get the path as an array
@@ -108,7 +180,7 @@ class Core {
             current = current[path[i]];
 
             if (i === path.length - 2) {
-                current[path[i+1]] = value;
+                current[path[i + 1]] = value;
             }
         }
     }

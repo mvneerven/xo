@@ -66,9 +66,9 @@ class ExoFormDataBindingResolver {
 
 
     _checkSchemaLogic() {
-
         const model = this.exo.dataBinding.model;
         if (model && model.logic) {
+
             if (typeof (model.logic) === "function") {
                 this.applyJSLogic(model.logic, null, model)
             }
@@ -106,11 +106,10 @@ class ExoFormDataBindingResolver {
     }
 
     _bindControlStateToUpdatedModel() {
-        console.log("bindControlStateToUpdatedModel called");
-
+        
         this._boundControlState.forEach(obj => {
             let value = this.dataBinding.get(obj.path);
-            console.debug("bindControlStateToUpdatedModel", obj.propertyName, "on", ExoFormFactory.fieldToString(obj.field), "to", value, obj.path);
+            console.debug("Databinding: bindControlStateToUpdatedModel", obj.propertyName, "on", ExoFormFactory.fieldToString(obj.field), "to", value, obj.path);
             obj.control[obj.propertyName] = value;
         });
 

@@ -39,11 +39,11 @@ class ExoFormNavigationBase {
 
         this.form.setAttribute("data-current-page", this.currentPage);
 
-        this.form.querySelector(".exf-cnt.exf-nav-cnt").addEventListener("click", e=>{
-            
+        this.form.querySelector(".exf-cnt.exf-nav-cnt").addEventListener("click", e => {
+
             console.log("nav click: " + e.target.name);
 
-            switch(e.target.name){
+            switch (e.target.name) {
                 case "next":
                     e.preventDefault();
                     this.next();
@@ -89,6 +89,67 @@ class ExoFormNavigationBase {
         this.container.appendChild(btn);
     }
 
+    _updateView(add, page) {
+
+        let current = this.currentPage;
+
+        if (add > 0 && current > 0) {
+
+            if (!this.exo.addins.validation.isPageValid(this.currentPage)) {
+                this.exo.addins.validation.reportValidity(this.currentPage);
+                return;
+            }
+        }
+
+        if (add !== 0)
+            page = parseInt(this.form.getAttribute("data-current-page") || "0");
+
+        console.log("updateview 1 -> ", add, page, "current", current)
+
+        page = this._getNextPage(add, page)
+
+        console.log("updateview 2 -> ", add, page, "current", current)
+        this._pageCount = this.getLastPage();
+
+        this._currentPage = page;
+
+        if (current > 0) {
+            if (!this.canMove(current, page))
+                return;
+
+            let returnValue = this.exo.triggerEvent(ExoFormFactory.events.beforePage, {
+                from: current,
+                page: page,
+                pageCount: this.pageCount
+            });
+
+            if (returnValue === false)
+                return;
+        }
+
+        this.form.setAttribute("data-current-page", this.currentPage);
+        this.form.setAttribute("data-page-count", this.exo.schema.pages.length);
+        this._currentPage = page;
+
+        let i = 0;
+
+
+        this.form.querySelectorAll('.exf-page[data-page]').forEach(p => {
+            i++;
+            p.classList[i === page ? "add" : "remove"]("active");
+        });
+
+        this.update();
+
+        this.exo.triggerEvent(ExoFormFactory.events.page, {
+            from: current,
+            page: page,
+            pageCount: this.pageCount
+        });
+
+        return page;
+    }
+
     /**
      * Moves to the next page in a multi-page form.
      */
@@ -117,65 +178,6 @@ class ExoFormNavigationBase {
         return this._updateView(0, page);
     }
 
-    _updateView(add, page) {
-
-        let current = this.currentPage;
-
-        if (add > 0 && current > 0) {
-
-            if (!this.exo.addins.validation.isPageValid(this.currentPage)) {
-                this.exo.addins.validation.reportValidity(this.currentPage);
-                return;
-            }
-        }
-        
-        if (add !== 0)
-            page = parseInt(this.form.getAttribute("data-current-page") || "0");
-            
-        console.log("updateview 1 -> ", add, page, "current" , current)
-
-        page = this._getNextPage(add, page)
-
-        console.log("updateview 2 -> ", add, page, "current" , current)
-        this._pageCount = this.getLastPage();
-       
-        this._currentPage = page;
-
-        if (current > 0) {
-            if (!this.canMove(current, page))
-                return;
-
-            let returnValue = this.exo.triggerEvent(ExoFormFactory.events.beforePage, {
-                from: current,
-                page: page,
-                pageCount: this.pageCount
-            });
-
-            if (returnValue === false)
-                return;
-        }
-
-        this.form.setAttribute("data-current-page", this.currentPage);
-        this.form.setAttribute("data-page-count", this.exo.formSchema.pages.length);
-        this._currentPage = page;
-
-        let i = 0;
-        
-        this.form.querySelectorAll('.exf-page[data-page]').forEach(p => {
-            i++;
-            p.classList[i === page ? "add" : "remove"]("active");
-        });
-
-        this.update();
-
-        this.exo.triggerEvent(ExoFormFactory.events.page, {
-            from: current,
-            page: page,
-            pageCount: this.pageCount
-        });
-
-        return page;
-    }
 
     get currentPage() {
         if (!this._currentPage) this._currentPage = 1;
@@ -190,13 +192,13 @@ class ExoFormNavigationBase {
 
     _getNextPage(add, page) {
         let ok = false;
-        
+
         var skip;
         do {
-            
+
             page += add;
 
-            if (page > this.exo.formSchema.pages.length) {
+            if (page > this.exo.schema.pages.length) {
                 return undefined;
             };
 
@@ -242,13 +244,13 @@ class ExoFormNavigationBase {
     }
 
     updateButtonStates() {
-        
+
         let prev = this.buttons["prev"];
-        if(prev && prev.element)
+        if (prev && prev.element)
             DOM[this.currentPage === 1 ? "disable" : "enable"](prev.element);
-        
-        let nxt =this.buttons["next"];
-        if(nxt && nxt.element)
+
+        let nxt = this.buttons["next"];
+        if (nxt && nxt.element)
             DOM[this.currentPage === this.pageCount ? "disable" : "enable"](nxt.element);
     }
 
@@ -263,9 +265,14 @@ class ExoFormStaticNavigation extends ExoFormNavigationBase {
         super.render();
 
         this.exo.on(ExoFormFactory.events.renderReady, e => {
-            this.form.querySelectorAll(".exf-page").forEach(elm => {
-                elm.style.display = "block";
-            });
+
+            //TODO fix this 
+            setTimeout(() => {
+                this.form.querySelectorAll(".exf-page").forEach(elm => {
+                    elm.style.display = "block";
+                });
+            }, 1);
+
         })
 
     }
@@ -305,6 +312,8 @@ class ExoFormWizardNavigation extends ExoFormDefaultNavigation {
             class: "form-post"
         }
     };
+
+    
 }
 
 class ExoFormSurveyNavigation extends ExoFormWizardNavigation {
@@ -396,7 +405,7 @@ class ExoFormSurveyNavigation extends ExoFormWizardNavigation {
                     type = e.detail.field;
 
                 if (!["checkboxlist", "tags"].includes(type)) { // need metadata from controls
-                    this.exo.nextPage();
+                    this.exo.addins.navigation.next();
                 }
 
                 else {
@@ -422,7 +431,7 @@ class ExoFormNavigation {
     }
 
     static getType(exo) {
-        let type = exo.formSchema.navigation;
+        let type = exo.schema.navigation;
         if (typeof (type) === "undefined" || type === "auto")
             type = ExoFormNavigation.matchNavigationType(exo);
 
@@ -430,7 +439,7 @@ class ExoFormNavigation {
     }
 
     static matchNavigationType(exo) {
-        if (exo.formSchema.pages.length > 1)
+        if (exo.schema.pages.length > 1)
             return "wizard"
 
         return "default"
