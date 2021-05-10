@@ -99,12 +99,20 @@ class ExoForm {
                 let url = new URL(schema, this.context.baseUrl);
 
                 try {
-                    fetch(url).then(x => x.json()).then(r => {
-
-                        loader(r);
-                    }).catch(ex => {
-                        reject(ex);
-                    });
+                    if (url.toString().split(".").pop() === "js") {
+                        fetch(url).then(x => x.text()).then(r => {
+                            loader(r);
+                        }).catch(ex => {
+                            reject(ex);
+                        });
+                    }
+                    else {
+                        fetch(url).then(x => x.json()).then(r => {
+                            loader(r);
+                        }).catch(ex => {
+                            reject(ex);
+                        });
+                    }
                 }
                 catch (ex) {
                     reject(ex);
@@ -407,15 +415,15 @@ class ExoForm {
      * @param {object} options - query options. e.g. {inScope: true} for querying only fields that are currenttly in scope.
      * @return {array} - All matched fields in the current ExoForm schema
      */
-     query(matcher, options) {
+    query(matcher, options) {
         if (matcher === undefined) matcher = () => { return true };
         options = options || {};
 
         return this.schema.query((item, data) => {
-            if(data.type === "page"){
+            if (data.type === "page") {
                 return !options.inScope || this.isPageInScope(data.pageIndex)
             }
-            
+
             return matcher(item, data)
         });
     }
