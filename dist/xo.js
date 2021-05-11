@@ -811,7 +811,7 @@
 
     assembleScript(logic) {
       if (logic && Array.isArray(logic.lines)) {
-        return `let model = this.dataBinding.model;\n` + logic.lines.join('\n');
+        return `const context = {model: this.dataBinding.model, exo: this};\n` + logic.lines.join('\n');
       }
 
       return "";
@@ -827,7 +827,7 @@
         if (f) {
           model.logic.bind(this.exo)(context);
         } else {
-          Core.scopeEval(context, js);
+          Core.scopeEval(this.exo, js);
         }
       } catch (ex) {
         console.error(ex);
@@ -1867,7 +1867,7 @@
         "minlength": "minLength",
         "maxlength": "maxLength"
       },
-      reserved: ["caption", "template", "elm", "ctl", "tagname", "ispage"]
+      reserved: ["caption", "template", "elm", "ctl", "tagname", "ispage", "bind"]
     },
     templates: {
       empty:
@@ -2169,8 +2169,8 @@
       let f = this.context.field;
 
       for (var prop in f) {
-        if (ExoForm.meta.properties.reserved.includes(prop)) continue;
         let name = prop.toLowerCase();
+        if (ExoForm.meta.properties.reserved.includes(name)) continue;
         let value = f[name];
         let useName = prop; // ExoForm.meta.properties.map[prop] || prop;
 
@@ -5487,6 +5487,7 @@
         //TODO fix this 
         setTimeout(() => {
           this.form.querySelectorAll(".exf-page").forEach(elm => {
+            //delete elm.style.display;
             elm.style.display = "block";
           });
         }, 1);

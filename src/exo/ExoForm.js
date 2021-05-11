@@ -30,7 +30,7 @@ class ExoForm {
                 "minlength": "minLength",
                 "maxlength": "maxLength"
             },
-            reserved: ["caption", "template", "elm", "ctl", "tagname", "ispage"]
+            reserved: ["caption", "template", "elm", "ctl", "tagname", "ispage", "bind"]
         },
 
         templates: {

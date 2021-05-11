@@ -80,9 +80,10 @@ class ExoFormDataBindingResolver {
     }
 
     assembleScript(logic) {
+        
         if (logic && Array.isArray(logic.lines)) {
 
-            return `let model = this.dataBinding.model;\n` + logic.lines.join('\n');
+            return `const context = {model: this.dataBinding.model, exo: this};\n` + logic.lines.join('\n');
         }
         return "";
     }
@@ -97,7 +98,7 @@ class ExoFormDataBindingResolver {
                 model.logic.bind(this.exo)(context);
             }
             else {
-                Core.scopeEval(context, js)
+                Core.scopeEval(this.exo, js)
             }
         }
         catch (ex) {

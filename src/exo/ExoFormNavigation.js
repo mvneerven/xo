@@ -10,7 +10,7 @@ class ExoFormNavigationBase {
         this._visible = true;
         this._currentPage = 1;
         this.form = exo.form;
-        
+
     }
 
     get visible() {
@@ -30,14 +30,14 @@ class ExoFormNavigationBase {
 
     render() {
         const tpl = /*html*/`<fieldset class="exf-cnt exf-nav-cnt"></fieldset>`;
-       
+
 
         this.container = DOM.parseHTML(tpl);
-        
+
         for (var b in this.buttons) {
             this.addButton(b, this.buttons[b])
         }
- 
+
         this.form.appendChild(this.container);
 
         this.form.setAttribute("data-current-page", this.currentPage);
@@ -71,9 +71,9 @@ class ExoFormNavigationBase {
         this.exo.on(ExoFormFactory.events.interactive, this._ready.bind(this));
     }
 
-    _ready(e){
+    _ready(e) {
         this._pageCount = this.getLastPage();
-        
+
         this.updateButtonStates()
     }
 
@@ -91,7 +91,7 @@ class ExoFormNavigationBase {
             ...options || {}
         }
 
-        
+
         let btn = DOM.parseHTML(/*html*/`<button name="${options.name}" type="${options.type}" class="exf-btn ${options.class}">${options.caption}</button>`);
 
         this.buttons[name].element = btn;
@@ -323,7 +323,7 @@ class ExoFormWizardNavigation extends ExoFormDefaultNavigation {
         }
     };
 
-    
+
 }
 
 class ExoFormSurveyNavigation extends ExoFormWizardNavigation {

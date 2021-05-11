@@ -893,7 +893,7 @@ html.theme-light nav.ul-drop ul li > ul {
   height: 1.2rem;
   border: none;
   border-radius: 1.2rem;
-  background-color: var(--color-input);
+  background-color: var(--color-text);
 }
 
 .exf-ctl-cnt.exf-switch input[type="range"]::-moz-range-thumb {
@@ -901,7 +901,7 @@ html.theme-light nav.ul-drop ul li > ul {
   height: 1.2rem;
   border: none;
   border-radius: 1.2rem;
-  background-color: var(--color-input);
+  background-color: var(--color-text);
 }
 
 .exf-ctl-cnt.exf-switch input[type="range"]::-ms-thumb {
@@ -909,7 +909,7 @@ html.theme-light nav.ul-drop ul li > ul {
   height: 1.2rem;
   border-radius: 1.2rem;
   border: 0;
-  background-color: var(--color-input);
+  background-color: var(--color-text);
 }
 
 .exf-ctl-cnt.exf-switch input[type="range"] .switch.on::-webkit-slider-thumb {

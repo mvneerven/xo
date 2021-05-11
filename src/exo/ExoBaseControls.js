@@ -310,10 +310,12 @@ class ExoControlBase {
         let f = this.context.field;
 
         for (var prop in f) {
-            if (ExoForm.meta.properties.reserved.includes(prop))
-                continue;
 
             let name = prop.toLowerCase();
+
+            if (ExoForm.meta.properties.reserved.includes(name))
+                continue;
+            
             let value = f[name];
 
             let useName = prop;// ExoForm.meta.properties.map[prop] || prop;
