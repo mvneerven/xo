@@ -88,12 +88,16 @@ class ExoFormDataBindingResolver {
     }
 
     applyJSLogic(f, js, model) {
+        const context = {
+            model: model,
+            exo: this.exo
+        };
         try {
             if (f) {
-                model.logic.bind(this.exo)(model, this.exo);
+                model.logic.bind(this.exo)(context);
             }
             else {
-                Core.scopeEval(this.exo, js)
+                Core.scopeEval(context, js)
             }
         }
         catch (ex) {

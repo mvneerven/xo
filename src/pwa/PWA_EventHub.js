@@ -49,15 +49,15 @@ class PWA_EventHub {
     }
 
     on(eventName, func) {
-        console.debug("Listening to event", eventName, func);
+        console.debug("PWA_EventHub: listening to event", {name: eventName, f: func});
         this.addEventListener(eventName, func);
         return this;
     }
 
     _triggerEvent(eventName, detail, ev) {
-        console.debug("Triggering event", eventName, "detail: ", detail)
+        console.debug("PWA_EventHub: triggering event", eventName, "detail: ", detail)
         if (!ev) {
-            ev = new Event(eventName, { "bubbles": false, "cancelable": true });
+            ev = new Event(eventName, { bubbles: false, cancelable: true });
         }
 
         ev.detail = {

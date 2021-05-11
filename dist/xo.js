@@ -815,11 +815,16 @@
     }
 
     applyJSLogic(f, js, model) {
+      const context = {
+        model: model,
+        exo: this.exo
+      };
+
       try {
         if (f) {
-          model.logic.bind(this.exo)(model, this.exo);
+          model.logic.bind(this.exo)(context);
         } else {
-          Core.scopeEval(this.exo, js);
+          Core.scopeEval(context, js);
         }
       } catch (ex) {
         console.error(ex);
@@ -1119,21 +1124,6 @@
       return this._schemaData;
     }
 
-    toString(mode) {
-      if (typeof mode === "undefined") mode = this.type || this.guessType();
-
-      switch (mode) {
-        case "js":
-        case "javascript":
-          return this.toJSString();
-
-        case "json":
-          return this.toJSONString();
-      }
-
-      return super.toString();
-    }
-
     get navigation() {
       return this._schemaData.navigation;
     }
@@ -1155,22 +1145,88 @@
     }
 
     guessType() {
-      if (typeof this.model.logic === "function") {
+      if (this.model && typeof this.model.logic === "function") {
         return this.types.js;
       }
 
       return this.types.json;
     }
 
+    toString(mode) {
+      if (typeof mode === "undefined") mode = this.type || this.guessType();
+
+      switch (mode) {
+        case "js":
+        case "javascript":
+          return this.toJSString();
+
+        case "json":
+          return this.toJSONString();
+      }
+
+      return super.toString();
+    }
+
     toJSONString() {
-      return JSON.stringify(this._schemaData, (key, value) => {
+      let data = { ...this._schemaData
+      };
+      this.logicToJson(data);
+      let result = JSON.stringify(data, (key, value) => {
         if (key.startsWith("_")) return undefined;
         return value;
       }, 2);
+      return result;
+    }
+
+    logicToJson(data) {
+      let logic;
+
+      if (data.model && typeof data.model.logic === "function") {
+        logic = data.model.logic;
+        data.model.logic = {
+          type: "JavaScript",
+          lines: this.getFunctionBodyLines(logic)
+        };
+      }
+    }
+
+    logicToJs(data) {
+      if (data.model && typeof data.model.logic === "object" && data.model.logic.type === "JavaScript" && Array.isArray(data.model.logic.lines)) {
+        let body = data.model.logic.lines.map(l => {
+          return '\t\t' + l.trim();
+        }).join('\n');
+        data.model.logic = new Function("context", body);
+      }
+    }
+
+    getFunctionBodyLines(f) {
+      let body = f.toString();
+      let p = body.indexOf("{");
+
+      if (p !== -1) {
+        body = body.substring(p + 1);
+        let parts = body.split('}');
+        parts.length--;
+        body = parts.join('}');
+        let lines = body.split('\n');
+        lines = lines.map(l => {
+          return l.trim();
+        }).filter(l => {
+          return l.length > 0;
+        });
+        return lines;
+      }
+
+      return null;
     }
 
     toJSString() {
-      return "const schema = " + Core.stringifyJs(this._schemaData, null, 2);
+      let data = { ...this._schemaData
+      };
+      this.logicToJs(data);
+      let str = Core.stringifyJs(data, null, 2);
+      str = str.replace("function anonymous(context\n) {", "context => {");
+      return "const schema = " + str;
     }
 
     get form() {
@@ -1470,7 +1526,10 @@
 
 
     on(eventName, func) {
-      console.debug("ExoForm: added event listener", eventName, func);
+      console.debug("ExoForm: added event listener", {
+        name: eventName,
+        f: func
+      });
       this.addEventListener(eventName, func);
       return this;
     }

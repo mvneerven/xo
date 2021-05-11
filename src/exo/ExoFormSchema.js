@@ -18,7 +18,7 @@ class ExoFormSchema {
 
     parse(schemaData) {
         if (typeof (schemaData) !== "object") {
-            
+
             let test = ExoFormFactory.tryScriptLiteral(schemaData);
             if (test) {
                 this._type = this.types.js
@@ -75,7 +75,7 @@ class ExoFormSchema {
     * @return {object} - The ExoForm instance
     */
     on(eventName, func) {
-        console.debug("Listening to event", eventName, func);
+        console.debug("ExoFormSchema: listening to event", {name: eventName, f: func});
         this.addEventListener(eventName, func);
         return this;
     }
@@ -83,7 +83,34 @@ class ExoFormSchema {
     get data() {
         return this._schemaData;
     }
-    
+
+    get navigation() {
+        return this._schemaData.navigation;
+    }
+
+    get validation() {
+        return this._schemaData.validation;
+    }
+
+    get progress() {
+        return this._schemaData.progress;
+    }
+
+    get rules() {
+        return this._schemaData.rules;
+    }
+
+    get theme() {
+        return this._schemaData.theme;
+    }
+
+    guessType() {
+        if (this.model && typeof (this.model.logic) === "function") {
+            return this.types.js
+        }
+        return this.types.json;
+    }
+
     toString(mode) {
 
         if (typeof (mode) === "undefined")
@@ -92,7 +119,6 @@ class ExoFormSchema {
         switch (mode) {
             case "js":
             case "javascript":
-
                 return this.toJSString();
             case "json":
                 return this.toJSONString();
@@ -101,43 +127,79 @@ class ExoFormSchema {
         return super.toString();
     }
 
-    get navigation(){
-        return this._schemaData.navigation;
-    }
-
-    get validation(){
-        return this._schemaData.validation;
-    }
-
-    get progress(){
-        return this._schemaData.progress;
-    }
-
-    get rules(){
-        return this._schemaData.rules;
-    }
-
-    get theme(){
-        return this._schemaData.theme;
-    }
-
-    guessType() {
-        if (typeof (this.model.logic) === "function") {
-            return this.types.js
-        }
-        return this.types.json;
-    }
-
     toJSONString() {
-        return JSON.stringify(this._schemaData, (key, value) => {
+
+        let data = {
+            ...this._schemaData
+        }
+
+        this.logicToJson(data)
+
+        let result = JSON.stringify(data, (key, value) => {
             if (key.startsWith("_"))
                 return undefined;
             return value;
         }, 2);
+
+        return result;
+    }
+
+    logicToJson(data) {
+        let logic;
+        if (data.model && typeof (data.model.logic) === "function") {
+            logic = data.model.logic;
+
+            data.model.logic = {
+                type: "JavaScript",
+                lines: this.getFunctionBodyLines(logic)
+            };
+        }
+
+    }
+
+    logicToJs(data) {
+        if (data.model && typeof (data.model.logic) === "object" && data.model.logic.type === "JavaScript" && Array.isArray(data.model.logic.lines)) {
+            let body = data.model.logic.lines.map(l => {
+                return '\t\t' + l.trim();
+            }).join('\n');
+
+            data.model.logic = new Function("context", body);
+        }
+
+    }
+
+    getFunctionBodyLines(f) {
+        let body = f.toString();
+        let p = body.indexOf("{");
+        if (p !== -1) {
+            body = body.substring(p + 1);
+            let parts = body.split('}');
+            parts.length--;
+            body = parts.join('}');
+            let lines = body.split('\n');
+            lines = lines.map(l => {
+                return l.trim();
+            }).filter(l => {
+                return l.length > 0;
+            });
+            return lines;
+        }
+        return null;
     }
 
     toJSString() {
-        return "const schema = " + Core.stringifyJs(this._schemaData, null, 2);
+
+        let data = {
+            ...this._schemaData
+        }
+
+        this.logicToJs(data)
+
+        let str = Core.stringifyJs(data, null, 2);
+
+        str = str.replace("function anonymous(context\n) {", "context => {");
+
+        return "const schema = " + str;
     }
 
     get form() {
@@ -170,13 +232,13 @@ class ExoFormSchema {
         let fieldIndex = 0;
         this._schemaData.pages.forEach(p => {
             fieldIndex = 0
-            if (matcher(p, {type: "page", pageIndex: pageIndex})) {
+            if (matcher(p, { type: "page", pageIndex: pageIndex })) {
                 if (Array.isArray(p.fields)) {
                     p.fields.forEach(f => {
                         f._page = {
                             index: pageIndex
                         }
-                        if (matcher(f, {type: "field", fieldIndex: fieldIndex})) {
+                        if (matcher(f, { type: "field", fieldIndex: fieldIndex })) {
                             matches.push(f)
                         }
                         fieldIndex++;

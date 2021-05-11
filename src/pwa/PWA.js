@@ -74,7 +74,7 @@ class PWA {
     }
 
     on(eventName, func) {
-        console.debug("Listening to event", eventName, func);
+        console.debug("PWA: listening to event", {name: eventName, f: func});
         this.addEventListener(eventName, func);
         return this;
     }

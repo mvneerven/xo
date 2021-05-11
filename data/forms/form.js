@@ -16,17 +16,14 @@ const schema = {
                 agree: false
             }
         },
-        logic: (model, exo) => {
-            const person = model.instance.person,
-                b = model.bindings;
-
+        logic: context => {
+            const model = context.model, person = model.instance.person, b = model.bindings;
             b.genderUnknown = !['male', 'female'].includes(person.gender);
             b.title =
                 (b.genderUnknown ? '' : (person.gender === 'male' ? 'Mr ' : 'Mrs '))
                 + person.name.first + ' ' + person.name.last;
             b.under18 = model.instance.person.age <= 17;
             b.continue = !b.under18 && model.instance.contract.agree;
-
             b.info = 'agree to proceed'
         }
     },

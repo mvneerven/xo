@@ -278,7 +278,7 @@ class ExoForm {
     * @return {object} - The ExoForm instance
     */
     on(eventName, func) {
-        console.debug("ExoForm: added event listener", eventName, func);
+        console.debug("ExoForm: added event listener", {name: eventName, f: func});
         this.addEventListener(eventName, func);
         return this;
     }

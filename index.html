@@ -15,8 +15,11 @@
             --color-shade: #ccc;
             --color-button: hsl(340, 87%, 65%);
             --color-button-disabled: hsl(340, 0%, 65%);
-            --color-text: #333;
             --field-box-shadow-subtle: #dedede;
+            --color-label-active: rgb(173, 58, 4);
+            --color-label:  #333;
+            --color-input-shade: rgba(0, 0, 0, 0.2);
+            --color-input-shade-focus: rgb(173, 58, 4);
         }
 
         html, body{
@@ -80,7 +83,7 @@
     <footer></footer>
     <script type="module" src="/dist/xo.js"></script>
 
-    <script src="/form.js"></script>
+    <!-- <script src="/form.js"></script> -->
 
     <script type="module">
         const factory = window.xo.form.factory,
@@ -94,7 +97,7 @@
         async function run(context) {
             const x = context.createForm();
             listen(x);
-            await x.load(schema);
+            await x.load("/data/forms/form.js");
             let result = await x.renderForm();
             document.body.querySelector("main").appendChild(result.container);
         }
