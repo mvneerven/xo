@@ -1,6 +1,6 @@
 (function (global, factory) {
-  typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('node:util'), require('regenerator-runtime/runtime')) :
-  typeof define === 'function' && define.amd ? define(['node:util', 'regenerator-runtime/runtime'], factory) :
+  typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('regenerator-runtime/runtime')) :
+  typeof define === 'function' && define.amd ? define(['regenerator-runtime/runtime'], factory) :
   (global = typeof globalThis !== 'undefined' ? globalThis : global || self, global.xo = factory());
 }(this, (function () { 'use strict';
 
@@ -310,26 +310,29 @@
       this.selector = selector;
       this.childSelector = childSelector;
       this.dragSortContainers = masterContainer.querySelectorAll(selector);
-      console.debug("dragSortContainers selected for dragdrop sorting: " + this.dragSortContainers.length, ", selector: ", selector);
+      console.debug("DragDropSorter: dragSortContainers selected for dragdrop sorting: " + this.dragSortContainers.length, ", selector: ", selector);
       this.enableDragList(masterContainer, childSelector);
     }
 
     triggerEvent(eventName, detail) {
-      console.debug("Triggering event", eventName, "detail: ", detail);
+      console.debug("DragDropSorter: triggering event", eventName, "detail: ", detail);
       let ev = new Event(eventName);
       ev.detail = detail;
       this.dispatchEvent(ev);
     }
 
     on(eventName, func) {
-      console.debug("Listening to event", eventName, func);
+      console.debug("DragDropSorter: listening to event", {
+        name: eventName,
+        f: func
+      });
       this.addEventListener(eventName, func);
       return this;
     }
 
     enableDragList(container, childSelector) {
       let elements = container.querySelectorAll(childSelector);
-      console.debug("Elements selected for dragdrop sorting: " + elements.length, ", childSelector: ", childSelector);
+      console.debug("DragDropSorter: elements selected for dragdrop sorting: " + elements.length, ", childSelector: ", childSelector);
       elements.forEach(item => {
         this.enableDragItem(item);
       });
@@ -370,11 +373,11 @@
 
     handleDrop(event) {
       event.target.classList.remove('drag-sort-active');
-      console.debug("drag stopped: " + event.target.class);
+      console.debug("DragDropSorter: drag stopped: " + event.target.class);
       let sortContainer = event.target.closest(this.selector);
 
       if (sortContainer) {
-        console.debug("Sort container: " + sortContainer.class);
+        console.debug("DragDropSorter: Sort container: " + sortContainer.class);
         sortContainer.classList.remove("drag-sort-in-process");
       }
 
@@ -1115,7 +1118,10 @@
 
 
     on(eventName, func) {
-      console.debug("Listening to event", eventName, func);
+      console.debug("ExoFormSchema: listening to event", {
+        name: eventName,
+        f: func
+      });
       this.addEventListener(eventName, func);
       return this;
     }
@@ -7112,18 +7118,21 @@
     }
 
     on(eventName, func) {
-      console.debug("Listening to event", eventName, func);
+      console.debug("PWA_EventHub: listening to event", {
+        name: eventName,
+        f: func
+      });
       this.addEventListener(eventName, func);
       return this;
     }
 
     _triggerEvent(eventName, detail, ev) {
-      console.debug("Triggering event", eventName, "detail: ", detail);
+      console.debug("PWA_EventHub: triggering event", eventName, "detail: ", detail);
 
       if (!ev) {
         ev = new Event(eventName, {
-          "bubbles": false,
-          "cancelable": true
+          bubbles: false,
+          cancelable: true
         });
       }
 
@@ -7277,7 +7286,10 @@
     }
 
     on(eventName, func) {
-      console.debug("Listening to event", eventName, func);
+      console.debug("PWA: listening to event", {
+        name: eventName,
+        f: func
+      });
       this.addEventListener(eventName, func);
       return this;
     }
