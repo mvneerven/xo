@@ -38,8 +38,9 @@ class ExoWizardRouteModule extends ExoRouteModule {
             });
 
         let u = null;
+        
         if(_.wizardSettings.url)
-            u = new URL(_.wizardSettings.url, _.app.config.baseUrl).toString();
+            u = _.wizardSettings.url;// new URL(_.wizardSettings.url, _.app.config.baseUrl).toString();
         else{
             u = _.wizardSettings.schema; 
         }

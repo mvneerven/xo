@@ -99,14 +99,19 @@ class ExoForm {
 
                 try {
                     if (url.toString().split(".").pop() === "js") {
-                        
+
                         fetch(url, {
                             credentials: 'include',
                             headers: {
                                 'Content-Type': 'text/plain',
                                 'Accept': 'text/plain'
                             }
-                        }).then(x=> x.text()).then(r => {  
+                        }).then(x => {
+                            if (x.status === 200) {
+                                return x.text()
+                            }
+                            throw "HTTP Status " + x.status;
+                        }).then(r => {
                             loader(r);
                         }).catch(ex => {
                             reject(ex);
@@ -119,7 +124,12 @@ class ExoForm {
                                 'Content-Type': 'application/json',
                                 'Accept': 'application/json'
                             }
-                        }).then(x => x.json()).then(r => {
+                        }).then(x => {
+                            if (x.status === 200) {
+                                return x.json()
+                            }
+                            throw "HTTP Status " + x.status;
+                        }).then(r => {
                             loader(r);
                         }).catch(ex => {
                             reject(ex);
