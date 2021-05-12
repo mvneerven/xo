@@ -9,7 +9,6 @@ import ExoFormValidation from './ExoFormValidation';
 import ExoFormNavigation from './ExoFormNavigation';
 import ExoFormProgress from './ExoFormProgress';
 import ExoFormRules from './ExoFormRules'
-import Core from '../pwa/Core';
 import ExoFormSchema from './ExoFormSchema';
 
 /**

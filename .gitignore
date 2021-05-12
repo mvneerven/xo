@@ -1,5 +1,7 @@
 /node_modules
 /out
+/.cache
+/.vscode
 
 img/cloud-up.svg
 img/Thumbs.db

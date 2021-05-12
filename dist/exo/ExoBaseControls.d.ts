@@ -3,6 +3,7 @@ export class ExoElementControl extends ExoControlBase {
 export class ExoInputControl extends ExoElementControl {
     static returnValueType: StringConstructor;
     createEmailLookup(): void;
+    destroyDataList(): void;
     testDataList(): void;
     getFetchLookup(f: any): any;
     createDataList(f: any, data: any): void;
@@ -17,46 +18,69 @@ export class ExoListControl extends ExoElementControl {
     isMultiSelect: boolean;
     view: string;
     populateList(containerElm: any, tpl: any): Promise<void>;
-    addListItem(f: any, i: any, tpl: any, container: any): void;
+    addListItem(f: any, i: any, tpl: any, container: any, index: any): void;
     renderFieldSync(item: any, tpl: any, container: any): Promise<void>;
 }
+export class ExoNumberControl extends ExoInputControl {
+    static returnValueType: NumberConstructor;
+    buttons: boolean;
+    minusButton: HTMLButtonElement;
+    plusButton: HTMLButtonElement;
+}
 export class ExoRangeControl extends ExoNumberControl {
+    showoutput: boolean;
+    output: HTMLOutputElement;
+    _sync(): void;
 }
 export default ExoBaseControls;
 declare class ExoControlBase {
     static returnValueType: any;
     constructor(context: any);
     attributes: {};
+    _visible: boolean;
+    _disabled: boolean;
+    _rendered: boolean;
     acceptedProperties: any[];
     dataProps: {};
-    containerTemplate: string;
     context: any;
     set htmlElement(arg: any);
     get htmlElement(): any;
+    _getContainerTemplate(obj: any): any;
     _htmlElement: any;
     allowedAttributes: string[];
     isSelfClosing: boolean;
     appendChild(elm: any): void;
+    typeConvert(value: any): any;
+    set value(arg: any);
+    get value(): any;
     triggerChange(detail: any): void;
-    set enabled(arg: boolean);
-    get enabled(): boolean;
+    set visible(arg: boolean);
+    get visible(): boolean;
+    set disabled(arg: boolean);
+    get disabled(): boolean;
+    get rendered(): boolean;
     acceptProperties(...ar: any[]): void;
+    _scope(): any;
+    _addContainerClasses(): void;
+    _getContainerClasses(): string[];
+    _getBaseType(): "text" | "default" | "bool" | "multi";
     render(): Promise<any>;
     container: any;
     addEventListeners(): void;
-    getContainerAttributes(): {
-        caption: any;
-        tooltip: any;
-        class: any;
-        id: string;
-    };
+    _getContainerAttributes(): any;
     setProperties(): void;
-    get valid(): any;
-    get validationMessage(): any;
+    _processProp(name: any, value: any): any;
+    get valid(): boolean;
+    get validationMessage(): string;
     showValidationError(): any;
-}
-declare class ExoNumberControl extends ExoInputControl {
-    static returnValueType: NumberConstructor;
+    /**
+     * Displays a help text to the user. Pass with empty @msg to hide.
+     * @param {String} msg - The message to display
+     * @param {Object} options - The options (type: "info|error|invalid")
+     * @returns
+     */
+    showHelp(msg: string, options: any): void;
+    _error: ChildNode;
 }
 declare class ExoBaseControls {
     static controls: {
@@ -145,7 +169,7 @@ declare class ExoBaseControls {
             };
         };
         checkbox: {
-            base: string;
+            type: typeof ExoCheckboxControl;
             note: string;
             demo: {
                 checked: boolean;
@@ -254,11 +278,24 @@ declare class ExoBaseControls {
 declare class ExoFormControl extends ExoElementControl {
 }
 declare class ExoFormPageControl extends ExoDivControl {
+    _relevant: boolean;
+    _previouslyRelevant: boolean;
+    set relevant(arg: boolean);
+    get relevant(): boolean;
+    _setRelevantState(): void;
     finalize(): void;
 }
 declare class ExoFieldSetControl extends ExoFormPageControl {
+    _index: any;
+    set index(arg: any);
+    get index(): any;
+}
+declare class ExoCheckboxControl extends ExoCheckboxListControl {
+    static returnValueType: BooleanConstructor;
+    text: string;
 }
 declare class ExoTextAreaControl extends ExoTextControl {
+    autogrow: boolean;
 }
 declare class ExoDropdownListControl extends ExoListControl {
 }
@@ -280,4 +317,5 @@ declare class ExoProgressControl extends ExoElementControl {
 declare class ExoLinkControl extends ExoElementControl {
 }
 declare class ExoInputListControl extends ExoListControl {
+    getValidationMessage(): string;
 }

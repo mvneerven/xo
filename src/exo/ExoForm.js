@@ -7,7 +7,6 @@ import Core from '../pwa/Core';
 import DOM from '../pwa/DOM';
 import ExoFormFactory from './ExoFormFactory';
 import ExoFormDataBinding from './ExoFormDataBinding';
-import ExoFormSchema from './ExoFormSchema';
 
 /**
  * ExoForm class. 
@@ -132,7 +131,6 @@ class ExoForm {
     loadSchema(schema) {
 
         this._schema = this.context.createSchema();
-
         this._schema.parse(schema);
 
         this._dataBinding = new ExoFormDataBinding(this, this._mappedInstance);

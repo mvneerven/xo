@@ -22,9 +22,7 @@ declare class DOM {
     static waitFor(selector: any, limit: any): Promise<any>;
     static require(src: any, c: any): Promise<any>;
     static addStyleSheet(src: any, attr: any): void;
-    static getObjectValue(obj: any, path: any, def: any): any;
     static format(template: any, data: any, settings: any): any;
-    static stringToPath(path: any): any;
     static replace(oldElm: any, newElm: any): any;
     static unwrap(el: any): any;
     static copyToClipboard(elm: any): boolean;

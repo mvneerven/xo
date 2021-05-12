@@ -1,8 +1,10 @@
 export default ExoForm;
-/*!
- * ExoForm - Generic Form/Wizard Generator - using JSON Form Schemas
- * (c) 2021 Marc van Neerven, MIT License, https://cto-as-a-service.nl
-*/
+/**
+ * ExoForm class.
+ * Created using ExoFormContext create() method
+ *
+ * @hideconstructor
+ */
 declare class ExoForm {
     static meta: {
         properties: {
@@ -19,13 +21,6 @@ declare class ExoForm {
         templates: {
             empty: string;
             exocontainer: string;
-            default: string;
-            nolabel: string;
-            text: string;
-            labelcontained: string;
-            form: string;
-            static: string;
-            fieldset: string;
             legend: string;
             pageIntro: string;
             datalist: string;
@@ -35,109 +30,98 @@ declare class ExoForm {
     };
     static _staticConstructor: void;
     static setup(): void;
-    static version: string;
     constructor(context: any, opts: any);
-    defaults: {
-        type: string;
-        baseUrl: string;
-        navigation: string;
-        validation: string;
-        runtime: {
-            progress: boolean;
-        };
-        form: {
-            theme: string;
-            class: string;
-        };
-        multiValueFieldTypes: string[];
-        ruleMethods: {
-            visible: (typeof Field.show)[];
-            enabled: (typeof Field.enable)[];
-            scope: (typeof Page.scope)[];
-            customMethod: (typeof Field.callCustomMethod)[];
-            goto: (typeof Page.goto)[];
-            dialog: (typeof Dialog.show)[];
-        };
-    };
     context: import("./ExoFormFactory").ExoFormContext;
     options: any;
-    formSchema: {
-        type: string;
-        baseUrl: string;
-        navigation: string;
-        validation: string;
-        runtime: {
-            progress: boolean;
-        };
-        form: {
-            theme: string;
-            class: string;
-        };
-        multiValueFieldTypes: string[];
-        ruleMethods: {
-            visible: (typeof Field.show)[];
-            enabled: (typeof Field.enable)[];
-            scope: (typeof Page.scope)[];
-            customMethod: (typeof Field.callCustomMethod)[];
-            goto: (typeof Page.goto)[];
-            dialog: (typeof Dialog.show)[];
-        };
-    };
-    form: ChildNode;
+    form: HTMLFormElement;
     container: ChildNode;
-    load(schema: any): Promise<any>;
-    applyLoadedSchema(): void;
+    get schema(): import("./ExoFormSchema").default;
+    /**
+     * load ExoForm schema (string or )
+     * @param {any} schema - A JSON ExoForm Schema string or object, or URL to fetch it from.
+     * @return {Promise} - A Promise returning the ExoForm Object with the loaded schema
+     */
+    load(schema: any, options: any): Promise<any>;
+    /**
+     * load ExoForm schema from object
+     * @param {any} schema - A JSON ExoForm Schema object.
+     * @return {any} - the loaded schema
+     */
+    loadSchema(schema: any): any;
+    _schema: import("./ExoFormSchema").default;
+    _dataBinding: ExoFormDataBinding;
+    /**
+    * Gets the data binding object
+    * @return {object} - The ExoFormDataBinding instance associated with the form.
+    */
+    get dataBinding(): any;
+    bind(instance: any): void;
+    _mappedInstance: any;
+    _createComponents(): void;
+    addins: {};
     triggerEvent(eventName: any, detail: any, ev: any): any;
-    getTotalFieldCount(schema: any): number;
-    isPageValid(index: any): boolean;
-    runValidCheck: boolean;
-    getField(name: any): any;
-    findField(compare: any): any;
+    /**
+     * Render ExoForm schema into a form
+     * Returns a Promise
+     */
     renderForm(): Promise<any>;
-    finalizeForm(): void;
-    cleanup(): void;
-    on(eventName: any, func: any): ExoForm;
-    renderPages(): Promise<any>;
+    _finalizeForm(): void;
+    _cleanup(): void;
+    /**
+    * Adds an event handler
+    * @param {string} eventName - Name of the event to listen to - Use xo.form.factory.events as a reference
+    * @param {function} func - function to attach
+    * @return {object} - The ExoForm instance
+    */
+    on(eventName: string, func: Function): object;
+    _renderPages(): Promise<any>;
     _addRendered(f: any, rendered: any, pageFieldsRendered: any, p: any, page: any): any;
-    getFormContainerProps(): any;
-    enrichPageSettings(p: any, pageNr: any): any;
-    query(matcher: any): any[];
-    map(mapper: any): ExoForm;
-    submitForm(ev: any): void;
-    getFormValues(e: any): Promise<any>;
-    getFieldValue(f: any): any;
-    gotoPage(page: any): any;
-    nextPage(): void;
-    previousPage(): void;
-    updateView(add: any, page: any): any;
-    currentPage: any;
-    getNextPage(add: any, page: any): any;
-    getLastPage(): number;
-    focusFirstControl(): void;
-    renderSingleControl(f: any): Promise<any>;
+    _getFormContainerProps(): any;
+    _enrichPageSettings(p: any, pageNr: any): any;
+    /**
+     * query all fields using matcher and return matches
+     * @param {function} matcher - function to use to filter
+     * @param {object} options - query options. e.g. {inScope: true} for querying only fields that are currenttly in scope.
+     * @return {array} - All matched fields in the current ExoForm schema
+     */
+    query(matcher: Function, options: object): any[];
+    /**
+     * Returns true if the given page is in scope (not descoped by active rules)
+     * @param {object} p - Page object (with index numeric property)
+     * @returns {boolean} - true if page is in scope
+     */
+    isPageInScope(p: object): boolean;
+    /**
+     * Get field with given name
+     * @param {string} name - name of field to get
+     * @return {Object} - Field
+     */
+    get(name: string): any;
+    /**
+     * Map data to form, once schema is loaded
+     * @param {function} mapper - a function that will return a value per field
+     * @return {object} - the current ExoForm instance
+     */
+    map(mapper: Function): object;
+    /**
+     * Submits the form
+     * @param {event} ev - event object to pass onto the submit handler
+     */
+    submitForm(ev: Event): void;
+    /**
+     * Gets the current form's values
+     * @return {object} - The typed data posted
+     */
+    getFormValues(): object;
+    getFieldValue(elementOrField: any): any;
+    /**
+     * Renders a single ExoForm control
+     * @param {object} field - field structure sub-schema.
+     * @return {promise} - A promise with the typed rendered element
+     */
+    renderSingleControl(field: object): Promise<any>;
     createControl(f: any): Promise<any>;
-    testValidity(e: any, field: any): void;
-    checkRules(): void;
-    getRenderedControl(id: any): any;
-    getFieldFromElementId(id: any): any;
-    interpretRule(objType: any, f: any, rule: any): void;
-    setupEventEventListener(settings: any): void;
-    getEventHost(ctl: any): any;
-    testRule(f: any, control: any, value: any, compare: any, rawValue: any): any;
+    _generateUniqueElementId(): string;
     clear(): void;
 }
-declare class Field {
-    static show(obj: any): void;
-    static hide(obj: any): void;
-    static enable(obj: any): void;
-    static disable(obj: any): void;
-    static callCustomMethod(obj: any): void;
-}
-declare class Page {
-    static scope(obj: any): void;
-    static descope(obj: any): void;
-    static goto(obj: any): any;
-}
-declare class Dialog {
-    static show(obj: any): void;
-}
+import ExoFormDataBinding from "./ExoFormDataBinding";

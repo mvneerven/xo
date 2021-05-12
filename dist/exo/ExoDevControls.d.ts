@@ -13,7 +13,16 @@ declare class ExoDevControls {
 declare const ExoAceCodeEditor_base: typeof import("./ExoBaseControls").ExoDivControl;
 declare class ExoAceCodeEditor extends ExoAceCodeEditor_base {
     static returnValueType: StringConstructor;
-    mode: string;
+    _mode: string;
+    defaultThemes: {
+        dark: string;
+        light: string;
+    };
+    _fontSize: number;
     theme: string;
-    value: any;
+    set mode(arg: string);
+    get mode(): string;
+    set fontSize(arg: number);
+    get fontSize(): number;
+    get ace(): any;
 }

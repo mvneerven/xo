@@ -12,12 +12,13 @@ declare class PWA {
         };
     };
     config: any;
-    signalR: Promise<void>;
+    restService: PWA_RESTService;
+    eventHub: PWA_EventHub;
     UI: PWA_UI;
     forceTheme: string;
-    triggerEvent(eventName: any, detail: any, ev: any): any;
+    _triggerEvent(eventName: any, detail: any, ev: any): any;
     on(eventName: any, func: any): PWA;
-    registerWorker(serviceWorker: any): void;
+    _registerWorker(serviceWorker: any): void;
     init(): void;
     asyncInit(): Promise<void>;
     execute(async: any): void;
@@ -28,6 +29,8 @@ declare class PWA {
     setupUI(): void;
     routerReady(): void;
 }
+import PWA_RESTService from "./PWA_RESTService";
+import PWA_EventHub from "./PWA_EventHub";
 import PWA_UI from "./PWA_UI";
 import Router from "./Router";
 import RouteModule from "./RouteModule";
