@@ -126,7 +126,7 @@ async function run(context) {
   const x = context.createForm();
   listen(x);
   //await x.load("/data/forms/form.js");
-  x.load(schema)
+  await x.load(schema)
   let result = await x.renderForm();
   document.body.querySelector("main").appendChild(result.container);
 }
