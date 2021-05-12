@@ -81,37 +81,11 @@
 <body>
     <main></main>
     <footer></footer>
-    <script type="module" src="/dist/xo.js"></script>
+    <script src="/src/exo/xo.js"></script>
 
-    <!-- <script src="/form.js"></script> -->
+    <script src="/data/forms/form.js"></script>
 
-    <script type="module">
-        const factory = window.xo.form.factory,
-        DOM = window.xo.dom,
-        log = ex => {
-            const elm = DOM.parseHTML(`<div>Error: ${ex.toString()}</div>`);            
-            document.querySelector("footer").appendChild(elm);
-            elm.scrollIntoView();
-        }
-
-        async function run(context) {
-            const x = context.createForm();
-            listen(x);
-            await x.load("/data/forms/form.js");
-            let result = await x.renderForm();
-            document.body.querySelector("main").appendChild(result.container);
-        }
-
-        function listen(x) {
-            x.on(factory.events.error, e => {
-                log(e.detail.error);
-            })
-        }
-
-        const context = await factory.build({ defaults: { validation: "inline" } });
-
-        run(context);
-    </script>
+    <script src="/js/index.js"></script>
 </body>
 
 </html>

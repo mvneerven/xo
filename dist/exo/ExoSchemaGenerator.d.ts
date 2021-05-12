@@ -7,10 +7,6 @@ declare class ExoSchemaGenerator {
         null: string;
     };
     defaultSchema: {
-        form: {
-            theme: string;
-            class: string;
-        };
         pages: {
             label: string;
             intro: string;
@@ -18,10 +14,6 @@ declare class ExoSchemaGenerator {
         }[];
     };
     generateFormSchema(DTO: any): {
-        form: {
-            theme: string;
-            class: string;
-        };
         pages: {
             label: string;
             intro: string;
@@ -34,5 +26,4 @@ declare class ExoSchemaGenerator {
         caption: any;
     };
     getDefault(meta: any): false | 0 | "";
-    toWords(text: any): any;
 }

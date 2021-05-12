@@ -1,3 +1,4 @@
+import "regenerator-runtime/runtime";
 import ExoFormFactory from './ExoFormFactory';
 import ExoRouteModule from './ExoRouteModule';
 import ExoWizardRouteModule from './ExoWizardRouteModule';
@@ -6,7 +7,6 @@ import DOM from '../pwa/DOM';
 import PWA from '../pwa/PWA';
 import Core from '../pwa/Core';
 import MsIdentity from '../pwa/MsIdentity';
-import "regenerator-runtime/runtime";
 
 const xo = {
     core: Core,

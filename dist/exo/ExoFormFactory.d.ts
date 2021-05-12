@@ -1,10 +1,16 @@
+/**
+ * Hosts an ExoForm context to create forms with.
+ * Created using {ExoFormFactory}.build()
+ *
+ * @hideconstructor
+ */
 export class ExoFormContext {
-    constructor(library: any);
+    constructor(config: any);
+    config: any;
+    baseUrl: string;
     library: any;
-    themes: typeof ExoThemes;
-    _theme: import("./ExoThemes").Fluent;
-    enrichMeta(library: any): any;
-    getProps(field: any, type: any, control: any): {
+    _enrichMeta(library: any): any;
+    _getProps(field: any, type: any, control: any): {
         name: {
             type: string;
             description: string;
@@ -19,46 +25,89 @@ export class ExoFormContext {
         };
     };
     createForm(options: any): ExoForm;
+    createSchema(): ExoFormSchema;
     get(type: any): any;
-    query(callback: any): any;
+    /**
+    * Searches the control library using @param {Function} callback.
+    * @return {Array} - list of matched controls.
+    */
+    query(callback: any): any[];
     isExoFormControl(formSchemaField: any): boolean;
     renderSingleControl(field: any): Promise<any>;
     createGenerator(): ExoSchemaGenerator;
-    set theme(arg: import("./ExoThemes").Fluent);
-    get theme(): import("./ExoThemes").Fluent;
 }
 export default ExoFormFactory;
-import ExoThemes from "./ExoThemes";
 import ExoForm from "./ExoForm";
+import ExoFormSchema from "./ExoFormSchema";
 import ExoSchemaGenerator from "./ExoSchemaGenerator";
+/**
+ * Factory class for ExoForm - Used to create an ExoForm context.
+ * Provides factory methods. Starting point for using ExoForm.
+ *
+ * @hideconstructor
+ */
 declare class ExoFormFactory {
     static _ev_pfx: string;
     static events: {
+        schemaLoaded: string;
+        renderStart: string;
+        getListItem: string;
+        renderReady: string;
+        interactive: string;
+        reportValidity: string;
+        dataModelChange: string;
         beforePage: string;
         page: string;
-        getListItem: string;
+        pageRelevancyChange: string;
         post: string;
-        renderStart: string;
-        renderReady: string;
-        change: string;
-        reportValidity: string;
-        schemaLoaded: string;
-        interactive: string;
+        error: string;
     };
-    static navigation: typeof ExoFormNavigation;
-    static validation: typeof ExoFormValidation;
+    static meta: {
+        navigation: {
+            type: typeof ExoFormNavigation;
+            description: string;
+        };
+        validation: {
+            type: typeof ExoFormValidation;
+            description: string;
+        };
+        progress: {
+            type: typeof ExoFormProgress;
+            description: string;
+        };
+        theme: {
+            type: typeof ExoFormThemes;
+            description: string;
+        };
+        rules: {
+            type: typeof ExoFormRules;
+            description: string;
+        };
+    };
     static Context: typeof ExoFormContext;
     static defaults: {
         imports: any[];
+        defaults: {
+            navigation: string;
+            validation: string;
+            progress: string;
+            theme: string;
+        };
     };
     static html: {
         classes: {
             formContainer: string;
             pageContainer: string;
             elementContainer: string;
+            groupContainer: string;
+            groupElementCaption: string;
         };
     };
     static library: {};
+    /**
+     * Build {ExoFormContext} instance.
+     *
+     */
     static build(options: any): Promise<any>;
     static buildLibrary(): {};
     static lookupBaseType(name: any, field: any): any;
@@ -67,12 +116,16 @@ declare class ExoFormFactory {
     static listNativeProps(ctl: any): string[];
     static loadCustomControl(f: any, src: any): Promise<any>;
     static importType(src: any): Promise<any>;
+    static tryScriptLiteral(scriptLiteral: any): any;
     static checkTypeConversion(type: any, rawValue: any): any;
     static getTypeParser(fieldMeta: any): (v: any) => any;
     static parseDate(value: any): string | number;
     static parseBoolean(value: any): boolean;
-    static getFieldFromElement(e: any): any;
+    static getFieldFromElement(e: any, options: any): any;
     static fieldToString(f: any): string;
 }
 import ExoFormNavigation from "./ExoFormNavigation";
 import ExoFormValidation from "./ExoFormValidation";
+import ExoFormProgress from "./ExoFormProgress";
+import ExoFormThemes from "./ExoFormThemes";
+import ExoFormRules from "./ExoFormRules";

@@ -20,7 +20,7 @@ class ExoFormSchema {
 
             let test = ExoFormFactory.tryScriptLiteral(schemaData);
             if (test) {
-                this._type = this.types.js
+                this._type = this.types.js;
                 schemaData = test;
             }
             else {

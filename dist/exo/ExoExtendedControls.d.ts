@@ -10,7 +10,7 @@ declare class ExoExtendedControls {
                 fileTypes: string[];
                 maxSize: number;
                 caption: string;
-                containerClass: string;
+                class: string;
             };
         };
         switch: {
@@ -105,10 +105,11 @@ declare class ExoExtendedControls {
 }
 declare const ExoFileDropControl_base: typeof import("./ExoBaseControls").ExoInputControl;
 declare class ExoFileDropControl extends ExoFileDropControl_base {
+    height: number;
     field: any;
     previewDiv: ChildNode;
     _change(): void;
-    bind(cb: any): void;
+    bindEvents(cb: any): void;
     getDataUrl(b64: any, fileType: any): string;
 }
 declare const ExoSwitchControl_base: typeof import("./ExoBaseControls").ExoRangeControl;
@@ -135,12 +136,13 @@ declare class ExoTaggingControl extends ExoTaggingControl_base {
 declare const MultiInputControl_base: typeof import("./ExoBaseControls").ExoDivControl;
 declare class MultiInputControl extends MultiInputControl_base {
     static returnValueType: ObjectConstructor;
-    grid: string;
-    _qs: (name: any) => Element;
+    columns: string;
+    areas: string;
+    gap: string;
     inputs: {};
     fields: any;
-    _gc: (e: any) => {};
-    _sc: (data: any) => void;
+    _qs(name: any): "" | Element;
+    getFormElement(elm: any): any;
 }
 declare class ExoCreditCardControl extends MultiInputControl {
 }
@@ -148,14 +150,18 @@ declare class ExoNameControl extends MultiInputControl {
 }
 declare class ExoNLAddressControl extends MultiInputControl {
     static APIUrl: string;
-    "grid-template": string;
 }
 declare class ExoDateRangeControl extends MultiInputControl {
+    grid: string;
 }
 declare const ExoEmbedControl_base: typeof import("./ExoBaseControls").ExoElementControl;
 declare class ExoEmbedControl extends ExoEmbedControl_base {
-    width: number;
-    height: number;
+    _width: string;
+    _height: string;
+    set width(arg: string);
+    get width(): string;
+    set height(arg: string);
+    get height(): string;
 }
 declare class ExoVideoControl extends ExoEmbedControl {
     static players: {
@@ -182,6 +188,9 @@ declare class ExoCaptchaControl extends ExoCaptchaControl_base {
     set sitekey(arg: any);
     get sitekey(): any;
     _sitekey: any;
+    set invisible(arg: boolean);
+    get invisible(): boolean;
+    _invisible: any;
 }
 declare const ExoStarRatingControl_base: typeof import("./ExoBaseControls").ExoRangeControl;
 declare class ExoStarRatingControl extends ExoStarRatingControl_base {
@@ -197,7 +206,7 @@ declare class ExoDialogControl extends ExoDialogControl_base {
     modal: boolean;
     dlgTemplate: string;
     dlgId: string;
-    hide(button: any): void;
+    hide(button: any, e: any): void;
     show(): void;
     remove(): void;
 }
