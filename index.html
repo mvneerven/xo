@@ -8,6 +8,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <meta name="color-scheme" content="light">
     <link rel="stylesheet" href="/css/exf.css" />
+    
     <style>
         :root {
             --color: #333;
@@ -17,12 +18,13 @@
             --color-button-disabled: hsl(340, 0%, 65%);
             --field-box-shadow-subtle: #dedede;
             --color-label-active: rgb(173, 58, 4);
-            --color-label:  #333;
+            --color-label: #333;
             --color-input-shade: rgba(0, 0, 0, 0.2);
             --color-input-shade-focus: rgb(173, 58, 4);
         }
 
-        html, body{
+        html,
+        body {
             height: 100vh;
             overflow: hidden;
         }
@@ -36,10 +38,10 @@
             display: grid;
             grid-template-rows: 1fr 200px;
             margin: 0;
-            padding:0;
+            padding: 0;
         }
 
-        #xo-test .exf-container{
+        #xo-test .exf-container {
             margin-top: 2rem;
         }
 
@@ -67,7 +69,7 @@
             margin-top: 1em;
         }
 
-        footer{
+        footer {
             padding: 1rem;
             overflow: auto;
             background: #333;
@@ -83,9 +85,27 @@
     <footer></footer>
     <script src="/src/exo/xo.js"></script>
 
-    <script src="/data/forms/form.js"></script>
+
 
     <script src="/js/index.js"></script>
+
+
+    <script>
+
+        fetch("data/forms/form.js", {
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'text/plain',
+                'Accept': 'text/plain'
+            }
+        }).then(x => x.text()).then(x=>{
+
+            alert(x);
+
+        })
+
+    </script>
+
 </body>
 
 </html>

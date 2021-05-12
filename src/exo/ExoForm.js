@@ -99,14 +99,27 @@ class ExoForm {
 
                 try {
                     if (url.toString().split(".").pop() === "js") {
-                        fetch(url).then(x => x.text()).then(r => {
+                        
+                        fetch(url, {
+                            credentials: 'include',
+                            headers: {
+                                'Content-Type': 'text/plain',
+                                'Accept': 'text/plain'
+                            }
+                        }).then(x=> x.text()).then(r => {  
                             loader(r);
                         }).catch(ex => {
                             reject(ex);
                         });
                     }
                     else {
-                        fetch(url).then(x => x.json()).then(r => {
+                        fetch(url, {
+                            credentials: 'include',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Accept': 'application/json'
+                            }
+                        }).then(x => x.json()).then(r => {
                             loader(r);
                         }).catch(ex => {
                             reject(ex);
@@ -276,7 +289,7 @@ class ExoForm {
     * @return {object} - The ExoForm instance
     */
     on(eventName, func) {
-        console.debug("ExoForm: added event listener", {name: eventName, f: func});
+        console.debug("ExoForm: added event listener", { name: eventName, f: func });
         this.addEventListener(eventName, func);
         return this;
     }

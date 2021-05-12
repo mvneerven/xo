@@ -2,6 +2,6 @@
 /out
 /.cache
 /.vscode
-
+/dist
 img/cloud-up.svg
 img/Thumbs.db

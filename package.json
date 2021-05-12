@@ -2,6 +2,7 @@
   "name": "@mvneerven/xo-js",
   "version": "1.1.17",
   "description": "ExoForm - Next Level Forms Generation based on JSON Schema",
+  "proxy": "https://localhost:4747",
   "repository": {
     "type": "git",
     "url": "https://github.com/mvneerven/xo"
@@ -15,11 +16,8 @@
   "types": "dist/exo/xo.d.ts",
   "homepage": "https://www.xo-js.dev",
   "scripts": {
-    "dev": "rollup -c -w",
-    "build": "rollup -c",
-    "build-prod": "rollup -c --environment BUILD:production&&npx tsc",
-    "parcel": "parcel index.html --no-cache",
-    "parcel-build": "parcel build src/exo/xo.js&&tsc"
+    "dev": "parcel index.html --no-cache --port=4747",
+    "build": "parcel build src/exo/xo.js&&tsc"
   },
   "license": "MIT",
   "devDependencies": {
