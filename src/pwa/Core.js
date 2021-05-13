@@ -59,6 +59,22 @@ class Core {
 
     };
 
+    /**
+     * 
+     * @returns {String} - An identifier known to be relatively unique per device
+     */
+    static fingerprint() {
+        const ca = document.createElement("canvas"),
+            co = ca.getContext("2d");
+        co.fillText("Lorem ipsum", 20, 20);
+        let s = ca.toDataURL("image/png"),
+            x = document.getElementById("canvas-fingerprint");
+        return s.split("").reduce((a, b) => {
+            a = (a << 5) - a + b.charCodeAt(0);
+            return a & a;
+        }, 0);
+    }
+
     static Iterator = Iterator;
 
     static addEvents(obj) {
@@ -117,11 +133,11 @@ class Core {
 
 
             let props = Object.keys(o)
-                .filter(key=>{
+                .filter(key => {
                     return !key.startsWith("_")
                 })
                 .map((key) => {
-                    
+
                     return `${key}: ${sfy(o[key], replacer, indent, level)}`;
                 })
                 .join(',\n' + tab(level));

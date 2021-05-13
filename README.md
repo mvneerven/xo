@@ -412,3 +412,10 @@ You can now easily switch to JavaScript literal notation, which makes it easier 
 In the upper right corner of the editor window, you can toggle between JS and JSON notation:
 
 ![Portal](img/md/json-schema.png "Toggling to JSON schema")
+
+# New in 1.1.2
+
+## ESBuild used
+
+No more Babel transpiling of ES6 Code. Just plain ES6, minified and bundled by [ESBuild](https://esbuild.github.io/).
+

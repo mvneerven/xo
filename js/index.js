@@ -1,4 +1,4 @@
-
+const Core = xo.core;
 
 const factory = window.xo.form.factory,
   DOM = window.xo.dom,
@@ -8,12 +8,11 @@ const factory = window.xo.form.factory,
     elm.scrollIntoView();
   };
 
-  
+
 async function run(context) {
   const x = context.createForm();
   listen(x);
   await x.load("/data/forms/form.js");
-  //await x.load(schema)
   let result = await x.renderForm();
   document.body.querySelector("main").appendChild(result.container);
 }
@@ -24,10 +23,10 @@ function listen(x) {
   });
 }
 
-factory.build({ 
-    defaults: { 
-      validation: "inline" 
-    } 
-  }).then((context) => {
-    run(context);
+factory.build({
+  defaults: {
+    validation: "inline"
+  }
+}).then((context) => {
+  run(context);
 });
