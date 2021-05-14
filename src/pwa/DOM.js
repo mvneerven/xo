@@ -289,8 +289,25 @@ class DOM {
     
 
     static require(src, c) {
-        if (typeof (src) == "string") src = [src];
         var d = document;
+        if (typeof (src) == "string") src = [src];
+        
+        let elm = d.head.querySelector(`script[src="${src}"]`);
+        if(elm){
+            let loadState = elm.getAttribute("data-exf-rl");
+            if(loadState ){
+                if(loadState === "1"){
+                    elm.addEventListener("load", ev=>{
+                        console.log("loadState ready: " , elm.src)
+                        ev.target.setAttribute("data-exf-rl", "2");
+                        c();
+                    })
+                    
+                }
+                return;
+            }
+        }
+        
         let loaded = 0;
         return new Promise((resolve, reject) => {
             const check = () => {
@@ -304,9 +321,11 @@ class DOM {
             }
             src.forEach(s => {
                 let e = d.createElement('script');
+                e.setAttribute("data-exf-rl", "1");
                 e.src = s
                 d.head.appendChild(e);
-                e.onload = e => {
+                e.onload = ev => {
+                    ev.target.setAttribute("data-exf-rl", "2");
                     loaded++;
                     check()
 
