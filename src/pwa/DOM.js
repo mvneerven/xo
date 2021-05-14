@@ -300,7 +300,9 @@ class DOM {
                     elm.addEventListener("load", ev=>{
                         console.log("loadState ready: " , elm.src)
                         ev.target.setAttribute("data-exf-rl", "2");
-                        c();
+                        if (typeof (c) === "function") {
+                            c();
+                        }
                     })
                     
                 }

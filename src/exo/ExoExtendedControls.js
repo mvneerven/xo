@@ -548,8 +548,8 @@ class DropDownButton extends ExoBaseControls.controls.list.type {
 }
 
 class ExoEmbedControl extends ExoBaseControls.controls.element.type {
-    _width = "600px";
-    _height = "400px";
+     _width = "";
+     _height = "";
 
     constructor(context) {
         super(context);
@@ -576,6 +576,12 @@ class ExoEmbedControl extends ExoBaseControls.controls.element.type {
 
         let wrapper = document.createElement("div")
         wrapper.classList.add("exf-embed-container");
+        
+        if(this.width)
+            wrapper.style.width = this.width;
+        if(this.height)
+            wrapper.style.height = this.height;
+
         wrapper.appendChild(this.htmlElement);
         this.container.querySelector(".exf-ctl").appendChild(wrapper);
 
@@ -594,7 +600,7 @@ class ExoEmbedControl extends ExoBaseControls.controls.element.type {
     }
 
     get height(){
-        return this._height;
+        return this._height; 
     }
 
     set height(value){

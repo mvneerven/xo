@@ -35,14 +35,15 @@ class RouteModule {
     }
 
     execute() {
-        const _ = this;
 
-        _.asyncInit().then(() => {
-            _._beforeRender();
-            if(_.app.UI.areas.title)
-                _.app.UI.areas.title.set(_.title);
+        this.asyncInit().then(() => {
+            this.init();
+            
+            this._beforeRender();
+            if(this.app.UI.areas.title)
+                this.app.UI.areas.title.set(this.title);
                 
-            _.render(...arguments);
+            this.render(...arguments);
         })
     }
 

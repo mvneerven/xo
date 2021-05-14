@@ -20,11 +20,6 @@ class ExoWizardRouteModule extends ExoRouteModule {
 
     unload() {
         this.app.UI.areas.main.clear();
-
-        // clean up wizard progress
-        let wp = document.querySelector(".exf-wiz-step-cnt");
-        if (wp) wp.remove(); 
-        document.body.classList.remove("exf-fs-progress");
     }
 
     render() {
