@@ -444,7 +444,6 @@ class ExoForm {
             if (data.type === "page") {
                 return !options.inScope || this.isPageInScope(data.pageIndex)
             }
-
             return matcher(item, data)
         });
     }
@@ -454,8 +453,8 @@ class ExoForm {
      * @param {object} p - Page object (with index numeric property)
      * @returns {boolean} - true if page is in scope
      */
-    isPageInScope(p) {
-        let pageElm = this.form.querySelector(".exf-page[data-page='" + p.index + "']:not([data-skip='true'])");
+    isPageInScope(index) {
+        let pageElm = this.form.querySelector(".exf-page[data-page='" + index + "']:not([data-skip='true'])");
         return pageElm !== null;
     }
 
@@ -497,8 +496,8 @@ class ExoForm {
         if (ev)
             ev.preventDefault();
 
-        if (!this.addins.validation.checkValidity()) {
-            console.debug("checkValidity - Form not valid");
+            if (!this.addins.validation.checkValidity()) {
+            console.debug("ExoForm - checkValidity - Form not valid");
             this.addins.validation.reportValidity();
             return;
         }

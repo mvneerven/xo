@@ -18,8 +18,10 @@ async function run(context) {
 }
 
 function listen(x) {
-  x.on(factory.events.error, (e) => {
+  x.on(factory.events.error, e => {
     log(e.detail.error);
+  }).on(factory.events.post, e=>{
+    alert(JSON.stringify(e.detail.postData, null, 2))
   });
 }
 

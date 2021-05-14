@@ -227,10 +227,11 @@ class ExoFormSchema {
         if (!this._schemaData || !this._schemaData.pages || !Array.isArray(this._schemaData.pages))
             return matches;
 
-        let pageIndex = 0;
+        let pageIndex = 1;
         let fieldIndex = 0;
         this._schemaData.pages.forEach(p => {
             fieldIndex = 0
+            
             if (matcher(p, { type: "page", pageIndex: pageIndex })) {
                 if (Array.isArray(p.fields)) {
                     p.fields.forEach(f => {
@@ -244,6 +245,7 @@ class ExoFormSchema {
                     });
                 }
             }
+            pageIndex++;
         });
         return matches;
     }

@@ -1,4 +1,6 @@
 const schema = {
+    //validation: "html5",
+
     model: {
         schemas: {
             person: "/data/json/schemas/person-schema.json",
@@ -36,6 +38,7 @@ const schema = {
                     name: "name",
                     type: "name",
                     caption: "Your name",
+                    
                     bind: "instance.person.name"
                 },
                 {
@@ -43,6 +46,7 @@ const schema = {
                     type: "number",
                     min: 16,
                     max: 110,
+                    required: true,
                     step: 1,
                     caption: "Your age",
                     bind: "instance.person.age"
