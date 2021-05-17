@@ -1,7 +1,7 @@
 {
   "name": "@mvneerven/xo-js",
   "type": "module",
-  "version": "1.1.22",
+  "version": "1.1.23",
   "description": "ExoForm - Next Level Forms Generation based on JSON Schema",
   "repository": {
     "type": "git",
@@ -16,8 +16,8 @@
   "types": "dist/exo/xo.d.ts",
   "homepage": "https://www.xo-js.dev",
   "scripts": {
-    "dev": "esbuild src/exo/xo.js --bundle --watch --outfile=dist/xo.js",
-    "build": "esbuild src/exo/xo.js --bundle --minify --outfile=dist/xo.min.js"
+    "dev": "esbuild js/xo.js --bundle --watch --outfile=dist/xo.js",
+    "build": "esbuild js/xo.js --bundle --minify --outfile=dist/xo.min.js&&tsc"
   },
   "license": "MIT",
   "devDependencies": {
