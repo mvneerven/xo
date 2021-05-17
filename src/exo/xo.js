@@ -1,4 +1,3 @@
-import "regenerator-runtime/runtime";
 import ExoFormFactory from './ExoFormFactory';
 import ExoRouteModule from './ExoRouteModule';
 import ExoWizardRouteModule from './ExoWizardRouteModule';

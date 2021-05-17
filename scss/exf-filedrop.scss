@@ -1,6 +1,10 @@
 .exf-filedrop {
 
     //overflow: hidden;
+    label{
+        padding-left: 1rem;
+    }
+
 
     .file-preview {
         border: 5px dashed rgba(0, 0, 0, 0.2);

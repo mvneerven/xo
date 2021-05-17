@@ -38,9 +38,18 @@ const schema = {
                     name: "name",
                     type: "name",
                     caption: "Your name",
-                    
+
                     bind: "instance.person.name"
                 },
+                {
+                    name: "price",
+                    type: "number",
+                    step: .01,
+                    caption: "Your price",
+                    prefix: "$",
+                    bind: "instance.person.price"
+                },
+
                 {
                     name: "age",
                     type: "number",

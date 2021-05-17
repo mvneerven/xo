@@ -197,7 +197,7 @@ class ExoFileDropControl extends ExoBaseControls.controls.input.type {
     }
 
     get valid() {
-        return this.htmlElement, checkValidity();
+        return this.htmlElement.checkValidity();
     }
 }
 

@@ -531,6 +531,10 @@ html.theme-light nav.ul-drop ul li > ul {
   border: solid 1px var(--color-shade);
 }
 
+.exf-filedrop label {
+  padding-left: 1rem;
+}
+
 .exf-filedrop .file-preview {
   border: 5px dashed rgba(0, 0, 0, 0.2);
 }
@@ -941,6 +945,10 @@ html.theme-dark .exf-ctl-cnt.exf-switch input[type="range"] {
   background-color: #5b5c5d;
   -webkit-box-shadow: inset 0 1px 0 0 #0d0e0f, inset 0 -1px 0 0 #3a3d42;
           box-shadow: inset 0 1px 0 0 #0d0e0f, inset 0 -1px 0 0 #3a3d42;
+}
+
+.exf-filedrop label {
+  padding-left: 1rem;
 }
 
 .exf-filedrop .file-preview {
@@ -1507,6 +1515,7 @@ html.theme-dark .exf-ctl-cnt.exf-switch input[type="range"] {
 
 .exf-container.exf-theme-material .exf-ctl-cnt > .exf-ctl > input,
 .exf-container.exf-theme-material .exf-ctl-cnt > .exf-ctl > textarea {
+  font-size: 1rem;
   padding: 0.5em 0.5em 0.5em 0.5em;
   border: 0;
   outline: none;

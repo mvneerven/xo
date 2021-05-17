@@ -1,3 +1,4 @@
+import Events from './Events';
 
 // Simple Vanilla JS Event System
 class Emitter {
@@ -76,6 +77,8 @@ class Core {
     }
 
     static Iterator = Iterator;
+
+    static Events = Events;
 
     static addEvents(obj) {
         new Emitter(obj);

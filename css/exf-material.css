@@ -100,6 +100,7 @@
 
 .exf-container.exf-theme-material .exf-ctl-cnt > .exf-ctl > input,
 .exf-container.exf-theme-material .exf-ctl-cnt > .exf-ctl > textarea {
+  font-size: 1rem;
   padding: 0.5em 0.5em 0.5em 0.5em;
   border: 0;
   outline: none;

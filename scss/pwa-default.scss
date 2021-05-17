@@ -137,11 +137,11 @@
         transition: width 0.5s;
 
         color: #aaa;
-        background-color: #00ff95;
+        background-color: var(--color-primary);
 
         /* Chrome */
         &::-webkit-progress-bar {
-            background-color: #00ff95;
+            background-color: var(--color-primary);
         }
 
         &::-moz-progress-bar {
@@ -149,7 +149,7 @@
         }
 
         &::-webkit-progress-value {
-            background-color: #555;
+            background-color: var(--color-shade);
         }
     }
 }

@@ -288,12 +288,12 @@ html:not(.pwa-signed-in) .if-signed-out {
   -webkit-transition: width 0.5s;
   transition: width 0.5s;
   color: #aaa;
-  background-color: #00ff95;
+  background-color: var(--color-primary);
   /* Chrome */
 }
 
 .pwa-notif progress::-webkit-progress-bar {
-  background-color: #00ff95;
+  background-color: var(--color-primary);
 }
 
 .pwa-notif progress::-moz-progress-bar {
@@ -301,7 +301,7 @@ html:not(.pwa-signed-in) .if-signed-out {
 }
 
 .pwa-notif progress::-webkit-progress-value {
-  background-color: #555;
+  background-color: var(--color-shade);
 }
 
 .theme-dark .pwa-notif .pwa-cnt, .theme-dark .pwa-notif select > option {
