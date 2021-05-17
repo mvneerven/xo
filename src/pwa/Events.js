@@ -1,10 +1,24 @@
-import Core from './Core';
+
+
+// Simple Vanilla JS Event System
+class Emitter {
+    constructor(obj) {
+        this.obj = obj;
+        this.eventTarget = document.createDocumentFragment();
+        ["addEventListener", "dispatchEvent", "removeEventListener"]
+            .forEach(this.delegate, this);
+    }
+
+    delegate(method) {
+        this.obj[method] = this.eventTarget[method].bind(this.eventTarget);
+    }
+}
 
 class Events {
     constructor(host, options) {
         this.host = host;
 
-        Core.addEvents(host); // add simple event system
+        new Emitter(host); // add simple event system
 
         host.on = (eventName, func) => {
             console.debug(host.constructor.name, "listening to event", { name: eventName, f: func });
