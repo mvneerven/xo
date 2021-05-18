@@ -353,6 +353,26 @@
   white-space: normal;
 }
 
+.exf-container.exf-theme-material .exf-input-group.tiles.small > .exf-ctl > div {
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+  display: -ms-grid;
+  display: grid;
+  -ms-grid-columns: minmax(200px, 1fr) [auto-fill];
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  grid-auto-rows: minmax(70px, auto);
+  grid-gap: 2em;
+}
+
+.exf-container.exf-theme-material .exf-input-group.tiles.small > .exf-ctl > div .exf-ilc-cnt > .exf-caption {
+  padding: .2rem;
+  width: auto;
+}
+
+.exf-container.exf-theme-material .exf-input-group.tiles.small > .exf-ctl > div .exf-ilc-cnt > .exf-caption > .exf-caption-description {
+  display: none;
+}
+
 .exf-container.exf-theme-material .exf-btn-cnt {
   text-align: center;
 }

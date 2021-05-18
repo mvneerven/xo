@@ -169,7 +169,7 @@ class ExoControlBase {
             ...f,
             caption: f.caption || "",
             tooltip: f.tooltip || "",
-            class: "",
+            class: f.class || "",
             id: f.id
         }
     }
@@ -437,7 +437,7 @@ export class ExoElementControl extends ExoControlBase {
 
         if (context.field.tagName) {
             try {
-                this.htmlElement = DOM.parseHTML('<' + context.field.tagName + '/>');
+                this.htmlElement = document.createElement(context.field.tagName);
                 if (this.htmlElement.nodeName !== context.field.tagName.toUpperCase()) {
                     throw "'" + context.field.tagName + "' is not a valid tagName";
                 }

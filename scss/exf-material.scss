@@ -412,6 +412,29 @@
                         }
                     }
                 }
+
+                &.small {
+                    > .exf-ctl > div {
+                        flex-wrap: wrap;
+                        display: -ms-grid;
+                        display: grid;
+                        -ms-grid-columns: (minmax(200px, 1fr))[auto-fill];
+                        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+                        grid-auto-rows: minmax(70px, auto);
+                        grid-gap: 2em;
+
+                        .exf-ilc-cnt {
+                            > .exf-caption {
+                                padding: .2rem;
+                                width: auto;
+                                
+                                > .exf-caption-description {
+                                    display: none;
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
 
