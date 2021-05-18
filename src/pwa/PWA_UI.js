@@ -98,7 +98,7 @@ class PWA_UI {
             console.warn("Theming depends on meta[name='color-scheme']");
         }
 
-        this.pwa._triggerEvent("pwa.theme", {theme: value});
+        this.pwa._triggerEvent("pwa.theme", { theme: value });
     }
 
     addStyleSheet(url) {
@@ -111,13 +111,14 @@ class PWA_UI {
     async showDialog(options) {
         let ctx = await window.xo.form.factory.build();
         let frm = ctx.createForm();
-        frm.renderSingleControl({
+        let r = await frm.renderSingleControl({
             ...options || {},
             type: "dialog"
-        }).then(r => {
-            var f = window.xo.form.factory.getFieldFromElement(r);
-            f._control.show();
         });
+        var f = window.xo.form.factory.getFieldFromElement(r);
+        f._control.show();
+        return r;
+
     }
 
 }
