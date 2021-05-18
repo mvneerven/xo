@@ -134,21 +134,19 @@ export class ExoFormContext {
  */
 class ExoFormFactory {
 
-    static _ev_pfx = "exf-ev-";
-
     static events = {
-        schemaLoaded: ExoFormFactory._ev_pfx + "form-loaded", // when loading the form schema is complete
-        renderStart: ExoFormFactory._ev_pfx + "render-start", // when form rendering starts
-        getListItem: ExoFormFactory._ev_pfx + "get-list-item", // 
-        renderReady: ExoFormFactory._ev_pfx + "render-ready", // when form rendering is complete
-        interactive: ExoFormFactory._ev_pfx + "form-interactive", // when form is actually shown to user
-        reportValidity: ExoFormFactory._ev_pfx + "report-validity", // when form control validity is reported
-        dataModelChange: ExoFormFactory._ev_pfx + "datamodel-change", // when the underlying datamodel to which the form is bound changes
-        beforePage: ExoFormFactory._ev_pfx + "before-page", // cancellable - called just before paging
-        page: ExoFormFactory._ev_pfx + "page", // after moving to other page
-        pageRelevancyChange: ExoFormFactory._ev_pfx + "page-relevancy-change", // when a page's relevancy state changes (e.g. moves in/out of scope)
-        post: ExoFormFactory._ev_pfx + "post", // on form post/submit
-        error: ExoFormFactory._ev_pfx + "error" // when any error occurs
+        schemaLoaded: "form-loaded", // when loading the form schema is complete
+        renderStart: "render-start", // when form rendering starts
+        getListItem: "get-list-item", // 
+        renderReady: "render-ready", // when form rendering is complete
+        interactive: "form-interactive", // when form is actually shown to user
+        reportValidity: "report-validity", // when form control validity is reported
+        dataModelChange: "datamodel-change", // when the underlying datamodel to which the form is bound changes
+        beforePage: "before-page", // cancellable - called just before paging
+        page: "page", // after moving to other page
+        pageRelevancyChange: "page-relevancy-change", // when a page's relevancy state changes (e.g. moves in/out of scope)
+        post: "post", // on form post/submit
+        error: "error" // when any error occurs
     }
 
     static meta = {

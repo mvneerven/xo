@@ -548,8 +548,8 @@ class DropDownButton extends ExoBaseControls.controls.list.type {
 }
 
 class ExoEmbedControl extends ExoBaseControls.controls.element.type {
-     _width = "";
-     _height = "";
+    _width = "";
+    _height = "";
 
     constructor(context) {
         super(context);
@@ -561,7 +561,7 @@ class ExoEmbedControl extends ExoBaseControls.controls.element.type {
             { name: "width" },
             { name: "height" }
         )
-        
+
     }
 
     async render() {
@@ -576,10 +576,10 @@ class ExoEmbedControl extends ExoBaseControls.controls.element.type {
 
         let wrapper = document.createElement("div")
         wrapper.classList.add("exf-embed-container");
-        
-        if(this.width)
+
+        if (this.width)
             wrapper.style.width = this.width;
-        if(this.height)
+        if (this.height)
             wrapper.style.height = this.height;
 
         wrapper.appendChild(this.htmlElement);
@@ -590,20 +590,20 @@ class ExoEmbedControl extends ExoBaseControls.controls.element.type {
         return this.container
     }
 
-    get width(){
+    get width() {
         return this._width;
     }
 
-    set width(value){
+    set width(value) {
         this._width = value;
         this.htmlElement.style.width = value;
     }
 
-    get height(){
-        return this._height; 
+    get height() {
+        return this._height;
     }
 
-    set height(value){
+    set height(value) {
         this._height = value;
         this.htmlElement.style.height = value;
     }
@@ -1027,35 +1027,45 @@ class ExoDialogControl extends ExoBaseControls.controls.div.type {
 
     show() {
         const _ = this;
+        
+        let body; 
+        if(typeof(this.body) === "object"){
+            body = this.body
+            this.body = ""
+        }
 
         let html = DOM.format(_.dlgTemplate, { ...this })
 
-        let dlg = DOM.parseHTML(html);
+        this.dlg = DOM.parseHTML(html);
 
-        dlg.classList.add(this.cancelVisible ? "dlg-cv" : "dlg-ch");
+        if(body){
+            this.dialogBody.appendChild(body);
+        }
+
+        this.dlg.classList.add(this.cancelVisible ? "dlg-cv" : "dlg-ch");
 
         const c = (e, confirm) => {
-
             //window.location.hash = "na";
             var btn = "cancel", b = e.target;
             if (confirm || b.classList.contains("confirm")) {
                 btn = "confirm";
             }
 
-            _.hide.apply(_, [btn, e]);
-
-            if (!e.cancelBubble) {
-                _.remove();
+            if (!this.modal || this.isDlgButton(b)) {
+                if (!b.closest(".exf-dlg-b")) {
+                    _.hide.apply(_, [btn, e]);
+                    if (!e.cancelBubble) {
+                        _.remove();
+                    }
+                }
             }
-
-
         };
 
-        dlg.querySelector(".dlg-x").addEventListener("click", c);
+        this.dlg.querySelector(".dlg-x").addEventListener("click", c);
 
-        document.body.appendChild(dlg);
+        document.body.appendChild(this.dlg);
 
-        dlg.addEventListener("click", c);
+        this.dlg.addEventListener("click", c);
 
         document.body.addEventListener("keydown", e => {
             if (e.keyCode === 27) c(e);
@@ -1072,10 +1082,20 @@ class ExoDialogControl extends ExoBaseControls.controls.div.type {
             }, 10)
     }
 
+    isDlgButton(b) {
+        return b.nodeName === "BUTTON" && b.closest(".exf-dlg-f");
+    }
+
+    get dialogBody() {
+        if (this.dlg) {
+            return this.dlg.querySelector(".exf-dlg-b")
+        }
+    }
+
     remove() {
-        let dlg = document.querySelector("#" + this.dlgId);
-        if (dlg)
-            dlg.remove();
+        //let dlg = document.querySelector("#" + this.dlgId);
+        if (this.dlg)
+            this.dlg.remove();
     }
 }
 

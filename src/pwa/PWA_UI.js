@@ -117,7 +117,7 @@ class PWA_UI {
         });
         var f = window.xo.form.factory.getFieldFromElement(r);
         f._control.show();
-        return r;
+        return f._control;
 
     }
 
