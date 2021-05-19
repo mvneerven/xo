@@ -1,6 +1,4 @@
 const schema = {
-    //validation: "html5",
-
     model: {
         schemas: {
             person: "/data/json/schemas/person-schema.json",

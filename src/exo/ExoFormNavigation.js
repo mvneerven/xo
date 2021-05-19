@@ -127,7 +127,7 @@ class ExoFormNavigationBase {
             if (!this.canMove(current, page))
                 return;
 
-            let returnValue = this.exo.triggerEvent(ExoFormFactory.events.beforePage, {
+            let returnValue = this.exo.events.trigger(ExoFormFactory.events.beforePage, {
                 from: current,
                 page: page,
                 pageCount: this.pageCount
@@ -151,7 +151,7 @@ class ExoFormNavigationBase {
 
         this.update();
 
-        this.exo.triggerEvent(ExoFormFactory.events.page, {
+        this.exo.events.trigger(ExoFormFactory.events.page, {
             from: current,
             page: page,
             pageCount: this.pageCount

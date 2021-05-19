@@ -13,7 +13,7 @@ class Router {
 
     constructor(app, routes, settings) {
         const _ = this;
-        Core.addEvents(this); // add simple event system
+        this.events = new Core.Events(this); // add simple event system
         _.app = app;
         _.routes = routes;
 
@@ -29,25 +29,25 @@ class Router {
         })
     }
 
-    _triggerEvent(eventName, detail, ev) {
-        console.debug("Triggering event", eventName, "detail: ", detail)
-        if (!ev) {
-            ev = new Event(eventName, { "bubbles": false, "cancelable": false });
-        }
+    // events.trigger(eventName, detail, ev) {
+    //     console.debug("Triggering event", eventName, "detail: ", detail)
+    //     if (!ev) {
+    //         ev = new Event(eventName, { "bubbles": false, "cancelable": false });
+    //     }
 
-        ev.detail = {
-            router: this,
-            ...(detail || {})
-        };
+    //     ev.detail = {
+    //         router: this,
+    //         ...(detail || {})
+    //     };
 
-        return this.dispatchEvent(ev);
-    }
+    //     return this.dispatchEvent(ev);
+    // }
 
-    on(eventName, func) {
-        console.debug("Listening to event", eventName, func);
-        this.addEventListener(eventName, func);
-        return this;
-    }
+    // on(eventName, func) {
+    //     console.debug("Listening to event", eventName, func);
+    //     this.addEventListener(eventName, func);
+    //     return this;
+    // }
 
     static changeHash(anchor) {
         history.replaceState(null, null, document.location.pathname + '#' + anchor);
@@ -55,7 +55,7 @@ class Router {
 
     setupHashListener(callback) {
         this.routeCallback = (m, p) => {
-            this._triggerEvent(Router.events.route, {
+            this.events.trigger(Router.events.route, {
                 module: m,
                 path: p
             });

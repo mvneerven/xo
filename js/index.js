@@ -12,7 +12,7 @@ const factory = window.xo.form.factory,
 async function run(context) {
   const x = context.createForm();
   listen(x);
-  await x.load("/data/forms/upload.js");
+  await x.load("/data/forms/form.js");
 
 
   let result = await x.renderForm();
@@ -24,11 +24,11 @@ function listen(x) {
   x.on(factory.events.error, e => {
     log(e.detail.error);
   }).on(factory.events.post, e => {
-    //alert(JSON.stringify(e.detail.postData, null, 2))
+    alert(JSON.stringify(e.detail.postData, null, 2))
 
-    this.upload(e.detail.postData.files).then(x => {
-      debugger;
-    })
+    // this.upload(e.detail.postData.files).then(x => {
+    //   debugger;
+    // })
   });
 }
 

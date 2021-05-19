@@ -31,7 +31,7 @@ class ExoFormDefaultValidation {
         });
 
         if (invalidFields.length) {
-            let returnValue = this.exo.triggerEvent(ExoFormFactory.events.reportValidity, {
+            let returnValue = this.exo.events.trigger(ExoFormFactory.events.reportValidity, {
                 invalid: invalidFields
             });
 

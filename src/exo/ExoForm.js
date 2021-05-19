@@ -47,7 +47,7 @@ class ExoForm {
     static setup() { } // reserved for later  
 
     constructor(context, opts) {
-        Core.addEvents(this); // add simple event system
+        this.events = new Core.Events(this);
 
         // Use const context = await ExoFormFactory.build() and context.createForm()
         if (!context || !(context instanceof ExoFormFactory.Context))
@@ -159,15 +159,15 @@ class ExoForm {
         this._dataBinding = new ExoFormDataBinding(this, this._mappedInstance);
         this.dataBinding.on("change", e => {
             e.detail.state = "change";
-            this.triggerEvent(ExoFormFactory.events.dataModelChange, e.detail)
+            this.events.trigger(ExoFormFactory.events.dataModelChange, e.detail)
         }).on("ready", e => {
             e.detail.state = "ready";
-            this.triggerEvent(ExoFormFactory.events.dataModelChange, e.detail)
+            this.events.trigger(ExoFormFactory.events.dataModelChange, e.detail)
         }).on("error", e => {
-            this.triggerEvent(ExoFormFactory.events.error, e.detail);
+            this.events.trigger(ExoFormFactory.events.error, e.detail);
         });
 
-        this.triggerEvent(ExoFormFactory.events.schemaLoaded);
+        this.events.trigger(ExoFormFactory.events.schemaLoaded);
 
         this._createComponents();
 
@@ -201,21 +201,7 @@ class ExoForm {
             this.addins[n] = new tp(this)
         }
     }
-
-    triggerEvent(eventName, detail, ev) {
-        console.debug("ExoForm: triggering event", eventName, "detail: ", detail)
-        if (!ev) {
-            ev = new Event(eventName, { bubbles: false, cancelable: true });
-        }
-
-        ev.detail = {
-            exoForm: this,
-            ...(detail || {})
-        };
-
-        return this.dispatchEvent(ev);
-    }
-
+    
     /**
      * Render ExoForm schema into a form
      * Returns a Promise
@@ -223,7 +209,7 @@ class ExoForm {
     renderForm() {
         const _ = this;
 
-        _.triggerEvent(ExoFormFactory.events.renderStart)
+        _.events.trigger(ExoFormFactory.events.renderStart)
         _._cleanup();
 
         return new Promise((resolve, reject) => {
@@ -269,14 +255,14 @@ class ExoForm {
 
         this.addins.navigation.restart();
 
-        this.triggerEvent(ExoFormFactory.events.renderReady);
+        this.events.trigger(ExoFormFactory.events.renderReady);
 
         // Test for fom becoming user-interactive 
         var observer = new IntersectionObserver((entries, observer) => {
             if (this.container.offsetHeight) {
                 observer = null;
                 console.debug("ExoForm: interactive event");
-                this.triggerEvent(ExoFormFactory.events.interactive);
+                this.events.trigger(ExoFormFactory.events.interactive);
             }
 
         }, { root: document.documentElement });
@@ -291,19 +277,7 @@ class ExoForm {
         if (this.container)
             this.container.innerHTML = "";
     }
-
-    /**
-    * Adds an event handler
-    * @param {string} eventName - Name of the event to listen to - Use xo.form.factory.events as a reference
-    * @param {function} func - function to attach 
-    * @return {object} - The ExoForm instance
-    */
-    on(eventName, func) {
-        console.debug("ExoForm: added event listener", { name: eventName, f: func });
-        this.addEventListener(eventName, func);
-        return this;
-    }
-
+    
     _renderPages() {
         const _ = this;
 
@@ -339,7 +313,7 @@ class ExoForm {
                                 pageFieldsRendered = this._addRendered(f, rendered, pageFieldsRendered, p, page);
 
                             }).catch(ex => {
-                                let showError = !this.triggerEvent(ExoFormFactory.events.error, { error: ex });
+                                let showError = !this.events.trigger(ExoFormFactory.events.error, { error: ex });
                                 console.error(ex);
                                 let rendered = DOM.parseHTML(DOM.format('<span class="exf-error exf-render-error" title="{{title}}">ERROR</span>', {
                                     title: "ExoForm: error rendering field " + ExoFormFactory.fieldToString(f) + ": " + ex.toString()
@@ -505,7 +479,7 @@ class ExoForm {
         let e = { target: this.form };
 
         let data = this.getFormValues(ev);
-        this.triggerEvent(ExoFormFactory.events.post, { postData: data })
+        this.events.trigger(ExoFormFactory.events.post, { postData: data })
         e.returnValue = false;
     }
 
@@ -613,7 +587,7 @@ class ExoForm {
                     }
                 });
 
-                let showError = !_.triggerEvent(ExoFormFactory.events.error, {
+                let showError = !_.events.trigger(ExoFormFactory.events.error, {
                     stage: "Create",
                     error: ex
                 });

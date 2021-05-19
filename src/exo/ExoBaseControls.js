@@ -845,7 +845,7 @@ export class ExoListControl extends ExoElementControl {
             o.listElement = DOM.parseHTML(s);
             DOM.replace(dummy, o.listElement);
         }
-        _.context.exo.triggerEvent(ExoFormFactory.events.getListItem, o);
+        _.context.exo.events.trigger(ExoFormFactory.events.getListItem, o);
     }
 
     // use trick to run async stuff and wait for it.
@@ -1329,7 +1329,7 @@ class ExoFormPageControl extends ExoDivControl {
             this.container.setAttribute("data-skip", "true");
         }
 
-        this.context.exo.triggerEvent(ExoFormFactory.events.pageRelevancyChange, {
+        this.context.exo.events.trigger(ExoFormFactory.events.pageRelevancyChange, {
             index: this.index,
             relevant: this.relevant
         });

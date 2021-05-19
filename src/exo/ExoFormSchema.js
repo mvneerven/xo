@@ -10,7 +10,7 @@ class ExoFormSchema {
     }
 
     constructor(options) {
-        Core.addEvents(this); // add simple event system
+        this.events = new Core.Events(this)
         this._type = this.types.undefined;
         this.options = options || {};
     }
@@ -49,34 +49,8 @@ class ExoFormSchema {
         this._totalFieldCount = this.query().length;
     }
 
-    triggerEvent(eventName, detail, ev) {
-        console.debug("Triggering event", eventName, "detail: ", detail)
-        if (!ev) {
-            ev = new Event(eventName, { bubbles: false, cancelable: true });
-        }
-
-        ev.detail = {
-            exoForm: this,
-            ...(detail || {})
-        };
-
-        return this.dispatchEvent(ev);
-    }
-
     get type() {
         return this._type;
-    }
-
-    /**
-    * Adds an event handler
-    * @param {string} eventName - Name of the event to listen to - Use xo.form.factory.events as a reference
-    * @param {function} func - function to attach 
-    * @return {object} - The ExoForm instance
-    */
-    on(eventName, func) {
-        console.debug("ExoFormSchema: listening to event", {name: eventName, f: func});
-        this.addEventListener(eventName, func);
-        return this;
     }
 
     get data() {
@@ -231,7 +205,7 @@ class ExoFormSchema {
         let fieldIndex = 0;
         this._schemaData.pages.forEach(p => {
             fieldIndex = 0
-            
+
             if (matcher(p, { type: "page", pageIndex: pageIndex })) {
                 if (Array.isArray(p.fields)) {
                     p.fields.forEach(f => {

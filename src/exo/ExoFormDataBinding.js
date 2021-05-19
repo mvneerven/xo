@@ -18,10 +18,8 @@ class ExoFormDataBinding {
 
     constructor(exo, instance) {
         this.exo = exo;
-        Core.addEvents(this); // add simple event system
-
+        this.events = new Core.Events(this);
         this._init(exo, instance);
-
         this._resolver = new ExoFormDataBindingResolver(this);
 
         exo.on(ExoFormFactory.events.renderStart, e => { // run logic for initial state of controls
@@ -72,7 +70,7 @@ class ExoFormDataBinding {
 
             console.log("Firing Model ready event ", this._model.instance);
 
-            this._triggerEvent("ready", { model: this._model });
+            this.events.trigger("ready", { model: this._model });
         })
             .on(ExoFormFactory.events.interactive, () => {
                 exo.form.addEventListener("change", e => {
@@ -89,7 +87,7 @@ class ExoFormDataBinding {
                             this._mapped = this._model.instance;
                         }
 
-                        this._triggerEvent("change", {
+                        this.events.trigger("change", {
                             model: this._model,
                             changed: field.bind,
                             value: value
@@ -99,22 +97,8 @@ class ExoFormDataBinding {
             })
     }
 
-    _triggerEvent(eventName, detail, ev) {
-        console.debug("ExoFormDatabinding: triggering event", eventName, "detail: ", detail)
-        if (!ev) {
-            ev = new Event(eventName, { bubbles: false, cancelable: true });
-        }
-
-        ev.detail = {
-            app: this,
-            ...(detail || {})
-        };
-
-        return this.dispatchEvent(ev);
-    }
-
     _signalDataBindingError(ex) {
-        this._triggerEvent("error", { exo: this.exo, error: ex });
+        this.events.trigger("error", { exo: this.exo, error: ex });
     }
 
     get(path, defaultValue) {
@@ -126,12 +110,6 @@ class ExoFormDataBinding {
             this._signalDataBindingError(ex);
         }
         return returnValue;
-    }
-
-    on(eventName, func) {
-        console.debug("ExoFormDatabinding: listening to event", eventName, func);
-        this.addEventListener(eventName, func);
-        return this;
     }
 
     _init(exo, instance) {

@@ -4,7 +4,7 @@ import Core from './Core';
 class PWA_EventHub {
     constructor(app) {
         this.app = app;
-        Core.addEvents(this); // add simple event system
+        this.events = new Core.Events(this);
     }
 
     async init() {
@@ -26,7 +26,7 @@ class PWA_EventHub {
                     signalRConnection.on('newMessage', msg => {
                         console.debug("signalR", msg);
 
-                        this._triggerEvent(msg.notificationDTO.useCase, {
+                        this.events.trigger(msg.notificationDTO.useCase, {
                             ...msg.notificationDTO
                         })
                     });
@@ -46,26 +46,6 @@ class PWA_EventHub {
                 resolve()
             }
         })
-    }
-
-    on(eventName, func) {
-        console.debug("PWA_EventHub: listening to event", {name: eventName, f: func});
-        this.addEventListener(eventName, func);
-        return this;
-    }
-
-    _triggerEvent(eventName, detail, ev) {
-        console.debug("PWA_EventHub: triggering event", eventName, "detail: ", detail)
-        if (!ev) {
-            ev = new Event(eventName, { bubbles: false, cancelable: true });
-        }
-
-        ev.detail = {
-            eventHub: this,
-            ...(detail || {})
-        };
-
-        return this.dispatchEvent(ev);
     }
 }
 

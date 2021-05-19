@@ -98,7 +98,7 @@ class PWA_UI {
             console.warn("Theming depends on meta[name='color-scheme']");
         }
 
-        this.pwa._triggerEvent("pwa.theme", { theme: value });
+        this.pwa.events.trigger("pwa.theme", { theme: value });
     }
 
     addStyleSheet(url) {

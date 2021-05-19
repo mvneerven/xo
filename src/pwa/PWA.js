@@ -8,7 +8,7 @@ import PWA_RESTService from './PWA_RESTService';
 class PWA {
     static RouteModule = RouteModule;
     static Router = Router;
-    
+
     defaults = {
         UI: {
             allowUserSelection: false
@@ -19,8 +19,7 @@ class PWA {
     }
 
     constructor(options) {
-        const _ = this;
-        Core.addEvents(this); // add simple event system
+        this.events = new Core.Events(this);
 
         document.querySelector("html").classList.add("pwa-signin-pending");
 
@@ -30,53 +29,29 @@ class PWA {
         this.config.environment = ["localhost", "127.0.0.1"].includes(document.location.hostname) ? "debug" : "prod";
 
         console.debug("Checking for serviceWorker in config: serviceWorker.src");
-        if (_.config.serviceWorker.src) {
-            _._registerWorker(_.config.serviceWorker)
+        if (this.config.serviceWorker.src) {
+            this._registerWorker(this.config.serviceWorker)
         }
 
         console.debug("PWA Config", this.config);
-        
+
         this.restService = new PWA_RESTService(this);
 
         this.eventHub = new PWA_EventHub(this);
-        
-        this.eventHub.init().then(()=>{
+
+        this.eventHub.init().then(() => {
 
             this.asyncInit().then(() => {
                 this.UI = new PWA_UI(this);
-    
-                _.init();
-                _.execute()
+                this.init();
+                this.execute()
             });
-                
         })
-       
-        
+
         let cl = document.querySelector("html").classList;
         this.forceTheme = cl.contains("theme-dark") ? "dark" : cl.contains("theme-light") ? "light" : undefined;
 
         cl.add("pwa-env-" + this.config.environment);
-
-    }
-
-    _triggerEvent(eventName, detail, ev) {
-        console.debug("Triggering event", eventName, "detail: ", detail)
-        if (!ev) {
-            ev = new Event(eventName, { "bubbles": false, "cancelable": true });
-        }
-
-        ev.detail = {
-            app: this,
-            ...(detail || {})
-        };
-
-        return this.dispatchEvent(ev);
-    }
-
-    on(eventName, func) {
-        console.debug("PWA: listening to event", {name: eventName, f: func});
-        this.addEventListener(eventName, func);
-        return this;
     }
 
     _registerWorker(serviceWorker) {
@@ -123,7 +98,7 @@ class PWA {
             onRoute: (mod, path) => {
                 console.debug("PWA Executes Route", mod, path);
 
-                if (!this._triggerEvent("pwa.route", {
+                if (!this.events.trigger("pwa.route", {
                     module: mod,
                     path: path
                 })) {
@@ -151,9 +126,9 @@ class PWA {
     getToken() { // to be subclassed
         return Promise.resolve();
     }
-    
+
     setupUI() { } // to be subclassed
-    
+
     routerReady() { } // to be subclassed
 }
 

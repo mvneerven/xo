@@ -2,7 +2,7 @@ import Core from './Core';
 
 class DragDropSorter {
     constructor(masterContainer, selector, childSelector) {
-        Core.addEvents(this); // add simple event system
+        this.events = new Core.Events(this);
 
         this.masterContainer = masterContainer;
         this.selector = selector;
@@ -12,19 +12,6 @@ class DragDropSorter {
 
         console.debug("DragDropSorter: dragSortContainers selected for dragdrop sorting: " + this.dragSortContainers.length, ", selector: ", selector);
         this.enableDragList(masterContainer, childSelector);
-    }
-
-    triggerEvent(eventName, detail) {
-        console.debug("DragDropSorter: triggering event", eventName, "detail: ", detail)
-        let ev = new Event(eventName);
-        ev.detail = detail;
-        this.dispatchEvent(ev);
-    }
-
-    on(eventName, func) {
-        console.debug("DragDropSorter: listening to event", {name: eventName, f: func});
-        this.addEventListener(eventName, func);
-        return this;
     }
 
     enableDragList(container, childSelector) {
@@ -81,7 +68,7 @@ class DragDropSorter {
             //TODO
         }
 
-        this.triggerEvent("sort", {
+        this.events.trigger("sort", {
             order: this.getOrder()
         })
     }
