@@ -191,7 +191,16 @@ class ExoFormFactory {
             pageContainer: "exf-page",
             elementContainer: "exf-ctl-cnt",
             groupContainer: "exf-input-group",
-            groupElementCaption: "exf-caption"
+            groupElementCaption: "exf-caption",
+            label: "exf-label",
+            navigationContainer: "exf-nav-cnt",            
+            button: "exf-btn",
+            focusedControlContainer: "exf-focus",
+            pageTitle: "exf-page-title",
+            pageIntroText: "exf-page-intro",
+            textBasedControl: "exf-base-text",
+            disabledControl: "exf-disabled"
+
 
         }
     }

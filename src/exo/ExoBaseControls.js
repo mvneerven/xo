@@ -29,10 +29,9 @@ class ExoControlBase {
         this.htmlElement = document.createElement('span');
 
         this.acceptProperties(
-            { name: "visible" },
-            { name: "disabled" }
+            { name: "visible", type: Boolean },
+            { name: "disabled", type: Boolean }
         );
-
     }
 
     _getContainerTemplate(obj) {

@@ -45,6 +45,12 @@
             }
         }
 
+        .exf-nav-cnt {
+            .exf-btn {
+                margin: 0
+            }
+        }
+
         .exf-page {
             margin: 0;
         }
@@ -318,7 +324,7 @@
                 > .exf-ctl {
                     > label {
                         position: absolute !important;
-                        top: 0.1rem !important;
+                        top: -.1rem !important;
                         left: 3.5em !important;
                         font-size: 1rem !important;
                     }
@@ -448,7 +454,7 @@
             border: 0;
             font-size: ($mf-font-size * 1.1);
             color: lighten($mf-focus-color, 10%);
-            margin: ($mf-gap * 2) 0;
+            margin: ($mf-gap * 1) 0;
             padding: ($mf-gap / 2) ($mf-gap * 2);
             cursor: pointer;
             transition: background-color 0.28s ease, color 0.28s ease, box-shadow 0.28s ease;

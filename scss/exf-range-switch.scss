@@ -46,7 +46,6 @@
       border: none;
       border-radius: 1.2rem;
       background-color: var(--color-text);
-      
     }
     &::-moz-range-thumb {
       width: 1.2rem;
@@ -91,10 +90,15 @@
     }
   }
 
-  label {
-    > span {
-      display: inline-block;
-      vertical-align: top;
+  > .exf-ctl {
+    label.exf-label {
+      width: auto!important;
+      top: -.1rem !important;
+
+      > span {
+        display: inline-block;
+        vertical-align: top;
+      }
     }
   }
 }

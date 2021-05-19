@@ -88,7 +88,12 @@
   background-color: var(--color-button);
 }
 
-.exf-ctl-cnt.exf-switch label > span {
+.exf-ctl-cnt.exf-switch > .exf-ctl label.exf-label {
+  width: auto !important;
+  top: -.1rem !important;
+}
+
+.exf-ctl-cnt.exf-switch > .exf-ctl label.exf-label > span {
   display: inline-block;
   vertical-align: top;
 }

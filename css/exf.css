@@ -63,8 +63,14 @@
   padding: 1em;
 }
 
+.exf-container .exf-disabled {
+  pointer-events: none;
+  opacity: 0.6;
+}
+
 .exf-container .exf-nav-cnt {
   clear: both;
+  margin: 0;
 }
 
 .exf-container.single-page .exf-page {
@@ -936,7 +942,12 @@ html.theme-light nav.ul-drop ul li > ul {
   background-color: var(--color-button);
 }
 
-.exf-ctl-cnt.exf-switch label > span {
+.exf-ctl-cnt.exf-switch > .exf-ctl label.exf-label {
+  width: auto !important;
+  top: -.1rem !important;
+}
+
+.exf-ctl-cnt.exf-switch > .exf-ctl label.exf-label > span {
   display: inline-block;
   vertical-align: top;
 }
@@ -1431,6 +1442,10 @@ html.theme-dark .exf-ctl-cnt.exf-switch input[type="range"] {
   font-weight: 600;
 }
 
+.exf-container.exf-theme-material .exf-nav-cnt .exf-btn {
+  margin: 0;
+}
+
 .exf-container.exf-theme-material .exf-page {
   margin: 0;
 }
@@ -1685,7 +1700,7 @@ html.theme-dark .exf-ctl-cnt.exf-switch input[type="range"] {
 
 .exf-container.exf-theme-material .exf-ctl-cnt.exf-switch > .exf-ctl > label {
   position: absolute !important;
-  top: 0.1rem !important;
+  top: -.1rem !important;
   left: 3.5em !important;
   font-size: 1rem !important;
 }
@@ -1798,7 +1813,7 @@ html.theme-dark .exf-ctl-cnt.exf-switch input[type="range"] {
   border: 0;
   font-size: 1.1rem;
   color: white;
-  margin: 2rem 0;
+  margin: 1rem 0;
   padding: 0.5rem 2rem;
   cursor: pointer;
   -webkit-transition: background-color 0.28s ease, color 0.28s ease, -webkit-box-shadow 0.28s ease;

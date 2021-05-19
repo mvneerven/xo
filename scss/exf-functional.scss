@@ -64,8 +64,14 @@
         padding: 1em;
     }
 
+    .exf-disabled {
+        pointer-events: none;
+        opacity: 0.6;
+    }
+
     .exf-nav-cnt {
         clear: both;
+        margin: 0
     }
 
     &.single-page {
