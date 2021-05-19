@@ -334,20 +334,34 @@ class ExoFormFactory {
     }
 
     static tryScriptLiteral(scriptLiteral) {
-        let schema;
-        if (typeof (scriptLiteral) === "string" && scriptLiteral.trim().startsWith("const")) {
+        let result = {
+            raw: scriptLiteral,
+            guessedType: typeof (scriptLiteral) === "string" && scriptLiteral.trim().startsWith("const") ? "javascript": "json",
+            schema: undefined,
+            type: "unknown",
+            parsed: false,
+            executed: false,
+            error: ""
+        };
+        if (result.guessedType === "javascript") {
             try {
                 const f = new Function("function s(){" + scriptLiteral + "; return schema};return s()");
-                schema = f.call();
+                result.type = "javascript"
+                result.parsed = true,
+
+                result.schema = f.call();
+                result.executed = true;
+                
             }
             catch (ex) {
-                //
-            };
-            return schema;
+                console.error("tryScriptLiteral", ex)
+                result.error = ex.toString();
+            }
+            finally {
+                return result;
+            }
         }
     }
-
-    
 
     static checkTypeConversion(type, rawValue) {
         let fieldMeta = ExoFormFactory.library[type];

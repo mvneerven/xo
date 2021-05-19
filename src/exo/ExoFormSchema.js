@@ -19,9 +19,13 @@ class ExoFormSchema {
         if (typeof (schemaData) !== "object") {
 
             let test = ExoFormFactory.tryScriptLiteral(schemaData);
-            if (test) {
+            if (test && test.type === "javascript") {
                 this._type = this.types.js;
-                schemaData = test;
+                if(test.executed)
+                    schemaData = test.schema;
+                else{
+                    throw "ExoFormSchema: Error in JavaScript Schema: " + test.error;
+                }
             }
             else {
                 try {
