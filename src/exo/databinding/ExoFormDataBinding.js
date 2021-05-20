@@ -1,6 +1,6 @@
 
-import ExoFormFactory from './ExoFormFactory';
-import Core from '../pwa/Core';
+import ExoFormFactory from '../ExoFormFactory';
+import Core from '../../pwa/Core';
 import ExoFormDataBindingResolver from './ExoFormDataBindingResolver';
 
 class ExoFormDataBinding {
@@ -28,6 +28,8 @@ class ExoFormDataBinding {
 
         exo.on(ExoFormFactory.events.renderReady, e => {
             exo.on(ExoFormFactory.events.dataModelChange, e => {
+                this.resolver.resolve();
+            }).on(ExoFormFactory.events.page, e=>{ // on navigate, resolve again (e.g. for navigation control state)
                 this.resolver.resolve();
             })
             this.resolver.resolve();
@@ -60,6 +62,8 @@ class ExoFormDataBinding {
                         data[f.name] = f.value
                     }
                 }
+            }, {
+                includeControls: true // navigation buttons are not normally included
             });
 
             // make sure we have a model if it wasn't passed in
@@ -80,7 +84,7 @@ class ExoFormDataBinding {
                     if (field && field.bind) {
                         let value = field._control.value;
                         Core.setObjectValue(this._model, field.bind, value);
-                        console.log("Model Instance changed", field.bind, value, this._model.instance);
+                        //console.log("Model Instance changed", field.bind, value, this._model.instance);
 
                         if (this._mapped) {
                             // map back
@@ -161,12 +165,16 @@ class ExoFormDataBinding {
 
             let path = value.substring(1);
             console.debug("ExoFormDatabinding: resolving databound control property", name, value, "path:", path);
+
+            
+
             returnValue = this.get(path, undefined);
             if (returnValue === undefined) {
+                
                 returnValue = value  // return original string, don't resolve
             }
             else {
-                console.debug("ExoFormDatabinding: resolved databound control property", name, value, returnValue);
+                console.debug("ExoFormDatabinding: resolved databound control property", name, value, ": >", returnValue , "<");
 
                 this.resolver.addBoundControl({
                     control: control,

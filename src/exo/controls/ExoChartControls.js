@@ -1,6 +1,5 @@
-import ExoBaseControls from './ExoBaseControls';
-import DOM from '../pwa/DOM';
-
+import ExoBaseControls from './base/ExoBaseControls';
+import DOM from '../../pwa/DOM';
 
 class ExoCircularChart extends ExoBaseControls.controls.div.type {  
 

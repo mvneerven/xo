@@ -1,8 +1,8 @@
-import ExoBaseControls from './ExoBaseControls';
-import ExoFormFactory from './ExoFormFactory';
-import ExoForm from './ExoForm';
-import Core from '../pwa/Core';
-import DOM from '../pwa/DOM';
+import ExoBaseControls from './base/ExoBaseControls';
+import ExoFormFactory from '../ExoFormFactory';
+import ExoForm from '../ExoForm';
+import Core from '../../pwa/Core';
+import DOM from '../../pwa/DOM';
 
 
 class ExoFileDropControl extends ExoBaseControls.controls.input.type {

@@ -1,6 +1,5 @@
-import ExoBaseControls from './ExoBaseControls';
-import Core from '../pwa/Core';
-import DOM from '../pwa/DOM';
+import ExoBaseControls from './base/ExoBaseControls';
+import DOM from '../../pwa/DOM';
 
 class ExoAceCodeEditor extends ExoBaseControls.controls.div.type {
     _mode = "html";

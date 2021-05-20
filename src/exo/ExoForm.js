@@ -6,7 +6,7 @@
 import Core from '../pwa/Core';
 import DOM from '../pwa/DOM';
 import ExoFormFactory from './ExoFormFactory';
-import ExoFormDataBinding from './ExoFormDataBinding';
+import ExoFormDataBinding from './databinding/ExoFormDataBinding';
 
 /**
  * ExoForm class. 
@@ -29,7 +29,7 @@ class ExoForm {
                 "minlength": "minLength",
                 "maxlength": "maxLength"
             },
-            reserved: ["caption", "template", "elm", "ctl", "tagname", "ispage", "bind"]
+            reserved: ["template", "elm", "ctl", "tagname", "ispage", "bind"]
         },
 
         templates: {
@@ -201,7 +201,7 @@ class ExoForm {
             this.addins[n] = new tp(this)
         }
     }
-    
+
     /**
      * Render ExoForm schema into a form
      * Returns a Promise
@@ -277,7 +277,7 @@ class ExoForm {
         if (this.container)
             this.container.innerHTML = "";
     }
-    
+
     _renderPages() {
         const _ = this;
 
@@ -414,12 +414,15 @@ class ExoForm {
         if (matcher === undefined) matcher = () => { return true };
         options = options || {};
 
-        return this.schema.query((item, data) => {
+        const match = (item, data) => {
+            
             if (data.type === "page") {
                 return !options.inScope || this.isPageInScope(data.pageIndex)
             }
             return matcher(item, data)
-        });
+        }
+
+        return this.schema.query(match, options );
     }
 
     /**
@@ -470,7 +473,8 @@ class ExoForm {
         if (ev)
             ev.preventDefault();
 
-            if (!this.addins.validation.checkValidity()) {
+            
+        if (!this.addins.validation.checkValidity()) {
             console.debug("ExoForm - checkValidity - Form not valid");
             this.addins.validation.reportValidity();
             return;

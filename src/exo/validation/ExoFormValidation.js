@@ -1,6 +1,4 @@
-
-import DOM from '../pwa/DOM';
-import ExoFormFactory from './ExoFormFactory';
+import ExoFormFactory from '../ExoFormFactory';
 
 class ExoFormDefaultValidation {
     constructor(exo) {
@@ -10,16 +8,35 @@ class ExoFormDefaultValidation {
         exo.form.setAttribute('novalidate', true);
     }
 
-    checkValidity() {
+    /**
+     * Checks form validity
+     * @param {Object} settings - By default, inScope: true is added. 
+     * Use inScope: false to check for overall validity including pages that are currently out of scope .
+     * @returns {Boolean} - true if all form controls are valid.
+     */
+    checkValidity(settings) {
+        settings = {
+            inScope: true,
+            page: undefined,
+            ...settings || {}
+        }
+
         let numInvalid = this.exo.query(f => {
             return !f._control.valid;
 
-        }, {
-            inScope: true
-        }).length;
-        return numInvalid === 0;
+        }, settings).length;
+
+        let valid = numInvalid === 0;
+
+        console.debug(this.constructor.name, "checkValidity", "Settings:", settings, "Valid=", valid);
+
+        return valid;
     }
 
+    /**
+     * Makes the validation addin report any validation errors
+     * @param {*} page - optional page to check
+     */
     reportValidity(page) {
         let invalidFields = this.exo.query(f => {
             return page === undefined ? !f._control.valid : page === f._page.index && !f._control.valid;
@@ -42,13 +59,17 @@ class ExoFormDefaultValidation {
         }
     }
 
+    /**
+     * Focuses the given field, optionally moving to the page the field is displayed on.
+     * @param {*} field - field element in the schema
+     */
     focus(field) {
         let element = field._control.htmlElement;
 
         const f = field => {
             let element = field._control.htmlElement;
             field._control.showValidationError();
-            if(!element.form)
+            if (!element.form)
                 element = element.querySelector("[name]");
         };
 
@@ -57,7 +78,7 @@ class ExoFormDefaultValidation {
             if (pgElm) {
                 let page = parseInt(pgElm.getAttribute("data-page"));
                 this.exo.addins.navigation.goto(page);
-                setTimeout(()=>{
+                setTimeout(() => {
                     f(field)
                 }, 20);
             }
@@ -65,24 +86,18 @@ class ExoFormDefaultValidation {
         else {
             f(field);
         }
-        return true;
     }
 
+    /**
+     * Checks whether the given page is valid.
+     * @param {*} index - page index (1-based)
+     * @returns {Boolean} - true if page is valid.
+     */
     isPageValid(index) {
-        
-        let hasInvalid = false;
-        try {
-            this.runValidCheck = true; // prevent reportValidity() showing messages on controls 
-            hasInvalid = this.exo.schema.pages[index - 1].fields.filter(f => {
-                return !f._control.valid;
-            }).length > 0;
-        }
-        finally {
-            this.runValidCheck = false;
-        }
-        return !hasInvalid;
+        return this.checkValidity({
+            page: index
+        })
     }
-
 
     testValidity(e, field) {
         if (this.runValidCheck)
@@ -177,7 +192,6 @@ class ExoFormInlineValidation extends ExoFormDefaultValidation {
     }
 }
 
-
 class ExoFormValidation {
     static types = {
         auto: undefined,
@@ -187,7 +201,7 @@ class ExoFormValidation {
 
     static getType(exo) {
         let type = exo.schema.validation;
-        if (type === "auto" || typeof(type) === "undefined")
+        if (type === "auto" || typeof (type) === "undefined")
             type = ExoFormValidation.matchValidationType(exo);
 
         let tp = ExoFormValidation.types[type];

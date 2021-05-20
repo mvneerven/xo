@@ -1,5 +1,5 @@
-import Core from '../pwa/Core';
-import ExoFormFactory from './ExoFormFactory';
+import Core from '../../pwa/Core';
+import ExoFormFactory from '../ExoFormFactory';
 
 class ExoFormDataBindingResolver {
 
@@ -80,9 +80,7 @@ class ExoFormDataBindingResolver {
     }
 
     assembleScript(logic) {
-        
         if (logic && Array.isArray(logic.lines)) {
-
             return `const context = {model: this.dataBinding.model, exo: this};\n` + logic.lines.join('\n');
         }
         return "";
@@ -111,7 +109,6 @@ class ExoFormDataBindingResolver {
     }
 
     _bindControlStateToUpdatedModel() {
-        
         this._boundControlState.forEach(obj => {
             let value = this.dataBinding.get(obj.path);
             console.debug("Databinding: bindControlStateToUpdatedModel", obj.propertyName, "on", ExoFormFactory.fieldToString(obj.field), "to", value, obj.path);

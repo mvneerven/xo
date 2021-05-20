@@ -17,14 +17,22 @@ const schema = {
             }
         },
         logic: context => {
-            const model = context.model, person = model.instance.person, b = model.bindings;
+            const m = context.model, person = m.instance.person,
+                b = m.bindings, a = context.exo.addins;
             b.genderUnknown = !['male', 'female'].includes(person.gender);
             b.title =
                 (b.genderUnknown ? '' : (person.gender === 'male' ? 'Mr ' : 'Mrs '))
                 + person.name.first + ' ' + person.name.last;
-            b.under18 = model.instance.person.age <= 17;
-            b.continue = !b.under18 && model.instance.contract.agree;
+            b.under18 = person.age <= 17;
+            b.noAgreement = b.under18 || !m.instance.contract.agree;
             b.info = 'agree to proceed'
+            b.isFirstPage = a.navigation.currentPage === 1;
+
+            //a.navigation.preventAutoButtonStates() // prevent simple wizard state checking
+
+            b.nextDisabled = !a.navigation.canMoveNext() || b.noAgreement;
+            
+            b.sendDisabled = !b.isFirstPage && !a.validation.checkValidity();
         }
     },
     pages: [
@@ -43,6 +51,7 @@ const schema = {
                     name: "price",
                     type: "number",
                     step: .01,
+                    required: true,
                     caption: "Your price",
                     prefix: "$",
                     bind: "instance.person.price"
@@ -63,6 +72,7 @@ const schema = {
                     type: "dropdown",
                     disabled: "@bindings.under18",
                     caption: "Gender",
+                    required: true,
                     items: [
                         {
                             name: "Please choose",
@@ -113,12 +123,43 @@ const schema = {
                     type: "checkboxlist",
                     name: "checkboxlist",
                     caption: "Checkboxlist",
+                    required: true,
                     items: [
                         "First",
                         "Second"
                     ]
                 }
             ]
+        }
+    ],
+    controls1: [
+        {
+            name: "reset",
+            type: "button",
+            caption: "Back to page one",
+            class: "form-reset",
+            disabled: "@bindings.isFirstPage"
+        },
+        {
+            name: "prev",
+            type: "button",
+            caption: "◁ Back",
+            class: "form-prev",
+            disabled: "@bindings.isFirstPage"
+        },
+        {
+            name: "next",
+            type: "button",
+            caption: "Next ▷",
+            class: "form-next",
+            disabled: "@bindings.noAgreement"
+        },
+        {
+            name: "send",
+            type: "button",
+            caption: "Submit",
+            class: "form-post",
+            disabled: "@bindings.sendDisabled"
         }
     ]
 }

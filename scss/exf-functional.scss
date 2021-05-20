@@ -71,7 +71,12 @@
 
     .exf-nav-cnt {
         clear: both;
-        margin: 0
+        margin: 0;
+
+        > .exf-ctl-cnt {
+            display: inline-block;
+            margin-right: .6rem;
+        }
     }
 
     &.single-page {

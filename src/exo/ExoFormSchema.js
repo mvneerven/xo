@@ -21,9 +21,9 @@ class ExoFormSchema {
             let test = ExoFormFactory.tryScriptLiteral(schemaData);
             if (test && test.type === "javascript") {
                 this._type = this.types.js;
-                if(test.executed)
+                if (test.executed)
                     schemaData = test.schema;
-                else{
+                else {
                     throw "ExoFormSchema: Error in JavaScript Schema: " + test.error;
                 }
             }
@@ -79,6 +79,10 @@ class ExoFormSchema {
 
     get theme() {
         return this._schemaData.theme;
+    }
+
+    get controls() {
+        return this._schemaData.controls;
     }
 
     guessType() {
@@ -210,21 +214,38 @@ class ExoFormSchema {
         this._schemaData.pages.forEach(p => {
             fieldIndex = 0
 
-            if (matcher(p, { type: "page", pageIndex: pageIndex })) {
-                if (Array.isArray(p.fields)) {
-                    p.fields.forEach(f => {
-                        f._page = {
-                            index: pageIndex
-                        }
-                        if (matcher(f, { type: "field", fieldIndex: fieldIndex })) {
-                            matches.push(f)
-                        }
-                        fieldIndex++;
-                    });
+            let skip = false
+            if (options.page && p.index !== options.page){
+                skip = true;
+            }
+
+            if (!skip) {
+                if (matcher(p, { type: "page", pageIndex: pageIndex })) {
+                    if (Array.isArray(p.fields)) {
+                        p.fields.forEach(f => {
+                            f._page = {
+                                index: pageIndex
+                            }
+                            if (matcher(f, { type: "field", fieldIndex: fieldIndex })) {
+                                matches.push(f)
+                            }
+                            fieldIndex++;
+                        });
+                    }
                 }
             }
             pageIndex++;
         });
+
+        // match controls as well
+        if (options.includeControls && Array.isArray(this._schemaData.controls)) {
+            this._schemaData.controls.forEach(c => {
+                if (matcher(c, { type: "control" })) {
+                    matches.push(f)
+                };
+            });
+        }
+
         return matches;
     }
 

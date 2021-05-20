@@ -73,6 +73,11 @@
   margin: 0;
 }
 
+.exf-container .exf-nav-cnt > .exf-ctl-cnt {
+  display: inline-block;
+  margin-right: .6rem;
+}
+
 .exf-container.single-page .exf-page {
   display: block;
 }
