@@ -12,13 +12,11 @@ const factory = window.xo.form.factory,
 async function run(context) {
   const x = context.createForm();
   listen(x);
-  await x.load("https://www.xo-js.dev/data/forms/templates/multiinput-test.js") // /data/forms/form.js";
-
-
-
+  await x.load("/data/forms/form.js");
   let result = await x.renderForm();
 
   document.body.querySelector("main").appendChild(result.container);
+
 }
 
 function listen(x) {

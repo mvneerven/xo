@@ -222,8 +222,10 @@ class ExoForm {
 
             try {
                 _._renderPages().then(() => {
-                    _._finalizeForm();
-                    resolve(_);
+                    _._finalizeForm().then(()=>{
+                        resolve(_);
+                    });
+                    
                 }).catch(ex => {
                     reject("_renderPages() failed: " + ex.toString());
                 });
@@ -235,8 +237,8 @@ class ExoForm {
         });
     }
 
-    _finalizeForm() {
-        this.addins.navigation.render();
+    async _finalizeForm() {
+        await this.addins.navigation.render();
 
         this.addins.progress.render();
 

@@ -27,60 +27,66 @@ class ExoFormNavigationBase {
         if (cnt) cnt.remove();
     }
 
-    render() {
+    async render() {
         const tpl = /*html*/`<fieldset class="exf-cnt exf-nav-cnt"></fieldset>`;
 
         this.container = DOM.parseHTML(tpl);
 
-        this.renderButtons().then(() => {
-            this.form.appendChild(this.container);
+        return new Promise((resolve, reject) => {
+            this.renderButtons().then(() => {
+                this.form.appendChild(this.container);
+    
+                this.form.setAttribute("data-current-page", this.currentPage);
+    
+                this.form.querySelector(".exf-cnt.exf-nav-cnt").addEventListener("click", e => {
+    
+                    let btn = e.target.closest("[name]")
+                    if (!btn)
+                        return;
+    
+                    switch (btn.name) {
+                        case "reset":
+                            e.preventDefault();
+                            this.restart();
+                            break;
+    
+                        case "next":
+                            e.preventDefault();
+                            this.next();
+                            break;
+                        case "prev":
+                            e.preventDefault();
+                            this.back();
+                            break;
+    
+                        case "send":
+                            e.preventDefault();
+                            this.exo.submitForm();
+                            break;
+                    }
+    
+                })
+    
+                this.exo.on(ExoFormFactory.events.page, e => {
+                    this.updatecontrolstates()
+                });
+    
+                this.exo.on(ExoFormFactory.events.pageRelevancyChange, e => {
+                    this._pageCount = this.getLastPage();
+                    this.updatecontrolstates()
+                })
+    
+                this.exo.form.addEventListener("change", e => {
+                    this.updatecontrolstates()
+                });
+    
+                this.exo.on(ExoFormFactory.events.interactive, this._ready.bind(this));
 
-            this.form.setAttribute("data-current-page", this.currentPage);
-
-            this.form.querySelector(".exf-cnt.exf-nav-cnt").addEventListener("click", e => {
-
-                let btn = e.target.closest("[name]")
-                if (!btn)
-                    return;
-
-                switch (btn.name) {
-                    case "reset":
-                        e.preventDefault();
-                        this.restart();
-                        break;
-
-                    case "next":
-                        e.preventDefault();
-                        this.next();
-                        break;
-                    case "prev":
-                        e.preventDefault();
-                        this.back();
-                        break;
-
-                    case "send":
-                        e.preventDefault();
-                        this.exo.submitForm();
-                        break;
-                }
-
-            })
-
-            this.exo.on(ExoFormFactory.events.page, e => {
-                this.updatecontrolstates()
+                resolve();
             });
-
-            this.exo.on(ExoFormFactory.events.pageRelevancyChange, e => {
-                this._pageCount = this.getLastPage();
-                this.updatecontrolstates()
-            })
-
-            this.exo.form.addEventListener("change", e => {
-                this.updatecontrolstates()
-            });
-
-            this.exo.on(ExoFormFactory.events.interactive, this._ready.bind(this));
         });
+
+        
 
     }
 
