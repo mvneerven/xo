@@ -100,13 +100,15 @@ class ExoForm {
                 try {
                     if (url.toString().split(".").pop() === "js") {
 
-                        fetch(url, {
-                            credentials: 'include',
-                            headers: {
-                                'Content-Type': 'text/plain',
-                                'Accept': 'text/plain'
-                            }
-                        }).then(x => {
+                        const settings =  {
+                            // credentials: 'include',
+                            // headers: {
+                            //     'Content-Type': 'text/plain',
+                            //     'Accept': 'text/plain'
+                            // }
+                        };
+                        
+                        fetch(url, settings).then(x => {
                             if (x.status === 200) {
                                 return x.text()
                             }
@@ -118,13 +120,15 @@ class ExoForm {
                         });
                     }
                     else {
-                        fetch(url, {
-                            credentials: 'include',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'Accept': 'application/json'
-                            }
-                        }).then(x => {
+                        let settings = {
+                            //credentials: 'include',
+                            // headers1: {
+                            //     'Content-Type': 'application/json',
+                            //     'Accept': 'application/json'
+                            // }
+                        };
+
+                        fetch(url, settings).then(x => {
                             if (x.status === 200) {
                                 return x.json()
                             }
@@ -415,14 +419,14 @@ class ExoForm {
         options = options || {};
 
         const match = (item, data) => {
-            
+
             if (data.type === "page") {
                 return !options.inScope || this.isPageInScope(data.pageIndex)
             }
             return matcher(item, data)
         }
 
-        return this.schema.query(match, options );
+        return this.schema.query(match, options);
     }
 
     /**
@@ -473,7 +477,7 @@ class ExoForm {
         if (ev)
             ev.preventDefault();
 
-            
+
         if (!this.addins.validation.checkValidity()) {
             console.debug("ExoForm - checkValidity - Form not valid");
             this.addins.validation.reportValidity();
