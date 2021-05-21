@@ -576,7 +576,7 @@ myDiv.appendChild(x.container);
 You still have access to most of the functionaliy:
 
 ```js
-const x = await xo.form.run("/data/forms/mi.js", {
+const x = await xo.form.run(schema, {
   on: {
       post: e => {
           // e.detail.postData
