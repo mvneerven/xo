@@ -18,11 +18,25 @@ const xo = {
         fields: {
             base: ExoBaseControls
         },        
-        wizard: ExoWizardRouteModule
+        wizard: ExoWizardRouteModule,
+        run: async (value, options) => {
+            options = options || {};
+            options.context = options.context || await ExoFormFactory.build()
+            let x = options.context.createForm();
+            if(options.on){
+                for(var o in options.on){
+                    x.on(o, options.on[o])
+                }
+            }
+            await x.load(value);
+            await x.renderForm();
+            return x;
+        }
     },
     identity: {
         msal: MsIdentity
     }
+    
 };
 
 window.xo = xo;
