@@ -562,3 +562,44 @@ model: {
 }
 ```
 
+# New in 1.2.5
+
+## Simplified usage
+
+There's now an extremely simple syntax to directly run a form.
+
+```js
+const x = await xo.form.run("/data/forms/mi.js");
+myDiv.appendChild(x.container);
+```
+
+You still have access to most of the functionaliy:
+
+```js
+const x = await xo.form.run("/data/forms/mi.js", {
+  on: {
+      post: e => {
+          // e.detail.postData
+      },
+      page: e => {
+        // paging
+      }
+  }
+});
+myDiv.appendChild(x.container);
+```
+
+... providing an ExoFormContext object
+
+```js
+xo.form.run("/data/forms/account.json", {
+    context: this.xoContext,
+    on: {
+        post: e=>{
+            // handle post
+        }
+    }
+}).then(x=>{
+    myDiv.appendChild(x.container)
+})
+```
