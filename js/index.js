@@ -12,7 +12,7 @@ const factory = window.xo.form.factory,
 async function run(context) {
   const x = context.createForm();
   listen(x);
-  await x.load("/data/forms/survey.json");
+  await x.load("/data/forms/mi.js");
   let result = await x.renderForm();
 
   document.body.querySelector("main").appendChild(result.container);

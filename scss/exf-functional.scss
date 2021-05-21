@@ -104,6 +104,16 @@
         border: 1px solid red;
     }
 
+    
+    .exf-input-group {
+        &:not(.tiles) {
+            .exf-ilc-cnt {
+                display: grid;
+                grid-template-columns: 30px 1fr;
+            }
+        }
+    }
+
     .exf-page {
         padding-top: 1rem;
 

@@ -99,6 +99,13 @@
   border: 1px solid red;
 }
 
+.exf-container .exf-input-group:not(.tiles) .exf-ilc-cnt {
+  display: -ms-grid;
+  display: grid;
+  -ms-grid-columns: 30px 1fr;
+      grid-template-columns: 30px 1fr;
+}
+
 .exf-container .exf-page {
   padding-top: 1rem;
 }
