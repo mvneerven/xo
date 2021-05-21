@@ -1,27 +1,24 @@
 import ExoFormWizardNavigation from './ExoFormWizardNavigation';
-
+import ExoFormFactory from '../ExoFormFactory';
 
 class ExoFormSurveyNavigation extends ExoFormWizardNavigation {
 
     multiValueFieldTypes = ["checkboxlist", "tags"]; // TODO better solution
 
-    render() {
-        const _ = this;
-        super.render();
-
+    async render() {
         const check = e => {
             let exf = e.target.closest("[data-exf]");
             if (exf && exf.data && exf.data.field) {
-                _.checkForward(exf.data.field, "change", e)
+                this.checkForward(exf.data.field, "change", e)
             }
         };
 
-        _.exo.form.querySelector(".exf-wrapper").addEventListener("change", check);
+        this.exo.form.querySelector(".exf-wrapper").addEventListener("change", check);
 
-        _.exo.form.addEventListener("keydown", e => {
+        this.exo.form.addEventListener("keydown", e => {
             if (e.keyCode === 8) { // backspace - TODO: Fix 
                 if ((e.target.value === "" && (!e.target.selectionStart) || e.target.selectionStart === 0)) {
-                    _.this.back();
+                    this.this.back();
                     e.preventDefault();
                     e.returnValue = false;
                 }
@@ -30,27 +27,29 @@ class ExoFormSurveyNavigation extends ExoFormWizardNavigation {
                 if (e.target.type !== "textarea") {
                     let exf = e.target.closest("[data-exf]");
                     let field = ExoFormFactory.getFieldFromElement(exf)
-                    _.checkForward(field, "enter", e);
+                    this.checkForward(field, "enter", e);
                     e.preventDefault();
                     e.returnValue = false;
                 }
             }
         });
 
-        _.exo.on(ExoFormFactory.events.page, e => {
-            _.focusFirstControl();
+        this.exo.on(ExoFormFactory.events.page, e => {
+            this.focusFirstControl();
         })
 
-        let container = _.exo.form.closest(".exf-container");
+        let container = this.exo.form.closest(".exf-container");
 
         container.classList.add("exf-survey");
 
-        _.exo.on(ExoFormFactory.events.interactive, e => {
-            _.exo.form.style.height = container.offsetHeight + "px";
-            _.exo.form.querySelectorAll(".exf-page").forEach(p => {
+        this.exo.on(ExoFormFactory.events.interactive, e => {
+            this.exo.form.style.height = container.offsetHeight + "px";
+            this.exo.form.querySelectorAll(".exf-page").forEach(p => {
                 p.style.height = container.offsetHeight + "px";
             })
         })
+
+        return super.render();
     }
 
     focusFirstControl() {

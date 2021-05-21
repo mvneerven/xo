@@ -1,6 +1,7 @@
 import ExoElementControl from './ExoElementControl';
 import ExoForm from '../../ExoForm';
 import DOM from '../../../pwa/DOM';
+import Core from '../../../pwa/Core';
 
 class ExoInputControl extends ExoElementControl {
 

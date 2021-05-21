@@ -1,0 +1,137 @@
+{
+    "navigation": "survey",
+    "pages": [
+        {
+            "legend": "What kind of feedback are you providing?",
+            "intro": "",
+            "fields": [
+                {
+                    "id": "what",
+                    "type": "dropdown",
+                    "name": "what",
+                    "containerClass": "block",
+                    "items": [
+                        {
+                            "value": "-",
+                            "name": "Please choose..."
+                        },
+                        {
+                            "value": "suggestion",
+                            "name": "A suggestion"
+                        },
+                        {
+                            "value": "issue",
+                            "name": "An issue"
+                        },
+                        {
+                            "value": "general",
+                            "name": "General feedback"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "legend": "Your message",
+            "intro": "",
+            "fields": [
+                {
+                    "type": "multiline",
+                    "name": "info",
+                    "placeholder": "ASF is fantastic!",
+                    "cols": 60,
+                    "rows": 6,
+                    "rules": [
+                        {
+                            "type": "enabled",
+                            "expression": [
+                                "what",
+                                "change",
+                                "value",
+                                "!==",
+                                "'-'"
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "legend": "Who are you",
+            "intro": "Your name please",
+            "fields": [
+                {
+                    "name": "name",
+                    "type": "text",
+                    "required": true,
+                    "placeholder": "John"
+                }
+            ]
+        },
+        {
+            "legend": "Mail",
+            "intro": "Fill out your email address",
+            "fields": [
+                {
+                    "name": "email",
+                    "type": "email",
+                    "required": true,
+                    "placeholder": "john@doe.com",
+                    "lookup": [
+                        "@gmail.com",
+                        "@outlook.com",
+                        "@live.nl",
+                        "@yahoo.com",
+                        "@hotmail.com"
+                    ]
+                }
+            ]
+        },
+        {
+            "legend": "Age",
+            "intro": "Your age please",
+            "type": "number",
+            "fields": [
+                {
+                    "name": "age",
+                    "type": "number",
+                    "min": 16,
+                    "max": 100,
+                    "size": 3,
+                    "maxlength": 3,
+                    "placeholder": "35"
+                }
+            ]
+        },
+        {
+            "legend": "City",
+            "intro": "Where do you live?",
+            "fields": [
+                {
+                    "name": "city",
+                    "type": "text",
+                    "lookup": {
+                        "type": "OpenData",
+                        "url": "https://opendata.cbs.nl/ODataApi/OData/84489NED/Woonplaatsen/",
+                        "field": "Title"
+                    }
+                }
+            ]
+        },
+        {
+            "legend": "Phone",
+            "intro": "What's your phone number?",
+            "fields": [
+                {
+                    "type": "tel",
+                    "name": "phone",
+                    "minlength": 10,
+                    "required": true,
+                    "placeholder": "0612345678",
+                    "maxlength": 15,
+                    "pattern": "(^\\+[0-9]{2}|^\\+[0-9]{2}\\(0\\)|^\\(\\+[0-9]{2}\\)\\(0\\)|^00[0-9]{2}|^0)([0-9]{9}$|[0-9\\-\\s]{10}$)"
+                }
+            ]
+        }
+    ]
+}

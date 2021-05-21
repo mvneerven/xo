@@ -1,4 +1,5 @@
 const schema = {
+    navigation: "survey",
     model: {
         schemas: {
             person: "/data/json/schemas/person-schema.json",
