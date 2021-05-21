@@ -569,7 +569,7 @@ model: {
 There's now an extremely simple syntax to directly run a form.
 
 ```js
-const x = await xo.form.run("/data/forms/mi.js");
+const x = await xo.form.run(schema);
 myDiv.appendChild(x.container);
 ```
 
