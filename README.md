@@ -562,7 +562,7 @@ model: {
 }
 ```
 
-# New in 1.2.5
+# New in 1.2.8
 
 ## Simplified usage
 
@@ -588,7 +588,7 @@ const elm = await xo.form.run("/data/forms/mi.js", {
 myDiv.appendChild(elm);
 ```
 
-... providing an ExoFormContext object
+... providing an ExoFormContext object:
 
 ```js
 xo.form.run("/data/forms/account.json", {
