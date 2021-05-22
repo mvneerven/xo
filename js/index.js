@@ -1,6 +1,12 @@
 const Core = xo.core;
 
-document.body.querySelector("main").appendChild(await xo.form.run("/data/forms/mi.js"));
+document.body.querySelector("main").appendChild(await xo.form.run("/data/forms/mi.js", {
+    on: {
+        created: e => {
+            alert(e.detail.host)
+        }
+    }
+}));
 
 // let div = await xo.form.run({
 //   type: "aceeditor",

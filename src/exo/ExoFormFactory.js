@@ -88,7 +88,6 @@ export class ExoFormContext {
     createForm(options) {
         // the only place where an ExoForm instance can be created       
         let x = new ExoForm(this, options)
-        x.events.trigger(ExoFormFactory.events.created)
         return x;
     }
 
@@ -137,17 +136,16 @@ export class ExoFormContext {
 class ExoFormFactory {
 
     static events = {
-        created: "created",
-        schemaLoaded: "form-loaded", // when loading the form schema is complete
-        renderStart: "render-start", // when form rendering starts
-        getListItem: "get-list-item", // 
-        renderReady: "render-ready", // when form rendering is complete
-        interactive: "form-interactive", // when form is actually shown to user
-        reportValidity: "report-validity", // when form control validity is reported
-        dataModelChange: "datamodel-change", // when the underlying datamodel to which the form is bound changes
-        beforePage: "before-page", // cancellable - called just before paging
+        schemaLoaded: "schemaLoaded", // when loading the form schema is complete
+        renderStart: "renderStart", // when form rendering starts
+        getListItem: "getListItem", // 
+        renderReady: "renderReady", // when form rendering is complete
+        interactive: "interactive", // when form is actually shown to user
+        reportValidity: "reportValidity", // when form control validity is reported
+        dataModelChange: "dataModelChange", // when the underlying datamodel to which the form is bound changes
+        beforePage: "beforePage", // cancellable - called just before paging
         page: "page", // after moving to other page
-        pageRelevancyChange: "page-relevancy-change", // when a page's relevancy state changes (e.g. moves in/out of scope)
+        pageRelevancyChange: "pageRelevancyChange", // when a page's relevancy state changes (e.g. moves in/out of scope)
         post: "post", // on form post/submit
         error: "error" // when any error occurs
     }
