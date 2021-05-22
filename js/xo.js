@@ -22,15 +22,26 @@ const xo = {
         run: async (value, options) => {
             options = options || {};
             options.context = options.context || await ExoFormFactory.build()
-            let x = options.context.createForm();
-            if(options.on){
-                for(var o in options.on){
-                    x.on(o, options.on[o])
-                }
+            let type = ExoFormFactory.determineSchemaType(value);
+            switch(type){
+                case "form":
+                    let x = options.context.createForm();
+                    if(options.on){
+                        for(var o in options.on){
+                            x.on(o, options.on[o])
+                        }
+                    }
+                    await x.load(value);
+                    await x.renderForm();
+                    return x.container;
+                case "field":
+                    let frm = options.context.createForm();
+                    return await frm.renderSingleControl(value);
+                case "json-schema":
+                    throw TypeError("Not implemented");
+                default:
+                    throw TypeError("Not implemented");
             }
-            await x.load(value);
-            await x.renderForm();
-            return x;
         }
     },
     identity: {

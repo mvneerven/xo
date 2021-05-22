@@ -90,7 +90,7 @@ export class ExoFormContext {
         return new ExoForm(this, options)
     }
 
-    createSchema(){
+    createSchema() {
         return new ExoFormSchema(this);
     }
 
@@ -193,7 +193,7 @@ class ExoFormFactory {
             groupContainer: "exf-input-group",
             groupElementCaption: "exf-caption",
             label: "exf-label",
-            navigationContainer: "exf-nav-cnt",            
+            navigationContainer: "exf-nav-cnt",
             button: "exf-btn",
             focusedControlContainer: "exf-focus",
             pageTitle: "exf-page-title",
@@ -306,6 +306,24 @@ class ExoFormFactory {
         }
     }
 
+    /**
+     * Determines the ExoForm schema type from an object.
+     * @param {Object} value 
+     * @returns {String} - the detected type ("field", "json-schema" or "form")
+     */
+    static determineSchemaType(value) {
+        if (typeof (value) === "object") {
+            if(value.$schema) {
+                return "json-schema";
+            }
+            if (value.type && value.name) {
+                return "field";
+            }
+        }
+
+        return "form";
+    }
+
     static listNativeProps(ctl) {
         let type = ctl.__proto__;
         let list = Object.getOwnPropertyNames(type);
@@ -336,7 +354,7 @@ class ExoFormFactory {
     static tryScriptLiteral(scriptLiteral) {
         let result = {
             raw: scriptLiteral,
-            guessedType: typeof (scriptLiteral) === "string" && scriptLiteral.trim().startsWith("const") ? "javascript": "json",
+            guessedType: typeof (scriptLiteral) === "string" && scriptLiteral.trim().startsWith("const") ? "javascript" : "json",
             schema: undefined,
             type: "unknown",
             parsed: false,
@@ -349,9 +367,9 @@ class ExoFormFactory {
                 result.type = "javascript"
                 result.parsed = true,
 
-                result.schema = f.call();
+                    result.schema = f.call();
                 result.executed = true;
-                
+
             }
             catch (ex) {
                 console.error("tryScriptLiteral", ex)

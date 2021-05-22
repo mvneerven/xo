@@ -569,14 +569,13 @@ model: {
 There's now an extremely simple syntax to directly run a form.
 
 ```js
-const x = await xo.form.run("/data/forms/mi.js");
-myDiv.appendChild(x.container);
+document.body.appendChild(await xo.form.run("/data/forms/mi.js"));
 ```
 
 You still have access to most of the functionaliy:
 
 ```js
-const x = await xo.form.run("/data/forms/mi.js", {
+const elm = await xo.form.run("/data/forms/mi.js", {
   on: {
       post: e => {
           // e.detail.postData
@@ -586,7 +585,7 @@ const x = await xo.form.run("/data/forms/mi.js", {
       }
   }
 });
-myDiv.appendChild(x.container);
+myDiv.appendChild(elm);
 ```
 
 ... providing an ExoFormContext object
@@ -603,3 +602,14 @@ xo.form.run("/data/forms/account.json", {
     myDiv.appendChild(x.container)
 })
 ```
+
+... but you can also render single controls:
+
+```js
+let div = await xo.form.run({
+  type: "aceeditor",
+  name: "htmlEditor",
+  caption: "Html"
+});
+```
+

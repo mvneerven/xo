@@ -1,8 +1,22 @@
 const Core = xo.core;
 
-xo.form.run("/data/forms/mi.js").then(x => {
-  document.body.appendChild(x.container);
-})
+document.body.querySelector("main").appendChild(await xo.form.run("/data/forms/mi.js"));
+
+// let div = await xo.form.run({
+//   type: "aceeditor",
+//   name: "htmlEditor",
+//   caption: "Html"
+// });
+
+// document.body.appendChild(div)
+
+// let ctl = await xo.form.run({
+//   type: "checkbox",
+//   name: "checkbox1",
+//   caption: "Auto save"
+// })
+
+// document.body.appendChild(ctl)
 
 // const factory = window.xo.form.factory,
 //   DOM = window.xo.dom,
