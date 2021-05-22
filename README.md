@@ -598,8 +598,8 @@ xo.form.run("/data/forms/account.json", {
             // handle post
         }
     }
-}).then(x=>{
-    myDiv.appendChild(x.container)
+}).then( elm => {
+    myDiv.appendChild(elm)
 })
 ```
 

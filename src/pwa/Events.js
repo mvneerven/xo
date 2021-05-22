@@ -28,13 +28,13 @@ class Events {
     }
 
     trigger(eventName, detail, ev) {
-        console.debug("Shop: triggering event", eventName, "detail: ", detail)
+        console.debug(host.constructor.name, "triggering event", eventName, "detail: ", detail)
         if (!ev) {
             ev = new Event(eventName, { bubbles: false, cancelable: true });
         }
 
         ev.detail = {
-            shop: this,
+            host: this.host,
             ...(detail || {})
         };
 

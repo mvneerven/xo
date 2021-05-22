@@ -87,7 +87,9 @@ export class ExoFormContext {
 
     createForm(options) {
         // the only place where an ExoForm instance can be created       
-        return new ExoForm(this, options)
+        let x = new ExoForm(this, options)
+        x.events.trigger(ExoFormFactory.events.created)
+        return x;
     }
 
     createSchema() {
@@ -135,6 +137,7 @@ export class ExoFormContext {
 class ExoFormFactory {
 
     static events = {
+        created: "created",
         schemaLoaded: "form-loaded", // when loading the form schema is complete
         renderStart: "render-start", // when form rendering starts
         getListItem: "get-list-item", // 
