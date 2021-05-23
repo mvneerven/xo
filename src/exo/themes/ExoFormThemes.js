@@ -1,4 +1,4 @@
-import DOM from '../pwa/DOM';
+import DOM from '../../pwa/DOM';
 
 class ExoFormTheme {
     constructor(exo) {

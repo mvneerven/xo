@@ -1,5 +1,5 @@
 import ExoElementControl from './ExoElementControl';
-import ExoForm from '../../ExoForm';
+import ExoForm from '../../core/ExoForm';
 import DOM from '../../../pwa/DOM';
 import Core from '../../../pwa/Core';
 

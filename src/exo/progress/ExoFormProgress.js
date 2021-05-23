@@ -1,5 +1,5 @@
-import DOM from '../pwa/DOM';
-import ExoFormFactory from './ExoFormFactory';
+import DOM from '../../pwa/DOM';
+import ExoFormFactory from '../ExoFormFactory';
 
 class ExoFormNoProgress {
     constructor(exo) {

@@ -1,5 +1,5 @@
 import ExoFormPageControl from './ExoFormPageControl';
-import ExoForm from '../../ExoForm';
+import ExoForm from '../../core/ExoForm';
 import DOM from '../../../pwa/DOM';
 
 class ExoFieldSetControl extends ExoFormPageControl {

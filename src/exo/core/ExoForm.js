@@ -3,10 +3,10 @@
  * (c) 2021 Marc van Neerven, MIT License, https://cto-as-a-service.nl 
 */
 
-import Core from '../pwa/Core';
-import DOM from '../pwa/DOM';
+import Core from '../../pwa/Core';
+import DOM from '../../pwa/DOM';
 import ExoFormFactory from './ExoFormFactory';
-import ExoFormDataBinding from './databinding/ExoFormDataBinding';
+import ExoFormDataBinding from '../databinding/ExoFormDataBinding';
 
 /**
  * ExoForm class. 

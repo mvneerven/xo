@@ -3,11 +3,11 @@ import ExoBaseControls from './controls/base/ExoBaseControls';
 import ExoExtendedControls from './controls/ExoExtendedControls';
 import ExoDevControls from './controls/ExoDevControls';
 import ExoChartControls from './controls/ExoChartControls';
-import ExoFormThemes from './ExoFormThemes';
+import ExoFormThemes from './themes/ExoFormThemes';
 import ExoFormValidation from './validation/ExoFormValidation';
 import ExoFormNavigation from './navigation/ExoFormNavigation';
-import ExoFormProgress from './ExoFormProgress';
-import ExoFormRules from './ExoFormRules'
+import ExoFormProgress from './progress/ExoFormProgress';
+import ExoFormRules from './validation/ExoFormRules'
 import ExoFormSchema from './ExoFormSchema';
 
 /**

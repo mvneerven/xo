@@ -1,6 +1,6 @@
 import ExoBaseControls from './base/ExoBaseControls';
 import ExoFormFactory from '../ExoFormFactory';
-import ExoForm from '../ExoForm';
+import ExoForm from '../core/ExoForm';
 import Core from '../../pwa/Core';
 import DOM from '../../pwa/DOM';
 
