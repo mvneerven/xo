@@ -1,7 +1,7 @@
 import 'regenerator-runtime/runtime'; // included for babel build 
 import ExoFormFactory from '../src/exo/ExoFormFactory';
-import ExoRouteModule from '../src/exo/ExoRouteModule';
-import ExoWizardRouteModule from '../src/exo/ExoWizardRouteModule';
+import RouteModule from '../src/pwa/RouteModule';
+//import ExoWizardRouteModule from '../src/exo/ExoWizardRouteModule';
 import ExoBaseControls from '../src/exo/controls/base/ExoBaseControls';
 import DOM from '../src/pwa/DOM';
 import PWA from '../src/pwa/PWA';
@@ -12,13 +12,13 @@ const xo = {
     core: Core,
     dom: DOM,
     pwa: PWA,
-    route: ExoRouteModule,
+    route: RouteModule,
     form: {
         factory: ExoFormFactory,
         fields: {
             base: ExoBaseControls
         },        
-        wizard: ExoWizardRouteModule,
+        //wizard: ExoWizardRouteModule,
         run: async (value, options) => {
             options = options || {};
             options.context = options.context || await ExoFormFactory.build()

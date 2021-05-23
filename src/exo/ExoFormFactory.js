@@ -3,7 +3,6 @@ import ExoBaseControls from './controls/base/ExoBaseControls';
 import ExoExtendedControls from './controls/ExoExtendedControls';
 import ExoDevControls from './controls/ExoDevControls';
 import ExoChartControls from './controls/ExoChartControls';
-import ExoSchemaGenerator from './ExoSchemaGenerator';
 import ExoFormThemes from './ExoFormThemes';
 import ExoFormValidation from './validation/ExoFormValidation';
 import ExoFormNavigation from './navigation/ExoFormNavigation';
@@ -120,10 +119,6 @@ export class ExoFormContext {
 
     renderSingleControl(field) {
         return this.createForm().renderSingleControl(field);
-    }
-
-    createGenerator() {
-        return new ExoSchemaGenerator();
     }
 }
 

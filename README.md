@@ -612,3 +612,11 @@ let div = await xo.form.run({
   caption: "Html"
 });
 ```
+
+## Changes
+
+- Removed 
+  - ExoWizardRouteModule (obsolete), 
+  - ExoSchemaGenerator (to be replaced with a full fledged schema generator based on JSON Schemas)
+  - ExoRouteModule (obsolete)
+  
