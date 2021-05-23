@@ -1,5 +1,5 @@
 import 'regenerator-runtime/runtime'; // included for babel build 
-import ExoFormFactory from '../src/exo/ExoFormFactory';
+import ExoFormFactory from '../src/exo/core/ExoFormFactory';
 import RouteModule from '../src/pwa/RouteModule';
 import ExoBaseControls from '../src/exo/controls/base/ExoBaseControls';
 import DOM from '../src/pwa/DOM';

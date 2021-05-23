@@ -1,5 +1,5 @@
 import ExoDivControl from './ExoDivControl';
-import ExoFormFactory from '../../ExoFormFactory';
+import ExoFormFactory from '../../core/ExoFormFactory';
 
 class ExoFormPageControl extends ExoDivControl {
 

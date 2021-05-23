@@ -1,5 +1,5 @@
 import DOM from '../../pwa/DOM';
-import ExoFormFactory from '../ExoFormFactory';
+import ExoFormFactory from '../core/ExoFormFactory';
 
 class ExoFormNavigationBase {
     controls = [];

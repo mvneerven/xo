@@ -1,5 +1,5 @@
 import ExoElementControl from './ExoElementControl';
-import ExoFormFactory from '../../ExoFormFactory';
+import ExoFormFactory from '../../core/ExoFormFactory';
 import DOM from '../../../pwa/DOM';
 
 class ExoListControl extends ExoElementControl {

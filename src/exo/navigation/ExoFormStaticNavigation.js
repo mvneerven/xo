@@ -1,5 +1,5 @@
 import ExoFormNavigationBase from './ExoFormNavigationBase';
-import ExoFormFactory from '../ExoFormFactory';
+import ExoFormFactory from '../core/ExoFormFactory';
 
 class ExoFormStaticNavigation extends ExoFormNavigationBase {
     render() {

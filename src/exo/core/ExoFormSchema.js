@@ -1,4 +1,4 @@
-import Core from '../pwa/Core';
+import Core from '../../pwa/Core';
 import ExoFormFactory from './ExoFormFactory';
 
 class ExoFormSchema {

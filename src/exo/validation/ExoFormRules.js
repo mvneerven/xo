@@ -1,6 +1,6 @@
 import DOM from '../../pwa/DOM';
 import Core from '../../pwa/Core';
-import ExoFormFactory from '../ExoFormFactory';
+import ExoFormFactory from '../core//ExoFormFactory';
 
 class ExoRuleEngineBase {
 

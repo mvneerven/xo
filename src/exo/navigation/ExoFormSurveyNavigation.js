@@ -1,5 +1,5 @@
 import ExoFormWizardNavigation from './ExoFormWizardNavigation';
-import ExoFormFactory from '../ExoFormFactory';
+import ExoFormFactory from '../core//ExoFormFactory';
 
 class ExoFormSurveyNavigation extends ExoFormWizardNavigation {
 

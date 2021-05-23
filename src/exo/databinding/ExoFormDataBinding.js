@@ -1,5 +1,5 @@
 
-import ExoFormFactory from '../ExoFormFactory';
+import ExoFormFactory from '../core/ExoFormFactory';
 import Core from '../../pwa/Core';
 import ExoFormDataBindingResolver from './ExoFormDataBindingResolver';
 

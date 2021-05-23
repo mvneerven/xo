@@ -1,7 +1,7 @@
 
 import InlineFieldValidator from './InlineFieldValidator';
 import ExoFormDefaultValidation from './ExoFormDefaultValidation';
-import ExoFormFactory from '../ExoFormFactory';
+import ExoFormFactory from '../core/ExoFormFactory';
 
 class ExoFormInlineValidation extends ExoFormDefaultValidation {
     constructor(exo) {

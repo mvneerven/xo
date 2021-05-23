@@ -1,4 +1,4 @@
-import ExoFormFactory from '../ExoFormFactory';
+import ExoFormFactory from '../core//ExoFormFactory';
 
 class ExoFormDefaultValidation {
     constructor(exo) {
