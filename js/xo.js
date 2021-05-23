@@ -24,7 +24,9 @@ const xo = {
             let type = ExoFormFactory.determineSchemaType(value);
             switch(type){
                 case "form":
-                    let x = options.context.createForm();
+                    let x = options.context.createForm({
+                        ...options
+                    });
                     if(options.on){
                         for(var o in options.on){
                             x.on(o, options.on[o])
