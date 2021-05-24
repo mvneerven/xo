@@ -1,9 +1,16 @@
 const Core = xo.core;
+const DOM = xo.dom;
 
-document.body.querySelector("main").appendChild(await xo.form.run("/data/forms/mi.js", {
+document.body.querySelector("main").appendChild(await xo.form.run("/data/forms/wizard.json", {
     on: {
         created: e => {
             alert(e.detail.host)
+        },
+        error: e => {
+            let ex = e.detail.error;
+            const elm = DOM.parseHTML(`<div>Error: ${ex.toString()}</div>`);
+            document.querySelector("footer").appendChild(elm);
+            elm.scrollIntoView();
         }
     }
 }));

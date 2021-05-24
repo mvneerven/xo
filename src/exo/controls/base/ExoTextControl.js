@@ -35,7 +35,7 @@ class ExoTextControl extends ExoInputControl {
 
             let pfx = document.createElement("span");
             pfx.innerText = this.prefix;
-            pfx.style = "position: absolute; top: .25rem"
+            pfx.style = "position: absolute; top: .25rem; left: 0"
             this.container.appendChild(pfx);
             this.htmlElement.style.paddingLeft = "1rem";
         }

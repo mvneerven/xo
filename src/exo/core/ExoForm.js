@@ -19,9 +19,9 @@ class ExoForm {
     static meta = {
 
         properties: {
-            all: ["accept", "alt", "autocomplete", "autofocus", "capture", "checked", "dirName", "disabled", "height", "list",
-                "max", "maxLength", "min", "minLength", "multiple", "name", "pattern", "placeholder", "readOnly", "required",
-                "size", "src", "step", "type", "value", "width", "className"],
+            // all: ["accept", "alt", "autocomplete", "autofocus", "capture", "checked", "dirName", "disabled", "height", "list",
+            //     "max", "maxLength", "min", "minLength", "multiple", "name", "pattern", "placeholder", "readOnly", "required",
+            //     "size", "src", "step", "type", "value", "width", "className"],
             map: {
                 "class": "className",
                 "readonly": "readOnly",
@@ -77,9 +77,10 @@ class ExoForm {
      * @return {Promise} - A Promise returning the ExoForm Object with the loaded schema
      */
     load(schema, options) {
+        
         options = options || { mode: "async" };
-        const _ = this;
-
+        
+        
         if (options.mode.startsWith("sync")) {
             return this.loadSchema(schema);
         }
@@ -87,27 +88,19 @@ class ExoForm {
         return new Promise((resolve, reject) => {
             const loader = schema => {
                 if (!schema)
-                    resolve(_)
+                    resolve(this)
                 else {
                     this.loadSchema(schema);
-                    resolve(_);
+                    resolve(this);
                 }
             }
 
             if (Core.isUrl(schema)) {
+                
                 let url = new URL(schema, this.context.baseUrl);
-
+                const settings = {};
                 try {
                     if (url.toString().split(".").pop() === "js") {
-
-                        const settings =  {
-                            // credentials: 'include',
-                            // headers: {
-                            //     'Content-Type': 'text/plain',
-                            //     'Accept': 'text/plain'
-                            // }
-                        };
-                        
                         fetch(url, settings).then(x => {
                             if (x.status === 200) {
                                 return x.text()
@@ -116,18 +109,14 @@ class ExoForm {
                         }).then(r => {
                             loader(r);
                         }).catch(ex => {
+                            this.events.trigger(ExoFormFactory.events.error, {
+                                error: ex,
+                                message: `Error loading schema from ${url}: ${ex.toString()}`
+                            });
                             reject(ex);
                         });
                     }
                     else {
-                        let settings = {
-                            //credentials: 'include',
-                            // headers1: {
-                            //     'Content-Type': 'application/json',
-                            //     'Accept': 'application/json'
-                            // }
-                        };
-
                         fetch(url, settings).then(x => {
                             if (x.status === 200) {
                                 return x.json()
@@ -136,6 +125,10 @@ class ExoForm {
                         }).then(r => {
                             loader(r);
                         }).catch(ex => {
+                            this.events.trigger(ExoFormFactory.events.error, {
+                                error: ex,
+                                message: `Error loading schema from ${url}: ${ex.toString()}`
+                            });
                             reject(ex);
                         });
                     }
@@ -148,6 +141,8 @@ class ExoForm {
                 loader(schema);
             }
         });
+
+        
     }
 
     /**
@@ -222,10 +217,10 @@ class ExoForm {
 
             try {
                 _._renderPages().then(() => {
-                    _._finalizeForm().then(()=>{
+                    _._finalizeForm().then(() => {
                         resolve(_);
                     });
-                    
+
                 }).catch(ex => {
                     reject("_renderPages() failed: " + ex.toString());
                 });
@@ -508,7 +503,6 @@ class ExoForm {
     }
 
     getFieldValue(elementOrField) {
-
         if (elementOrField && elementOrField._control)
             return elementOrField._control.value;
         else if (elementOrField.form && elementOrField.name) {
@@ -517,7 +511,6 @@ class ExoForm {
             if (field)
                 return field._control.value; //return DOM.getValue(this.form.querySelector("[name='" + f.name + "']"))
         }
-
         return undefined;
     }
 
@@ -613,9 +606,14 @@ class ExoForm {
     }
 
     _generateUniqueElementId() {
-        let gid = Core.guid();
-        gid = gid.split('-');
-        gid = gid[gid.length - 1];
+        //let gid = Core.guid();
+        let gid = 'xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+            var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+            return v.toString(16);
+        });
+
+        //gid = gid.split('-');
+        //gid = gid[gid.length - 1];
         return "exf" + gid;
     }
 

@@ -1,5 +1,5 @@
 const schema = {
-    navigation: "survey",
+    //navigation: "survey",
     model: {
         schemas: {
             person: "/data/json/schemas/person-schema.json",
@@ -133,7 +133,7 @@ const schema = {
             ]
         }
     ],
-    controls1: [
+    controls: [
         {
             name: "reset",
             type: "button",

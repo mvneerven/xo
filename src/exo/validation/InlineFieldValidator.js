@@ -1,11 +1,13 @@
 class InlineFieldValidator {
 
-    constructor(field) {
+    constructor(field, options) {
+        options = options || {};
         this._field = field;
         this._cnt = this._field._control.container || this._field._control.htmlElement;
         this._error = null;
         this._onInvalid = this._onInvalid.bind(this);
-        //this._onInput = this._onInput.bind(this);
+        //if(options.onInput)
+        this._onInput = this._onChange.bind(this);
         this._onChange = this._onChange.bind(this);
 
         this.bindEventListeners();
@@ -18,6 +20,7 @@ class InlineFieldValidator {
             })
 
             this._cnt.addEventListener("change", this._onChange);
+            this._cnt.addEventListener("input", this._onInput);
         }
     }
 

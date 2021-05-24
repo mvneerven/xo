@@ -7,7 +7,7 @@ import ExoFormThemes from '../themes/ExoFormThemes';
 import ExoFormValidation from '../validation/ExoFormValidation';
 import ExoFormNavigation from '../navigation/ExoFormNavigation';
 import ExoFormProgress from '../progress/ExoFormProgress';
-import ExoFormRules from '../validation/ExoFormRules'
+import ExoFormRules from '../rules/ExoFormRules'
 import ExoFormContext from './ExoFormContext';
 
 
