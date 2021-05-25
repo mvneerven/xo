@@ -206,19 +206,24 @@ class ExoForm {
      * Returns a Promise
      */
     renderForm() {
-        const _ = this;
 
-        _.events.trigger(ExoFormFactory.events.renderStart)
-        _._cleanup();
+        this.events.trigger(ExoFormFactory.events.renderStart)
+        this._cleanup();
 
         return new Promise((resolve, reject) => {
 
-            _.container.appendChild(_.form);
+            this.container.appendChild(this.form);
+            if(this.schema.form.id){
+                this.container.setAttribute("id", this.schema.form.id);
+            }
 
             try {
-                _._renderPages().then(() => {
-                    _._finalizeForm().then(() => {
-                        resolve(_);
+                
+                this._renderPages().then(() => {
+                    
+                    this._finalizeForm().then(() => {
+                        
+                        resolve(this);
                     });
 
                 }).catch(ex => {
@@ -282,6 +287,8 @@ class ExoForm {
     _renderPages() {
         const _ = this;
 
+        let cid =  this.container.id;
+
         return new Promise((resolve, reject) => {
             var pageNr = 0;
 
@@ -300,11 +307,15 @@ class ExoForm {
                     let pageFieldsRendered = 0;
 
                     p.fields.forEach(f => {
-                        console.debug("ExoForm: rendering field", f.name, f);
+                        console.debug("ExoForm: rendering field", f.name, f, cid);
                         f.dummy = DOM.parseHTML('<span/>');
 
                         page.appendChild(f.dummy);
                         _.createControl(f).then(() => {
+                            console.debug("createControl ", f, " on " + cid);
+                            // if(cid === "frm-expl"){
+                            //     debugger
+                            // }
 
                             f._control.render().then(rendered => {
 
@@ -323,6 +334,8 @@ class ExoForm {
                                 pageFieldsRendered = this._addRendered(f, rendered, pageFieldsRendered, p, page);
 
                             }).finally(r => {
+                                
+
                                 totalFieldsRendered++;
 
                                 if (totalFieldsRendered === _.schema.fieldCount) {

@@ -17,7 +17,6 @@ const xo = {
         fields: {
             base: ExoBaseControls
         },        
-        //wizard: ExoWizardRouteModule,
         run: async (value, options) => {
             options = options || {};
             options.context = options.context || await ExoFormFactory.build()
@@ -36,7 +35,9 @@ const xo = {
                     await x.renderForm();
                     return x.container;
                 case "field":
-                    let frm = options.context.createForm();
+                    let frm = options.context.createForm({
+                        ...options
+                    });
                     return await frm.renderSingleControl(value);
                 case "json-schema":
                     throw TypeError("Not implemented");

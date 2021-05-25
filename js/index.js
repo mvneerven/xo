@@ -1,6 +1,29 @@
 const Core = xo.core;
 const DOM = xo.dom;
 
+
+function getForm() {
+    return new Promise((resolve, reject) => {
+        xo.form.run({
+            pages: [{
+                fields: [
+                    { type: "text", name: "test1" }
+                ]
+            }]
+        }, {
+            on: {
+                renderReady: e=>{
+                    resolve(e.detail.host)
+                }
+            }
+        })
+    });
+}
+
+getForm().then(exo=>{
+    alert(exo.schema);
+})
+
 document.body.querySelector("main").appendChild(await xo.form.run("/data/forms/wizard.json", {
     on: {
         created: e => {

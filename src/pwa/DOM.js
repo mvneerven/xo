@@ -267,59 +267,50 @@ class DOM {
     };
 
     // Wait For an element in the DOM
-    static waitFor(selector, limit){
-        if(!limit) limit = 1000;
-        return Core.waitFor(()=>{
+    static waitFor(selector, limit) {
+        if (!limit) limit = 1000;
+        return Core.waitFor(() => {
             return document.querySelector(selector);
         }, limit)
     }
-    
+
 
     static require(src, c) {
         var d = document;
-        if (typeof (src) == "string") src = [src];
-        
         let elm = d.head.querySelector(`script[src="${src}"]`);
-        if(elm){
+        if (elm) {
             let loadState = elm.getAttribute("data-exf-rl");
-            if(loadState ){
-                if(loadState === "1"){
-                    elm.addEventListener("load", ev=>{
-                        console.log("loadState ready: " , elm.src)
+            if (loadState) {
+                if (loadState === "1") {
+                    elm.addEventListener("load", ev => {
                         ev.target.setAttribute("data-exf-rl", "2");
                         if (typeof (c) === "function") {
                             c();
                         }
                     })
-                    
+                }
+                else if (loadState === "2" && typeof (c) === "function") {
+                    c();
                 }
                 return;
             }
         }
-        
-        let loaded = 0;
+
         return new Promise((resolve, reject) => {
             const check = () => {
-
-                if (loaded === src.length) {
-                    if (typeof (c) === "function") {
-                        c();
-                    }
-                    resolve();
+                if (typeof (c) === "function") {
+                    c();
                 }
+                resolve();
             }
-            src.forEach(s => {
-                let e = d.createElement('script');
-                e.setAttribute("data-exf-rl", "1");
-                e.src = s
-                d.head.appendChild(e);
-                e.onload = ev => {
-                    ev.target.setAttribute("data-exf-rl", "2");
-                    loaded++;
-                    check()
-
-                }
-            });
+            let e = d.createElement('script');
+            e.setAttribute("data-exf-rl", "1");
+            e.src = src
+            d.head.appendChild(e);
+            e.onload = ev => {
+                ev.target.setAttribute("data-exf-rl", "2");
+                check()
+            }
         });
     }
 
@@ -340,7 +331,7 @@ class DOM {
 
     }
 
-    
+
 
     static format(template, data, settings) {
         settings = settings || { empty: '' };
@@ -369,7 +360,7 @@ class DOM {
         return template;
     }
 
-    
+
 
     static replace(oldElm, newElm) {
         let dummy = oldElm;
@@ -378,7 +369,7 @@ class DOM {
         return newElm;
     }
 
-    static unwrap(el){
+    static unwrap(el) {
         var parent = el.parentNode;
         while (el.firstChild) parent.insertBefore(el.firstChild, el);
         parent.removeChild(el);
