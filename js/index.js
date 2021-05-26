@@ -2,30 +2,33 @@ const Core = xo.core;
 const DOM = xo.dom;
 
 
-function getForm() {
-    return new Promise((resolve, reject) => {
-        xo.form.run({
-            pages: [{
-                fields: [
-                    { type: "text", name: "test1" }
-                ]
-            }]
-        }, {
-            on: {
-                renderReady: e=>{
-                    resolve(e.detail.host)
-                }
-            }
-        })
-    });
-}
+// function getForm() {
+//     return new Promise((resolve, reject) => {
+//         xo.form.run({
+//             pages: [{
+//                 fields: [
+//                     { type: "text", name: "test1" }
+//                 ]
+//             }]
+//         }, {
+//             on: {
+//                 renderReady: e=>{
+//                     resolve(e.detail.host)
+//                 }
+//             }
+//         })
+//     });
+// }
 
-getForm().then(exo=>{
-    alert(exo.schema);
-})
+// getForm().then(exo=>{
+//     alert(exo.schema);
+// })
 
-document.body.querySelector("main").appendChild(await xo.form.run("/data/forms/wizard.json", {
+document.body.querySelector("main").appendChild(await xo.form.run("/data/forms/form.js", {
     on: {
+        post: e=>{
+            alert(JSON.stringify(e.detail.postData, null, 2))
+        },
         created: e => {
             alert(e.detail.host)
         },

@@ -69,6 +69,12 @@ const schema = {
                     bind: "instance.person.age"
                 },
                 {
+                    name: "tags",
+                    caption: "Tags",
+                    type: "tags",
+                    value: ["rain", "cats", "dogs"]
+                },
+                {
                     name: "gender",
                     type: "dropdown",
                     disabled: "@bindings.under18",
