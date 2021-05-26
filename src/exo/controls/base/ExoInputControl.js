@@ -40,7 +40,6 @@ class ExoInputControl extends ExoElementControl {
 
         _.htmlElement.addEventListener("keyup", e => {
             if (e.key !== "Enter") {
-                console.log(e.key);
                 let data = [];
 
                 ["@gmail.com", "@outlook.com", "@live.nl", "@yahoo.com", "@hotmail.com"].forEach(a => {

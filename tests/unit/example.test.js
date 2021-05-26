@@ -68,6 +68,7 @@ function getForm() {
         }, {
             on: {
                 renderReady: e=>{
+                    console.log("FORM READY: ", e.detail.host )
                     resolve(e.detail.host)
                 }
             }

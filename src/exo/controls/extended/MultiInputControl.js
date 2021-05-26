@@ -173,9 +173,7 @@ class MultiInputControl extends ExoBaseControls.controls.div.type {
 
         for (var n in this.fields) {
             var elm = this.getFormElement(this._qs(n));
-            console.log("Checking ", elm)
             if (!elm.checkValidity()) {
-                console.log("Not valid: ", elm)
                 if (elm.reportValidity)
                     elm.reportValidity();
 
