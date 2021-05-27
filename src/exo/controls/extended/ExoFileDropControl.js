@@ -18,22 +18,26 @@ class ExoFileDropControl extends ExoBaseControls.controls.input.type {
     }
 
     async render() {
-        const _ = this;
 
-        _.field = _.context.field;
-        _.field.type = "file";
-        _.field.data = this.field.data || [];
+        this.field = this.context.field;
+        this.field.type = "file";
+        this.field.data = this.field.data || [];
 
         await super.render();
 
-        _.previewDiv = DOM.parseHTML(`<div class="file-preview clearable"></div>`);
-        _.previewDiv.style.height = `${this.height}px`;
+        this.previewDiv = DOM.parseHTML(`<div class="file-preview clearable"></div>`);
+        this.previewDiv.style.height = `${this.height}px`;
 
-        _.container.querySelector(".exf-ctl").appendChild(_.previewDiv);
-        _.container.classList.add("exf-filedrop");
+        this.container.querySelector(".exf-ctl").appendChild(this.previewDiv);
+        this.container.classList.add("exf-filedrop");
 
-        _.bindEvents(
+        this.bindEvents(
             data => {
+                setTimeout(() => {
+                    this.container.classList.remove("loading");
+                }, 1000);
+
+
                 if (!data.error) {
                     var thumb = DOM.parseHTML('<div data-id="' + data.fileName + '" class="thumb ' + data.type.replace('/', ' ') + '"></div>');
 
@@ -42,10 +46,10 @@ class ExoFileDropControl extends ExoBaseControls.controls.input.type {
 
                         let thumb = e.target.closest(".thumb");
                         let id = thumb.getAttribute("data-id");
-                        var index = Array.from(_.previewDiv.children).indexOf(thumb);
+                        var index = Array.from(this.previewDiv.children).indexOf(thumb);
                         thumb.remove();
-                        _.field.data = _.field.data.filter(item => item.fileName !== id);
-                        _._change();
+                        this.field.data = this.field.data.filter(item => item.fileName !== id);
+                        this._change();
                     });
                     thumb.appendChild(close);
 
@@ -53,21 +57,21 @@ class ExoFileDropControl extends ExoBaseControls.controls.input.type {
                     let img = DOM.parseHTML('<div class="thumb-data"></div>');
                     if (data.type.startsWith("image/")) {
                         thumb.classList.add("image");
-                        img.style.backgroundImage = 'url("' + _.getDataUrl(data.b64, data.type) + '")';
+                        img.style.backgroundImage = 'url("' + this.getDataUrl(data.b64, data.type) + '")';
                     }
                     else {
                         thumb.classList.add("no-img");
                     }
                     thumb.appendChild(img);
                     thumb.appendChild(DOM.parseHTML('<figcaption>' + data.fileName + '</figcaption>'));
-                    _.previewDiv.appendChild(thumb);
+                    this.previewDiv.appendChild(thumb);
                 }
                 else {
-                    _.showHelp(data.error, { type: "error" });
+                    this.showHelp(data.error, { type: "error" });
                 }
             }
         )
-        return _.container;
+        return this.container;
     }
 
     get value() {
@@ -78,22 +82,30 @@ class ExoFileDropControl extends ExoBaseControls.controls.input.type {
         // TODO 
     }
 
-
     _change() {
         DOM.trigger(this.htmlElement, "change", {
             data: this.context.field.data
         })
     }
 
+    clear() {
+        
+        this.context.field.data = [];
+        
+        if(this.rendered)
+            this.container.querySelector(".clearable").innerHTML = "";
+        
+    }
+
     bindEvents(cb) {
-
-        const _ = this;
-
+        const me = this;
         const loadFile = (data) => {
             var file = data.file;
-            _.showHelp();
+            this.showHelp();
 
             var reader = new FileReader();
+
+
 
             reader.onload = function () {
                 let returnValue = {
@@ -103,15 +115,15 @@ class ExoFileDropControl extends ExoBaseControls.controls.input.type {
                     size: data.file.size,
                     date: data.file.lastModifiedDate
                 }
-                if (_.field.max) {
-                    if (_.field.data.length >= _.field.max) {
+                if (me.field.max) {
+                    if (me.field.data.length >= me.field.max) {
                         returnValue.error = "Maximum number of attachements reached";
                     }
                 }
 
-                if (_.field.fileTypes) {
+                if (me.field.fileTypes) {
                     let found = false;
-                    _.field.fileTypes.forEach(t => {
+                    me.field.fileTypes.forEach(t => {
                         if (data.file.type.indexOf(t) === 0)
                             found = true;
                     })
@@ -121,8 +133,8 @@ class ExoFileDropControl extends ExoBaseControls.controls.input.type {
                     }
                 }
 
-                if (!returnValue.error && _.field.maxSize) {
-                    if (data.file.size > _.field.maxSize) {
+                if (!returnValue.error && me.field.maxSize) {
+                    if (data.file.size > me.field.maxSize) {
                         returnValue.error = "Max size exceeded";
                     }
                 }
@@ -132,22 +144,23 @@ class ExoFileDropControl extends ExoBaseControls.controls.input.type {
                 }
 
                 if (!returnValue.error) {
-                    _.field.data.push(returnValue);
-                    _._change();
+                    me.field.data.push(returnValue);
+                    me._change();
                 }
 
                 cb(returnValue);
             };
             try {
                 reader.readAsBinaryString(file);
-            } catch { }
+            }
+            catch { }
 
         }
 
-        const dropArea = _.htmlElement.closest(".exf-ctl-cnt");
+        const dropArea = this.htmlElement.closest(".exf-ctl-cnt");
 
         const uf = (e) => {
-
+            this.container.classList.add("loading");
             if (!e.detail) {
                 e.stopImmediatePropagation();
                 e.cancelBubble = true;
@@ -168,7 +181,7 @@ class ExoFileDropControl extends ExoBaseControls.controls.input.type {
 
         };
 
-        _.htmlElement.addEventListener("change", uf);
+        this.htmlElement.addEventListener("change", uf);
 
         dropArea.addEventListener('dragover', e => {
             e.dataTransfer.dropEffect = 'copy';

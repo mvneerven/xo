@@ -1167,6 +1167,61 @@ html.theme-light nav.ul-drop ul li > ul {
   opacity: 1;
 }
 
+.exf-filedrop.loading .file-preview {
+  background-image: none;
+}
+
+.exf-filedrop.loading .file-preview:after {
+  position: absolute;
+  content: " .";
+  height: 100%;
+  top: 20%;
+  left: 40%;
+  font-size: 120px;
+  font-family: arial;
+  width: auto;
+  -webkit-animation: dots 1s steps(5, end) infinite;
+          animation: dots 1s steps(5, end) infinite;
+}
+
+@-webkit-keyframes dots {
+  0%,
+  20% {
+    color: rgba(0, 0, 0, 0);
+    text-shadow: 0.25em 0 0 rgba(0, 0, 0, 0), 0.5em 0 0 rgba(0, 0, 0, 0);
+  }
+  40% {
+    color: white;
+    text-shadow: 0.25em 0 0 rgba(0, 0, 0, 0), 0.5em 0 0 rgba(0, 0, 0, 0);
+  }
+  60% {
+    text-shadow: 0.25em 0 0 white, 0.5em 0 0 rgba(0, 0, 0, 0);
+  }
+  80%,
+  100% {
+    text-shadow: 0.25em 0 0 white, 0.5em 0 0 white;
+  }
+}
+
+@keyframes dots {
+  0%,
+  20% {
+    color: rgba(0, 0, 0, 0);
+    text-shadow: 0.25em 0 0 rgba(0, 0, 0, 0), 0.5em 0 0 rgba(0, 0, 0, 0);
+  }
+  40% {
+    color: white;
+    text-shadow: 0.25em 0 0 rgba(0, 0, 0, 0), 0.5em 0 0 rgba(0, 0, 0, 0);
+  }
+  60% {
+    text-shadow: 0.25em 0 0 white, 0.5em 0 0 rgba(0, 0, 0, 0);
+  }
+  80%,
+  100% {
+    text-shadow: 0.25em 0 0 white, 0.5em 0 0 white;
+  }
+}
+
 .exf-star-rating-cnt svg {
   position: absolute;
 }
@@ -1585,6 +1640,42 @@ html.theme-dark .exf-ctl-cnt.exf-switch input[type="range"] {
 
 .exf-filedrop .file-preview .thumb:hover .close {
   opacity: 1;
+}
+
+.exf-filedrop.loading .file-preview {
+  background-image: none;
+}
+
+.exf-filedrop.loading .file-preview:after {
+  position: absolute;
+  content: " .";
+  height: 100%;
+  top: 20%;
+  left: 40%;
+  font-size: 120px;
+  font-family: arial;
+  width: auto;
+  -webkit-animation: dots 1s steps(5, end) infinite;
+          animation: dots 1s steps(5, end) infinite;
+}
+
+@keyframes dots {
+  0%,
+  20% {
+    color: rgba(0, 0, 0, 0);
+    text-shadow: 0.25em 0 0 rgba(0, 0, 0, 0), 0.5em 0 0 rgba(0, 0, 0, 0);
+  }
+  40% {
+    color: white;
+    text-shadow: 0.25em 0 0 rgba(0, 0, 0, 0), 0.5em 0 0 rgba(0, 0, 0, 0);
+  }
+  60% {
+    text-shadow: 0.25em 0 0 white, 0.5em 0 0 rgba(0, 0, 0, 0);
+  }
+  80%,
+  100% {
+    text-shadow: 0.25em 0 0 white, 0.5em 0 0 white;
+  }
 }
 
 .exf-wiz-step-cnt {

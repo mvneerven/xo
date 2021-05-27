@@ -24,7 +24,7 @@ const DOM = xo.dom;
 //     alert(exo.schema);
 // })
 
-document.body.querySelector("main").appendChild(await xo.form.run("/data/forms/form.js", {
+document.body.querySelector("main").appendChild(await xo.form.run("/data/forms/upload.js", {
     on: {
         post: e=>{
             alert(JSON.stringify(e.detail.postData, null, 2))
