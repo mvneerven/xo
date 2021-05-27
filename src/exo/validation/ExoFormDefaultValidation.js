@@ -51,7 +51,6 @@ class ExoFormDefaultValidation {
             });
 
             if (returnValue !== false) {
-                console.log(invalidFields);
                 this.focus(invalidFields[0].field);
             }
         }

@@ -8,6 +8,7 @@ class ExoControlBase {
     _visible = true;
     _disabled = false;
     _rendered = false;
+    _useContainer = true;
 
     acceptedProperties = [];
 
@@ -26,9 +27,10 @@ class ExoControlBase {
         this.htmlElement = document.createElement('span');
 
         this.acceptProperties(
-            { name: "visible", type: Boolean },
-            { name: "disabled", type: Boolean },
-            { name: "caption", type: String }
+            { name: "visible", type: Boolean, description: "Determines control visibility" },
+            { name: "disabled", type: Boolean, description: "Determines whether the control can be interacted with by the user" },
+            { name: "caption", type: String, description: "Caption/label to display" },
+            { name: "useContainer", type: Boolean, description: "Specifies whether the control should render within the standard control container. Default depends on control."}
         );
     }
 
@@ -38,9 +40,9 @@ class ExoControlBase {
             return DOM.format( /*html*/`<span data-replace="true"></span>`, this._getContainerAttributes(obj))
         }
 
-        else if (this.context.field.type === "button") {
+        else if (!this.useContainer) {
 
-            const tpl = /*html*/`<div data-id="{{id}}" class="exf-ctl-cnt {{class}}"><span data-replace="true"></span></div>`;
+            const tpl = /*html*/`<div data-id="{{id}}" class="exf-ctl-cnt exf-ctl-bare {{class}}"><span data-replace="true"></span></div>`;
 
             return DOM.format(tpl, this._getContainerAttributes(obj))
         }
@@ -71,6 +73,14 @@ class ExoControlBase {
 
     get htmlElement() {
         return this._htmlElement;
+    }
+
+    set useContainer(value){
+        this._useContainer = value
+    }
+
+    get useContainer(){
+        return this._useContainer;
     }
 
     appendChild(elm) {

@@ -6,6 +6,8 @@ class ExoFormPageControl extends ExoDivControl {
     constructor(context) {
         super(context);
 
+        this._useContainer = false; // no container by default
+        
         this._relevant = true;
         this._previouslyRelevant = true;
 

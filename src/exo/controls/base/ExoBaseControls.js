@@ -17,13 +17,15 @@ import ExoRadioButtonListControl from './ExoRadioButtonListControl';
 import ExoButtonControl from './ExoButtonControl';
 import ExoProgressControl from './ExoProgressControl';
 import ExoLinkControl from './ExoLinkControl';
+import ExoImageControl from './ExoImageControl';
 
 class ExoBaseControls {
 
     static controls = {
 
         base: { hidden: true, type: ExoControlBase },
-        element: { type: ExoElementControl, note: "Any raw HTML Element", demo: { type: "element", tagName: "img", src: "https://source.unsplash.com/random/600x400" } },
+        element: { type: ExoElementControl, note: "Any raw HTML Element", demo: { type: "element", tagName: "div", html: `<h3>Test</h3><p>Test HTML</p>` } },
+        image: {type: ExoImageControl, note: "Image element", demo: {value: "https://source.unsplash.com/random/600x400"}},
         input: { hidden: true, type: ExoInputControl },
         div: { hidden: true, type: ExoDivControl, note: "A standard HTML div container element", demo: { html: `<h3>Wow!</h3>` } },
         form: { hidden: true, type: ExoFormControl },

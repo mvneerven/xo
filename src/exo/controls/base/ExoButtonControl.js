@@ -5,7 +5,11 @@ import DOM from '../../../pwa/DOM';
 class ExoButtonControl extends ExoElementControl {
     constructor(context) {
         super(context);
+
+        this._useContainer = false; // no container by default
+        
         this.iconHtml = "";
+        
         this.htmlElement = DOM.parseHTML('<button class="exf-btn" />')
 
         this.acceptProperties(

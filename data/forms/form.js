@@ -10,6 +10,7 @@ const schema = {
                     first: "John",
                     last: "Doe"
                 },
+                tags: ["good", "will", "hunting"],
                 age: 57,
                 gender: "male"
             },
@@ -49,6 +50,20 @@ const schema = {
                     bind: "instance.person.name"
                 },
                 {
+                    type: "image",
+                    name: "myImg",
+                    caption: "My Image (random from unsplash.com)",
+                    value: "https://source.unsplash.com/random/600x400"
+                },
+                {
+                    type: "link",
+                    name: "myLink",
+                    value: "https://source.unsplash.com/random/600x400",
+                    html: "Image (Unsplash)",
+                    external: true
+                },
+                
+                {
                     name: "price",
                     type: "number",
                     step: .01,
@@ -72,7 +87,7 @@ const schema = {
                     name: "tags",
                     caption: "Tags",
                     type: "tags",
-                    value: ["rain", "cats", "dogs"]
+                    bind: "instance.person.tags"
                 },
                 {
                     name: "gender",

@@ -48,7 +48,7 @@ class ExoFormDataBinding {
             let data = {};
 
             const modelSetup = [ExoFormDataBinding.origins.bind, ExoFormDataBinding.origins.schema].includes(this._origin);
-            console.log("Model set up: " + modelSetup);
+
 
             exo.query(f => {
 
@@ -68,11 +68,8 @@ class ExoFormDataBinding {
 
             // make sure we have a model if it wasn't passed in
             if (!modelSetup) {
-                console.log("Fill initial model", data);
                 this._model.instance.data = data;
             }
-
-            console.log("Firing Model ready event ", this._model.instance);
 
             this.events.trigger("ready", { model: this._model });
         })

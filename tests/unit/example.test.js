@@ -1,75 +1,80 @@
 import xo from "../../dist/xo.min";
 
-/**
- * Utility function that mocks the `IntersectionObserver` API. Necessary for components that rely
- * on it, otherwise the tests will crash. Recommended to execute inside `beforeEach`.
- * @param intersectionObserverMock - Parameter that is sent to the `Object.defineProperty`
- * overwrite method. `jest.fn()` mock functions can be passed here if the goal is to not only
- * mock the intersection observer, but its methods.
- */
- export function setupIntersectionObserverMock({
-    root = null,
-    rootMargin = '',
-    thresholds = [],
-    disconnect = () => null,
-    observe = () => null,
-    takeRecords = () => [],
-    unobserve = () => null,
-  } = {}) {
-    class MockIntersectionObserver {
-      constructor() {
-        this.root = root;
-        this.rootMargin = rootMargin;
-        this.thresholds = thresholds;
-        this.disconnect = disconnect;
-        this.observe = observe;
-        this.takeRecords = takeRecords;
-        this.unobserve = unobserve;
-      }
-    }
-  
-    Object.defineProperty(window, 'IntersectionObserver', {
-      writable: true,
-      configurable: true,
-      value: MockIntersectionObserver
-    });
-  
-    // Object.defineProperty(global, 'IntersectionObserver', {
-    //   writable: true,
-    //   configurable: true,
-    //   value: MockIntersectionObserver
-    // });
-  }
-
 describe("XO General Tests", () => {
-    let exo = null;
+    let context = {};
+
     beforeAll(() => {
+        console.debug = e => { };
 
-        setupIntersectionObserverMock();
-
-        getForm().then(x => {
-            exo = x;
+        return form({
+            model: {
+                instance: {
+                    data: {
+                        tags: ["beer", "pong"]
+                    }
+                }
+            },
+            pages: [{
+                fields: [
+                    { type: "text", name: "text1" },
+                    { type: "tags", name: "tags1", value: ["dead", "can", "dance"] },
+                    { type: "tags", name: "tags2", bind: "instance.data.tags" },
+                    { type: "radiobuttonlist", name: "radio1", items: ["one", "two", "three"] }
+                ]
+            }]
+        }).then(x => {
+            context = x
         })
     });
 
     it("Form Running", () => {
-        expect(exo).not.toBeNull();
+        expect(context.exo).not.toBeNull();
     });
+
+    it("Form has ONE page", () => {
+        expect(context.exo.schema.pages.length).toBe(1);
+    });
+
+    it("Form field with name test1 is found", () => {
+        expect(context.exo.get("text1")).not.toBeNull();
+    });
+
+    it("Form field with name test1 has textbox control", () => {
+        expect(context.exo.get("text1")._control.htmlElement.type).toBe("text");
+    });
+
+    it("Tags are rendered", () => {
+        expect(context.exo.get("tags1")._control.value.join(", ")).toBe("dead, can, dance");
+    });
+
+    it("Tags are bound", () => {
+        expect(context.exo.get("tags2")._control.value.join(", ")).toBe("beer, pong");
+    });
+
+    it("Radio renders options", () => {
+        expect(context.exo.get("radio1")._control.container.querySelectorAll("input[name]").length).toBe(3);
+    });
+
+    it("Form posts correct data", () => {
+        
+        expect(context.posted.tags2.length).toBe(2);
+    });
+
+
 })
 
-function getForm() {
+function form(schema) {
     return new Promise((resolve, reject) => {
-        xo.form.run({
-            pages: [{
-                fields: [
-                    { type: "text", name: "test1" }
-                ]
-            }]
-        }, {
+        xo.form.run(schema, {
             on: {
-                renderReady: e=>{
-                    console.log("FORM READY: ", e.detail.host )
-                    resolve(e.detail.host)
+                renderReady: e => {
+                    let context = {
+                        exo: e.detail.host,
+                        posted: e.detail.host.getFormValues()
+                    }
+                    console.log(context.posted);
+
+                    resolve(context);
                 }
             }
         })
