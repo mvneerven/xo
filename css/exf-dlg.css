@@ -6,6 +6,7 @@
   left: 0;
   background: rgba(0, 0, 0, 0.6);
   z-index: 99999;
+  overflow-y: auto;
 }
 
 .exf-dlg.c-mdl {

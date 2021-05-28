@@ -1,5 +1,6 @@
 import Core from '../../pwa/Core';
 import ExoFormFactory from './ExoFormFactory';
+import JSONSchema from './JSONSchema';
 
 class ExoFormSchema {
 
@@ -13,6 +14,7 @@ class ExoFormSchema {
         this.events = new Core.Events(this)
         this._type = this.types.undefined;
         this.options = options || {};
+        this._jsonSchemas = {};
     }
 
     parse(schemaData) {
@@ -48,9 +50,18 @@ class ExoFormSchema {
 
         this._schemaData.form = this._schemaData.form || {};
 
-        this._schemaData.pages = this._schemaData.pages || [];
-
+        this._schemaData.pages = this._schemaData.pages || [];     
+        
         this._totalFieldCount = this.query().length;
+
+    }
+
+    addJSONSchema(instanceName, schema) {
+        this._jsonSchemas[instanceName] = new JSONSchema(instanceName, schema);
+    }
+
+    get jsonSchemas() {
+        return this._jsonSchemas
     }
 
     get type() {
@@ -90,6 +101,29 @@ class ExoFormSchema {
             return this.types.js
         }
         return this.types.json;
+    }
+
+    applyJsonSchemas(){
+        this.query().forEach(f=>{
+            this.applyJsonSchema(f)
+        });
+    }
+
+    applyJsonSchema(field){
+        
+        if(field.bind){
+            let instanceName = field.bind.split('.')[1];
+            if(this.jsonSchemas[instanceName]){
+                this.jsonSchemas[instanceName].apply(field);
+            }
+        }
+    }
+
+    static getPathFromBind(bind){
+        let parts = bind.split('.');
+        parts.shift();
+        parts.shift();
+        return parts.join();
     }
 
     toString(mode) {
@@ -215,7 +249,7 @@ class ExoFormSchema {
             fieldIndex = 0
 
             let skip = false
-            if (options.page && p.index !== options.page){
+            if (options.page && p.index !== options.page) {
                 skip = true;
             }
 

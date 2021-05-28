@@ -16,10 +16,10 @@ import ExoFormFactory from './ExoFormFactory';
     }
 
     _enrichMeta(library) {
-        const form = this.createForm({
+        const form = this.createForm({ // needed for meta buildup
             internal: true
         });
-        form.load({ pages: [{}] });
+        //form.load({ pages: [{}] }); //TODO: check whether it's safe to remove this
 
         for (var name in library) {
             let field = library[name];

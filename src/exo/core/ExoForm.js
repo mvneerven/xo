@@ -77,26 +77,29 @@ class ExoForm {
      * @return {Promise} - A Promise returning the ExoForm Object with the loaded schema
      */
     load(schema, options) {
-        
+
         options = options || { mode: "async" };
-        
-        
-        if (options.mode.startsWith("sync")) {
-            return this.loadSchema(schema);
-        }
+
+        // if (options.mode.startsWith("sync")) {
+        //     return this.loadSchema(schema);
+        // }
 
         return new Promise((resolve, reject) => {
             const loader = schema => {
                 if (!schema)
                     resolve(this)
                 else {
-                    this.loadSchema(schema);
-                    resolve(this);
+                    this.loadSchema(schema).then(() => {
+                        this.schema.applyJsonSchemas();
+                        resolve(this);
+                    }).catch(ex => {
+                        reject(ex)
+                    });
                 }
             }
 
             if (Core.isUrl(schema)) {
-                
+
                 let url = new URL(schema, this.context.baseUrl);
                 const settings = {};
                 try {
@@ -142,7 +145,7 @@ class ExoForm {
             }
         });
 
-        
+
     }
 
     /**
@@ -150,32 +153,65 @@ class ExoForm {
      * @param {any} schema - A JSON ExoForm Schema object.
      * @return {any} - the loaded schema
      */
-    loadSchema(schema) {
+    async loadSchema(schema) {
 
-        this._schema = this.context.createSchema();
-        this._schema.parse(schema);
+        return new Promise((resolve, reject) => {
+            this._schema = this.context.createSchema();
+            this._schema.parse(schema);
 
-        this._dataBinding = new ExoFormDataBinding(this, this._mappedInstance);
-        this.dataBinding.on("change", e => {
-            e.detail.state = "change";
-            this.events.trigger(ExoFormFactory.events.dataModelChange, e.detail)
-        }).on("ready", e => {
-            e.detail.state = "ready";
-            this.events.trigger(ExoFormFactory.events.dataModelChange, e.detail)
-        }).on("error", e => {
-            this.events.trigger(ExoFormFactory.events.error, e.detail);
+            this._dataBinding = new ExoFormDataBinding(this, this._mappedInstance);
+            this.dataBinding.on("change", e => {
+                e.detail.state = "change";
+                this.events.trigger(ExoFormFactory.events.dataModelChange, e.detail)
+            }).on("ready", e => {
+                e.detail.state = "ready";
+                this.events.trigger(ExoFormFactory.events.dataModelChange, e.detail)
+            }).on("error", e => {
+                this.events.trigger(ExoFormFactory.events.error, e.detail);
+            });
+
+            this.events.trigger(ExoFormFactory.events.schemaLoaded);
+
+            this._createComponents();
+
+            if (this.schema.form) {
+                let formClasses = this.schema.form.class ? this.schema.form.class.split(' ') : ["standard"];
+                formClasses.forEach(c => {
+                    this.form.classList.add(c);
+                })
+            }
+            let promises = [];
+
+            const loadJsonSchema = async (url, instanceName) => {
+                return await fetch(url).then(x=>{
+                    if(x.status === 200)
+                        return x.json()
+                    
+                    reject(`HTTP Status ${x.status} - ${x.statusText}`);
+
+                }).then(data => {
+                    //this._schema.model.schemas[instanceName] = data;
+                    this._schema.addJSONSchema(instanceName, data);
+                })
+            }
+            if (this._schema.model && this._schema.model.schemas) {
+                for (var instanceName in this._schema.model.schemas) {
+                    let schemaRef = this._schema.model.schemas[instanceName]
+                    if (Core.isUrl(schemaRef)) {
+                        promises.push(loadJsonSchema(schemaRef, instanceName))
+                    }
+                }
+            }
+
+            if (promises.length === 0) {
+                resolve()
+            }
+            else {
+                Promise.all(promises).then(x => {
+                    resolve();
+                })
+            }
         });
-
-        this.events.trigger(ExoFormFactory.events.schemaLoaded);
-
-        this._createComponents();
-
-        if (this.schema.form) {
-            let formClasses = this.schema.form.class ? this.schema.form.class.split(' ') : ["standard"];
-            formClasses.forEach(c => {
-                this.form.classList.add(c);
-            })
-        }
     }
 
     /**
@@ -213,16 +249,16 @@ class ExoForm {
         return new Promise((resolve, reject) => {
 
             this.container.appendChild(this.form);
-            if(this.schema.form.id){
+            if (this.schema.form.id) {
                 this.container.setAttribute("id", this.schema.form.id);
             }
 
             try {
-                
+
                 this._renderPages().then(() => {
-                    
+
                     this._finalizeForm().then(() => {
-                        
+
                         resolve(this);
                     });
 
@@ -287,7 +323,7 @@ class ExoForm {
     _renderPages() {
         const _ = this;
 
-        let cid =  this.container.id;
+        let cid = this.container.id;
 
         return new Promise((resolve, reject) => {
             var pageNr = 0;
@@ -334,7 +370,7 @@ class ExoForm {
                                 pageFieldsRendered = this._addRendered(f, rendered, pageFieldsRendered, p, page);
 
                             }).finally(r => {
-                                
+
 
                                 totalFieldsRendered++;
 
@@ -557,7 +593,11 @@ class ExoForm {
             }
 
             try {
-                if (!f || !f.type)
+                
+                //this.schema.applyJsonSchema(f);
+                
+
+                if (!f.type)
                     throw "ExoForm: incorrect field options. Must be object with at least 'type' property. " + JSON.stringify(f)
 
                 f.id = f.id || _._generateUniqueElementId();
@@ -617,6 +657,8 @@ class ExoForm {
             }
         });
     }
+
+   
 
     _generateUniqueElementId() {
         //let gid = Core.guid();

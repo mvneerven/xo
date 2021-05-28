@@ -62,8 +62,9 @@ class ExoTaggingControl extends ExoBaseControls.controls.text.type {
         
 
         
-        this.wrapper.addEventListener('click', function () {
-            this.input.focus();
+        this.wrapper.addEventListener('click', function (e) {
+            let inp = e.target.closest(".exf-input").querySelector("input");
+            inp.focus();
         });
 
         this.input.addEventListener('keydown', e => {

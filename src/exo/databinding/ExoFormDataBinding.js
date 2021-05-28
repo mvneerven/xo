@@ -2,6 +2,7 @@
 import ExoFormFactory from '../core/ExoFormFactory';
 import Core from '../../pwa/Core';
 import ExoFormDataBindingResolver from './ExoFormDataBindingResolver';
+import ExoFormSchema from '../core/ExoFormSchema';
 
 class ExoFormDataBinding {
 
@@ -51,17 +52,18 @@ class ExoFormDataBinding {
 
 
             exo.query(f => {
-
-                if (f.name) {
-                    if (!f.bind && !modelSetup) {
+                if (!f.bind && !modelSetup) {
+                    if (f.name) {
                         f.bind = "instance.data." + f.name; // use default model binding if no binding is specified
                     }
-                    if (f.bind) { // field uses databinding to model
-                        f.value = (modelSetup ? this.get(f.bind) : f.value) || "";
-                        console.debug("ExoFormDatabinding: applying instance." + f.name, f.bind, f.value);
-                        data[f.name] = f.value
-                    }
                 }
+                if (f.bind) { // field uses databinding to model
+                    f.name = f.name || ExoFormSchema.getPathFromBind(f.bind);
+                    f.value = (modelSetup ? this.get(f.bind) : f.value) || "";
+                    console.debug("ExoFormDatabinding: applying instance." + f.name, f.bind, f.value);
+                    data[f.name] = f.value
+                }
+                
             }, {
                 includeControls: true // navigation buttons are not normally included
             });

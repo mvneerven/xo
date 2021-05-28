@@ -26,8 +26,8 @@ class ExoDialogControl extends ExoBaseControls.controls.div.type {
     </div>
 <div class="exf-dlg-b">{{body}}</div>
 <div class="exf-dlg-f">
-    <button type="button" class="dlg-x btn exf-btn btn-default dismiss" >{{cancelText}}</button>
     <button type="button" class="dlg-x btn exf-btn btn-primary confirm" >{{confirmText}}</button>
+    <button type="button" class="dlg-x btn exf-btn btn-default dismiss" >{{cancelText}}</button>
 </div>
 </div>
 </div>`;
@@ -59,9 +59,9 @@ class ExoDialogControl extends ExoBaseControls.controls.div.type {
 
     show() {
         const _ = this;
-        
-        let body; 
-        if(typeof(this.body) === "object"){
+
+        let body;
+        if (typeof (this.body) === "object") {
             body = this.body
             this.body = ""
         }
@@ -70,7 +70,7 @@ class ExoDialogControl extends ExoBaseControls.controls.div.type {
 
         this.dlg = DOM.parseHTML(html);
 
-        if(body){
+        if (body) {
             this.dialogBody.appendChild(body);
         }
 

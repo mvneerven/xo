@@ -78,7 +78,7 @@ Show the progress within a multi-page form.
 }
 ```
 
-![Steps](img/md/progress-steps.png?raw=true "Adding step indicator using progress='steps'")
+![Steps](https://xo-js.dev/assets/img/progress-steps.png?raw=true "Adding step indicator using progress='steps'")
 
 ## Material Theme
 A new theme, inspired by Material Design, was added.
@@ -88,7 +88,7 @@ A new theme, inspired by Material Design, was added.
   "theme": "material"
 }
 ```
-![Material Theme](img/md/theme-material.png?raw=true "Setting theme to 'material'")
+![Material Theme](https://xo-js.dev/assets/img/theme-material.png?raw=true "Setting theme to 'material'")
 
 ## Control Additions
 
@@ -162,7 +162,7 @@ Make the Google ReCaptcha control act invisibly.
 ## ExoForm Explorer 
 [The ExoForm Explorer](https://www.xo-js.dev/#/explore) is loaded with new functionality to experiment with all the new features.
 
-![Portal](img/md/portal.png "The new ExoForm Explorer")
+![Portal](https://xo-js.dev/assets/img/portal.png "The new ExoForm Explorer")
 
 ## Distributable
 
@@ -407,11 +407,11 @@ const schema = {
 
 You can now easily switch to JavaScript literal notation, which makes it easier to write logic (if you're a developer ;-).
 
-![Portal](img/md/js-schema.png "ExoForm Studio editing a JS schema")
+![Portal](https://xo-js.dev/assets/img/js-schema.png "ExoForm Studio editing a JS schema")
 
 In the upper right corner of the editor window, you can toggle between JS and JSON notation:
 
-![Portal](img/md/json-schema.png "Toggling to JSON schema")
+![Portal](https://xo-js.dev/assets/img/json-schema.png "Toggling to JSON schema")
 
 # New in 1.1.2
 
@@ -620,3 +620,115 @@ let div = await xo.form.run({
   - ExoSchemaGenerator (to be replaced with a full fledged schema generator based on JSON Schemas)
   - ExoRouteModule (obsolete)
   
+
+# New in 1.2.20
+
+## JSON Schema Support
+
+Support for JSON Schema references in the model.
+
+With this model:
+
+```js
+const schema = {
+    model: {
+        schemas: {
+            assets: "/data/schemas/assets-schema.json"
+        },
+        instance: {
+            assets: {
+                id: "ea56912e-0f14-489e-af5f-3e4b7d0a966f",
+                name: "Sunset.jpg",
+                type: "image/jpeg",
+                alt: "Sunset in the mist",
+                size: 3874085,
+                imageUri: "https://blobs.mydomain.com/assets/d3a7691266f.jpg",
+                tags: ["sunset", "hills", "misty", "clouds]
+            }
+        }
+    }, [...]
+``` 
+
+... and the referenced JSON schema:
+
+```json
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "type": "object",
+    "properties": {
+      "id": {
+        "type": "string",
+        "readOnly": true,
+        "label": "Id"
+      },
+      "name": {
+        "type": "string",
+        "label": "Name"
+      },
+      "type": {
+        "type": "string",
+        "label": "File Type"
+      },
+      "alt": {
+        "type": "string",
+        "label": "Alt Text"
+      },
+      "size": {
+        "type": "integer",
+        "label": "File Size"
+      },
+      "imageUri": {
+        "type": "string",
+        "label": "Image"
+      },
+      "tags": {
+        "type": "array",
+        "label": "Tags"
+      }
+
+    },
+    "required": [
+      "id",
+      "name",
+      "type",
+      "alt",
+      "size",
+      "imageUri",
+      "tags"
+    ]
+  }
+```
+
+... your average ExoForm UI schema looks a lot simpler:
+
+```js
+pages: [
+    {
+        fields: [
+            { bind: "instance.data.name" },
+            { bind: "instance.data.type"}, 
+            { bind: "instance.data.alt" },
+            { bind: "instance.data.size"},
+            { 
+                bind: "instance.data.imageUri",
+                disabled: true
+            }, 
+            { 
+                bind: "instance.data.imageUri",
+                caption: " " ,
+                type: "image",
+                style: "max-width: 400px"
+            }, 
+            {
+                name: "tags",
+                bind: "instance.data.tags",
+                type: "tags"
+            }
+        ]
+    }
+]
+```
+
+... which will result in this form:
+
+![Portal](https://xo-js.dev/assets/img/schema-form.png "The resulting form")

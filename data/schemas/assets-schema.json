@@ -1,0 +1,45 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "type": "object",
+    "properties": {
+      "id": {
+        "type": "string",
+        "readOnly": true,
+        "label": "Id"
+      },
+      "name": {
+        "type": "string",
+        "label": "Name"
+      },
+      "type": {
+        "type": "string",
+        "label": "File Type"
+      },
+      "alt": {
+        "type": "string",
+        "label": "Alt Text"
+      },
+      "size": {
+        "type": "integer",
+        "label": "File Size"
+      },
+      "imageUri": {
+        "type": "string",
+        "label": "Image"
+      },
+      "tags": {
+        "type": "array",
+        "label": "Tags"
+      }
+
+    },
+    "required": [
+      "id",
+      "name",
+      "type",
+      "alt",
+      "size",
+      "imageUri",
+      "tags"
+    ]
+  }
