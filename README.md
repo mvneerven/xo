@@ -24,7 +24,7 @@ What does ExoForm bring?
 * No bulky dependencies. HTML5, CSS3, ECMAScript. That's it. They're powerful enough ;-) 
 * Use it in any environment, Vue, React, Angular, or plain vanilla JavaScript. 
 * Create and include your own control libraries. 
-* Customize anything: validation, 
+* Customize anything: styling, validation, navigation, progress indication, etc. 
 * Get typed JSON post data 
 * All HTML5 controls included, plus a large number of custom controls
 * Ace Code Editor, CkEditor wysiwyg editor (richt text) 
