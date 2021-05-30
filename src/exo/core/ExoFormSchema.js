@@ -2,6 +2,9 @@ import Core from '../../pwa/Core';
 import ExoFormFactory from './ExoFormFactory';
 import JSONSchema from './JSONSchema';
 
+/**
+ * Hosts the ExoForm json/js form schema and manages its state
+ */
 class ExoFormSchema {
 
     types = {
@@ -11,11 +14,12 @@ class ExoFormSchema {
     }
 
     constructor(options) {
-        this.events = new Core.Events(this)
+        ///this.events = new Core.Events(this)
         this._type = this.types.undefined;
         this.options = options || {};
         this._jsonSchemas = {};
     }
+
 
     parse(schemaData) {
         if (typeof (schemaData) !== "object") {
@@ -40,8 +44,8 @@ class ExoFormSchema {
             }
         }
 
-        if (!schemaData || !schemaData.pages || !Array.isArray(schemaData.pages))
-            throw "ExoFormSchema: invalid ExoForm schema";
+        // if (!schemaData || !schemaData.pages || !Array.isArray(schemaData.pages))
+        //     throw "ExoFormSchema: invalid ExoForm schema";
 
         this._schemaData = {
             ...this.options.defaults || {},
@@ -50,10 +54,44 @@ class ExoFormSchema {
 
         this._schemaData.form = this._schemaData.form || {};
 
-        this._schemaData.pages = this._schemaData.pages || [];     
-        
-        this._totalFieldCount = this.query().length;
+        this._schemaData.pages = this._schemaData.pages || [];
 
+        this.refreshStats();
+
+    }
+
+    createDefaultUiIfNeeded() {
+
+        let defaultModelInstance = this.getFirstInstanceName();
+        if (!defaultModelInstance) {
+            defaultModelInstance = "data";
+            this._schemaData.model  = this._schemaData.model || {instance: {}};
+            this.model.instance[defaultModelInstance] = {};
+        }
+
+        if (this.pages.length === 0) {
+            let fields = [];
+            let schemaProps = this.jsonSchemas[defaultModelInstance].schema.properties;
+            for (var name in schemaProps) {
+                fields.push({
+                    name: name,
+                    bind: `instance.${defaultModelInstance}.${name}`
+                })
+            }
+            this.pages.push({ fields: fields });
+        }
+    
+    }
+
+    getFirstInstanceName() {
+        if (this.model && this.model.instance) {
+            let names = Object.getOwnPropertyNames(this.model.instance);
+            return names[0];
+        }
+    }
+
+    refreshStats() {
+        this._totalFieldCount = this.query().length;
     }
 
     addJSONSchema(instanceName, schema) {
@@ -103,23 +141,24 @@ class ExoFormSchema {
         return this.types.json;
     }
 
-    applyJsonSchemas(){
-        this.query().forEach(f=>{
+    applyJsonSchemas() {
+        this.query().forEach(f => {
             this.applyJsonSchema(f)
         });
+
     }
 
-    applyJsonSchema(field){
-        
-        if(field.bind){
+    applyJsonSchema(field) {
+
+        if (field.bind) {
             let instanceName = field.bind.split('.')[1];
-            if(this.jsonSchemas[instanceName]){
+            if (this.jsonSchemas[instanceName]) {
                 this.jsonSchemas[instanceName].apply(field);
             }
         }
     }
 
-    static getPathFromBind(bind){
+    static getPathFromBind(bind) {
         let parts = bind.split('.');
         parts.shift();
         parts.shift();
@@ -285,6 +324,7 @@ class ExoFormSchema {
 
     get fieldCount() {
         return this._totalFieldCount;
+
     }
 }
 

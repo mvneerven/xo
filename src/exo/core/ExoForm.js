@@ -77,12 +77,7 @@ class ExoForm {
      * @return {Promise} - A Promise returning the ExoForm Object with the loaded schema
      */
     load(schema, options) {
-
         options = options || { mode: "async" };
-
-        // if (options.mode.startsWith("sync")) {
-        //     return this.loadSchema(schema);
-        // }
 
         return new Promise((resolve, reject) => {
             const loader = schema => {
@@ -91,6 +86,7 @@ class ExoForm {
                 else {
                     this.loadSchema(schema).then(() => {
                         this.schema.applyJsonSchemas();
+                        this.events.trigger(ExoFormFactory.events.jsonSchemasApplied);
                         resolve(this);
                     }).catch(ex => {
                         reject(ex)
@@ -157,46 +153,67 @@ class ExoForm {
 
         return new Promise((resolve, reject) => {
             this._schema = this.context.createSchema();
-            this._schema.parse(schema);
+            this.schema.parse(schema);
+            this.events.trigger(ExoFormFactory.events.schemaParsed);
 
-            this._dataBinding = new ExoFormDataBinding(this, this._mappedInstance);
-            this.dataBinding.on("change", e => {
-                e.detail.state = "change";
-                this.events.trigger(ExoFormFactory.events.dataModelChange, e.detail)
-            }).on("ready", e => {
-                e.detail.state = "ready";
-                this.events.trigger(ExoFormFactory.events.dataModelChange, e.detail)
-            }).on("error", e => {
-                this.events.trigger(ExoFormFactory.events.error, e.detail);
-            });
+            this.resolveJsonSchemas().then(() => {
 
-            this.events.trigger(ExoFormFactory.events.schemaLoaded);
+                this.schema.createDefaultUiIfNeeded();
 
-            this._createComponents();
+                this.events.trigger(ExoFormFactory.events.schemaLoading);
 
-            if (this.schema.form) {
-                let formClasses = this.schema.form.class ? this.schema.form.class.split(' ') : ["standard"];
-                formClasses.forEach(c => {
-                    this.form.classList.add(c);
-                })
-            }
-            let promises = [];
+                this._dataBinding = new ExoFormDataBinding(this, this._mappedInstance);
+                this.dataBinding.on("change", e => {
+                    e.detail.state = "change";
+                    this.events.trigger(ExoFormFactory.events.dataModelChange, e.detail)
+                }).on("ready", e => {
+                    e.detail.state = "ready";
+                    this.events.trigger(ExoFormFactory.events.dataModelChange, e.detail)
+                }).on("error", e => {
+                    this.events.trigger(ExoFormFactory.events.error, e.detail);
+                });
 
-            const loadJsonSchema = async (url, instanceName) => {
-                return await fetch(url).then(x=>{
-                    if(x.status === 200)
-                        return x.json()
-                    
-                    reject(`HTTP Status ${x.status} - ${x.statusText}`);
+                this.events.trigger(ExoFormFactory.events.schemaLoaded);
+                this.schema.refreshStats();
 
-                }).then(data => {
-                    //this._schema.model.schemas[instanceName] = data;
-                    this._schema.addJSONSchema(instanceName, data);
-                })
-            }
-            if (this._schema.model && this._schema.model.schemas) {
-                for (var instanceName in this._schema.model.schemas) {
-                    let schemaRef = this._schema.model.schemas[instanceName]
+                this._createComponents();
+
+                if (this.schema.form) {
+                    let formClasses = this.schema.form.class ? this.schema.form.class.split(' ') : ["standard"];
+                    formClasses.forEach(c => {
+                        this.form.classList.add(c);
+                    })
+                }
+
+                resolve();
+            })
+            this.schema.refreshStats();
+        });
+    }
+
+    // resolve 
+    async resolveJsonSchemas() {
+
+        let promises = [];
+        const loadJsonSchema = async (url, instanceName) => {
+            let schemaUrl = new URL(url, this.context.baseUrl);
+            return await fetch(schemaUrl).then(x => {
+                if (x.status === 200) {
+                    return x.json()
+                }
+
+                throw `HTTP Status ${x.status} - ${schemaUrl.toString()}`;
+
+            }).then(data => {
+                //this._schema.model.schemas[instanceName] = data;
+                this._schema.addJSONSchema(instanceName, data);
+            })
+        }
+
+        return new Promise((resolve, reject) => {
+            if (this.schema.model && this.schema.model.schemas) {
+                for (var instanceName in this.schema.model.schemas) {
+                    let schemaRef = this.schema.model.schemas[instanceName]
                     if (Core.isUrl(schemaRef)) {
                         promises.push(loadJsonSchema(schemaRef, instanceName))
                     }
@@ -213,6 +230,7 @@ class ExoForm {
             }
         });
     }
+
 
     /**
     * Gets the data binding object
@@ -370,7 +388,6 @@ class ExoForm {
                                 pageFieldsRendered = this._addRendered(f, rendered, pageFieldsRendered, p, page);
 
                             }).finally(r => {
-
 
                                 totalFieldsRendered++;
 
@@ -593,9 +610,9 @@ class ExoForm {
             }
 
             try {
-                
+
                 //this.schema.applyJsonSchema(f);
-                
+
 
                 if (!f.type)
                     throw "ExoForm: incorrect field options. Must be object with at least 'type' property. " + JSON.stringify(f)
@@ -658,7 +675,7 @@ class ExoForm {
         });
     }
 
-   
+
 
     _generateUniqueElementId() {
         //let gid = Core.guid();

@@ -42,14 +42,10 @@ What does ExoForm bring?
 
 # Using ExoForm in JavaScript
 
-Basic JavaScript Flow:
+Basic JavaScript Flow (1.2+):
 
-```javascript 
-const context = await window.xo.form.factory.build();
-const x = context.createForm();
-await x.load("/forms/myform.json");
-let result = await x.renderForm();
-document.body.appendChild(result.container);     
+```js 
+
 ```
 
 # New in 1.01
@@ -223,6 +219,8 @@ get value() {
 - containerClass removed. Use 'class' on schema fields to set class names. All classes are added to the containing div (div.exf-ctl-cnt)
 
 # New in 1.1.0
+
+CDN link: https://xo-js.dev/v1.1/xo.js
 
 ## Model Binding
 
@@ -421,6 +419,8 @@ No more Babel transpiling of ES6 Code. Just plain ES6, minified and bundled by [
 
 # New in 1.2.0
 
+CDN link: https://xo-js.dev/v1.2/xo.js
+
 ## Form controls in Schema
 
 The Form Control for navigation and submit can now be optionally included in the Form schema.
@@ -575,17 +575,16 @@ document.body.appendChild(await xo.form.run("/data/forms/mi.js"));
 You still have access to most of the functionaliy:
 
 ```js
-const elm = await xo.form.run("/data/forms/mi.js", {
-  on: {
-      post: e => {
-          // e.detail.postData
-      },
-      page: e => {
-        // paging
-      }
-  }
-});
-myDiv.appendChild(elm);
+myDiv.appendChild(await xo.form.run("/data/forms/mi.js", {
+    on: {
+        post: e => {
+            // work with e.detail.postData
+        },
+        page: e => {
+            // e.detail.from -> e.detail.page
+        }
+    }
+}));
 ```
 
 ... providing an ExoFormContext object:
@@ -621,11 +620,13 @@ let div = await xo.form.run({
   - ExoRouteModule (obsolete)
   
 
-# New in 1.2.20
+# New in 1.3.0
+
+CDN link: https://xo-js.dev/v1.3/xo.js
 
 ## JSON Schema Support
 
-Support for JSON Schema references in the model.
+Support for JSON Schema (V7) references in the model.
 
 With this model:
 
@@ -643,7 +644,7 @@ const schema = {
                 alt: "Sunset in the mist",
                 size: 3874085,
                 imageUri: "https://blobs.mydomain.com/assets/d3a7691266f.jpg",
-                tags: ["sunset", "hills", "misty", "clouds]
+                tags: ["sunset", "hills", "misty", "clouds"]
             }
         }
     }, [...]
@@ -659,31 +660,31 @@ const schema = {
       "id": {
         "type": "string",
         "readOnly": true,
-        "label": "Id"
+        "title": "Id"
       },
       "name": {
         "type": "string",
-        "label": "Name"
+        "title": "Name"
       },
       "type": {
         "type": "string",
-        "label": "File Type"
+        "title": "File Type"
       },
       "alt": {
         "type": "string",
-        "label": "Alt Text"
+        "title": "Alt Text"
       },
       "size": {
         "type": "integer",
-        "label": "File Size"
+        "title": "File Size"
       },
       "imageUri": {
         "type": "string",
-        "label": "Image"
+        "title": "Image"
       },
       "tags": {
         "type": "array",
-        "label": "Tags"
+        "title": "Tags"
       }
 
     },

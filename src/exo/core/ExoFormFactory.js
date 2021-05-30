@@ -20,7 +20,10 @@ import ExoFormContext from './ExoFormContext';
 class ExoFormFactory {
 
     static events = {
+        schemaParsed: "schemaParsed", // parsed raw schema, no processing done
+        schemaLoading: "schemaLoading", // initial processing done, JSON schemas (if any) loaded.
         schemaLoaded: "schemaLoaded", // when loading the form schema is complete
+        jsonSchemasApplied: "jsonSchemasApplied",
         renderStart: "renderStart", // when form rendering starts
         getListItem: "getListItem", // 
         renderReady: "renderReady", // when form rendering is complete

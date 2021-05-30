@@ -1,6 +1,6 @@
 import xo from "../../dist/xo.min";
 
-describe("XO General Tests", () => {
+describe("ExoForm databinding Tests", () => {
     let context = {};
 
     beforeAll(() => {
@@ -10,16 +10,18 @@ describe("XO General Tests", () => {
             model: {
                 instance: {
                     data: {
-                        tags: ["beer", "pong"]
+                        txt: "Hello dear",
+                        tags: ["beer", "pong"],
+                        vl1: "two"
                     }
                 }
             },
             pages: [{
                 fields: [
-                    { type: "text", name: "text1" },
+                    { type: "text", name: "text1", bind: "instance.data.txt" },
                     { type: "tags", name: "tags1", value: ["dead", "can", "dance"] },
                     { type: "tags", name: "tags2", bind: "instance.data.tags" },
-                    { type: "radiobuttonlist", name: "radio1", items: ["one", "two", "three"] }
+                    { type: "radiobuttonlist", name: "radio1", bind: "instance.data.vl1" , items: ["one", "two", "three"] }
                 ]
             }]
         }).then(x => {
@@ -56,7 +58,6 @@ describe("XO General Tests", () => {
     });
 
     it("Form posts correct data", () => {
-        
         expect(context.posted.tags2.length).toBe(2);
     });
 

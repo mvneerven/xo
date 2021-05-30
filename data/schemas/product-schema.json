@@ -1,0 +1,64 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "type": "object",
+    "properties": {
+        "id": {
+            "type": "string",
+            "title": "Id",
+            "readOnly": true
+            
+        },
+        "recordVersion": {
+            "type": "integer"
+        },
+        "name": {
+            "type": "string",
+            "title": "Name"
+        },
+        "description": {
+            "type": "string",
+            "title": "Description"
+        },
+        "price": {
+            "type": "object",
+            "title": "Price",
+            "properties": {
+                "amount": {
+                    "title": "Price",
+                    "type": "number"
+                },
+                "currency": {
+                    "title": "Currency",
+                    "type": "integer"
+                }
+            },
+            "required": [
+                "amount",
+                "currency"
+            ]
+        },
+        "vatPercentage": {
+            "type": "number",
+            "title": "VAT",
+            "enum": [
+                "0",
+                "9",
+                "21"
+            ]
+        },
+        "imageUri": {
+            "type": "string",
+            "title": "Image"
+        },
+        "isForSale": {
+            "type": "boolean"
+        }
+    },
+    "required": [
+        "id",
+        "name",
+        "price",
+        "vatPercentage",
+        "imageUri"
+    ]
+}

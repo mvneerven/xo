@@ -1,34 +1,58 @@
 const Core = xo.core;
 const DOM = xo.dom;
 
-
-// function getForm() {
-//     return new Promise((resolve, reject) => {
-//         xo.form.run({
-//             pages: [{
-//                 fields: [
-//                     { type: "text", name: "test1" }
-//                 ]
-//             }]
-//         }, {
-//             on: {
-//                 renderReady: e=>{
-//                     resolve(e.detail.host)
-//                 }
-//             }
-//         })
-//     });
-// }
-
-// getForm().then(exo=>{
-//     alert(exo.schema);
-// })
-
-document.body.querySelector("main").appendChild(await xo.form.run("/data/forms/assets.js", {
+document.body.querySelector("main").appendChild(await xo.form.run("/data/forms/products.js", {
     on: {
-        post: e=>{
+        post: e => {
             alert(JSON.stringify(e.detail.postData, null, 2))
         },
+
+
+        schemaLoaded: e => {
+            let schema = e.detail.host.schema;
+
+            // schema.pages[0].fields = schema.pages[0].fields.map(f => {
+            //     if (f.name === "coordinates") {
+            //         f.type = "element";
+            //         f.tagName = "iframe";
+            //         f.src = "//www.embed-leaflet.com/map?center=47.606011,-122.332147&zoom=8&style=&marker=true&popup=true&title=Marker&enhancedScroll=true"
+            //     }
+
+            //     return f;
+            // })
+
+            schema.pages[0].fields = schema.pages[0].fields.map(f => {
+                switch (f.name) {
+                    case "id":
+                    case "recordVersion":
+                            f.type = "hidden";
+                        break;
+                    case "price":
+                        f.fields = {
+                            amount: {
+                                type: "number",
+                                prefix: "€"
+                            }
+                        }
+                        f.columns = "6em 4em";
+                        f.areas = `"amount currency"`;
+                        break
+
+                    case "vatPercentage":
+                        f.type = "dropdown";
+                        f.items = [{ name: "None", value: 0 }, 9, 21]
+                        break
+
+                    case "imageUri":
+                        f.type = "image";
+                        break
+    
+                }
+
+                return f;
+            })
+        },
+
         created: e => {
             alert(e.detail.host)
         },

@@ -5,31 +5,42 @@
       "id": {
         "type": "string",
         "readOnly": true,
-        "label": "Id"
+        "title": "Id"
       },
       "name": {
         "type": "string",
-        "label": "Name"
+        "title": "Name"
+      },
+      "description": {
+        "type": "string",
+        "title": "Description",
+        "maxLength": 512
       },
       "type": {
         "type": "string",
-        "label": "File Type"
+        "title": "File Type"
       },
       "alt": {
         "type": "string",
-        "label": "Alt Text"
+        "title": "Alt Text"
       },
       "size": {
         "type": "integer",
-        "label": "File Size"
+        "title": "File Size"
       },
       "imageUri": {
         "type": "string",
-        "label": "Image"
+        "format": "uri",
+        "title": "Image"
+      },
+      "coordinates": {
+        "type": "string",
+        "title": "Position Coordinates (lon,lat)",
+        "pattern": "^(-?\\d+(\\.\\d+)?),\\s*(-?\\d+(\\.\\d+)?)$"
       },
       "tags": {
         "type": "array",
-        "label": "Tags"
+        "title": "Tags"
       }
 
     },

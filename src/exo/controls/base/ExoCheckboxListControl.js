@@ -16,10 +16,19 @@ class ExoCheckboxListControl extends ExoInputListControl {
 
     //TODO
     set value(data) {
-        
-        this.container.querySelectorAll("[name]").forEach(i => {
+        if(!data){
+            this._value = null;
+        }
+        else{
+            this._value = data;
 
-        });
+            if(this.rendered){
+                this.container.querySelectorAll("[name]").forEach(i => {
+                    i.checked = this._value.contains(i.value)
+                        
+                });
+            }
+        }
     }
 
 }
