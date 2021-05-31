@@ -19,7 +19,7 @@
     }
 
     > div {
-        width: 400px;
+        max-width: 600px;
         position: relative;
         margin: 10% auto;
         padding: 10px;
@@ -35,6 +35,10 @@
         padding-bottom: 10px;
         border-bottom: 1px solid var(--color-shade);
         margin-bottom: 1em;
+
+        max-height: 500px;
+        overflow-y: auto;
+    
     }
 
     .dlg-bc {
@@ -54,5 +58,14 @@
     .exf-dlg-t {
         font-size: 1.2em;
         font-weight: 800;
+    }
+}
+
+
+@media only screen and (max-width: 752px) {
+    .exf-dlg {
+        > div {
+            max-width: 95%;
+        }
     }
 }

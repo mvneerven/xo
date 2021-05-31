@@ -16,9 +16,7 @@ class ExoImageControl extends ExoElementControl {
 
     set value(src){
         this._value = src;
-        
         this.htmlElement.setAttribute("src", this._value);
-        
     }
 
     get value(){

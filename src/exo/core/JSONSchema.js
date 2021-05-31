@@ -111,7 +111,7 @@ class JSONSchema {
     }
 
     applyNumericType(field, props) {
-        let obj = { type: "number" }
+        let obj = { type: "number", step: "0.01" }
 
         if (props.minimum !== undefined) {
             obj.min = props.minimum
@@ -123,6 +123,10 @@ class JSONSchema {
 
         if (props.exclusiveMinimum !== undefined) {
             obj.min = props.minimum;
+        }
+
+        if(props.multipleOf !== undefined) {
+            obj.step = props.multipleOf;
         }
 
         return obj;

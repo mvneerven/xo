@@ -242,27 +242,6 @@ class Core {
             function (g0, g1, g2) { return g1.toUpperCase() + g2.toLowerCase(); });
     }
 
-
-    static prettyPrintJSON(obj) {
-        var jsonLine = /^( *)("[\w]+": )?("[^"]*"|[\w.+-]*)?([,[{])?$/mg;
-        var replacer = function (match, pIndent, pKey, pVal, pEnd) {
-            var key = '<span class="json-key" style="color: brown">',
-                val = '<span class="json-value" style="color: navy">',
-                str = '<span class="json-string" style="color: olive">',
-                r = pIndent || '';
-            if (pKey)
-                r = r + key + pKey.replace(/[": ]/g, '') + '</span>: ';
-            if (pVal)
-                r = r + (pVal[0] == '"' ? str : val) + pVal + '</span>';
-            return r + (pEnd || '');
-        };
-
-        return JSON.stringify(obj, null, 3)
-            .replace(/&/g, '&amp;').replace(/\\"/g, '&quot;')
-            .replace(/</g, '&lt;').replace(/>/g, '&gt;')
-            .replace(jsonLine, replacer);
-    }
-
     static guid() {
         return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
             var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
@@ -288,6 +267,22 @@ class Core {
     }
 
 
+    static formatByteSize(size) {
+        // Setup some constants
+        const LN1024 = Math.log(1024), // This converts from log in base e to log in base 1024.
+            // For LN1024 we can also just use the constant 6.9314718055994530941723212145818 which is what this evaluates to
+            units = ['B', 'KB', 'MB', 'GB'], // A simple map to convert the exponent to a unit marker. exponent 0 is Byte, exponent 1 is Kilobytes, etc
+
+            // Calculate our exponent (How many units to move)
+            exp = Math.floor(Math.min(Math.log(size) / LN1024, 3)), // We'll clamp to a max of 3 orders of magnitude (GB)
+
+            // If we divide our number by base^exp then we've converted it to the correct unit space
+            divisor = Math.pow(1024, exp),
+
+            // Put it together and we arrive at our human readable file size
+            readable = Math.floor(size / divisor) + units[exp];
+        return readable;
+    }
 
     static isValidUrl(urlString) {
         let url;

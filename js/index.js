@@ -6,20 +6,12 @@ document.body.querySelector("main").appendChild(await xo.form.run("/data/forms/p
         post: e => {
             alert(JSON.stringify(e.detail.postData, null, 2))
         },
-
+        dataModelChange: e=>{
+            console.log("datamodel change", JSON.stringify(e.detail.model, null, 2))
+        },
 
         schemaLoaded: e => {
             let schema = e.detail.host.schema;
-
-            // schema.pages[0].fields = schema.pages[0].fields.map(f => {
-            //     if (f.name === "coordinates") {
-            //         f.type = "element";
-            //         f.tagName = "iframe";
-            //         f.src = "//www.embed-leaflet.com/map?center=47.606011,-122.332147&zoom=8&style=&marker=true&popup=true&title=Marker&enhancedScroll=true"
-            //     }
-
-            //     return f;
-            // })
 
             schema.pages[0].fields = schema.pages[0].fields.map(f => {
                 switch (f.name) {
@@ -46,7 +38,9 @@ document.body.querySelector("main").appendChild(await xo.form.run("/data/forms/p
                     case "imageUri":
                         f.type = "image";
                         break
-    
+                    case "tags":
+                        f.type = "tags";
+                        break
                 }
 
                 return f;

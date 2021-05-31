@@ -52,6 +52,10 @@
         },
         "isForSale": {
             "type": "boolean"
+        },
+
+        "tags": {
+            "type": "array"
         }
     },
     "required": [

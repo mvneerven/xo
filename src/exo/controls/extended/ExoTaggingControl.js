@@ -40,9 +40,8 @@ class ExoTaggingControl extends ExoBaseControls.controls.text.type {
     }
 
     async render() {
-        
+        const me = this;
         this.wrapper.classList.add(this.wrapperClass);
-        
 
         await super.render();
         this.htmlElement.parentNode.insertBefore(this.wrapper, this.htmlElement);
@@ -58,12 +57,9 @@ class ExoTaggingControl extends ExoBaseControls.controls.text.type {
             }
 
         })
-
-        
-
         
         this.wrapper.addEventListener('click', function (e) {
-            let inp = e.target.closest(".exf-input").querySelector("input");
+            let inp = me.container.querySelector("input");
             inp.focus();
         });
 
