@@ -242,8 +242,8 @@ class Router {
         // when mouse
         menu.element.addEventListener("touchstart", e => {
             this.touchStarted = true;
-            if (_.config.areas.menu) {
-                let menu = e.target.closest(_.config.areas.menu);
+            
+                let menu = e.target.closest("[data-pwa-area]");
                 if (menu) {
                     if (e.target.closest("li")) {
                         menu.classList.add("clicked");
@@ -252,7 +252,7 @@ class Router {
                         menu.classList.remove("clicked");
                     }
                 }
-            }
+            
         });
 
         return menu;

@@ -45,10 +45,6 @@
   border: 0;
 }
 
-.exf-dlg .dlg-x.dismiss {
-  display: none;
-}
-
 .exf-dlg.dlg-cv .dlg-x.dismiss {
   display: inline-block;
 }

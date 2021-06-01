@@ -34,6 +34,7 @@ class ExoFormDataBindingResolver {
     }
 
     _replaceVars(node) {
+        //console.log("Replace vars in ", node)
         let ar = [];
 
         if (node.nodeType == 3) {

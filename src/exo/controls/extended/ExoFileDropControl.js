@@ -4,9 +4,12 @@ import DOM from '../../../pwa/DOM';
 class ExoFileDropControl extends ExoBaseControls.controls.input.type {
 
     height = 120;
+    _value = [];
 
     constructor(context) {
         super(context);
+        this.field = this.context.field;
+        this.field.type = "file";
 
         this.acceptProperties(
             { name: "maxSize" },
@@ -15,13 +18,15 @@ class ExoFileDropControl extends ExoBaseControls.controls.input.type {
             { name: "maxSize", type: Number, description: "Maximum filesize of files to be uploaded (in bytes) - example: 4096000" },
             { name: "height", type: Number, description: "Height of drop area" }
         )
+
+        if(Array.isArray(this.field.data))
+            this._value = this.field.data;
     }
 
     async render() {
 
-        this.field = this.context.field;
-        this.field.type = "file";
-        this.field.data = this.field.data || [];
+        //this.field.data = this.field.data || [];
+        
 
         await super.render();
 
@@ -33,10 +38,7 @@ class ExoFileDropControl extends ExoBaseControls.controls.input.type {
 
         this.bindEvents(
             data => {
-                setTimeout(() => {
-                    this.container.classList.remove("loading");
-                }, 1000);
-
+                this.stopLoading();
 
                 if (!data.error) {
                     var thumb = DOM.parseHTML('<div data-id="' + data.fileName + '" class="thumb ' + data.type.replace('/', ' ') + '"></div>');
@@ -48,7 +50,7 @@ class ExoFileDropControl extends ExoBaseControls.controls.input.type {
                         let id = thumb.getAttribute("data-id");
                         var index = Array.from(this.previewDiv.children).indexOf(thumb);
                         thumb.remove();
-                        this.field.data = this.field.data.filter(item => item.fileName !== id);
+                        this._value = this._value.filter(item => item.fileName !== id);
                         this._change();
                     });
                     thumb.appendChild(close);
@@ -73,27 +75,50 @@ class ExoFileDropControl extends ExoBaseControls.controls.input.type {
         )
         return this.container;
     }
+    
+    stopLoading(){
+        setTimeout(() => {
+            this.container.classList.remove("loading");
+        }, 500);
+    }
 
     get value() {
-        return this.context.field.data.sort();
+        return this._value.sort();
     }
 
     set value(data) {
         // TODO 
+
+        //debugger;
+       // this._value = data;
     }
 
     _change() {
-        DOM.trigger(this.htmlElement, "change", {
-            data: this.context.field.data
-        })
+        
+        var evt = document.createEvent("HTMLEvents");
+        evt.initEvent("change", true, true);
+        evt.detail = { 
+            field: "filedrop", 
+            data: this.value
+        };
+        this.htmlElement.dispatchEvent(evt);
+
+        // DOM.trigger(this.htmlElement, "change", {
+        //     data: this.value
+        // })
+
+        this.stopLoading()
     }
 
     clear() {
         
-        this.context.field.data = [];
+        this._value = [];
         
         if(this.rendered)
             this.container.querySelector(".clearable").innerHTML = "";
+
+
+        
         
     }
 
@@ -116,7 +141,7 @@ class ExoFileDropControl extends ExoBaseControls.controls.input.type {
                     date: data.file.lastModifiedDate
                 }
                 if (me.field.max) {
-                    if (me.field.data.length >= me.field.max) {
+                    if (me._value.length >= me.field.max) {
                         returnValue.error = "Maximum number of attachements reached";
                     }
                 }
@@ -144,7 +169,7 @@ class ExoFileDropControl extends ExoBaseControls.controls.input.type {
                 }
 
                 if (!returnValue.error) {
-                    me.field.data.push(returnValue);
+                    me._value.push(returnValue);
                     me._change();
                 }
 

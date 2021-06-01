@@ -16,6 +16,7 @@ import ExoDialogControl from './ExoDialogControl';
 import ExoInfoControl from './ExoInfoControl';
 import ExoStarRatingControl from './ExoStarRatingControl';
 import ExoCreditCardControl from './ExoCreditCardControl';
+import ExoLeafletMapControl from './ExoLeafletMapControl';
 
 class ExoExtendedControls {
     static controls = {
@@ -41,7 +42,8 @@ class ExoExtendedControls {
         captcha: { caption: "Google ReCaptcha Control", type: ExoCaptchaControl, note: "Captcha field", demo: { sitekey: "6Lel4Z4UAAAAAOa8LO1Q9mqKRUiMYl_00o5mXJrR" } },
         starrating: { type: ExoStarRatingControl, note: "An accessible star rating control", demo: { value: 2.5 } },
         dialog: { type: ExoDialogControl, caption: "Dialog", note: "A simple dialog (modal or modeless)" },
-        info: { type: ExoInfoControl, note: "An info panel", demo: { title: "Info", icon: "ti-info", body: "Your informational text" } }
+        info: { type: ExoInfoControl, note: "An info panel", demo: { title: "Info", icon: "ti-info", body: "Your informational text" } },
+        map: {type: ExoLeafletMapControl, note: "Leaflet interactive map" }
 
     }
 }
