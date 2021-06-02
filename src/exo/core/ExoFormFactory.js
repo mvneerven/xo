@@ -201,7 +201,7 @@ class ExoFormFactory {
      */
     static determineSchemaType(value) {
         if (typeof (value) === "object") {
-            if(value.$schema) {
+            if (value.$schema) {
                 return "json-schema";
             }
             if (value.type && value.name) {
@@ -319,7 +319,7 @@ class ExoFormFactory {
         }
         let field = null;
 
-        
+
 
 
         // if (e.getAttribute("data-exf")) {
@@ -346,12 +346,12 @@ class ExoFormFactory {
                 field = e.data["field"];
             }
         }
-        
-        if(!field){
+
+        if (!field) {
             let cnt = e.closest(".exf-ctl-cnt");
-            if(cnt){
+            if (cnt) {
                 let el = cnt.querySelector("[data-exf]");
-                if(el) 
+                if (el)
                     field = el.data["field"];
             }
         }
@@ -370,6 +370,72 @@ class ExoFormFactory {
         }
 
         return "Unknown field";
+    }
+
+    /**
+     * Run a form directly and return generated container
+     * @param {*} value - JS/JSON schema or a URL to fetch it from.
+     * @param {*} options - Object containing options 
+     * - context: ExoFormContext
+     * - on: object with event listeners 
+     *   e.g. 
+     *   xo.form.run(schema, {
+     *     on: {
+     *       post: e => {
+     *         // handle post
+     *       }
+     *     }
+     *   })
+     * - for DOM event listening, use (on: {dom: {change: e => { ... }}})
+     *   xo.form.run(schema, {
+     *     on: {
+     *       post: e => {
+     *         // handle post
+     *       },
+     *       dom: {
+     *         change: e => {
+     *           // handle change event
+     *         }
+     *       }
+     *     }
+     *   })
+
+     * @returns div element (form container element div.exf-container)
+     */
+    static async run(value, options) {
+        options = options || {};
+        options.context = options.context || await ExoFormFactory.build()
+        let type = ExoFormFactory.determineSchemaType(value);
+        switch (type) {
+            case "form":
+                let x = options.context.createForm({
+                    ...options
+                });
+                if (options.on) {
+                    for (var o in options.on) {
+                        if (o === "dom") {
+                            for (var p in options.on.dom) {
+                                x.form.addEventListener(p, options.on.dom[p])
+                            }
+                        }
+                        else {
+                            x.on(o, options.on[o])
+                        }
+                    }
+                }
+                await x.load(value);
+                await x.renderForm();
+                return x.container;
+            case "field":
+                let frm = options.context.createForm({
+                    ...options
+                });
+                return await frm.renderSingleControl(value);
+            case "json-schema":
+                throw TypeError("Not implemented");
+            default:
+                throw TypeError("Not implemented");
+        }
     }
 
 }

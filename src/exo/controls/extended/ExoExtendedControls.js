@@ -17,6 +17,7 @@ import ExoInfoControl from './ExoInfoControl';
 import ExoStarRatingControl from './ExoStarRatingControl';
 import ExoCreditCardControl from './ExoCreditCardControl';
 import ExoLeafletMapControl from './ExoLeafletMapControl';
+import ExoListViewControl from './ExoListViewControl';
 
 class ExoExtendedControls {
     static controls = {
@@ -43,8 +44,8 @@ class ExoExtendedControls {
         starrating: { type: ExoStarRatingControl, note: "An accessible star rating control", demo: { value: 2.5 } },
         dialog: { type: ExoDialogControl, caption: "Dialog", note: "A simple dialog (modal or modeless)" },
         info: { type: ExoInfoControl, note: "An info panel", demo: { title: "Info", icon: "ti-info", body: "Your informational text" } },
-        map: {type: ExoLeafletMapControl, note: "Leaflet interactive map" }
-
+        map: {type: ExoLeafletMapControl, note: "Leaflet interactive map" }//,
+        //listview: {type: ExoListViewControl, note: "Listview control"}
     }
 }
 

@@ -733,3 +733,38 @@ pages: [
 ... which will result in this form:
 
 ![Portal](https://xo-js.dev/assets/img/schema-form.png "The resulting form")
+
+# New in 1.3.5 
+
+## Events 
+
+### Binding to dom events using 'on'
+
+Apart from handling ExoForm events using the 'on' property of the optuons provided in xo.form.run(), you can now also directly provide event handlers for DOM events in the rendered form:
+
+```js
+let container = await xo.form.run("/data/forms/account.json", {
+    context: this.xoContext,
+    on: {
+        post: e=>{
+          // handle post
+        },
+        page: e=>{
+          // react on form paging
+        },
+        dom: {
+          change: e => {
+            // react to DOM change on rendered form element
+          }
+        }
+    }
+})
+```
+
+## Controls
+
+- map -> Leaflet wrapper
+- listview -> rich list/tiles/details view
+
+
+

@@ -38,8 +38,8 @@ class ExoInputControl extends ExoElementControl {
     createEmailLookup() {
         const _ = this;
 
-        _.htmlElement.addEventListener("keyup", e => {
-            if (e.key !== "Enter") {
+        _.htmlElement.addEventListener("input", e => {
+            //if (e.key !== "Enter") {
                 let data = [];
 
                 ["@gmail.com", "@outlook.com", "@live.nl", "@yahoo.com", "@hotmail.com"].forEach(a => {
@@ -52,14 +52,14 @@ class ExoInputControl extends ExoElementControl {
                 else {
                     _.destroyDataList()
                 }
-            }
-            else {
-                let dl = _.container.querySelector("datalist");
-                if (dl) {
-                    dl.remove();
-                }
-                e.preventDefault();
-            }
+            //}
+            // else {
+            //     let dl = _.container.querySelector("datalist");
+            //     if (dl) {
+            //         dl.remove();
+            //     }
+            //     e.preventDefault();
+            // }
         })
     }
 
@@ -70,7 +70,7 @@ class ExoInputControl extends ExoElementControl {
         }
     }
 
-    testDataList() {
+     testDataList() {
         const _ = this;
 
         let f = _.context.field;
@@ -99,6 +99,29 @@ class ExoInputControl extends ExoElementControl {
                 })
             }
         }
+     }
+
+    async getItems() {
+        return new Promise(resolve => {
+            if (Core.isUrl(this.items)) {
+                fetch(this.items).then(x => {
+                    if (x.status === 200) {
+                        resolve(x.json());
+                        return;
+                    }
+                    throw Error(`HTTP error ${x.status} - ${this.items}`);
+                })
+            }
+            else if (Array.isArray(this.items)) {
+                resolve(this.items);
+            }
+            else if (typeof (this.items) === "function") {
+                resolve(this.items());
+            }
+            else {
+                return resolve(Promise.resolve(this.items));
+            }
+        });
     }
 
     getFetchLookup(f) {
@@ -125,7 +148,44 @@ class ExoInputControl extends ExoElementControl {
             }
         }
 
+        else if (o.data.type === "promise"){
+            return (q) => { 
+                
+                this.getItems(o.data.items).then(x => {
+                    // o.callback(o.field, data.value.map(e => {
+                    //     return e.Title
+                    // }));
+                    o.callback(o.field, x);
+                    
+                });
+            } 
+           
+        }
+
         return exo.options.get(o)
+    }
+
+    async getItems(items) {
+        return new Promise(resolve => {
+            if (Core.isUrl(items)) {
+                fetch(items).then(x => {
+                    if (x.status === 200) {
+                        resolve(x.json());
+                        return;
+                    }
+                    throw Error(`HTTP error ${x.status} - ${this.items}`);
+                })
+            }
+            else if (Array.isArray(items)) {
+                resolve(items);
+            }
+            else if (typeof (items) === "function") {
+                resolve(items());
+            }
+            else {
+                return resolve(Promise.resolve(items));
+            }
+        });
     }
 
     createDataList(f, data) {

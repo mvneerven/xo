@@ -3,7 +3,51 @@ const DOM = xo.dom;
 
 class Route extends xo.route {
     async render() {
-        let form = await xo.form.run("/data/forms/products1.js", {
+        const schema = {
+            type: "multiinput",
+            name: "search-assets",
+            fields: {
+                email: {
+                    type: "email"
+                },
+                search: {
+                    type: "search",
+                    caption: "Search",
+                    value: "Wahja",
+                    lookup: {
+                        type: "promise",
+                        items: async search => {
+                            search = search || ""
+
+                            return ["Wahja", "Test", "Pils", "Cool"].filter(i => {
+                                return search === "" || i.toLowerCase().indexOf(search.toLowerCase()) > -1
+                            })
+                        }
+                    }
+                },
+                image: {
+                    type: "image",
+                    caption: "Asset Image",
+                    value: "https://stasfassetsdev.z6.web.core.windows.net/fb70c487-edfe-4cd4-bd7e-cded4f309b4f/images/products/brugse-zot-blond-33cl.jpg",
+                    style: "max-height: 100px; display: block"
+                },
+                jump: {
+                    type: "button",
+                    caption: "→",
+                    click: e => {
+                        debugger
+                        e.preventDefault();
+                        e.stopPropagation();
+                        e.cancelBubble = true;
+                        pwa.route = "/assets"
+                    }
+                }
+            },
+            areas: `"email search image jump"`,
+            columns: "10em 10em 1fr 30px"
+        }
+
+        let form = await xo.form.run(schema, {
             on: {
                 post: e => {
                     alert(JSON.stringify(e.detail.postData, null, 2))
@@ -55,12 +99,18 @@ class Route extends xo.route {
                     const elm = DOM.parseHTML(`<div>Error: ${ex.toString()}</div>`);
                     document.querySelector("footer").appendChild(elm);
                     elm.scrollIntoView();
+                },
+                dom: {
+                    click: e => {
+                        debugger;
+                    }
                 }
+
             }
         });
 
         this.app.UI.areas.main.add(form)
- 
+
     }
 }
 

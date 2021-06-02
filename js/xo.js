@@ -16,40 +16,13 @@ const xo = {
         factory: ExoFormFactory,
         fields: {
             base: ExoBaseControls
-        },        
-        run: async (value, options) => {
-            options = options || {};
-            options.context = options.context || await ExoFormFactory.build()
-            let type = ExoFormFactory.determineSchemaType(value);
-            switch(type){
-                case "form":
-                    let x = options.context.createForm({
-                        ...options
-                    });
-                    if(options.on){
-                        for(var o in options.on){
-                            x.on(o, options.on[o])
-                        }
-                    }
-                    await x.load(value);
-                    await x.renderForm();
-                    return x.container;
-                case "field":
-                    let frm = options.context.createForm({
-                        ...options
-                    });
-                    return await frm.renderSingleControl(value);
-                case "json-schema":
-                    throw TypeError("Not implemented");
-                default:
-                    throw TypeError("Not implemented");
-            }
-        }
+        },
+        run: ExoFormFactory.run
     },
     identity: {
         msal: MsIdentity
     }
-    
+
 };
 
 window.xo = xo;

@@ -1,0 +1,184 @@
+[
+    {
+        "id": "86e4dc55-4559-441c-8864-1880fda0f4de",
+        "recordVersion": 1,
+        "name": "Jupiler",
+        "description": "Standaard pils (25cl)",
+        "price": {
+            "amount": 2.25,
+            "currency": 978
+        },
+        "vatPercentage": 0.0,
+        "imageUri": "https://stasfassetsdev.z6.web.core.windows.net/fb70c487-edfe-4cd4-bd7e-cded4f309b4f/images/products/jupiler.jpeg",
+        "isForSale": false
+    },
+    {
+        "id": "8c93b7b0-aec2-4f9d-99a8-af18f41ddda9",
+        "recordVersion": 1,
+        "name": "Hertog Jan",
+        "description": "Van de tap, 25cl",
+        "price": {
+            "amount": 2.5,
+            "currency": 978
+        },
+        "vatPercentage": 21.0,
+        "imageUri": "https://stasfassetsdev.z6.web.core.windows.net/fb70c487-edfe-4cd4-bd7e-cded4f309b4f/images/products/hertogjan.jpg",
+        "isForSale": false
+    },
+    {
+        "id": "db810312-885f-435a-903b-9ec5cbb71aa9",
+        "recordVersion": 1,
+        "name": "Witbier",
+        "description": "Lekker fris",
+        "price": {
+            "amount": 3.95,
+            "currency": 978
+        },
+        "vatPercentage": 0.0,
+        "imageUri": "https://stasfassetsdev.z6.web.core.windows.net/fb70c487-edfe-4cd4-bd7e-cded4f309b4f/images/products/vedett.jpg",
+        "isForSale": false
+    },
+    {
+        "id": "0727c1cb-9ca0-4844-84fc-f7792d6d40f3",
+        "recordVersion": 1,
+        "name": "Boon Kriek",
+        "description": "Een betere Lambiek",
+        "price": {
+            "amount": 4.5,
+            "currency": 978
+        },
+        "vatPercentage": 0.0,
+        "imageUri": "https://stasfassetsdev.z6.web.core.windows.net/fb70c487-edfe-4cd4-bd7e-cded4f309b4f/images/products/boon-kriek.jpg",
+        "isForSale": false
+    },
+    {
+        "id": "aa93bdd8-50e8-4ae6-8c1e-986c9cfa1c6d",
+        "recordVersion": 1,
+        "name": "Wahja",
+        "description": "Fruitig bier",
+        "price": {
+            "amount": 4.5,
+            "currency": 978
+        },
+        "vatPercentage": 9.0,
+        "imageUri": "https://stasfassetsdev.z6.web.core.windows.net/fb70c487-edfe-4cd4-bd7e-cded4f309b4f/images/products/wahja.jpg",
+        "isForSale": false
+    },
+    {
+        "id": "f9093c06-23b2-4628-a653-e73cf975f4f6",
+        "recordVersion": 1,
+        "name": "Oettinger",
+        "description": "Duits pils",
+        "price": {
+            "amount": 3.75,
+            "currency": 978
+        },
+        "vatPercentage": 9.0,
+        "imageUri": "https://stasfassetsdev.z6.web.core.windows.net/fb70c487-edfe-4cd4-bd7e-cded4f309b4f/images/products/oettinger.jpg",
+        "isForSale": false
+    },
+    {
+        "id": "9ba879e5-41bf-4327-a1ce-103c36075c40",
+        "recordVersion": 1,
+        "name": "Brugse Zot",
+        "description": "Gebrouwen uit 6 verschillende mouten, waardoor het bijzonder rijk van smaak is!",
+        "price": {
+            "amount": 4.5,
+            "currency": 978
+        },
+        "vatPercentage": 9.0,
+        "imageUri": "https://stasfassetsdev.z6.web.core.windows.net/fb70c487-edfe-4cd4-bd7e-cded4f309b4f/images/products/brugse-zot-blond-33cl.jpg",
+        "isForSale": false
+    },
+    {
+        "id": "86e4dc55-4559-441c-8864-1880fda0f4de",
+        "recordVersion": 1,
+        "name": "Jupiler",
+        "description": "Standaard pils (25cl)",
+        "price": {
+            "amount": 2.25,
+            "currency": 978
+        },
+        "vatPercentage": 0.0,
+        "imageUri": "https://stasfassetsdev.z6.web.core.windows.net/fb70c487-edfe-4cd4-bd7e-cded4f309b4f/images/products/jupiler.jpeg",
+        "isForSale": false
+    },
+    {
+        "id": "8c93b7b0-aec2-4f9d-99a8-af18f41ddda9",
+        "recordVersion": 1,
+        "name": "Hertog Jan",
+        "description": "Van de tap, 25cl",
+        "price": {
+            "amount": 2.5,
+            "currency": 978
+        },
+        "vatPercentage": 21.0,
+        "imageUri": "https://stasfassetsdev.z6.web.core.windows.net/fb70c487-edfe-4cd4-bd7e-cded4f309b4f/images/products/hertogjan.jpg",
+        "isForSale": false
+    },
+    {
+        "id": "db810312-885f-435a-903b-9ec5cbb71aa9",
+        "recordVersion": 1,
+        "name": "Witbier",
+        "description": "Lekker fris",
+        "price": {
+            "amount": 3.95,
+            "currency": 978
+        },
+        "vatPercentage": 0.0,
+        "imageUri": "https://stasfassetsdev.z6.web.core.windows.net/fb70c487-edfe-4cd4-bd7e-cded4f309b4f/images/products/vedett.jpg",
+        "isForSale": false
+    },
+    {
+        "id": "0727c1cb-9ca0-4844-84fc-f7792d6d40f3",
+        "recordVersion": 1,
+        "name": "Boon Kriek",
+        "description": "Een betere Lambiek",
+        "price": {
+            "amount": 4.5,
+            "currency": 978
+        },
+        "vatPercentage": 0.0,
+        "imageUri": "https://stasfassetsdev.z6.web.core.windows.net/fb70c487-edfe-4cd4-bd7e-cded4f309b4f/images/products/boon-kriek.jpg",
+        "isForSale": false
+    },
+    {
+        "id": "aa93bdd8-50e8-4ae6-8c1e-986c9cfa1c6d",
+        "recordVersion": 1,
+        "name": "Wahja",
+        "description": "Fruitig bier",
+        "price": {
+            "amount": 4.5,
+            "currency": 978
+        },
+        "vatPercentage": 9.0,
+        "imageUri": "https://stasfassetsdev.z6.web.core.windows.net/fb70c487-edfe-4cd4-bd7e-cded4f309b4f/images/products/wahja.jpg",
+        "isForSale": false
+    },
+    {
+        "id": "f9093c06-23b2-4628-a653-e73cf975f4f6",
+        "recordVersion": 1,
+        "name": "Oettinger",
+        "description": "Duits pils",
+        "price": {
+            "amount": 3.75,
+            "currency": 978
+        },
+        "vatPercentage": 9.0,
+        "imageUri": "https://stasfassetsdev.z6.web.core.windows.net/fb70c487-edfe-4cd4-bd7e-cded4f309b4f/images/products/oettinger.jpg",
+        "isForSale": false
+    },
+    {
+        "id": "9ba879e5-41bf-4327-a1ce-103c36075c40",
+        "recordVersion": 1,
+        "name": "Brugse Zot",
+        "description": "Gebrouwen uit 6 verschillende mouten, waardoor het bijzonder rijk van smaak is!",
+        "price": {
+            "amount": 4.5,
+            "currency": 978
+        },
+        "vatPercentage": 9.0,
+        "imageUri": "https://stasfassetsdev.z6.web.core.windows.net/fb70c487-edfe-4cd4-bd7e-cded4f309b4f/images/products/brugse-zot-blond-33cl.jpg",
+        "isForSale": false
+    }
+]
