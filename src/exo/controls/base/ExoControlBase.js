@@ -61,6 +61,9 @@ class ExoControlBase {
 </div>`;
     }
 
+    /**
+     * Sets the HTML element
+     */
     set htmlElement(el) {
         this._htmlElement = el;
         this.allowedAttributes = ExoFormFactory.listNativeProps(this.htmlElement);
@@ -68,14 +71,16 @@ class ExoControlBase {
             "area", "base", "col", "embed", "hr", "img", "input",
             "link", "meta", "param", "source", "track", "wbr"
         ].includes(el.tagName.toLowerCase());
-
-
     }
 
     get htmlElement() {
         return this._htmlElement;
     }
 
+    /**
+     * Specifies whether ExoForm should use a containing DIV element to render the control.
+     * By default for instance, the button and the page control don't use a container.
+     */
     set useContainer(value){
         this._useContainer = value
     }
@@ -428,7 +433,6 @@ class ExoControlBase {
      * Displays a help text to the user. Pass with empty @msg to hide.
      * @param {String} msg - The message to display
      * @param {Object} options - The options (type: "info|error|invalid")
-     * @returns 
      */
     showHelp(msg, options) {
 

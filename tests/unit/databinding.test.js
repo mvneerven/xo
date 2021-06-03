@@ -4,6 +4,8 @@ describe("ExoForm databinding Tests", () => {
     let context = {};
 
     beforeAll(() => {
+        
+
         console.debug = e => { };
 
         return form({
@@ -25,7 +27,10 @@ describe("ExoForm databinding Tests", () => {
                 ]
             }]
         }).then(x => {
+            
             context = x
+        }).catch(ex =>{
+            
         })
     });
 
@@ -66,9 +71,15 @@ describe("ExoForm databinding Tests", () => {
 
 function form(schema) {
     return new Promise((resolve, reject) => {
+
+        console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
+
         xo.form.run(schema, {
             on: {
                 renderReady: e => {
+                    
+                    
+
                     let context = {
                         exo: e.detail.host,
                         posted: e.detail.host.getFormValues()

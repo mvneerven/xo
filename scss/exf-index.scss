@@ -1,0 +1,116 @@
+main{
+    display: grid;
+
+    grid-template-columns: 200px 1fr;
+}
+
+:root {
+    --color: #333;
+    --color-text: #333;
+    --color-shade: #ccc;
+    --color-button: hsl(340, 87%, 65%);
+    --color-button-disabled: hsl(340, 0%, 65%);
+    --field-box-shadow-subtle: #dedede;
+    --color-label-active: rgb(173, 58, 4);
+    --color-label: #333;
+    --color-input-shade: rgba(0, 0, 0, 0.2);
+    --color-input-shade-focus: rgb(173, 58, 4);
+}
+
+html,
+body {
+    height: 100vh;
+    overflow: hidden;
+}
+
+body {
+    height: 100%;
+    color: #333;
+    color: var(--color);
+    font-family: Roboto;
+    background-color: #efefef;
+    display: grid;
+    grid-template-rows: 1fr 200px;
+    margin: 0;
+    padding: 0;
+}
+
+#xo-test .exf-container {
+    margin-top: 2rem;
+}
+
+#xo-test .exf-wrapper fieldset {
+    overflow-y: auto;
+}
+
+form {
+    width: 70%;
+    margin: auto;
+    box-shadow: 1px 1px 50px 1px rgba(0, 0, 0, 0.15);
+    border-radius: 1em;
+    padding: 1em;
+}
+
+legend {
+    background-color: #efafaf;
+    padding: 0.3em 0.7em;
+    border-radius: 0.3em;
+}
+
+fieldset {
+    border: 0;
+    margin-top: 1em;
+}
+
+footer {
+    padding: 1rem;
+    overflow: auto;
+    background: #333;
+    color: #ff2233;
+}
+
+[data-pwa-area="main"]{
+    overflow-y: auto;
+    height: 100vh;
+}
+
+
+
+nav.main-menu {
+    padding: 0;
+    font-family: Lato;
+    ul {
+        margin: 0;
+        list-style: none;
+
+        li {
+            margin: 0 0 2px 0;
+            padding: 0;
+            border: 1px solid #ccc;
+            background-color: #eee;
+            transition: all 0.2s;
+
+            a {
+                display: block;
+                padding: 1em;
+                margin: 2px;
+                text-decoration: none;
+
+                &:link,
+                &:visited,
+                &:active {
+                    color: #666;
+                }
+            }
+
+            &:hover {
+                background-color: #fefefe;
+                transition: all 0.2s;
+            }
+
+            &.selected{
+                background-color: #fdd;
+            }
+        }
+    }
+}

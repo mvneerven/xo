@@ -5,6 +5,8 @@ class RouteModule {
 
     menuIcon = "ti-test";
 
+    autoClear = [];
+
     constructor(app, route, path) {
         this.route = route
         this.app = app;
@@ -16,7 +18,7 @@ class RouteModule {
             throw "app.config not defined";
     }
 
-    init(){ } // called just after instantiation. To be subclassed
+    init() { } // called just after instantiation. To be subclassed
 
     _unload() {
         document.head.querySelectorAll("[data-pwa]").forEach(e => {
@@ -38,11 +40,11 @@ class RouteModule {
 
         this.asyncInit().then(() => {
             this.init();
-            
+
             this._beforeRender();
-            if(this.app.UI.areas.title)
+            if (this.app.UI.areas.title)
                 this.app.UI.areas.title.set(this.title);
-                
+
             this.render(...arguments);
         })
     }

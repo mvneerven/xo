@@ -405,32 +405,40 @@ class ExoFormFactory {
     static async run(value, options) {
         options = options || {};
         options.context = options.context || await ExoFormFactory.build()
-        let type = ExoFormFactory.determineSchemaType(value);
-        switch (type) {
-            case "form":
-                let x = options.context.createForm({
-                    ...options
-                });
-                if (options.on) {
-                    for (var o in options.on) {
-                        if (o === "dom") {
-                            for (var p in options.on.dom) {
-                                x.form.addEventListener(p, options.on.dom[p])
-                            }
-                        }
-                        else {
-                            x.on(o, options.on[o])
+        let type = ExoFormFactory.determineSchemaType(value), x, result;
+
+        const applyOptions = (x, dom) => {
+            if (options.on) {
+                for (var o in options.on) {
+                    if (o === "dom" && dom) {
+                        for (var p in options.on.dom) {
+                            dom.addEventListener(p, options.on.dom[p])
                         }
                     }
+                    else if (x) {
+                        x.on(o, options.on[o])
+                    }
                 }
+            }
+        }
+
+        switch (type) {
+            case "form":
+                x = options.context.createForm({
+                    ...options
+                });
+                applyOptions(x, x.form)
                 await x.load(value);
                 await x.renderForm();
                 return x.container;
             case "field":
-                let frm = options.context.createForm({
+                x = options.context.createForm({
                     ...options
                 });
-                return await frm.renderSingleControl(value);
+                applyOptions(x, null);
+                result = await x.renderSingleControl(value);
+                applyOptions(null, result);
+                return result;
             case "json-schema":
                 throw TypeError("Not implemented");
             default:

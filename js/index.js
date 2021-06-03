@@ -2,8 +2,11 @@ const Core = xo.core;
 const DOM = xo.dom;
 
 class Route extends xo.route {
+
+    title = "Home";
+
     async render() {
-        
+
         let form = await xo.form.run("/data/forms/products1.js", {
             on: {
                 post: e => {
@@ -69,14 +72,26 @@ class Route extends xo.route {
         this.app.UI.areas.main.add(form)
 
     }
+    
+}
+class TestRoute extends xo.route {
+
+    title = "Test";
+
+    async render() {
+        this.app.UI.areas.main.add("Hello!")
+    }
 }
 
 class PWA extends xo.pwa {
-
+    routerReady() {
+        this.router.generateMenu(this.UI.areas.menu);
+    }
 }
 
 new PWA({
     routes: {
-        "/": Route
+        "/": Route,
+        "/test": TestRoute
     }
 })

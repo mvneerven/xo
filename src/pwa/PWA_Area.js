@@ -1,16 +1,22 @@
+import Core from './Core';
 import DOM from './DOM';
 
 class PWA_Area {
     constructor(name, element) {
         this.name = name;
-        const _ = this;
+        this.element = element;
+        this.checkPinnable();
+        this.events = new Core.Events(this);
 
-        _.element = element;
+        this.on("dirty", e=>{
+            this.dirty = true;
+        })
 
-        _.checkPinnable()
+        this.autoReset = element.getAttribute("data-reset") === "route";
     }
 
     add(e) {
+        this.events.trigger("dirty");
         if (!e)
             return;
 
@@ -32,32 +38,34 @@ class PWA_Area {
     }
 
     set(s) {
+        this.events.trigger("dirty");
         this.element.innerHTML = s;
     }
 
     clear() {
+        this.events.trigger("dirty");
         this.set("");
     }
 
     checkPinnable() {
-        const _ = this;
-        if (_.element.classList.contains("pwa-pinnable")) {
+
+        if (this.element.classList.contains("pwa-pinnable")) {
             // check hover over pin icon (cannot be done using CSS, since it's a pseudo-element - :before )
-            _.element.addEventListener("mouseover", e => {
-                let overPin = (e.offsetX > _.element.offsetWidth - 70) && (e.offsetY < 70);
+            this.element.addEventListener("mouseover", e => {
+                let overPin = (e.offsetX > this.element.offsetWidth - 70) && (e.offsetY < 70);
                 if (overPin) {
-                    _.pinActive = true;
-                    _.element.classList.add("pin-active");
+                    this.pinActive = true;
+                    this.element.classList.add("pin-active");
                 }
-                else if (_.pinActive) {
-                    _.pinActive = false;
-                    _.element.classList.remove("pin-active");
+                else if (this.pinActive) {
+                    this.pinActive = false;
+                    this.element.classList.remove("pin-active");
                 }
             });
 
-            _.element.addEventListener("click", e => {
-                if (_.pinActive) {
-                    _.pinned = !_.pinned
+            this.element.addEventListener("click", e => {
+                if (this.pinActive) {
+                    this.pinned = !this.pinned
                 }
             });
         }

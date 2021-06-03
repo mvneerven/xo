@@ -3,25 +3,23 @@ import Core from './Core';
 import RouteModule from './RouteModule';
 
 class Router {
-    static _ev_pfx = "pwa-ev-";
-
     static events = {
-        route: Router._ev_pfx + "route"
+        route: "route"
     }
 
     modules = [];
 
     constructor(app, routes, settings) {
-        const _ = this;
-        this.events = new Core.Events(this); // add simple event system
-        _.app = app;
-        _.routes = routes;
 
-        _.setupHashListener(settings.onRoute)
+        this.events = new Core.Events(this); // add simple event system
+        this.app = app;
+        this.routes = routes;
+
+        this.setupHashListener(settings.onRoute)
 
         console.debug("Loading Route modules");
-        _.loadModules().then(() => {
-            console.debug("Loaded Route modules", _.modules);
+        this.loadModules().then(() => {
+            console.debug("Loaded Route modules", this.modules);
             DOM.trigger(window, 'hashchange');
         }).then(() => {
             console.debug("Router Ready");
@@ -29,80 +27,71 @@ class Router {
         })
     }
 
-    // events.trigger(eventName, detail, ev) {
-    //     console.debug("Triggering event", eventName, "detail: ", detail)
-    //     if (!ev) {
-    //         ev = new Event(eventName, { "bubbles": false, "cancelable": false });
-    //     }
-
-    //     ev.detail = {
-    //         router: this,
-    //         ...(detail || {})
-    //     };
-
-    //     return this.dispatchEvent(ev);
-    // }
-
-    // on(eventName, func) {
-    //     console.debug("Listening to event", eventName, func);
-    //     this.addEventListener(eventName, func);
-    //     return this;
-    // }
-
     static changeHash(anchor) {
         history.replaceState(null, null, document.location.pathname + '#' + anchor);
     };
 
     setupHashListener(callback) {
         this.routeCallback = (m, p) => {
+
             this.events.trigger(Router.events.route, {
+                id: m.id,
                 module: m,
                 path: p
             });
             callback(m, p)
         };
-        const _ = this;
         window.addEventListener('hashchange', () => {
-            _.hashChanged();
+            this.hashChanged();
         });
     }
 
     hashChanged() {
-        const _ = this;
         const W = window;
         var h = W.location.hash.substr(1);
         if (h.startsWith("/")) {
             let id = "/" + h.substr(1).split('/')[0];
             let path = h.substr(id.length);
-            let route = _.routes[id];
+            let route = this.routes[id];
             console.debug(W.location.hash, "RouteModule: ", route);
 
             if (route) {
-                let m = _.findByRoute(route);
+                let m = this.findByRoute(route);
                 if (m && m.module) {
-                    _._route = id;
+                    this._route = id;
+
                     let html = document.querySelector("html");
-                    html.classList.forEach(c => {
-                        if (c.startsWith("route-")) {
-                            html.classList.remove(c);
-                        }
-                    })
-                    document.querySelector("html").classList.add("route-" + m.module.constructor.name);
-                    if (_.current) {
-                        _.current.module._unload();
+                    html.setAttribute("data-pwa-route", id);
+
+                    if (this.current) {
+                        this.app.UI.clearAffectedAreas(); // clear areas with data-reset="route" attrib
+                        this.current.module._unload();
                     }
-                    _.current = m;
-                    _.routeCallback(m.module, path);
+
+                    this.current = m;
+                    
+                    this.routeCallback(m.module, path);
+
+                    this.updateGeneratedMenu(m.module.path);
                 }
             }
             else if (!h.startsWith("dlg-")) {
-                _.home();
+                this.home();
             }
         }
         else {
-            _.home();
+            this.home();
         }
 
+    }
+
+    updateGeneratedMenu(selectedPath) {
+        if (this.menu) {
+            this.menu.element.querySelectorAll("li").forEach(li => {
+                let selected = selectedPath === li.getAttribute("data-route");
+                li.classList[selected ? "add" : "remove"]("selected")
+            })
+        }
     }
 
     set route(routePath) {
@@ -133,26 +122,25 @@ class Router {
     }
 
     loadModules() {
-        const _ = this;
         let promises = [];
         let homeRouteFound = false;
-        for (var r in _.routes) {
+        for (var r in this.routes) {
             if (r === "/")
                 homeRouteFound = true;
 
-            let route = _.routes[r];
+            let route = this.routes[r];
             if (!r.startsWith('/'))
                 throw "Malformed route: " + r;
 
             promises.push(new Promise((resolve, reject) => {
 
                 if (route.prototype && route.prototype instanceof RouteModule) {
-                    let o = new route(_.app, route, r)
+                    let o = new route(this.app, route, r)
                     resolve(o);
 
                 }
                 else if (typeof (route) === "string") {
-                    _.loadES6Module(route, _.app, route, r).then(o => {
+                    this.loadES6Module(route, this.app, route, r).then(o => {
                         resolve(o);
                     })
                 }
@@ -164,7 +152,7 @@ class Router {
 
         return Promise.all(promises).then(e => {
             e.forEach(o => {
-                _.modules.push({
+                this.modules.push({
                     ...o,
                     route: o.route,
                     url: "#" + o.path,
@@ -176,8 +164,6 @@ class Router {
     }
 
     loadES6Module(src) {
-        const _ = this;
-
         src = new URL(src, this.app.config.baseUrl);
 
         let args = Array.prototype.slice.call(arguments, 1);
@@ -202,18 +188,18 @@ class Router {
     }
 
     generateMenu(menu) {
-        const _ = this;
 
         const menuTpl = /*html*/`<nav class="main-menu"><ul>{{inner}}</ul></nav>`;
-        const menuItemTpl = /*html*/`<li class="{{class}}" data-module="{{name}}" title="{{title}}"><a href="{{url}}"><span class="{{menuIcon}}"></span> <span class="name">{{menuTitle}}</span></a></li>`;
+        const menuItemTpl = /*html*/`<li class="{{class}}" data-route="{{path}}" title="{{title}}"><a href="{{url}}"><span class="{{menuIcon}}"></span> <span class="name">{{menuTitle}}</span></a></li>`;
         let ar = [];
 
-        _.modules.forEach(m => {
+        this.modules.forEach(m => {
 
             if (!m.hidden) {
                 let o = { ...m, name: m.module.constructor.name };
-
                 o.menuTitle = o.menuTitle || m.title;
+                o.class = m.path === this.route ? "selected": "";
+                o.path = m.path;
                 let s = DOM.format(menuItemTpl, o);
                 ar.push(s);
             }
@@ -225,14 +211,14 @@ class Router {
         menu.add(DOM.parseHTML(ul))
 
         menu.element.addEventListener("click", e => {
-            const _ = this;
+
             if (e.target.closest("li")) {
-                _.app.UI.areas.menu.element.classList.add("clicked");
+                this.app.UI.areas.menu.element.classList.add("clicked");
 
                 if (!this.touchStarted) {
                     setTimeout(() => {
-                        _.app.UI.areas.menu.element.classList.remove("clicked");
-                        _.touchStarted = false;
+                        this.app.UI.areas.menu.element.classList.remove("clicked");
+                        this.touchStarted = false;
                     }, 1500);
                 }
             }
@@ -242,18 +228,20 @@ class Router {
         // when mouse
         menu.element.addEventListener("touchstart", e => {
             this.touchStarted = true;
-            
-                let menu = e.target.closest("[data-pwa-area]");
-                if (menu) {
-                    if (e.target.closest("li")) {
-                        menu.classList.add("clicked");
-                    }
-                    else {
-                        menu.classList.remove("clicked");
-                    }
+
+            let menu = e.target.closest("[data-pwa-area]");
+            if (menu) {
+                if (e.target.closest("li")) {
+                    menu.classList.add("clicked");
                 }
-            
+                else {
+                    menu.classList.remove("clicked");
+                }
+            }
+
         });
+
+        this.menu = menu;
 
         return menu;
     }

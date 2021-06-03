@@ -80,6 +80,16 @@ class PWA_UI {
         });
     }
 
+    // clear areas with data-reset="route" attrib
+    clearAffectedAreas() {
+        for (var a in this.areas) {
+            let area = this.areas[a];
+            if (area.autoReset) {
+                area.clear();
+            }
+        }
+    }
+
     get theme() {
         return this._theme || "light"
     }
@@ -120,6 +130,9 @@ class PWA_UI {
         return f._control;
 
     }
+
+
+
 
 }
 
