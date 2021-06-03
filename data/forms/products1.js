@@ -28,7 +28,8 @@ const schema = {
         {
           fields: [
               {
-                bind: "instance.data.name"
+                bind: "instance.data.name",
+                tooltip: "Name..."
               },
               {
                 bind: "instance.data.description"

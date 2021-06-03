@@ -764,7 +764,11 @@ let container = await xo.form.run("/data/forms/account.json", {
 ## Controls
 
 - map -> Leaflet wrapper
-- listview -> rich list/tiles/details view
+
+# New in 1.3.6
+
+- Generic tooltip property added on all controls
+
 
 
 

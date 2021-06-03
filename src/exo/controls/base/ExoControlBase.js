@@ -28,6 +28,7 @@ class ExoControlBase {
 
         this.acceptProperties(
             { name: "visible", type: Boolean, description: "Determines control visibility" },
+            { name: "tooltip", type: String, description: "Tooltip to show over the element" },
             { name: "disabled", type: Boolean, description: "Determines whether the control can be interacted with by the user" },
             { name: "caption", type: String, description: "Caption/label to display" },
             { name: "useContainer", type: Boolean, description: "Specifies whether the control should render within the standard control container. Default depends on control."}
@@ -294,6 +295,11 @@ class ExoControlBase {
         }
 
         this._addContainerClasses();
+
+        if(this.tooltip){
+            this.container.setAttribute("title", this.tooltip);
+        }
+
         this._rendered = true;
         return this.container
     }
