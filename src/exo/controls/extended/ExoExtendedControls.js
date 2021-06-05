@@ -8,7 +8,7 @@ import ExoCaptchaControl from './ExoCaptchaControl';
 import DropDownButton from './DropDownButton';
 import ExoEmbedControl from './ExoEmbedControl';
 import ExoVideoControl from './ExoVideoControl';
-import MultiInputControl from './MultiInputControl';
+import ExoMultiInputControl from './ExoMultiInputControl';
 import ExoNameControl from './ExoNameControl';
 import ExoNLAddressControl from './ExoNLAddressControl';
 import ExoDateRangeControl from './ExoDateRangeControl';
@@ -18,6 +18,7 @@ import ExoStarRatingControl from './ExoStarRatingControl';
 import ExoCreditCardControl from './ExoCreditCardControl';
 import ExoLeafletMapControl from './ExoLeafletMapControl';
 import ExoListViewControl from './ExoListViewControl';
+import ExoAutoComplete from './ExoAutoComplete';
 
 class ExoExtendedControls {
     static controls = {
@@ -32,7 +33,7 @@ class ExoExtendedControls {
         switch: { type: ExoSwitchControl },
         richtext: { type: ExoCKRichEditor, note: "A CKEditor wrapper for ExoForm" },
         tags: { caption: "Tags control", type: ExoTaggingControl, note: "A control for adding multiple tags", demo: { tags: ["JavaScript", "CSS", "HTML"] } },
-        multiinput: { type: MultiInputControl },
+        multiinput: { type: ExoMultiInputControl },
         creditcard: { caption: "Credit Card", type: ExoCreditCardControl, note: "A credit card control" },
         name: { caption: "Name (first, last) group", type: ExoNameControl, note: "Person name control" },
         nladdress: { caption: "Dutch address", type: ExoNLAddressControl, note: "Nederlands adres" },
@@ -44,6 +45,7 @@ class ExoExtendedControls {
         starrating: { type: ExoStarRatingControl, note: "An accessible star rating control", demo: { value: 2.5 } },
         dialog: { type: ExoDialogControl, caption: "Dialog", note: "A simple dialog (modal or modeless)" },
         info: { type: ExoInfoControl, note: "An info panel", demo: { title: "Info", icon: "ti-info", body: "Your informational text" } },
+        autocomplete: {type: ExoAutoComplete, note: "Simple Autocomplete" },
         map: {type: ExoLeafletMapControl, note: "Leaflet interactive map" }//,
         //listview: {type: ExoListViewControl, note: "Listview control"}
     }

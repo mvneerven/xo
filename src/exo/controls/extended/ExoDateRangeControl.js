@@ -1,6 +1,6 @@
-import MultiInputControl from './MultiInputControl';
+import ExoMultiInputControl from './ExoMultiInputControl';
 
-class ExoDateRangeControl extends MultiInputControl {
+class ExoDateRangeControl extends ExoMultiInputControl {
     grid = "exf-cols-10em-10em";
 
     fields = {

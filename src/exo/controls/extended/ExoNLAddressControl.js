@@ -1,8 +1,8 @@
 import DOM from '../../../pwa/DOM';
-import MultiInputControl from './MultiInputControl';
+import ExoMultiInputControl from './ExoMultiInputControl';
 
 
-class ExoNLAddressControl extends MultiInputControl {
+class ExoNLAddressControl extends ExoMultiInputControl {
 
     columns = "4em 4em 10em 1fr"
 

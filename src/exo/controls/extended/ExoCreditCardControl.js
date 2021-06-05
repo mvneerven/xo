@@ -1,6 +1,6 @@
-import MultiInputControl from './MultiInputControl';
+import ExoMultiInputControl from './ExoMultiInputControl';
 
-class ExoCreditCardControl extends MultiInputControl {
+class ExoCreditCardControl extends ExoMultiInputControl {
 
     columns = "4em 4em 4em 1fr";
 

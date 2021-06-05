@@ -1,0 +1,48 @@
+.exf-ctl-cnt[data-field-type="autocomplete"]{
+    position: relative;
+    width: auto;
+    margin: auto;
+    display: inline-block;
+
+    .exf-ac-rs {
+        font-size: 0.9rem;
+        background-color: rgb(240,240,240);
+        position: fixed;
+       
+        box-shadow: 0 3px 10px -2px rgba(0, 0, 0, 0.1);
+        border: 1px solid rgba(0, 0, 0, 0.1);
+        padding: .2rem;
+        max-height: 200px;
+        overflow-y: auto;
+        z-index: 10;
+
+        .exf-ac-itm {
+            cursor: pointer;
+            padding: 0.5rem;
+
+            &:hover {
+                background-color: rgba(0,0,0, 0.05);
+            }
+
+            span.text{
+                display: inline-block;
+                min-width: 100px;
+            }
+
+            span.category{
+                float: right;
+                color: rgba(0,0,0,0.5);
+                font-size: smaller;
+            }
+
+            &.selected{
+                background-color: rgba(255,0,0, 0.15);
+            }
+
+            &.active{
+                background-color: rgba(255,0,0, 0.25);
+                transition: all 0.1s;
+            }
+        }
+    }
+}

@@ -31,7 +31,7 @@ class ExoControlBase {
             { name: "tooltip", type: String, description: "Tooltip to show over the element" },
             { name: "disabled", type: Boolean, description: "Determines whether the control can be interacted with by the user" },
             { name: "caption", type: String, description: "Caption/label to display" },
-            { name: "useContainer", type: Boolean, description: "Specifies whether the control should render within the standard control container. Default depends on control."}
+            { name: "useContainer", type: Boolean, description: "Specifies whether the control should render within the standard control container. Default depends on control." }
         );
     }
 
@@ -81,11 +81,11 @@ class ExoControlBase {
      * Specifies whether ExoForm should use a containing DIV element to render the control.
      * By default for instance, the button and the page control don't use a container.
      */
-    set useContainer(value){
+    set useContainer(value) {
         this._useContainer = value
     }
 
-    get useContainer(){
+    get useContainer() {
         return this._useContainer;
     }
 
@@ -100,18 +100,18 @@ class ExoControlBase {
     /**
      * The control's caption/label
      */
-    get caption(){
+    get caption() {
         return this._caption;
     }
 
     /**
      * The control's caption/label
      */
-     set caption(value){
+    set caption(value) {
         this._caption = value;
-        if(this.rendered){
+        if (this.rendered) {
             let label = this.container.querySelector(".exf-label");
-            if(label){
+            if (label) {
                 label.innerText = this._caption;
             }
         }
@@ -124,9 +124,16 @@ class ExoControlBase {
 
     set value(data) {
         this.htmlElement.value = data;
-        if(this.rendered ){
-            this.container.classList[data? "add" : "remove"]("exf-filled");
+        if (this.rendered) {
+            this.container.classList[data ? "add" : "remove"]("exf-filled");
         }
+    }
+
+    focus() {
+        try {
+            this.htmlElement.focus();
+        }
+        catch { }
     }
 
     triggerChange(detail) {
@@ -301,7 +308,7 @@ class ExoControlBase {
 
         this._addContainerClasses();
 
-        if(this.tooltip){
+        if (this.tooltip) {
             this.container.setAttribute("title", this.tooltip);
         }
 
@@ -355,7 +362,7 @@ class ExoControlBase {
             let name = prop.toLowerCase();
             let value = f[name];
 
-            if (ExoForm.meta.properties.reserved.includes(name)){
+            if (ExoForm.meta.properties.reserved.includes(name)) {
                 //f[name] = this._processProp(name, value);
                 continue;
             }

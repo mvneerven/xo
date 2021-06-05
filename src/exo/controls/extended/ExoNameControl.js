@@ -1,7 +1,7 @@
 
-import MultiInputControl from './MultiInputControl';
+import ExoMultiInputControl from './ExoMultiInputControl';
 
-class ExoNameControl extends MultiInputControl {
+class ExoNameControl extends ExoMultiInputControl {
 
     columns = "10em 1fr";
 

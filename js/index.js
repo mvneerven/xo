@@ -1,9 +1,11 @@
 const Core = xo.core;
 const DOM = xo.dom;
 
-class Route extends xo.route {
+class HomeRoute extends xo.route {
 
     title = "Home";
+
+    menuIcon = "ti-home";
 
     async render() {
 
@@ -13,7 +15,7 @@ class Route extends xo.route {
                     alert(JSON.stringify(e.detail.postData, null, 2))
                 },
                 dataModelChange: e => {
-                    console.log("datamodel change", JSON.stringify(e.detail.model, null, 2))
+                    // console.log("datamodel change", JSON.stringify(e.detail.model, null, 2))
                 },
                 schemaLoaded: e => {
                     let schema = e.detail.host.schema;
@@ -72,26 +74,201 @@ class Route extends xo.route {
         this.app.UI.areas.main.add(form)
 
     }
-    
+
 }
 class TestRoute extends xo.route {
 
     title = "Test";
 
+    menuIcon = "ti-gift";
+
     async render() {
-        this.app.UI.areas.main.add("Hello!")
+        this.area.add("This is a test!")
     }
+
+    get area() {
+        return this.app.UI.areas.main;
+    }
+
+
+
+}
+class SettingsRoute extends xo.route {
+
+    title = "Settings";
+
+    menuIcon = "ti-settings";
+
+    schema = {
+        pages: [
+            {
+                fields: [
+                    {
+                        type: "name",
+                        name: "name",
+                        caption: "Your name",
+                        tooltip: "Your full name"
+                    },
+                    {
+                        type: "email",
+                        name: "email",
+                        caption: "Email address",
+                        tooltip: "Email address linked to your account"
+                    },
+                    {
+                        type: "tel",
+                        name: "phone",
+                        caption: "Phone number",
+                        tooltip: "Your phone number"
+                    }
+                ]
+            }
+        ]
+    }
+
+    async render(path) {
+        this.area.add(await xo.form.run(this.schema, {
+            on: {
+                interactive: e=>{
+                    let fieldName = path.replace("/","");
+                    var field = e.detail.host.get(fieldName);
+                    if(field){
+                        field._control.focus();
+                    }
+                }
+            }
+        }));
+    }
+
+    get area() {
+        return this.app.UI.areas.main;
+    }
+
+    get omniBoxCategories() {
+        return {
+            Settings: {
+
+                trigger: options => { return options.search.length >= 2 },
+                getItems: async options => {
+
+                    return this.schema.pages[0].fields.filter(i => {
+                        let text = `${i.caption} ${i.tooltip}`.toLowerCase();
+                        return text.indexOf(options.search) > -1;
+                    }).map(r => {
+                        return {
+                            text: "Settings/" + r.caption,
+                            field: r.name
+                        }
+                    })
+                },
+                text: "Search for '%search%' products",
+                icon: "ti-package",
+                action: options => {
+                    document.location.hash = "/settings/" + options.field
+                }
+
+            }
+        }
+    };
+}
+
+class ProductsRoute extends xo.route {
+    menuIcon = "ti-package";
+
+    title = "Products";
+
+    get omniBoxCategories() {
+        return {
+            Products: {
+
+                trigger: options => { return options.search.length >= 2 },
+                getItems: async options => {
+
+                    var prods = await fetch("/data/products.json").then(x => x.json());
+
+                    return prods.filter(p => {
+                        return p.name.toLowerCase().indexOf(options.search.toLowerCase()) >= 0;
+                    }).map(r => {
+                        return {
+                            text: r.name
+                        }
+                    })
+                },
+                text: "Search for '%search%' products",
+                icon: "ti-package",
+                action: options => {
+                    alert(options.search)
+                }
+
+            }
+        }
+    };
 }
 
 class PWA extends xo.pwa {
     routerReady() {
         this.router.generateMenu(this.UI.areas.menu);
+
+        this.omniBox = new PWA.OmniBox({
+            useRoutes: true,
+
+            categories: {
+                Google: {
+                    trigger: options => { return options.search.length >= 2 },
+                    text: "Search on Google for '%search%'",
+                    getItems: options => {
+                        return [{
+                            text: "Search on Google for '%search%'"
+                        }]
+                    },
+                    icon: "ti-search",
+                    action: options => {
+                        options.url = `https://www.google.com/search?q=${options.search}`;
+                    },
+                    newTab: true
+                },
+                Images: {
+                    trigger: options => { return options.search.length >= 2 },
+                    getItems: options => {
+                        return [{
+                            text: "Search images on Pexels for '%search%'"
+                        }]
+                    },
+                    action: options => {
+                        options.url = `https://www.pexels.com/search/${options.search}`;
+                    },
+                    newTab: true,
+                    text: "Search for '%search%' images",
+                    icon: "ti-image"
+                },
+
+                Products: {
+                    trigger: options => { return options.search.length >= 2 },
+                    getItems: options => {
+                        return [{
+                            text: "Search products with term/tag '%search%'"
+                        }]
+                    },
+                    text: "Search for '%search%' products",
+                    icon: "ti-package",
+                    action: options => {
+                        document.location.hash = `/products/${options.search}`;
+                    }
+                }
+            }
+        });
+
+        this.omniBox.render().then(elm => {
+            this.UI.areas.header.add(elm)
+        })
     }
 }
 
 new PWA({
     routes: {
-        "/": Route,
-        "/test": TestRoute
+        "/": HomeRoute,
+        "/test": TestRoute,
+        "/settings": SettingsRoute,
+        "/products": ProductsRoute
     }
 })

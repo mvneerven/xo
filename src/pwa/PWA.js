@@ -4,10 +4,12 @@ import RouteModule from './RouteModule';
 import PWA_UI from './PWA_UI';
 import PWA_EventHub from './PWA_EventHub';
 import PWA_RESTService from './PWA_RESTService';
+import PWA_OmniBox from './PWA_OmniBox';
 
 class PWA {
     static RouteModule = RouteModule;
     static Router = Router;
+    static OmniBox = PWA_OmniBox;
 
     defaults = {
         UI: {
@@ -19,6 +21,8 @@ class PWA {
     }
 
     constructor(options) {
+        window.pwa = this;
+        
         this.events = new Core.Events(this);
 
         document.querySelector("html").classList.add("pwa-signin-pending");

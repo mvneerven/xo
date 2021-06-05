@@ -1,7 +1,7 @@
 import ExoBaseControls from '../base/ExoBaseControls';
 import ExoFormFactory from '../../core/ExoFormFactory';
 
-class MultiInputControl extends ExoBaseControls.controls.div.type {
+class ExoMultiInputControl extends ExoBaseControls.controls.div.type {
     columns = ""
 
     areas = "";
@@ -121,6 +121,19 @@ class MultiInputControl extends ExoBaseControls.controls.div.type {
 
     }
 
+    focus() {
+
+        for(var n in this.fields){
+            var elm = this._qs(n);
+            if (elm) {
+                let fld = ExoFormFactory.getFieldFromElement(elm);
+                let ctl = fld._control
+                ctl.focus();
+            }
+            break;
+        }
+    }
+
     _qs(name) {
         const f = this.context.field;
         if (this.htmlElement) {
@@ -192,4 +205,4 @@ class MultiInputControl extends ExoBaseControls.controls.div.type {
 
 }
 
-export default MultiInputControl;
+export default ExoMultiInputControl;
