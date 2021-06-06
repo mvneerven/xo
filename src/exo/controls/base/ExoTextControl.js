@@ -1,5 +1,6 @@
 import ExoInputControl from './ExoInputControl';
 import DOM from '../../../pwa/DOM';
+import ExoTextControlAutoCompleteExtension from './ExoTextControlAutoCompleteExtension';
 
 class ExoTextControl extends ExoInputControl {
     constructor(context) {
@@ -12,8 +13,12 @@ class ExoTextControl extends ExoInputControl {
             name: "prefix",
             type: String,
             description: "Prefix to display in input (e.g. '$')"
-        })
-
+        },
+        {
+            name: "autocomplete",
+            description: "Object with autocomplete settings",
+            type: Object
+        });
     }
 
     async render() {
@@ -40,6 +45,10 @@ class ExoTextControl extends ExoInputControl {
             this.htmlElement.style.paddingLeft = "1rem";
         }
 
+        if(this.autocomplete){
+            this.autocomplete.attach();
+        }
+
         return this.container
     }
 
@@ -52,6 +61,14 @@ class ExoTextControl extends ExoInputControl {
 
         if (this.rendered)
             this.htmlElement.closest(".exf-ctl").setAttribute("data-prefix", this._prefix)
+    }
+
+    set autocomplete(obj){
+        this._autoComplete = new ExoTextControlAutoCompleteExtension(this, obj);
+    }
+
+    get autocomplete(){
+        return this._autoComplete;
     }
 
 }

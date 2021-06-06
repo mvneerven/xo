@@ -1,33 +1,27 @@
 import Core from '../../../pwa/Core'
-import DOM from '../../../pwa/DOM';
-import ExoTextControl from '../base/ExoInputControl';
 
-class ExoAutoComplete extends ExoTextControl {
+class ExoTextControlAutoCompleteExtension {
 
     cssClasses = {
         result: "exf-ac-rs",
         item: "exf-ac-itm"
     }
 
-    constructor() {
-        super(...arguments);
+    constructor(control, settings) {
+        this.control = control;
 
-        this.acceptProperties(
-            {
-                name: "items",
-                type: Object,
-                description: "Array, url or promise"
-            },
-            {
-                name: "categories",
-                description: "Object containing the result categories",
-                type: Object
-            }
-        )
+        this.categories = settings.categories || {};
+
+        if (!settings.items)
+            throw TypeError("Must pass items array, function or promise in autocomplete settings");
+
+
+        this.items = settings.items;
     }
 
-    async render() {
-        await super.render();
+    attach() {
+        this.htmlElement = this.control.htmlElement
+        this.container = this.control.container;
 
         const on = (a, b) => { this.htmlElement.addEventListener(a, b) };
 
@@ -41,7 +35,9 @@ class ExoAutoComplete extends ExoTextControl {
         this.resultsDiv.addEventListener("mousedown", this.resultClick.bind(this))
         this.container.appendChild(this.resultsDiv)
         this.clear();
-        return this.container;
+
+        this.container.classList.add("autocomplete")
+
     }
 
     moveResult(add) {
@@ -79,7 +75,7 @@ class ExoAutoComplete extends ExoTextControl {
             this.resultClicked = true;
             let result = this.results[index];
 
-            let handlingCategory = this.categories[result.category];
+            let handlingCategory = this.categories[result.category] || { action: this.setText.bind(this) };
 
             if (handlingCategory.newTab) {
                 this.tabWindow = window.open('about:blank', '_blank'); // prevent popup blocking
@@ -104,9 +100,14 @@ class ExoAutoComplete extends ExoTextControl {
                 }
                 this.clear();
             }, 100);
-           
-            
+
+
         }
+    }
+
+    setText(options) {
+        this.control.value = options.text;
+        this.hide();
     }
 
     resultClick(event) {
@@ -145,10 +146,14 @@ class ExoAutoComplete extends ExoTextControl {
 
     inputHandler(e) {
         this.clear();
+        let options = {
+            search: e.target.value,
+            categories: this.categories
+        };
 
-        this.getItems({
-            search: e.target.value
-        }).then(this.resultsHandler.bind(this))
+        this.getItems(options).then(r => {
+            this.resultsHandler(r, options)
+        })
     }
 
     keyUpHandler(e) {
@@ -175,20 +180,23 @@ class ExoAutoComplete extends ExoTextControl {
         this.clear();
         const options = {
             suggest: true,
-            search: e.target.value
+            search: e.target.value,
+            categories: this.categories
         }
-        this.getItems(options).then(this.resultsHandler.bind(this))
+        this.getItems(options).then(r => {
+            this.resultsHandler(r, options)
+        })
     }
 
-    resultsHandler(r) {
+    resultsHandler(r, options) {
         this.results = r;
         this.rowIndex = -1;
         let index = 0;
         r.forEach(i => {
             this.resultsDiv.innerHTML += `<div data-index="${index}" class="${this.cssClasses.item}">
                 <span class="${i.icon}"></span>
-                <span class="text">${this.formatResultItem(i)}</span>
-                <span class="category">${i.category}</span></div>`;
+                <span class="text">${this.formatResultItem(i, options)}</span>
+                <span class="category">${i.category || ""}</span></div>`;
 
             index++;
         });
@@ -197,14 +205,14 @@ class ExoAutoComplete extends ExoTextControl {
         }
     }
 
-    formatResultItem(i) {
+    formatResultItem(i, options) {
         let result = i.text;
 
-        return result.replace("%search%", this.options.search)
+        return result.replace("%search%", options.search)
     }
 
     async getItems(options) {
-        this.options = options;
+        //this.options = options;
         return new Promise(resolve => {
             if (Core.isUrl(this.items)) {
                 fetch(this.items + "?" + this.createQueryParam(options)).then(x => {
@@ -216,6 +224,14 @@ class ExoAutoComplete extends ExoTextControl {
                 })
             }
             else if (Array.isArray(this.items)) {
+
+                this.items = this.items.map(i => {
+                    if (typeof (i) === "string") {
+                        return { text: i }
+                    }
+                    return i;
+                })
+
                 resolve(this.items.filter(i => {
                     return this.isMatch(options, i)
                 }));
@@ -244,4 +260,4 @@ class ExoAutoComplete extends ExoTextControl {
 }
 
 
-export default ExoAutoComplete;
+export default ExoTextControlAutoCompleteExtension;

@@ -83,7 +83,30 @@ class TestRoute extends xo.route {
     menuIcon = "ti-gift";
 
     async render() {
-        this.area.add("This is a test!")
+        
+
+        this.elm = await xo.form.run({
+            
+            pages: [
+                {
+                    fields: [
+                        {
+                            name: "autocomplete",
+                            type: "text",
+                            caption: "Autocomplete test",
+                            placeholder: "Start typing...",
+                            autocomplete: {
+                                ///categories: this.options.categories,
+                                items: ["test", "okay", "bla"]
+                            }
+
+                        }
+                    ]
+                }
+            ]
+        });
+        this.area.add(this.elm)
+
     }
 
     get area() {
@@ -129,10 +152,10 @@ class SettingsRoute extends xo.route {
     async render(path) {
         this.area.add(await xo.form.run(this.schema, {
             on: {
-                interactive: e=>{
-                    let fieldName = path.replace("/","");
+                interactive: e => {
+                    let fieldName = path.replace("/", "");
                     var field = e.detail.host.get(fieldName);
-                    if(field){
+                    if (field) {
                         field._control.focus();
                     }
                 }
@@ -180,7 +203,7 @@ class ProductsRoute extends xo.route {
     get omniBoxCategories() {
         return {
             Products: {
-
+                sortIndex: 100,
                 trigger: options => { return options.search.length >= 2 },
                 getItems: async options => {
 
@@ -197,7 +220,7 @@ class ProductsRoute extends xo.route {
                 text: "Search for '%search%' products",
                 icon: "ti-package",
                 action: options => {
-                    alert(options.search)
+                    document.location.hash = '/products/' + options.text
                 }
 
             }
@@ -214,6 +237,7 @@ class PWA extends xo.pwa {
 
             categories: {
                 Google: {
+                    sortIndex: 500,
                     trigger: options => { return options.search.length >= 2 },
                     text: "Search on Google for '%search%'",
                     getItems: options => {
@@ -228,6 +252,7 @@ class PWA extends xo.pwa {
                     newTab: true
                 },
                 Images: {
+                    sortIndex: 600,
                     trigger: options => { return options.search.length >= 2 },
                     getItems: options => {
                         return [{
@@ -243,6 +268,7 @@ class PWA extends xo.pwa {
                 },
 
                 Products: {
+                    sortIndex: 100,
                     trigger: options => { return options.search.length >= 2 },
                     getItems: options => {
                         return [{

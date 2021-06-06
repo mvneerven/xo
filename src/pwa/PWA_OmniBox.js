@@ -11,13 +11,14 @@ class PWA_OmniBox {
         if (this.options.useRoutes) {
 
             this.options.categories.App = {
+                sortIndex: 10,
                 trigger: options => { return true },
                 getItems: options => {
-                    
-                    return this.getRoutes(options).filter(i=>{
-                        if(!options.search)
+
+                    return this.getRoutes(options).filter(i => {
+                        if (!options.search)
                             return true;
-                        else{
+                        else {
                             return i.text.toLowerCase().startsWith(options.search.toLowerCase())
                         }
                     })
@@ -53,11 +54,14 @@ class PWA_OmniBox {
                     fields: [
                         {
                             name: "autocomplete",
-                            type: "autocomplete",
+                            type: "text",
                             caption: "",
                             placeholder: "Find shit...",
-                            categories: this.options.categories,
-                            items: this.items.bind(this)
+                            autocomplete: {
+                                categories: this.options.categories,
+                                items: this.items
+                            }
+
                         }
                     ]
                 }
@@ -69,8 +73,10 @@ class PWA_OmniBox {
     async items(options) {
         let arr = [];
 
-        for (var c in this.options.categories) {
-            let catHandler = this.options.categories[c];
+        //todo create array sorted for categories
+        // based on SortI
+        for (var c in options.categories) {
+            let catHandler = options.categories[c];
             if (catHandler.trigger(options)) {
                 let catResults = await catHandler.getItems(options);
 
