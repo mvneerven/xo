@@ -786,9 +786,15 @@ What is an OmniBox?
 
 ![OmniBox](https://xo-js.dev/assets/img/omnibox.png "An OmniBox")
 
-A picture says more than a thousand words.
+OmniBox is a multi-faceted global contextual search autocomplete mechanism that is a great addition to any Progressive Web App/Single Page Application.
 
-An OmniBox is a multi-faceted, distributed search facility that can be an entry point for both advanced and novice users.
+The OmniBox 'knows' the app routes, but also provides a flexible way for any component within the app to hook into the listings and provide custom search results with custom selection actions, using OmniBox categories.
+
+In the case portrayed in the image, the OmniBox shows results in 4 categories, with both deep links to state inside the app, and external actions to be triggered.
+
+The Google and Image categories simply link through to external applications, but the Help category has real understanding of a help system attached to the app (like ZenDesk for instance), and the Settings category is fed by using the settings ExoForm schema (which essentially is metadata that is to be translated into a web form), so it can deep link into a form field highlighted in a form.
+
+However intuitive your app's UI is, for novice users of your app, OmniBox will help discover functionality. For power users, it will shorten the path to functionality hidden a few clicks away in the UI.
 
 
 ```js
