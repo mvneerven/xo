@@ -229,7 +229,7 @@ class Core {
     /**
      * Helper for GetObjectProperty and GetObjectProperty
      * @param {String} path 
-     * @returns 
+     * @returns Array
      */
     static stringToPath(path) {
 
@@ -259,7 +259,7 @@ class Core {
      * @param {String} operator 
      * @param {Object} a 
      * @param {Object} b 
-     * @returns 
+     * @returns Boolean
      */
     static compare(operator, a, b) {
         return this.operatorTable[operator](a, b);
