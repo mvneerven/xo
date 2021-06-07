@@ -9,14 +9,16 @@
         background-color: rgb(240,240,240);
         position: fixed;
        
-        box-shadow: 0 3px 10px -2px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 5px 10px 2px rgba(0, 0, 0, 0.1);
         border: 1px solid rgba(0, 0, 0, 0.1);
         padding: .2rem;
-        max-height: 200px;
+        max-height: 300px;
         overflow-y: auto;
         z-index: 10;
 
         .exf-ac-itm {
+            display: grid;
+            grid-template-columns: 30px 1fr 7rem;
             cursor: pointer;
             padding: 0.5rem;
 
@@ -27,10 +29,19 @@
             span.text{
                 display: inline-block;
                 min-width: 100px;
+
+                small {
+                    color: rgba(0,0,0, 0.5)
+                }
+
+                .txt-hl {
+                    text-decoration: underline;
+                }
             }
 
             span.category{
                 float: right;
+                text-align: right;
                 color: rgba(0,0,0,0.5);
                 font-size: smaller;
             }

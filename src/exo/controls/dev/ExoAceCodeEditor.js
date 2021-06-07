@@ -1,5 +1,5 @@
-import ExoBaseControls from './base/ExoBaseControls';
-import DOM from '../../pwa/DOM';
+import ExoBaseControls from '../base/ExoBaseControls';
+import DOM from '../../../pwa/DOM';
 
 class ExoAceCodeEditor extends ExoBaseControls.controls.div.type {
     _mode = "html";
@@ -130,12 +130,4 @@ class ExoAceCodeEditor extends ExoBaseControls.controls.div.type {
     }
 }
 
-
-class ExoDevControls {
-    static controls = {
-        aceeditor: { type: ExoAceCodeEditor, note: "Ace code editor", demo: { mode: "html" } }
-
-    }
-}
-
-export default ExoDevControls;
+export default ExoAceCodeEditor;

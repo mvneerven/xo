@@ -1,52 +1,50 @@
-# The Problem
+# XO-JS
 
-Large Enterprise, Multi-tenant SaaS apps are extremely configurable at all levels. Also, they need automated, self-service onboarding, in order to set the basics for a new tenant or user, manage user authorization, subscription management, and all data that the specific SaaS product needs to manage.
+Compact pure JavaScript (ES6) Component Library
 
-> Building complete front-ends in a bespoke way is a tedious, error-prone and costly undertaking.
+The Library consists of two major components:
+1. xo.form 
+   - Declarative JSON/JS Forms
+2. xo.pwa
+   - Progressive Web App (SPA) helpers
+   - Simple Router
+   - UI building features
+   - Utility methods
 
-Also, each of these developments adds overhead in terms of testing and deployment.
 
-Lastly, maintaining consistence over all front-end facing application parts is not a small task.
-
-# How does ExoForm solve this problem?
-
-A way to solve all these issues at once, and speed up delivery of countless new front-end data-collecting requirements, is to have a highly flexible Forms Generator that can be fed declarative form schema data and automatically render forms.
-
-Examples of this type of product are XForms generators, Wufoo, TypeForm, JotForms and others. 
-
-Why develop a new one, then? 
-
-> Well, because I've seen what developers need. They need to save as much time as needed, yet have all the power to themselves.
-
-What does ExoForm bring?
-
-* ExoForm gives developers complete freedom: simply include it in your development stack, and bypass, subclass, add anything you want. 
-* No bulky dependencies. HTML5, CSS3, ECMAScript. That's it. They're powerful enough ;-) 
-* Use it in any environment, Vue, React, Angular, or plain vanilla JavaScript. 
-* Create and include your own control libraries. 
-* Customize anything: styling, validation, navigation, progress indication, etc. 
-* Get typed JSON post data 
-* All HTML5 controls included, plus a large number of custom controls
-* Ace Code Editor, CkEditor wysiwyg editor (richt text) 
-* Examples of adding your own controls at codepen.io. For example, use the [Monaco Editor](https://codepen.io/mvneerven/pen/NWdYybz).
-* Autocompletion (using standard HTML5 DataLists, fixed lists, or dynamic API searches)
-* Standard HTML5 & Inline validation (or roll your own)
-* Wizards & other multi-page forms, Surveys, 
-* Completely overridable rendering & theming
-* A visual [ExoForm Explorer](https://www.xo-js.dev/#/explore) and Test Environment
-  * JSON Schema editor 
-  * Wysiwyg designer (in development) 
-  * Jest test environment 
-* [Codepen examples](https://codepen.io/collection/XLwaxp)
-* Etc. 
-
-# Using ExoForm in JavaScript
+# ExoForm 'Hello World'
 
 Basic JavaScript Flow (1.2+):
 
 ```js 
-
+let div = await xo.form.run(schema[, settings]);
 ```
+
+Where *schema* can be a literal (JSON/JS) or a URL, and *settings* an optional object.
+
+## Minimal Form
+
+```js 
+let div = await xo.form.run({
+  pages: [
+    {
+      legend: "My Form",
+      intro: "My form description",
+      fields: [
+        {
+          name: "text1",
+          caption: "Text",
+          type: "text"
+        }
+      ]
+    }
+  ]
+});
+```
+
+---
+
+# Update History
 
 # New in 1.01
 
@@ -771,4 +769,92 @@ let container = await xo.form.run("/data/forms/account.json", {
 
 
 
+# New in 1.3.12
+
+## Textbox Autocomplete
+
+All textbox controls, including derived ones such as email, tel, url, now have a property *autocomplete*, which accepts an object with *items* and *categories*.
+
+```js
+
+```
+
+
+## PWA OmniBox
+
+What is an OmniBox?
+
+![OmniBox](https://xo-js.dev/assets/img/omnibox.png "An OmniBox")
+
+A picture says more than a thousand words.
+
+An OmniBox is a multi-faceted, distributed search facility that can be an entry point for both advanced and novice users.
+
+
+```js
+ this.omniBox = new PWA.OmniBox({
+      useRoutes: true,
+      placeholder: "The start of everything...",
+      tooltip: "Navigate through this app by clicking & typing here..",
+
+      categories: {
+          Google: {
+              sortIndex: 500,
+              trigger: options => { return options.search.length >= 2 },
+              text: "Search on Google for '%search%'",
+              getItems: options => {
+                  return [{
+                      text: "Search on Google for '%search%'"
+                  }]
+              },
+              icon: "ti-search",
+              action: options => {
+                  options.url = `https://www.google.com/search?q=${options.search}`;
+              },
+              newTab: true
+          },
+
+          Images: {
+              sortIndex: 600,
+              trigger: options => { return options.search.length >= 2 },
+              getItems: options => {
+                  return [{
+                      text: "Search images on Pexels for '%search%'"
+                  }]
+              },
+              action: options => {
+                  options.url = `https://www.pexels.com/search/${options.search}`;
+              },
+              newTab: true,
+              text: "Search for '%search%' images",
+              icon: "ti-image"
+          },
+
+          Products: {
+              sortIndex: 100,
+              trigger: options => { return options.search.length >= 2 },
+              getItems: options => {
+                  return [{
+                      text: "Search products with term/tag '%search%'"
+                  }]
+              },
+              text: "Search for '%search%' products",
+              icon: "ti-package",
+              action: options => {
+                  document.location.hash = `/products/${options.search}`;
+              }
+          }
+      }
+  });
+
+```
+
+## Core.MarkDown
+
+A [MarkdownIt](https://github.com/markdown-it/markdown-it) wrapper:
+
+```js
+let html = await Core.MarkDown.read("./README.md");
+document.body.appendChild(DOM.parseHTML(html));
+```
 

@@ -76,6 +76,7 @@ class HomeRoute extends xo.route {
     }
 
 }
+
 class TestRoute extends xo.route {
 
     title = "Test";
@@ -83,10 +84,10 @@ class TestRoute extends xo.route {
     menuIcon = "ti-gift";
 
     async render() {
-        
+
 
         this.elm = await xo.form.run({
-            
+
             pages: [
                 {
                     fields: [
@@ -116,6 +117,7 @@ class TestRoute extends xo.route {
 
 
 }
+
 class SettingsRoute extends xo.route {
 
     title = "Settings";
@@ -180,6 +182,7 @@ class SettingsRoute extends xo.route {
                     }).map(r => {
                         return {
                             text: "Settings/" + r.caption,
+                            description: "Go to settings",
                             field: r.name
                         }
                     })
@@ -188,6 +191,77 @@ class SettingsRoute extends xo.route {
                 icon: "ti-package",
                 action: options => {
                     document.location.hash = "/settings/" + options.field
+                }
+
+            }
+        }
+    };
+}
+
+class HelpRoute extends xo.route {
+
+    title = "Help";
+
+    menuIcon = "ti-help";
+
+    async asyncInit() {
+        await super.asyncInit();
+
+        await this.getMD();
+    }
+
+    async render(path) {
+
+        let readmeElement = DOM.parseHTML(await Core.MarkDown.read(this.readMeMD));
+        this.area.add(readmeElement);
+
+        if (path) {
+            let sentencePart = decodeURIComponent(path.substr(1));
+            if (sentencePart.endsWith("..."))
+                sentencePart = sentencePart.substr(0, sentencePart.length - 3);
+
+            let headings = readmeElement.querySelectorAll("h1, h2, h3");
+            for (var i = 0; i < headings.length; i++) {
+                let h = headings[i];
+                if (h.innerText.startsWith(sentencePart)) {
+                    h.scrollIntoView();
+                    break;
+                }
+            }
+        }
+    }
+
+    async getMD() {
+        if (!this.readMeMD)
+            this.readMeMD = await fetch("./README.md").then(x => x.text());
+    }
+
+    get area() {
+        return this.app.UI.areas.main;
+    }
+
+    get omniBoxCategories() {
+        return {
+            Help: {
+
+                trigger: options => { return options.search.length >= 2 },
+                getItems: async options => {
+                    await this.getMD();
+                    return this.readMeMD.split('\n').filter(l => {
+                        return l.startsWith('#') && l.toLowerCase().indexOf(options.search.toLowerCase()) > -1;
+                    }).map(l => {
+
+                        let text = l.replace(/\#/g, "").substr(0, 25).trim() + '...';
+
+                        return {
+                            text: text
+                        }
+                    })
+                },
+                text: "Search for '%search%' in help",
+                icon: "ti-help",
+                action: options => {
+                    document.location.hash = "/help/" + options.text;
                 }
 
             }
@@ -213,7 +287,8 @@ class ProductsRoute extends xo.route {
                         return p.name.toLowerCase().indexOf(options.search.toLowerCase()) >= 0;
                     }).map(r => {
                         return {
-                            text: r.name
+                            text: r.name,
+                            description: r.description
                         }
                     })
                 },
@@ -226,14 +301,45 @@ class ProductsRoute extends xo.route {
             }
         }
     };
+
+    async render(path) {
+        
+        let search = decodeURIComponent(path.substr(1));
+
+        var prods = await fetch("/data/products.json").then(x => x.json());
+        let div = document.createElement("div")
+        div.classList.add("products-mock");
+
+        prods.forEach(p => {
+
+            let selected = (p.name==search) ? " selected": "";
+
+            div.appendChild(DOM.parseHTML(
+                /*html*/`<div class="product ${selected}">
+                    <span>
+                        <div>${p.name}</div>
+                        <div><small>${p.description}</small></div>
+                    </span> 
+                    <span class="pull-right">&euro; ${p.price.amount}</span>
+                </div>`))
+        })
+
+        this.area.add(div)
+    }
+
+    get area() {
+        return this.app.UI.areas.main;
+    }
 }
 
 class PWA extends xo.pwa {
     routerReady() {
-        this.router.generateMenu(this.UI.areas.menu);
+
 
         this.omniBox = new PWA.OmniBox({
             useRoutes: true,
+            placeholder: "The start of everything...",
+            tooltip: "Navigate through this app by clicking & typing here..",
 
             categories: {
                 Google: {
@@ -251,6 +357,7 @@ class PWA extends xo.pwa {
                     },
                     newTab: true
                 },
+
                 Images: {
                     sortIndex: 600,
                     trigger: options => { return options.search.length >= 2 },
@@ -295,6 +402,7 @@ new PWA({
         "/": HomeRoute,
         "/test": TestRoute,
         "/settings": SettingsRoute,
-        "/products": ProductsRoute
+        "/products": ProductsRoute,
+        "/help": HelpRoute
     }
 })

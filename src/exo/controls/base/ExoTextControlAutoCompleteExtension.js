@@ -29,6 +29,7 @@ class ExoTextControlAutoCompleteExtension {
         on("click", this.clickHandler.bind(this))
         on("focusout", this.blurHandler.bind(this))
         on("keyup", this.keyUpHandler.bind(this));
+        on("keydown", this.keyDownHandler.bind(this));
 
         this.resultsDiv = document.createElement("div");
         this.resultsDiv.classList.add(this.cssClasses.result)
@@ -41,6 +42,7 @@ class ExoTextControlAutoCompleteExtension {
     }
 
     moveResult(add) {
+        this.show();
         let all = this.resultsDiv.querySelectorAll("div");
         let length = all.length;
         this.rowIndex = this.rowIndex + add;
@@ -58,7 +60,9 @@ class ExoTextControlAutoCompleteExtension {
         if (div)
             div.classList.add("selected")
         else {
-            this.clickHandler();
+            this.clickHandler({
+                target: this.htmlElement
+            });
         }
 
     }
@@ -137,7 +141,10 @@ class ExoTextControlAutoCompleteExtension {
     }
 
     show() {
-        this.resultsDiv.style.display = 'block';
+        if (this.resultsDiv.style.display !== 'block') {
+            this.resultsDiv.style.display = 'block';
+            this.rowIndex = -1;
+        }
     }
 
     hide() {
@@ -154,6 +161,14 @@ class ExoTextControlAutoCompleteExtension {
         this.getItems(options).then(r => {
             this.resultsHandler(r, options)
         })
+    }
+
+    keyDownHandler(e) {
+        switch (e.keyCode) {
+            case 40:
+            case 38:
+                e.preventDefault();
+        }
     }
 
     keyUpHandler(e) {
@@ -178,9 +193,19 @@ class ExoTextControlAutoCompleteExtension {
 
     clickHandler(e) {
         this.clear();
+        let value = e.target.value;
+        this.suggest(value)
+    }
+
+    /**
+     * Shows suggestion box
+     * @param {string} value - String to suggest results for
+     */
+    suggest(value) {
+        this.htmlElement.focus();
         const options = {
             suggest: true,
-            search: e.target.value,
+            search: value || "",
             categories: this.categories
         }
         this.getItems(options).then(r => {
@@ -192,10 +217,12 @@ class ExoTextControlAutoCompleteExtension {
         this.results = r;
         this.rowIndex = -1;
         let index = 0;
+
         r.forEach(i => {
+            let catHandler = options.categories[i.category] || {};
             this.resultsDiv.innerHTML += `<div data-index="${index}" class="${this.cssClasses.item}">
-                <span class="${i.icon}"></span>
-                <span class="text">${this.formatResultItem(i, options)}</span>
+                <span class="${i.icon || catHandler.icon}"></span>
+                <span class="text">${this.formatResultItem(i, options, catHandler)}</span>
                 <span class="category">${i.category || ""}</span></div>`;
 
             index++;
@@ -205,10 +232,30 @@ class ExoTextControlAutoCompleteExtension {
         }
     }
 
-    formatResultItem(i, options) {
+    formatResultItem(i, options, catHandler) {
         let result = i.text;
+        result = result.replace("%search%", options.search);
 
-        return result.replace("%search%", options.search)
+        result = this.highlight(result, options.search);
+
+        if (i.description) {
+            result = `<div>${result}</div><small>${i.description}</small>`
+        }
+
+        if (catHandler.format) {
+            debugger
+            result = catHandler.format({
+                item: i,
+                result: result,
+                options: options
+            })
+        }
+        return result;
+    }
+
+    highlight(str, find) {
+        var reg = new RegExp('(' + find + ')', 'gi');
+        return str.replace(reg, '<span class="txt-hl">$1</span>');
     }
 
     async getItems(options) {

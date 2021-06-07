@@ -1,9 +1,9 @@
 @import url("https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap");
 
 main {
-    display: grid;
+    padding: 1rem;
+    overflow: auto;
 
-    grid-template-columns: 200px 1fr;
 }
 
 :root {
@@ -21,16 +21,16 @@ main {
 
 html,
 body {
-    height: 100%;
-
+    height: 100vh;
+    overflow: hidden;
     font-family: Roboto;
 }
 
 body {
-    overflow: hidden;
+    
     display: grid;
     grid-template-rows: 50px 1fr 30px;
-    height: 100%;
+   
     color: #333;
     color: var(--color);
 
@@ -44,10 +44,48 @@ body {
 
     footer {
         background-color: rgba(0, 0, 0, 0.15);
+        text-align: center;
+        font-size: smaller;
+        padding-top: 5px;
     }
 }
 
 #xo-test {
+    .md-converted-html {
+        max-width: 90%;
+        
+
+        img {
+            max-width: 600px;
+        }
+
+        code {
+            font-size: 1rem;
+            font-family: Consolas, "Courier New", Courier, monospace;
+        }
+
+        blockquote {
+            border-left: 10px solid #c04e58;
+            padding: 0.5rem 1rem;
+        }
+    }
+
+    .products-mock {
+        > div {
+            margin-top: 1rem;
+            display: grid;
+            grid-template-columns: 1fr 60px;
+
+            small {
+                color: rgba(0, 0, 0, 0.5);
+            }
+
+            &.selected {
+                background-color: yellow
+            }
+        }
+    }
+
     .exf-container {
         &.exf-theme-material {
             margin-top: 2rem;
@@ -76,7 +114,7 @@ body {
             }
         }
 
-        &.exf-theme-none {
+        &.pwa-omnibox {
             .exf-wrapper {
                 text-align: center;
             }
@@ -90,24 +128,19 @@ body {
                 .exf-ctl-cnt {
                     text-align: left;
                     input {
-                        padding: 0.4rem 0.8rem;
+                        padding: 0.6rem 0.9rem;
+                        border: 2px solid rgba(0, 0, 0, 0.2);
+                        border-radius: 0.5rem;
+                        outline: none;
+
+                        &:focus {
+                            border-color: rgba(200, 0, 0, 0.4);
+                        }
                     }
                 }
             }
         }
     }
-}
-
-footer {
-    padding: 1rem;
-    overflow: auto;
-    background: #333;
-    color: #ff2233;
-}
-
-[data-pwa-area="main"] {
-    overflow-y: auto;
-    height: 100vh;
 }
 
 nav.main-menu {

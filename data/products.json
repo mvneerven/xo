@@ -80,7 +80,7 @@
     {
         "id": "9ba879e5-41bf-4327-a1ce-103c36075c40",
         "recordVersion": 1,
-        "name": "Brugse Zot",
+        "name": "Duvel",
         "description": "Gebrouwen uit 6 verschillende mouten, waardoor het bijzonder rijk van smaak is!",
         "price": {
             "amount": 4.5,
@@ -93,7 +93,7 @@
     {
         "id": "86e4dc55-4559-441c-8864-1880fda0f4de",
         "recordVersion": 1,
-        "name": "Jupiler 2",
+        "name": "Grimbergen",
         "description": "Standaard pils (25cl)",
         "price": {
             "amount": 2.25,
@@ -106,7 +106,7 @@
     {
         "id": "8c93b7b0-aec2-4f9d-99a8-af18f41ddda9",
         "recordVersion": 1,
-        "name": "Hertog Jan",
+        "name": "Heineken",
         "description": "Van de tap, 25cl",
         "price": {
             "amount": 2.5,
@@ -119,7 +119,7 @@
     {
         "id": "db810312-885f-435a-903b-9ec5cbb71aa9",
         "recordVersion": 1,
-        "name": "Witbier",
+        "name": "Hoegaarden Witbier",
         "description": "Lekker fris",
         "price": {
             "amount": 3.95,
@@ -132,8 +132,8 @@
     {
         "id": "0727c1cb-9ca0-4844-84fc-f7792d6d40f3",
         "recordVersion": 1,
-        "name": "Boon Kriek",
-        "description": "Een betere Lambiek",
+        "name": "Mort Subite",
+        "description": "Heftig Tripel",
         "price": {
             "amount": 4.5,
             "currency": 978

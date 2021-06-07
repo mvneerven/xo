@@ -1,5 +1,8 @@
 import ExoListControl from './ExoListControl';
 
+/**
+ * Renders a single select / dropdown list
+ */
 class ExoDropdownListControl extends ExoListControl {
     constructor(context) {
         super(context);

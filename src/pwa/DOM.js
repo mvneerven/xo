@@ -87,6 +87,9 @@ class DragDropSorter {
 
 }
 
+/**
+ * Document Object Model helper methods
+ */
 class DOM {
 
     static DragDropSorter = DragDropSorter;
@@ -96,6 +99,11 @@ class DOM {
         DOM.setupGrid();
     })();
 
+    /**
+     * Generates an Html Element from the given HTML string
+     * @param {String} html 
+     * @returns DOM element
+     */
     static parseHTML(html) {
         let parser = new DOMParser(),
             doc = parser.parseFromString(html, 'text/html');
@@ -103,7 +111,6 @@ class DOM {
     }
 
     static getValue(ctl) {
-        DOM._checkNull('getValue', ctl);
         if (ctl.type === "select" || ctl.type === "select-one") {
             if (ctl.selectedIndex !== -1)
                 return ctl.options[ctl.selectedIndex].value;
@@ -121,7 +128,6 @@ class DOM {
     }
 
     static setValue(ctl, value) {
-        DOM._checkNull('setValue', ctl);
         ctl.value = value;
     }
 
@@ -131,11 +137,12 @@ class DOM {
         return e.toString();
     }
 
-    // returns string representation of HtmlElement 
-    // using nodeName, id and classes
+    /**
+     * Returns string representation of HtmlElement using nodeName, id and classes
+     * @param {Object} el - the DOMM element
+     * @returns String 
+     */
     static elementToString(el) {
-        DOM._checkNull('elementToString', el);
-
         let s = [];
         if (el && el.nodeName) {
             s.push(el.nodeName);
@@ -152,44 +159,29 @@ class DOM {
         return s.join('');
     }
 
-    static _checkNull(fName, c) {
-        // if (!c) {
-        //     let s = "No element passed to " + fName + "()";
-        //     console.error(s)
-        //     throw s;
-        // }
-    }
-
     static hide(ctl) {
-        DOM._checkNull('hide', ctl);
         ctl.style.display = "none";
     }
 
     static show(ctl) {
-        DOM._checkNull('show', ctl);
         ctl.style.display = "block";
     }
 
     static enable(ctl) {
-        DOM._checkNull('enable', ctl);
         ctl.removeAttribute("disabled");
     }
 
     static disable(ctl) {
-        DOM._checkNull('disable', ctl);
         ctl.setAttribute("disabled", "disabled");
     }
 
     static trigger(el, type, x) {
-        DOM._checkNull('trigger', el);
         let ev = new Event(type);
         ev.detail = x;
         el.dispatchEvent(ev);
     }
 
     static throttleResize(elm, callback) {
-        DOM._checkNull('throttleResize', elm);
-        let _ = this;
         let delay = 100, timeout;
         callback();
 

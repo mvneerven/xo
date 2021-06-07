@@ -1,13 +1,19 @@
+import xo from "../../js/xo";
+import ExoFormFactory from "../exo/core/ExoFormFactory";
 import Core from "./Core";
 
+/**
+ * OmniBox search facility for PWAs. Use this.omniBox = new PWA.OmniBox({..}) in PWA inherited class
+ */
 class PWA_OmniBox {
 
     constructor(options) {
         this.options = options || {};
         this.options.categories = this.options.categories || {};
-
         this.events = new Core.Events(this);
+    }
 
+    async render() {
         if (this.options.useRoutes) {
 
             this.options.categories.App = {
@@ -40,12 +46,10 @@ class PWA_OmniBox {
                         ...add
                     }
                 }
-
             });
         }
-    }
 
-    async render() {
+
         this.elm = await xo.form.run({
             navigation: "none",
             theme: "none",
@@ -56,7 +60,8 @@ class PWA_OmniBox {
                             name: "autocomplete",
                             type: "text",
                             caption: "",
-                            placeholder: "Find shit...",
+                            placeholder: this.options.placeholder || "Start here...",
+                            tooltip: this.options.tooltip || "Click & type to search...",
                             autocomplete: {
                                 categories: this.options.categories,
                                 items: this.items
@@ -66,7 +71,23 @@ class PWA_OmniBox {
                     ]
                 }
             ]
+        }, {
+            on: {
+                renderReady: e => {
+                    this.autoCompleteControl = e.detail.host.get("autocomplete")._control;
+                }
+            }
         });
+        this.elm.classList.add("pwa-omnibox");
+        document.addEventListener("keydown", e => {
+
+            if (e.key === "/") {
+                if (!["INPUT", "TEXTAREA"].includes(e.target.tagName)) {
+                    e.preventDefault();
+                    this.autoCompleteControl.autocomplete.suggest();
+                }
+            }
+        })
         return this.elm;
     }
 

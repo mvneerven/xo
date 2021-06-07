@@ -1,5 +1,8 @@
 import ExoInputListControl from './ExoInputListControl';
 
+/**
+ * Renders a checkbox list
+ */
 class ExoCheckboxListControl extends ExoInputListControl {
 
     optionType = "checkbox";

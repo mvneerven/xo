@@ -17,8 +17,6 @@ import ExoInfoControl from './ExoInfoControl';
 import ExoStarRatingControl from './ExoStarRatingControl';
 import ExoCreditCardControl from './ExoCreditCardControl';
 import ExoLeafletMapControl from './ExoLeafletMapControl';
-import ExoListViewControl from './ExoListViewControl';
-
 
 class ExoExtendedControls {
     static controls = {

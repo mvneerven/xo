@@ -1,4 +1,7 @@
 
+/**
+ * Module/App that is launched on the configured PWA route
+ */
 class RouteModule {
 
     title = "Module";

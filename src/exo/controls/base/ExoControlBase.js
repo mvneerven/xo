@@ -2,6 +2,9 @@ import ExoFormFactory from '../../core/ExoFormFactory';
 import ExoForm from '../../core/ExoForm';
 import DOM from '../../../pwa/DOM';
 
+/**
+ * Abstract base class for ExoForm controls
+ */
 class ExoControlBase {
     attributes = {};
 
@@ -224,14 +227,7 @@ class ExoControlBase {
         if (!this.isPage)
             ar.push("exf-ctl-cnt")
 
-        ar.push("exf-base-" + this._getBaseType())
-
-        // if (this.context.field.containerClass) {
-        //     let cc = this.context.field.containerClass.trim().split(" ");
-        //     cc.forEach(c => {
-        //         ar.push(c);
-        //     })
-        // }
+        ar.push("exf-base-" + this._getBaseType())        
 
         if (this.htmlElement.tagName === "INPUT" || this.htmlElement.tagName === "TEXTAREA")
             ar.push("exf-input");

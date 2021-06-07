@@ -1,4 +1,5 @@
 import Events from './Events';
+import MarkDown from './MarkDown';
 
 // Simple Vanilla JS Event System
 class Emitter {
@@ -42,6 +43,9 @@ class Iterator {
     }
 }
 
+/**
+ * Core utility methods
+ */
 class Core {
 
     static operatorTable = {
@@ -61,7 +65,7 @@ class Core {
     };
 
     /**
-     * 
+     * Generates a device fingerprint based on rendering data on a canvas element - See https://en.wikipedia.org/wiki/Canvas_fingerprinting
      * @returns {String} - An identifier known to be relatively unique per device
      */
     static fingerprint() {
@@ -80,10 +84,19 @@ class Core {
 
     static Events = Events;
 
+    static MarkDown = MarkDown;
+
     static addEvents(obj) {
         new Emitter(obj);
     }
 
+    /**
+     * 
+     * @param {Object} obj - the object to get a property from
+     * @param {String} path - path to the property
+     * @param {Any} def - default to return if the property is undefined
+     * @returns The value of the property as retrieved
+     */
     static getObjectValue(obj, path, def) {
         // Get the path as an array
         path = Core.stringToPath(path);
@@ -100,7 +113,14 @@ class Core {
         return current;
     }
 
-    static stringifyJs(o, replacer, indent) {
+    /**
+     * Does JS code stringification comparable to JSON.stringify()
+     * @param {Object} jsLiteral - the JavaScript literal to stringify 
+     * @param {Function} replacer 
+     * @param {Number} indent 
+     * @returns String
+     */
+    static stringifyJs(jsLiteral, replacer, indent) {
         const sfy = (o, replacer, indent, level) => {
             let type = typeof o,
                 tpl,
@@ -152,13 +172,24 @@ class Core {
         };
 
         let level = 0;
-        return sfy(o, replacer, indent, level);
+        return sfy(jsLiteral, replacer, indent, level);
     }
 
+    /**
+     * Evaluates a script in the given scope
+     * @param {Object} scope - the 'this' scope for the script to run in
+     * @param {String} script - the script to execute
+     * @returns The return value of the script, if any
+     */
     static scopeEval(scope, script) {
         return Function('"use strict";' + script).bind(scope)();
     }
 
+    /**
+     * Checks whether the fiven string is a valid URL.
+     * @param {String} txt - the string to evaluate
+     * @returns Boolean indeicating whether the string is a URL.
+     */
     static isUrl(txt) {
         try {
             if (typeof (txt) !== "string")
@@ -172,6 +203,12 @@ class Core {
         return false;
     }
 
+    /**
+     * Counterpart of GetObjectValue
+     * @param {Object} obj - the object to set a shallow or deep property on
+     * @param {String} path - the path to the property to set
+     * @param {Any} value - the value to set
+     */
     static setObjectValue(obj, path, value) {
         // Get the path as an array
         path = Core.stringToPath(path);
@@ -189,6 +226,11 @@ class Core {
         }
     }
 
+    /**
+     * Helper for GetObjectProperty and GetObjectProperty
+     * @param {String} path 
+     * @returns 
+     */
     static stringToPath(path) {
 
         // If the path isn't a string, return it
@@ -212,6 +254,13 @@ class Core {
         return output;
     }
 
+    /**
+     * Compares values using the built in operator table
+     * @param {String} operator 
+     * @param {Object} a 
+     * @param {Object} b 
+     * @returns 
+     */
     static compare(operator, a, b) {
         return this.operatorTable[operator](a, b);
     }
@@ -234,6 +283,7 @@ class Core {
         return s;
     }
 
+
     static toPascalCase(s) {
         if (typeof (s) !== "string")
             return s;
@@ -242,6 +292,10 @@ class Core {
             function (g0, g1, g2) { return g1.toUpperCase() + g2.toLowerCase(); });
     }
 
+    /**
+     * Returns a random GUID
+     * @returns string (36 characters)
+     */
     static guid() {
         return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
             var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
@@ -249,8 +303,15 @@ class Core {
         });
     }
 
-
-    static async waitFor(f, timeoutMs) {
+    /**
+     * Waits for a given condition in a promise.
+     * @param {Function} f - the function to evaluate whether waiting should end
+     * @param {Number} timeoutMs - total time to wait if the given function still doesn't return true 
+     * @param {Number} intervalMs - interval to wait between each function evaluation (in milliseconds) - Defaults to 20.
+     * @returns Promise that resolves when the evaluating function provided return true, or gets rejected when the timeout is reached.
+     */
+    static async waitFor(f, timeoutMs, intervalMs) {
+        intervalMs = intervalMs || 20;
         return new Promise((resolve, reject) => {
             let timeWas = new Date(),
                 wait = setInterval(function () {
@@ -262,11 +323,15 @@ class Core {
                         clearInterval(wait);
                         reject();
                     }
-                }, 20);
+                }, intervalMs);
         });
     }
 
-
+    /**
+     * Formats a number as human-friendly byte size
+     * @param {Number} size 
+     * @returns String like 20KB, 1.25MB, 6.25GB, etc.
+     */
     static formatByteSize(size) {
         // Setup some constants
         const LN1024 = Math.log(1024), // This converts from log in base e to log in base 1024.

@@ -6,6 +6,9 @@ import PWA_EventHub from './PWA_EventHub';
 import PWA_RESTService from './PWA_RESTService';
 import PWA_OmniBox from './PWA_OmniBox';
 
+/**
+ * Progressive Web App container 
+ */
 class PWA {
     static RouteModule = RouteModule;
     static Router = Router;
@@ -20,9 +23,13 @@ class PWA {
         }
     }
 
+    /**
+     * Constructor
+     * @param {Object} options - sets up the PWA 
+     */
     constructor(options) {
         window.pwa = this;
-        
+
         this.events = new Core.Events(this);
 
         document.querySelector("html").classList.add("pwa-signin-pending");
@@ -39,14 +46,14 @@ class PWA {
 
         console.debug("PWA Config", this.config);
 
-        this.restService = new PWA_RESTService(this);
+        this._restService = new PWA_RESTService(this);
 
         this.eventHub = new PWA_EventHub(this);
 
         this.eventHub.init().then(() => {
 
             this.asyncInit().then(() => {
-                this.UI = new PWA_UI(this);
+                this._UI = new PWA_UI(this);
                 this.init();
                 this.execute()
             });
@@ -89,16 +96,32 @@ class PWA {
         // to subclass
     }
 
+    /**
+     * Returns the REST service (using a fetch implementation)
+     */
+    get restService(){
+        return this._restService;
+    }
+
+    /**
+     * Returns the UI instance for this PWA
+     */
+    get UI(){
+        return this._UI;
+    }
+
+    /**
+     * Called to allow the inherited class to initialize async
+     * @returns Promise
+     */
     asyncInit() {
         return Promise.resolve();
     }
 
     execute(async) {
-        const _ = this;
-
         this.setupUI()
 
-        _.router = new Router(_, this.config.routes, {
+        this._router = new Router(this, this.config.routes, {
             onRoute: (mod, path) => {
                 console.debug("PWA Executes Route", mod, path);
 
@@ -113,10 +136,17 @@ class PWA {
             },
             ready: () => {
                 console.debug("PWA Router Ready");
-                _.routerReady()
+                this.routerReady()
             }
         })
 
+    }
+
+    /**
+     * Returns the router instance created for the PWA.
+     */
+    get router() {
+        return this._router;
     }
 
     rest(endpoint, options) {
@@ -127,12 +157,19 @@ class PWA {
         return window.account != null;
     }
 
+    /**
+     * Returns the JWT token to use in REST (if implemented in inherited class)
+     * @returns JWT token wrapped in promise 
+     */
     getToken() { // to be subclassed
         return Promise.resolve();
     }
 
     setupUI() { } // to be subclassed
 
+    /**
+     * Called when all routes have been set up (asynchronously)
+     */
     routerReady() { } // to be subclassed
 }
 

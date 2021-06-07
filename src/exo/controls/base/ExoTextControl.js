@@ -14,11 +14,11 @@ class ExoTextControl extends ExoInputControl {
             type: String,
             description: "Prefix to display in input (e.g. '$')"
         },
-        {
-            name: "autocomplete",
-            description: "Object with autocomplete settings",
-            type: Object
-        });
+            {
+                name: "autocomplete",
+                description: "Object with autocomplete settings",
+                type: Object
+            });
     }
 
     async render() {
@@ -45,11 +45,11 @@ class ExoTextControl extends ExoInputControl {
             this.htmlElement.style.paddingLeft = "1rem";
         }
 
-        if(this.autocomplete){
+        if (this.autocomplete) {
             this.autocomplete.attach();
         }
 
-        return this.container
+        return this.container;
     }
 
     get prefix() {
@@ -60,14 +60,14 @@ class ExoTextControl extends ExoInputControl {
         this._prefix = value;
 
         if (this.rendered)
-            this.htmlElement.closest(".exf-ctl").setAttribute("data-prefix", this._prefix)
+            this.htmlElement.closest(".exf-ctl").setAttribute("data-prefix", this._prefix);
     }
 
-    set autocomplete(obj){
+    set autocomplete(obj) {
         this._autoComplete = new ExoTextControlAutoCompleteExtension(this, obj);
     }
 
-    get autocomplete(){
+    get autocomplete() {
         return this._autoComplete;
     }
 
