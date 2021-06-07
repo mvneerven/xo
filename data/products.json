@@ -28,8 +28,8 @@
     {
         "id": "db810312-885f-435a-903b-9ec5cbb71aa9",
         "recordVersion": 1,
-        "name": "Witbier",
-        "description": "Lekker fris",
+        "name": "Hoegaarden Witbier",
+        "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce bibendum, leo rhoncus aliquam euismod, nisl ipsum congue diam, et sollicitudin nisl dui nec mauris. Donec blandit felis sagittis elit porta venenatis. Quisque nec facilisis sem. Ut nec eleifend ante, vitae scelerisque lacus. Etiam ac orci tellus. Ut scelerisque quam ut nisi pellentesque lacinia. Quisque fringilla imperdiet volutpat. Etiam dignissim venenatis finibus. Nullam facilisis ornare elementum. Curabitur interdum tristique libero sed pulvinar.",
         "price": {
             "amount": 3.95,
             "currency": 978
@@ -114,19 +114,6 @@
         },
         "vatPercentage": 21.0,
         "imageUri": "https://stasfassetsdev.z6.web.core.windows.net/fb70c487-edfe-4cd4-bd7e-cded4f309b4f/images/products/hertogjan.jpg",
-        "isForSale": false
-    },
-    {
-        "id": "db810312-885f-435a-903b-9ec5cbb71aa9",
-        "recordVersion": 1,
-        "name": "Hoegaarden Witbier",
-        "description": "Lekker fris",
-        "price": {
-            "amount": 3.95,
-            "currency": 978
-        },
-        "vatPercentage": 0.0,
-        "imageUri": "https://stasfassetsdev.z6.web.core.windows.net/fb70c487-edfe-4cd4-bd7e-cded4f309b4f/images/products/vedett.jpg",
         "isForSale": false
     },
     {

@@ -13,6 +13,7 @@
         border: 1px solid rgba(0, 0, 0, 0.1);
         padding: .2rem;
         max-height: 300px;
+        max-width: 500px;
         overflow-y: auto;
         z-index: 10;
 
@@ -20,6 +21,7 @@
             display: grid;
             grid-template-columns: 30px 1fr 7rem;
             cursor: pointer;
+            overflow: hidden;
             padding: 0.5rem;
 
             &:hover {
@@ -31,7 +33,9 @@
                 min-width: 100px;
 
                 small {
-                    color: rgba(0,0,0, 0.5)
+                    color: rgba(0,0,0, 0.5);
+                    word-wrap: normal;
+                    display: inline-block;
                 }
 
                 .txt-hl {
