@@ -173,9 +173,10 @@ class ExoForm {
                     this.events.trigger(ExoFormFactory.events.error, e.detail);
                 });
 
+                
                 this.events.trigger(ExoFormFactory.events.schemaLoaded);
                 this.schema.refreshStats();
-
+                
                 this._createComponents();
 
                 if (this.schema.form) {
@@ -280,7 +281,9 @@ class ExoForm {
                         resolve(this);
                     });
 
-                }).catch(ex => {
+                })
+
+                .catch(ex => {
                     reject("_renderPages() failed: " + ex.toString());
                 });
 
@@ -292,6 +295,7 @@ class ExoForm {
     }
 
     async _finalizeForm() {
+        
         await this.addins.navigation.render();
 
         this.addins.progress.render();
@@ -360,69 +364,74 @@ class ExoForm {
                 _.createControl(p).then(page => {
                     let pageFieldsRendered = 0;
 
-                    p.fields.forEach(f => {
-                        console.debug("ExoForm: rendering field", f.name, f, cid);
-                        f.dummy = DOM.parseHTML('<span/>');
+                    if (Array.isArray(p.fields)) {
+                        p.fields.forEach(f => {
+                            console.debug("ExoForm: rendering field", f.name, f, cid);
+                            f.dummy = DOM.parseHTML('<span/>');
 
-                        page.appendChild(f.dummy);
-                        _.createControl(f).then(() => {
-                            console.debug("createControl ", f, " on " + cid);
-                            // if(cid === "frm-expl"){
-                            //     debugger
-                            // }
+                            page.appendChild(f.dummy);
+                            _.createControl(f).then(() => {
+                                console.debug("createControl ", f, " on " + cid);
+                                
+                                f._control.render().then(rendered => {
 
-                            f._control.render().then(rendered => {
+                                    if (!rendered)
+                                        throw "ExoForm: " + ExoFormFactory.fieldToString(f) + " does not render an HTML element";
 
-                                if (!rendered)
-                                    throw "ExoForm: " + ExoFormFactory.fieldToString(f) + " does not render an HTML element";
+                                    pageFieldsRendered = this._addRendered(f, rendered, pageFieldsRendered, p, page);
 
-                                pageFieldsRendered = this._addRendered(f, rendered, pageFieldsRendered, p, page);
+                                }).catch(ex => {
+                                    let showError = !this.events.trigger(ExoFormFactory.events.error, { error: ex });
+                                    console.error(ex);
+                                    let rendered = DOM.parseHTML(DOM.format('<span class="exf-error exf-render-error" title="{{title}}">ERROR</span>', {
+                                        title: "ExoForm: error rendering field " + ExoFormFactory.fieldToString(f) + ": " + ex.toString()
 
-                            }).catch(ex => {
-                                let showError = !this.events.trigger(ExoFormFactory.events.error, { error: ex });
-                                console.error(ex);
-                                let rendered = DOM.parseHTML(DOM.format('<span class="exf-error exf-render-error" title="{{title}}">ERROR</span>', {
-                                    title: "ExoForm: error rendering field " + ExoFormFactory.fieldToString(f) + ": " + ex.toString()
+                                    }))
+                                    pageFieldsRendered = this._addRendered(f, rendered, pageFieldsRendered, p, page);
 
-                                }))
-                                pageFieldsRendered = this._addRendered(f, rendered, pageFieldsRendered, p, page);
+                                }).finally(r => {
 
-                            }).finally(r => {
+                                    totalFieldsRendered++;
 
-                                totalFieldsRendered++;
+                                    if (totalFieldsRendered === _.schema.fieldCount) {
+                                        _.container.classList.add(pageNr > 1 ? "exf-multi-page" : "exf-single-page");
 
-                                if (totalFieldsRendered === _.schema.fieldCount) {
-                                    _.container.classList.add(pageNr > 1 ? "exf-multi-page" : "exf-single-page");
+                                        // check for custom container
+                                        if (_.schema.form.container) {
+                                            let cf = _._getFormContainerProps(_)
 
-                                    // check for custom container
-                                    if (_.schema.form.container) {
-                                        let cf = _._getFormContainerProps(_)
+                                            _.createControl(cf).then(cx => {
+                                                cx.render().then(x => {
+                                                    x.appendChild(_.pageContainer);
+                                                    _.pageContainer = DOM.unwrap(_.pageContainer);
+                                                    cx.finalize(_.pageContainer);
+                                                    _.form.appendChild(x);
 
-                                        _.createControl(cf).then(cx => {
-                                            cx.render().then(x => {
-                                                x.appendChild(_.pageContainer);
-                                                _.pageContainer = DOM.unwrap(_.pageContainer);
-                                                cx.finalize(_.pageContainer);
-                                                _.form.appendChild(x);
+                                                    resolve();
+                                                })
+                                            });
 
-                                                resolve();
-                                            })
-                                        });
+                                        }
+                                        else {
+                                            _.form.appendChild(_.pageContainer);
+                                            resolve();
+                                        }
 
                                     }
-                                    else {
-                                        _.form.appendChild(_.pageContainer);
-                                        resolve();
-                                    }
+                                });
+                            })
 
-                                }
+                            .catch(ex => {
+                                reject("Exception in createControl() for control " + ExoFormFactory.fieldToString(f) + ": " + ex.toString())
                             });
-                        }).catch(ex => {
-                            reject("Exception in createControl() for control " + ExoFormFactory.fieldToString(f) + ": " + ex.toString())
                         });
-                    });
+                    }
+                    else{
+                        console.warn(`Page ${pageNr} has no fields array`);
+                    }
+                })
 
-                }).catch(ex => {
+                .catch(ex => {
                     reject("Exception in createControl() for page container " + ExoFormFactory.fieldToString(p) + ": " + ex.toString())
                 });
             });

@@ -243,7 +243,7 @@ class ExoTextControlAutoCompleteExtension {
         }
 
         if (catHandler.format) {
-            debugger
+            
             result = catHandler.format({
                 item: i,
                 result: result,

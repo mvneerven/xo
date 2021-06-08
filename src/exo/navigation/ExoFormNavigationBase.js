@@ -33,6 +33,7 @@ class ExoFormNavigationBase {
         this.container = DOM.parseHTML(tpl);
 
         return new Promise((resolve, reject) => {
+
             this.renderButtons().then(() => {
                 this.form.appendChild(this.container);
     
@@ -91,13 +92,12 @@ class ExoFormNavigationBase {
     }
 
     renderButtons() {
-
-        let rendered = 0, count = this.controls.length;
-
         return new Promise((resolve, reject) => {
             if (Array.isArray(this.exo.schema.controls)) {
                 this.controls = this.exo.schema.controls;
             }
+
+            let rendered = 0, count = this.controls.length;
 
             this.controls.forEach(b => {
                 this.addButton(b).then(btn => {

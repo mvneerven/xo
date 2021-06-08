@@ -52,7 +52,8 @@ body footer {
 }
 
 #xo-test .md-converted-html img {
-  max-width: 600px;
+  width: 90%;
+  max-width: 900px;
 }
 
 #xo-test .md-converted-html code {
@@ -136,6 +137,17 @@ body footer {
 
 #xo-test .exf-container.pwa-omnibox fieldset .exf-ctl-cnt input:focus {
   border-color: rgba(200, 0, 0, 0.4);
+}
+
+#xo-test .exf-container .compact.exf-ctl-cnt {
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+#xo-test .exf-container .compact.exf-ctl-cnt .exf-ctl-group {
+  padding: 0 !important;
+  margin: 0 !important;
+  padding-top: 1rem !important;
 }
 
 nav.main-menu {

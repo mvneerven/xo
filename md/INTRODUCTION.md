@@ -36,7 +36,7 @@ What does ExoForm bring?
 * Wizards & other multi-page forms, Surveys, 
 * Completely overridable rendering & theming
 * A visual [ExoForm Explorer](https://www.xo-js.dev/#/explore) and Test Environment
-  * JSON Schema editor 
+  * Code Editor with JSON/JS support
   * Wysiwyg designer (in development) 
   * Jest test environment 
 * [Codepen examples](https://codepen.io/collection/XLwaxp)

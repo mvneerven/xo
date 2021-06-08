@@ -14,7 +14,6 @@ class ExoFormSchema {
     }
 
     constructor(options) {
-        ///this.events = new Core.Events(this)
         this._type = this.types.undefined;
         this.options = options || {};
         this._jsonSchemas = {};
@@ -44,9 +43,6 @@ class ExoFormSchema {
             }
         }
 
-        // if (!schemaData || !schemaData.pages || !Array.isArray(schemaData.pages))
-        //     throw "ExoFormSchema: invalid ExoForm schema";
-
         this._schemaData = {
             ...this.options.defaults || {},
             ...schemaData
@@ -65,22 +61,98 @@ class ExoFormSchema {
         let defaultModelInstance = this.getFirstInstanceName();
         if (!defaultModelInstance) {
             defaultModelInstance = "data";
-            this._schemaData.model  = this._schemaData.model || {instance: {}};
+            this._schemaData.model = this._schemaData.model || { instance: {} };
             this.model.instance[defaultModelInstance] = {};
         }
 
         if (this.pages.length === 0) {
-            let fields = [];
             let schemaProps = this.jsonSchemas[defaultModelInstance].schema.properties;
+
+            let mapped = this.tryMappings(defaultModelInstance);
+            
+            if (this.pages.length === 0)
+                this.pages.push({ fields: [] });
+
+
             for (var name in schemaProps) {
-                fields.push({
-                    name: name,
-                    bind: `instance.${defaultModelInstance}.${name}`
-                })
+                if (!mapped.includes(name)) {
+                    this.pages[0].fields.push({
+                        name: name,
+                        bind: `instance.${defaultModelInstance}.${name}`
+                    })
+                }
             }
-            this.pages.push({ fields: fields });
+
+            if(mapped.length){
+                console.log(this.toJSString());
+            }
         }
-    
+    }
+
+    // if mappings object exists in schema, it is used to bind UI state 
+    // where json-schema is leading for model and property types. 
+    tryMappings(defaultModelInstance) {
+        let mapped = [];
+        
+        const DEFAULT_PAGE_ID = "_defaultPage";
+
+        if (typeof (this.mappings) === "object") {
+
+            // skip is an Array with fields that need to be excluded from the UI
+            if(Array.isArray(this.mappings.skip)) {
+                console.debug("mappings.skip found: exclude from UI:", this.mappings.skip)
+                mapped = mapped.concat(this.mappings.skip) 
+            }
+
+            this.mappings.pages = this.mappings.pages || {}
+
+            if (typeof (this.mappings.properties) === "object") {
+                console.debug("mappings.properties found")
+                for (var name in this.mappings.properties) {
+                    let prop = this.mappings.properties[name];
+                    if (!prop.page) {
+                        prop.page = DEFAULT_PAGE_ID;
+                    }
+
+                    this.mappings.pages[prop.page] = this.mappings.pages[prop.page] || {};
+                    this.mappings.pages[prop.page].fields = this.mappings.pages[prop.page].fields || [];
+                    
+                    console.debug("mappings.properties found for", name)
+                    this.mappings.pages[prop.page].fields.push({
+                        name: name,
+                        bind: `instance.${defaultModelInstance}.${name}`,
+                        ...prop
+                    })
+                    mapped.push(name);
+                }
+            }
+
+            let unplacedFields = [];
+            if (typeof (this.mappings.pages) === "object") {
+                for (var name in this.mappings.pages) {
+                    let page = this.mappings.pages[name];
+
+                    page.fields = page.fields || [];
+
+                    if (name === DEFAULT_PAGE_ID) {
+                        unplacedFields = page.fields;
+                    }
+                    else {
+                        this.pages.push(page);
+                    }
+                }
+            }
+
+            if (unplacedFields.length) {
+                if (this.pages.length) {
+                    this.pages[0].fields = this.pages[0].fields.concat(unplacedFields);
+                }
+                else {
+                    this.pages.push({ fields: unplacedFields });
+                }
+            }
+        }
+        return mapped;
     }
 
     getFirstInstanceName() {
@@ -96,6 +168,18 @@ class ExoFormSchema {
 
     addJSONSchema(instanceName, schema) {
         this._jsonSchemas[instanceName] = new JSONSchema(instanceName, schema);
+    }
+
+    get form() {
+        return this._schemaData.form;
+    }
+
+    get pages() {
+        return this._schemaData.pages;
+    }
+
+    get model() {
+        return this._schemaData.model;
     }
 
     get jsonSchemas() {
@@ -126,12 +210,23 @@ class ExoFormSchema {
         return this._schemaData.rules;
     }
 
+
     get theme() {
         return this._schemaData.theme;
     }
 
+    /**
+     * Controls section for form navigation 
+     */
     get controls() {
         return this._schemaData.controls;
+    }
+
+    /**
+     * UI mappings - used when JSON Schema is used and only UI mapping is needed
+     */
+    get mappings() {
+        return this._schemaData.mappings;
     }
 
     guessType() {
@@ -256,17 +351,6 @@ class ExoFormSchema {
         return "const schema = " + str;
     }
 
-    get form() {
-        return this._schemaData.form;
-    }
-
-    get pages() {
-        return this._schemaData.pages;
-    }
-
-    get model() {
-        return this._schemaData.model;
-    }
 
     /**
      * query all fields using matcher and return matches

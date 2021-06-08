@@ -39,7 +39,7 @@ class ExoBaseControls {
         color: { caption: "Color Input", base: "input", note: "A control to select a color", demo: { value: "#cc4433" } },
         checkbox: { type: ExoCheckboxControl, note: "A checkbox", demo: { checked: true } },
         email: { caption: "Email Address", base: "text", note: "A text input that validates email addresses", demo: { required: true } },
-        date: { base: "input", note: "A date input that is used to input phone numbers" },
+        date: { base: "input", note: "A date input" },
         month: { base: "input", note: "A month selector input" },
         "datetime-local": { caption: "Local Date &amp; Time selector", base: "input", note: "A date input that is used to input local date/time" },
         search: { base: "text", note: "A search text input with a clear button" },

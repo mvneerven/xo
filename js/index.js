@@ -8,53 +8,99 @@ class HomeRoute extends xo.route {
     menuIcon = "ti-home";
 
     async render() {
+        try {
+            await this.renderForm();
+        }
+        catch (ex) {
+            this.app.UI.areas.main.add("Could not render form: " + ex.toString)
+        }
+    }
 
-        let form = await xo.form.run("/data/forms/products1.js", {
+    async renderForm() {
+        const schema = {
+            navigation: "static",
+            model: {
+                schemas: {
+                    data: "/data/schemas/product-schema.json"
+                },
+                instance: {
+                    data: {
+                        id: "ea56912e-0f14-489e-af5f-3e4b7d0a966f",
+                        name: "My random photo",
+                        description: "Just an example form showing JSON Schema Binding",
+                        price: {
+                            amount: 34.45,
+                            currency: 978
+                        },
+                        isForSale: true,
+                        vatPercentage: 9,
+                        imageUri: "https://xo-js.dev/assets/img/omnibox.png",
+                        tags: ["sunset", "hills", "misty", "clouds"]
+                    }
+                },
+                logic: context => {
+                    let m = context.model;
+                    m.bindings.edit = !m.instance.data.id
+                }
+            },
+
+            mappings: {
+                skip: ["recordVersion"],
+
+                pages: { 
+                    one: { legend: "Hello" },
+                    two: { legend: "Bye" }
+                },
+
+                properties: {
+                    id: {
+                        type: "hidden"
+                    },
+                    name: {
+                        autocomplete: { items: ["Good", "Bad", "Ugly"] }
+                    },
+                    imageUri: {
+                        page: "two",
+                        type: "image"
+                    },
+
+                    price: {
+                        class: "compact",
+                        fields: {
+                            amount: {
+                                type: "number",
+                                prefix: "€"
+                            }
+                        },
+                        columns: "6em 4em",
+                        areas: `"amount currency"`
+                    },
+                    tags: {
+                        type: "tags"
+                    },
+                    isForSale: {
+                        type: "switch"
+                    }
+                }
+            },
+
+            controls: [
+                {
+                    name: "save",
+                    type: "button",
+                    caption: "Save"
+                },
+                {
+                    name: "cancel",
+                    type: "button",
+                    caption: "Cancel"
+                },
+            ]
+        }
+        let form = await xo.form.run(schema, {
             on: {
                 post: e => {
                     alert(JSON.stringify(e.detail.postData, null, 2))
-                },
-                dataModelChange: e => {
-                    // console.log("datamodel change", JSON.stringify(e.detail.model, null, 2))
-                },
-                schemaLoaded: e => {
-                    let schema = e.detail.host.schema;
-
-                    schema.pages[0].fields = schema.pages[0].fields.map(f => {
-                        switch (f.name) {
-                            case "id":
-                            case "recordVersion":
-                                f.type = "hidden";
-                                break;
-                            case "price":
-                                f.fields = {
-                                    amount: {
-                                        type: "number",
-                                        prefix: "€"
-                                    }
-                                }
-                                f.columns = "6em 4em";
-                                f.areas = `"amount currency"`;
-                                break
-
-                            case "vatPercentage":
-                                f.type = "dropdown";
-                                f.items = [{ name: "None", value: 0 }, 9, 21]
-                                break
-
-                            case "imageUri":
-                                f.type = "image";
-                                break
-                            case "tags":
-                                f.type = "tags";
-                                break
-                        }
-
-                        return f;
-                    })
-                },
-                created: e => {
-                    alert(e.detail.host)
                 },
                 error: e => {
                     let ex = e.detail.error;
@@ -64,17 +110,14 @@ class HomeRoute extends xo.route {
                 },
                 dom: {
                     click: e => {
-                        debugger;
+                        //   debugger;
                     }
                 }
-
             }
         });
 
         this.app.UI.areas.main.add(form)
-
     }
-
 }
 
 class TestRoute extends xo.route {
@@ -84,10 +127,7 @@ class TestRoute extends xo.route {
     menuIcon = "ti-gift";
 
     async render() {
-
-
         this.elm = await xo.form.run({
-
             pages: [
                 {
                     fields: [
@@ -100,22 +140,17 @@ class TestRoute extends xo.route {
                                 ///categories: this.options.categories,
                                 items: ["test", "okay", "bla"]
                             }
-
                         }
                     ]
                 }
             ]
         });
         this.area.add(this.elm)
-
     }
 
     get area() {
         return this.app.UI.areas.main;
     }
-
-
-
 }
 
 class SettingsRoute extends xo.route {
@@ -303,7 +338,6 @@ class ProductsRoute extends xo.route {
     };
 
     async render(path) {
-        
         let search = decodeURIComponent(path.substr(1));
 
         var prods = await fetch("/data/products.json").then(x => x.json());
@@ -312,7 +346,7 @@ class ProductsRoute extends xo.route {
 
         prods.forEach(p => {
 
-            let selected = (p.name==search) ? " selected": "";
+            let selected = (p.name == search) ? " selected" : "";
 
             div.appendChild(DOM.parseHTML(
                 /*html*/`<div class="product ${selected}">
@@ -334,8 +368,6 @@ class ProductsRoute extends xo.route {
 
 class PWA extends xo.pwa {
     routerReady() {
-
-
         this.omniBox = new PWA.OmniBox({
             useRoutes: true,
             placeholder: "The start of everything...",

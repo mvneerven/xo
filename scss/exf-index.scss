@@ -56,7 +56,8 @@ body {
         
 
         img {
-            max-width: 600px;
+            width: 90%;
+            max-width: 900px;
         }
 
         code {
@@ -140,6 +141,19 @@ body {
                 }
             }
         }
+
+        .compact.exf-ctl-cnt {
+            padding: 0!important;
+            margin: 0!important;
+
+            .exf-ctl-group {
+                padding: 0!important;
+                margin: 0!important;
+                padding-top: 1rem!important;
+            }
+        }
+
+        
     }
 }
 
