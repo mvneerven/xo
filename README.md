@@ -10,7 +10,7 @@ The Library consists of two major components:
    - JSON-Schema powered
    - Model driven
    - Developer-friendly
-2. [xo.pwa](./md/pwa-README.md) 
+2. [xo.pwa](./md/PWA-README.md) 
    - Progressive Web App (SPA) Container
    - Simple Router
    - UI building features
