@@ -58,7 +58,7 @@ class ExoInputListControl extends ExoListControl {
     // Used to get localized standard validation message 
     getValidationMessage() {
         let msg = "You must select a value",
-            testFrm = DOM.parseHTML('<form><input name="test" required /></form');
+            testFrm = DOM.parseHTML('<form><input name="test" required /></form>');
         testFrm.querySelector("input").addEventListener("invalid", e => {
             msg = e.validationMessage;
             e.preventDefault()
