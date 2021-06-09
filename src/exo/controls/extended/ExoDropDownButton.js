@@ -24,13 +24,14 @@ class ExoDropDownButton extends ExoListControl {
 
   async render() {
     this.htmlElement = DOM.parseHTML(this.getNavTemplate());
+    await super.render();
     const tpl = /*html*/ `<li title="{{tooltip}}"><a>{{name}}</a></li>`;
     this.items = await this.getItems();
     await this.populateList(
       this.htmlElement.querySelector("ul > li > ul"),
       tpl
     );
-    return await super.render();
+    return this.container;
   }
 
   async populateList(containerElm, tpl) {
@@ -54,8 +55,6 @@ class ExoDropDownButton extends ExoListControl {
       title: i.title || "",
     };
 
-    console.log("the item is", item);
-
     let template = DOM.parseHTML(`<div/>`);
     switch (item.type) {
       case "event":
@@ -65,9 +64,10 @@ class ExoDropDownButton extends ExoListControl {
             item
           )
         );
-        template.addEventListener("click", () =>
-          this.events.trigger(item.title, {})
-        );
+        template.addEventListener("click", () => {
+          const ev = new Event(item.title);
+          this.container.dispatchEvent(ev);
+        });
         break;
       case "field":
         template = DOM.parseHTML(
