@@ -1,7 +1,8 @@
 import Core from "../../../pwa/Core";
 import DOM from "../../../pwa/DOM";
 import ExoListControl from "../base/ExoListControl";
-class DropDownButton extends ExoListControl {
+
+class ExoDropDownButton extends ExoListControl {
   icon = "ti-user";
 
   constructor(context) {
@@ -137,4 +138,4 @@ class DropDownButton extends ExoListControl {
   }
 }
 
-export default DropDownButton;
+export default ExoDropDownButton;

@@ -5,7 +5,7 @@ import ExoCKRichEditor from './ExoCKRichEditor';
 import ExoSwitchControl from './ExoSwitchControl';
 import ExoTaggingControl from './ExoTaggingControl';
 import ExoCaptchaControl from './ExoCaptchaControl';
-import DropDownButton from './DropDownButton';
+import ExoDropDownButton from './ExoDropDownButton';
 import ExoEmbedControl from './ExoEmbedControl';
 import ExoVideoControl from './ExoVideoControl';
 import ExoMultiInputControl from './ExoMultiInputControl';
@@ -38,7 +38,7 @@ class ExoExtendedControls {
         daterange: { caption: "Date range", type: ExoDateRangeControl, note: "A date range control" },
         embed: { type: ExoEmbedControl, note: "Embed anything in an IFrame", demo: { url: "https://codepen.io/chriscoyier/embed/gfdDu" } },
         video: { type: ExoVideoControl, caption: "Embed video", note: "An embedded video from YouTube or Vimeo", demo: { player: "youtube", code: "85Nyi4Xb9PY" } },
-        dropdownbutton: { hidden: true, type: DropDownButton, note: "A dropdown menu button" },
+        dropdownbutton: { hidden: true, type: ExoDropDownButton, note: "A dropdown menu button" },
         captcha: { caption: "Google ReCaptcha Control", type: ExoCaptchaControl, note: "Captcha field", demo: { sitekey: "6Lel4Z4UAAAAAOa8LO1Q9mqKRUiMYl_00o5mXJrR" } },
         starrating: { type: ExoStarRatingControl, note: "An accessible star rating control", demo: { value: 2.5 } },
         dialog: { type: ExoDialogControl, caption: "Dialog", note: "A simple dialog (modal or modeless)" },

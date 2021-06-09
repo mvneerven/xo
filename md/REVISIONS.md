@@ -901,3 +901,7 @@ mappings: {
 ## Misc
 - xo.form.factory.readJSONSchema() method
 
+# New in 1.3.17
+
+- ExoDropdownButton update
+
