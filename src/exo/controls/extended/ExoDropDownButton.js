@@ -23,16 +23,14 @@ class ExoDropDownButton extends ExoListControl {
   }
 
   async render() {
-    await super.render();
     this.htmlElement = DOM.parseHTML(this.getNavTemplate());
     const tpl = /*html*/ `<li title="{{tooltip}}"><a>{{name}}</a></li>`;
     this.items = await this.getItems();
-    console.log("the items are", this.items);
     await this.populateList(
       this.htmlElement.querySelector("ul > li > ul"),
       tpl
     );
-    return this.htmlElement;
+    return await super.render();
   }
 
   async populateList(containerElm, tpl) {
