@@ -1,37 +1,140 @@
-import ExoBaseControls from '../base/ExoBaseControls';
-import DOM from '../../../pwa/DOM';
+import Core from "../../../pwa/Core";
+import DOM from "../../../pwa/DOM";
+import ExoListControl from "../base/ExoListControl";
+class DropDownButton extends ExoListControl {
+  icon = "ti-user";
 
-// TODO finish
-class DropDownButton extends ExoBaseControls.controls.list.type {
+  constructor(context) {
+    super(context);
+    this.events = new Core.Events(this);
+    this.context.field.type = "hidden";
 
-    navTemplate = /*html*/`
-        <nav class="ul-drop" role='navigation'>
-            <ul>
-                <li>
-                    <a class="user-icon" href="#"><span class="ti-user"></span></a>
-                    <ul></ul>
-                </li>
-            </ul>
-        </nav>`;
+    this.acceptProperties(
+      {
+        name: "icon",
+        type: String,
+      },
+      {
+        name: "items",
+        type: Array,
+      }
+    );
+  }
 
-    constructor(context) {
-        super(context);
-        this.context.field.type = "hidden";
-        this.htmlElement = DOM.parseHTML(this.navTemplate);
+  async render() {
+    await super.render();
+    this.htmlElement = DOM.parseHTML(this.getNavTemplate());
+    const tpl = /*html*/ `<li title="{{tooltip}}"><a>{{name}}</a></li>`;
+    this.items = await this.getItems();
+    console.log("the items are", this.items);
+    await this.populateList(
+      this.htmlElement.querySelector("ul > li > ul"),
+      tpl
+    );
+    return this.htmlElement;
+  }
+
+  async populateList(containerElm, tpl) {
+    if (this.items && Array.isArray(this.items)) {
+      this.items.forEach((i, index) => {
+        this.addListItem(this.context.field, i, tpl, containerElm, index);
+      });
     }
+  }
 
-    async render() {
-        let f = this.context.field;
-        const tpl = /*html*/`<li title="{{tooltip}}"><a class="{{class}}" href="{{value}}">{{name}}</a></li>`;
-        await this.populateList(this.htmlElement.querySelector("ul > li > ul"), tpl);
-        return await super.render();
-    }
+  async addListItem(f, i, tpl, containerElm, index) {
+    const item = {
+      ...i,
+      name: typeof i.name === "string" ? i.name : i,
+      value: i.value !== undefined ? i.value : i,
+      type: i.type || "link",
+      inputname: f.name,
+      tooltip: (i.tooltip || i.name || "").replace("{{field}}", ""),
+      oid: f.id + "_" + index,
+      url: i.url || "",
+      title: i.title || "",
+    };
 
-    setupButton() {
-        const _ = this;
-        document.querySelector("body").classList.add("signed-out");
-        container.appendChild(DOM.parseHTML(DOM.format(tpl, data, { empty: undefined })));
+    console.log("the item is", item);
+
+    let template = DOM.parseHTML(`<div/>`);
+    switch (item.type) {
+      case "event":
+        template = DOM.parseHTML(
+          DOM.format(
+            `<li title="{{tooltip}}"><a class="{{class}}">{{name}}</a></li>`,
+            item
+          )
+        );
+        template.addEventListener("click", () =>
+          this.events.trigger(item.title, {})
+        );
+        break;
+      case "field":
+        template = DOM.parseHTML(
+          DOM.format(
+            `<li title="{{tooltip}}"><a class="{{class}}">{{name}}</a></li>`,
+            item
+          )
+        );
+        template.querySelector("a").appendChild(await xo.form.run(item.field));
+        break;
+      default:
+        template = DOM.parseHTML(
+          DOM.format(
+            `<li title="{{tooltip}}"><a class="{{class}}" href="{{url}}">{{name}}</a></li>`,
+            item
+          )
+        );
+        break;
     }
+    containerElm.appendChild(template);
+  }
+
+  async getItems() {
+    return new Promise((resolve) => {
+      if (Core.isUrl(this.items)) {
+        fetch(this.items).then((x) => {
+          if (x.status === 200) {
+            resolve(x.json());
+            return;
+          }
+          throw Error(`HTTP error ${x.status} - ${this.items}`);
+        });
+      } else if (Array.isArray(this.items)) {
+        resolve(
+          this.items.map((i) => {
+            if (typeof i === "string") {
+              return { text: i };
+            }
+            return i;
+          })
+        );
+      } else if (typeof this.items === "function") {
+        resolve(this.items);
+      } else {
+        return resolve(Promise.resolve(this.items));
+      }
+    });
+  }
+
+  getNavTemplate() {
+    return `<nav class="ul-drop" role='navigation'>
+        <ul>
+            <li>
+                <a class="user-icon" href="#"><span class="${this.icon}"></span></a>
+                <ul></ul>
+            </li>
+        </ul>
+    </nav>`;
+  }
+
+  setupButton() {
+    document.querySelector("body").classList.add("signed-out");
+    container.appendChild(
+      DOM.parseHTML(DOM.format(tpl, data, { empty: undefined }))
+    );
+  }
 }
 
 export default DropDownButton;
