@@ -8,6 +8,11 @@ class HomeRoute extends xo.route {
     menuIcon = "ti-home";
 
     async render() {
+
+        // let jsc = await xo.form.factory.readJSONSchema("/data/schemas/product-schema.json")
+        // debugger;
+
+
         try {
             await this.renderForm();
         }

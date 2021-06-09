@@ -446,6 +446,38 @@ class ExoFormFactory {
         }
     }
 
+    /**
+     * Read JSON Schema from the given URL.
+     * @param {URL} schemaUrl - The URL to read the JSON Schema from
+     * @returns {Object} - JSON Schema Object
+     */
+    static async readJSONSchema(schemaUrl) {
+
+        return new Promise((resolve) => {
+            ExoFormFactory.run(
+                {
+                    model: {
+                        schemas: {
+                            my_custom_Instance: schemaUrl,
+                        },
+                        instance: {
+                            my_custom_Instance: {}
+                        },
+                    },
+                },
+                {
+                    on: {
+                        schemaLoaded: (e) => {
+                            resolve(
+                                e.detail.host.schema.jsonSchemas.my_custom_Instance.schema
+                            );
+                        },
+                    },
+                }
+            );
+        });
+    }
+
 }
 
 export default ExoFormFactory;

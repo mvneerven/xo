@@ -819,3 +819,85 @@ let html = await Core.MarkDown.read("./README.md");
 document.body.appendChild(DOM.parseHTML(html));
 ```
 
+# New in 1.3.16
+
+## ExoForm Schema
+
+### New Property: mappings
+
+With a JSON Schema in the lead, form generation is easier than ever.
+The JSON Schema provides a lot of information that helps ExoForm in binding to a model.
+What you need then is an intuitive way of mapping and customizing the UI for each control, given the rich possibilities ExoForm (and extensions) provide.
+
+With *bindings*, you can reuse the property layout in a JSON Schema to specify any customizations per property:
+
+Example:
+
+```js
+const schema = {
+  navigation: "static",
+  model: {
+    schemas: {
+        data: "/data/schemas/product-schema.json"
+    },
+    instance: {
+        data: {
+            id: "ea56912e-0f14-489e-af5f-3e4b7d0a966f",
+            name: "Test Product",
+            description: "Product description",
+            price: {
+                amount: 34.45,
+                currency: 978
+            },
+            isForSale: true,
+            vatPercentage: 9,
+            imageUri: "https://cdn.domain.com/st6fvmyd/assets/img/testprod1.jpg",
+            tags: ["sunset", "hills", "misty", "clouds"]
+        }
+    }
+},
+
+mappings: {
+    skip: ["recordVersion"],
+
+    pages: { 
+        one: { legend: "Hello" },
+        two: { legend: "Bye" }
+    },
+
+    properties: {
+        id: {
+            type: "hidden"
+        },
+        name: {
+            autocomplete: { items: ["Good", "Bad", "Ugly"] }
+        },
+        imageUri: {
+            page: "two",
+            type: "image"
+        },
+
+        price: {
+            class: "compact",
+            fields: {
+                amount: {
+                    type: "number",
+                    prefix: "€"
+                }
+            },
+            columns: "6em 4em",
+            areas: `"amount currency"`
+        },
+        tags: {
+            type: "tags"
+        },
+        isForSale: {
+            type: "switch"
+        }
+    }
+}
+```
+
+## Misc
+- xo.form.factory.readJSONSchema() method
+
