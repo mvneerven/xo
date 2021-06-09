@@ -198,7 +198,7 @@ class Router {
             if (!m.hidden) {
                 let o = { ...m, name: m.module.constructor.name };
                 o.menuTitle = o.menuTitle || m.title;
-                o.class = m.path === this.route ? "selected": "";
+                o.class =  `${m.class || ""} ${m.path === this.route ? "selected": ""}`;
                 o.path = m.path;
                 let s = DOM.format(menuItemTpl, o);
                 ar.push(s);
