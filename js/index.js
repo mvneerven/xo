@@ -15,6 +15,7 @@ class HomeRoute extends xo.route {
 
         try {
             await this.renderForm();
+            // await xo.form.factory.run();
         }
         catch (ex) {
             this.app.UI.areas.main.add("Could not render form: " + ex.toString)
@@ -22,86 +23,87 @@ class HomeRoute extends xo.route {
     }
 
     async renderForm() {
-        const schema = {
-            navigation: "static",
-            model: {
-                schemas: {
-                    data: "/data/schemas/product-schema.json"
-                },
-                instance: {
-                    data: {
-                        id: "ea56912e-0f14-489e-af5f-3e4b7d0a966f",
-                        name: "My random photo",
-                        description: "Just an example form showing JSON Schema Binding",
-                        price: {
-                            amount: 34.45,
-                            currency: 978
-                        },
-                        isForSale: true,
-                        vatPercentage: 9,
-                        imageUri: "https://xo-js.dev/assets/img/omnibox.png",
-                        tags: ["sunset", "hills", "misty", "clouds"]
-                    }
-                },
-                logic: context => {
-                    let m = context.model;
-                    m.bindings.edit = !m.instance.data.id
-                }
-            },
+        const schema = "/data/forms/form.js";
+        // const schema = {
+        //     navigation: "static",
+        //     model: {
+        //         schemas: {
+        //             data: "/data/schemas/product-schema.json"
+        //         },
+        //         instance: {
+        //             data: {
+        //                 id: "ea56912e-0f14-489e-af5f-3e4b7d0a966f",
+        //                 name: "My random photo",
+        //                 description: "Just an example form showing JSON Schema Binding",
+        //                 price: {
+        //                     amount: 34.45,
+        //                     currency: 978
+        //                 },
+        //                 isForSale: true,
+        //                 vatPercentage: 9,
+        //                 imageUri: "https://xo-js.dev/assets/img/omnibox.png",
+        //                 tags: ["sunset", "hills", "misty", "clouds"]
+        //             }
+        //         },
+        //         logic: context => {
+        //             let m = context.model;
+        //             m.bindings.edit = !m.instance.data.id
+        //         }
+        //     },
 
-            mappings: {
-                skip: ["recordVersion"],
+        //     mappings: {
+        //         skip: ["recordVersion"],
 
-                pages: { 
-                    one: { legend: "Hello" },
-                    two: { legend: "Bye" }
-                },
+        //         pages: { 
+        //             one: { legend: "Hello" },
+        //             two: { legend: "Bye" }
+        //         },
 
-                properties: {
-                    id: {
-                        type: "hidden"
-                    },
-                    name: {
-                        autocomplete: { items: ["Good", "Bad", "Ugly"] }
-                    },
-                    imageUri: {
-                        page: "two",
-                        type: "image"
-                    },
+        //         properties: {
+        //             id: {
+        //                 type: "hidden"
+        //             },
+        //             name: {
+        //                 autocomplete: { items: ["Good", "Bad", "Ugly"] }
+        //             },
+        //             imageUri: {
+        //                 page: "two",
+        //                 type: "image"
+        //             },
 
-                    price: {
-                        class: "compact",
-                        fields: {
-                            amount: {
-                                type: "number",
-                                prefix: "€"
-                            }
-                        },
-                        columns: "6em 4em",
-                        areas: `"amount currency"`
-                    },
-                    tags: {
-                        type: "tags"
-                    },
-                    isForSale: {
-                        type: "switch"
-                    }
-                }
-            },
+        //             price: {
+        //                 class: "compact",
+        //                 fields: {
+        //                     amount: {
+        //                         type: "number",
+        //                         prefix: "€"
+        //                     }
+        //                 },
+        //                 columns: "6em 4em",
+        //                 areas: `"amount currency"`
+        //             },
+        //             tags: {
+        //                 type: "tags"
+        //             },
+        //             isForSale: {
+        //                 type: "switch"
+        //             }
+        //         }
+        //     },
 
-            controls: [
-                {
-                    name: "save",
-                    type: "button",
-                    caption: "Save"
-                },
-                {
-                    name: "cancel",
-                    type: "button",
-                    caption: "Cancel"
-                },
-            ]
-        }
+        //     controls: [
+        //         {
+        //             name: "save",
+        //             type: "button",
+        //             caption: "Save"
+        //         },
+        //         {
+        //             name: "cancel",
+        //             type: "button",
+        //             caption: "Cancel"
+        //         },
+        //     ]
+        // }
         let form = await xo.form.run(schema, {
             on: {
                 post: e => {
