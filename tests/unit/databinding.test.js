@@ -71,21 +71,13 @@ describe("ExoForm databinding Tests", () => {
 
 function form(schema) {
     return new Promise((resolve, reject) => {
-
-        console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
-
         xo.form.run(schema, {
             on: {
                 renderReady: e => {
-                    
-                    
-
                     let context = {
                         exo: e.detail.host,
                         posted: e.detail.host.getFormValues()
                     }
-                    console.log(context.posted);
-
                     resolve(context);
                 }
             }

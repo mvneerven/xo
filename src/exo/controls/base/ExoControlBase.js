@@ -227,7 +227,7 @@ class ExoControlBase {
         if (!this.isPage)
             ar.push("exf-ctl-cnt")
 
-        ar.push("exf-base-" + this._getBaseType())        
+        ar.push("exf-base-" + this._getBaseType())
 
         if (this.htmlElement.tagName === "INPUT" || this.htmlElement.tagName === "TEXTAREA")
             ar.push("exf-input");
@@ -466,7 +466,7 @@ class ExoControlBase {
             this.container.classList.add('exf-invalid');
         }
 
-        this.container.querySelector(".exf-help-wrapper").appendChild(this._error);
+        this.container.querySelector(":scope > .exf-fld-details > .exf-help-wrapper").appendChild(this._error);
 
     }
 }

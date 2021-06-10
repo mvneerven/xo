@@ -31,9 +31,9 @@ class PWA_EventHub {
                         })
                     });
 
-                    signalRConnection.onclose(() => console.log('disconnected'));
+                    signalRConnection.onclose(() => console.log("PWA_EventHub", 'disconnected'));
 
-                    console.log("Starting signalR connection ", sr.notificationServiceUrl);
+                    console.debug("PWA_EventHub", "Starting signalR connection ", sr.notificationServiceUrl);
 
                     signalRConnection.start()
                         .then(() => reactiveData.isConnected = true)

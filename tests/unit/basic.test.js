@@ -54,8 +54,6 @@ function form(schema) {
                         exo: e.detail.host,
                         posted: e.detail.host.getFormValues()
                     }
-                    console.log(context.posted);
-
                     resolve(context);
                 }
             }

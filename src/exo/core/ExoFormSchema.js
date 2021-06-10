@@ -82,10 +82,6 @@ class ExoFormSchema {
                     })
                 }
             }
-
-            if(mapped.length){
-                console.log(this.toJSString());
-            }
         }
     }
 

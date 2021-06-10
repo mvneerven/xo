@@ -83,8 +83,6 @@ class ExoFormDataBinding {
                     if (field && field.bind) {
                         let value = field._control.value;
                         Core.setObjectValue(this._model, field.bind, value);
-                        //console.log("Model Instance changed", field.bind, value, this._model.instance);
-
                         if (this._mapped) {
                             // map back
                             this._mapped = this._model.instance;
