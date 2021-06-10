@@ -433,6 +433,10 @@ class PWA extends xo.pwa {
         this.omniBox.render().then(elm => {
             this.UI.areas.header.add(elm)
         })
+
+        this.router.generateMenu(this.UI.areas.menu, m=>{
+            return m.name !== "SettingsRoute"
+        });
     }
 }
 

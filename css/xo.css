@@ -876,11 +876,13 @@ nav.ul-drop ul ul {
 nav.ul-drop ul ul li {
   float: none;
   position: relative;
+  white-space: nowrap;
 }
 
 nav.ul-drop ul ul li a {
   padding: 6px 10px;
   border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  cursor: pointer;
 }
 
 nav.ul-drop ul ul ul {

@@ -1,7 +1,9 @@
-import DOM from './DOM';
 import Core from './Core';
 import RouteModule from './RouteModule';
 
+/**
+ * Hash-based PWA router
+ */
 class Router {
     static events = {
         route: "route"
@@ -17,12 +19,14 @@ class Router {
 
         this.setupHashListener(settings.onRoute)
 
-        console.debug("Loading Route modules");
+        console.debug("Router", "Loading Route modules");
         this.loadModules().then(() => {
-            console.debug("Loaded Route modules", this.modules);
-            DOM.trigger(window, 'hashchange');
+            console.debug("Router", "Loaded Route modules", this.modules);
+            let ev = new Event("hashchange");
+            window.dispatchEvent(ev);
+
         }).then(() => {
-            console.debug("Router Ready");
+            console.debug("Router", "Router Ready");
             settings.ready();
         })
     }
@@ -69,10 +73,13 @@ class Router {
                     }
 
                     this.current = m;
-                    
-                    this.routeCallback(m.module, path);
 
-                    this.updateGeneratedMenu(m.module.path);
+                    this.events.trigger("route", {
+                        module: m.module,
+                        path: path
+                    });
+
+                    this.routeCallback(m.module, path);
                 }
             }
             else if (!h.startsWith("dlg-")) {
@@ -83,15 +90,6 @@ class Router {
             this.home();
         }
 
-    }
-
-    updateGeneratedMenu(selectedPath) {
-        if (this.menu) {
-            this.menu.element.querySelectorAll("li").forEach(li => {
-                let selected = selectedPath === li.getAttribute("data-route");
-                li.classList[selected ? "add" : "remove"]("selected")
-            })
-        }
     }
 
     set route(routePath) {
@@ -183,68 +181,48 @@ class Router {
         });
     }
 
+    /**
+     * Returns an array of objects representing the router's route modules
+     * @param {Function} filter 
+     * @returns Array of objects with route module properties
+     */
+    listModules(filter) {
+        let ar = [];
+
+        if (!filter)
+            filter = m => { return !m.hidden };
+
+        this.modules.forEach(m => {
+            let o = {
+                ...m,
+                name: m.module.constructor.name,
+                menuTitle: m.menuTitle || m.title,
+                class: `${m.class || ""} ${m.path === this.route ? "selected" : ""}`
+            };
+            if (filter(o)) {
+                ar.push(o);
+            }
+        });
+        return ar;
+    }
+
+    /**
+     * Navigates to the home route
+     */
     home() {
         this.route = "/";
     }
 
-    generateMenu(menu) {
-
-        const menuTpl = /*html*/`<nav class="main-menu"><ul>{{inner}}</ul></nav>`;
-        const menuItemTpl = /*html*/`<li class="{{class}}" data-route="{{path}}" title="{{title}}"><a href="{{url}}"><span class="{{menuIcon}}"></span> <span class="name">{{menuTitle}}</span></a></li>`;
-        let ar = [];
-
-        this.modules.forEach(m => {
-
-            if (!m.hidden) {
-                let o = { ...m, name: m.module.constructor.name };
-                o.menuTitle = o.menuTitle || m.title;
-                o.class =  `${m.class || ""} ${m.path === this.route ? "selected": ""}`;
-                o.path = m.path;
-                let s = DOM.format(menuItemTpl, o);
-                ar.push(s);
-            }
-        });
-
-
-        let ul = DOM.format(menuTpl, { inner: ar.join('') });
-
-        menu.add(DOM.parseHTML(ul))
-
-        menu.element.addEventListener("click", e => {
-
-            if (e.target.closest("li")) {
-                this.app.UI.areas.menu.element.classList.add("clicked");
-
-                if (!this.touchStarted) {
-                    setTimeout(() => {
-                        this.app.UI.areas.menu.element.classList.remove("clicked");
-                        this.touchStarted = false;
-                    }, 1500);
-                }
-            }
-        });
-
-        // handle special mobile case to prevent menu from opening 
-        // when mouse
-        menu.element.addEventListener("touchstart", e => {
-            this.touchStarted = true;
-
-            let menu = e.target.closest("[data-pwa-area]");
-            if (menu) {
-                if (e.target.closest("li")) {
-                    menu.classList.add("clicked");
-                }
-                else {
-                    menu.classList.remove("clicked");
-                }
-            }
-
-        });
-
-        this.menu = menu;
-
-        return menu;
+    /**
+     * Generates a menu based on the provided routes and adds it to 
+     * @param {Object} pwaArea - the PWA area to use
+     * @param {Function} filter - Optional function to filter menu items out
+     */
+    generateMenu(pwaArea, filter) {
+        this.routerMenu = this.app.UI.createMenu(this);
+        this.routerMenu.generate(pwaArea, filter);
     }
+
 }
 
 export default Router;
