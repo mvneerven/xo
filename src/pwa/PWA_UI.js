@@ -2,7 +2,7 @@
 import PWA_Notifications from './PWA_Notifications';
 import PWA_Area from './PWA_Area';
 import DOM from '../pwa/DOM';
-import RouterMenu from './PWA_RouterMenu';
+import PWA_RouterMenu from './PWA_RouterMenu';
 
 class PWA_UI {
     _dirtyMessage = 'If you continue your changes will not be saved.';
@@ -12,7 +12,7 @@ class PWA_UI {
 
     notifications = new PWA_Notifications(this);
 
-    static Menu = RouterMenu;
+    static Menu = PWA_RouterMenu;
 
     constructor(pwa) {
         const _ = this;

@@ -1,6 +1,6 @@
 import DOM from './DOM';
 
-class RouterMenu {
+class PWA_RouterMenu {
     constructor(router) {
         this.router = router;
     }
@@ -59,9 +59,6 @@ class RouterMenu {
         }
     }
 
-
-    
-
     renderRouteMenu(filter) {
         let ar = this.router.listModules(filter);
 
@@ -83,4 +80,4 @@ class RouterMenu {
     }
 }
 
-export default RouterMenu;
+export default PWA_RouterMenu;

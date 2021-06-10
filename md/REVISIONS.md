@@ -905,3 +905,20 @@ mappings: {
 
 - ExoDropdownButton update
 
+# New in 1.3.22 
+
+
+## Router menu display
+
+ *router.generateMenu()* now points to generic router menu generation 
+  - *pwa.router.listModules()* is called to get loaded route module properties
+  - *pwa.UI.createMenu()* creates an instance *PWA_RouterMenu* class
+  - These routines can now be called separately to have full control.
+
+```js
+  const menu = pwa.UI.createMenu();
+  let nav = menu.renderRouteMenu( m=>{
+      return m.name !== "MySpecialRoute"
+  });
+```
+
