@@ -4,6 +4,10 @@ import Core from "./Core";
 
 /**
  * OmniBox search facility for PWAs. Use this.omniBox = new PWA.OmniBox({..}) in PWA inherited class
+ * 
+ * Options: 
+ * - categories: object containing list of categories with omnibox handling.
+ * - useRoutes: boolean or filter function that indicates (which) routes should be added automatically
  */
 class PWA_OmniBox {
 
@@ -21,7 +25,7 @@ class PWA_OmniBox {
                 trigger: options => { return true },
                 getItems: options => {
 
-                    return this.getRoutes(options).filter(i => {
+                    return this.getRoutes(this.options.useRoutes).filter(i => {
                         if (!options.search)
                             return true;
                         else {
@@ -37,7 +41,7 @@ class PWA_OmniBox {
                 }
             }
 
-            pwa.router.modules.forEach(r => {
+            this.getRoutes(this.options.useRoutes).forEach(r => {
                 let add = r.module.omniBoxCategories;
                 if (add) {
 
@@ -113,7 +117,7 @@ class PWA_OmniBox {
         return arr;
     }
 
-    getRoutes(options) {
+    getRoutes(filter) {
 
         let ar = []
 
@@ -123,12 +127,17 @@ class PWA_OmniBox {
                     category: "App",
                     text: r.title || r.menuTitle,
                     icon: r.menuIcon,
-                    route: r.path
+                    route: r.path,
+                    module: r
 
                 });
 
             }
         });
+
+        if(typeof(filter) === "function"){
+            ar = ar.filter(filter);
+        }
 
         return ar;
     }

@@ -1,0 +1,128 @@
+.exf-container.exf-survey {
+  position: relative;
+  margin: auto;
+  width: 70%;
+  height: 100%;
+  text-align: center;
+  display: -ms-grid;
+  display: grid;
+  -ms-grid-rows: 120px 1fr 30px;
+      grid-template-rows: 120px 1fr 30px;
+}
+
+.exf-container.exf-survey .exf-form {
+  height: 500px;
+  padding-top: 50px;
+  overflow: hidden;
+  -ms-scroll-snap-type: y mandatory;
+      scroll-snap-type: y mandatory;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
+
+.exf-container.exf-survey .exf-page-intro {
+  margin: 30px;
+}
+
+.exf-container.exf-survey .exf-cnt {
+  display: block;
+}
+
+.exf-container.exf-survey .exf-cnt.active {
+  display: block;
+}
+
+.exf-container.exf-survey .exf-cnt .exf-page-title {
+  margin-bottom: 2em;
+}
+
+.exf-container.exf-survey .exf-nav-cnt {
+  text-align: center;
+  display: none;
+}
+
+.exf-container.exf-survey.step-ready .exf-nav-cnt {
+  display: block;
+}
+
+.exf-container.exf-survey.step-ready .exf-nav-cnt [name] {
+  font-size: 1.1em;
+  padding: 0.4em;
+  margin-top: 20px;
+}
+
+.exf-container.exf-survey.step-ready .exf-nav-cnt [name="prev"],
+.exf-container.exf-survey.step-ready .exf-nav-cnt [name="send"] {
+  display: none;
+}
+
+.exf-container.exf-survey.step-ready .exf-nav-cnt [name="next"] {
+  display: inline-block;
+}
+
+.exf-container.exf-survey.end-reached .exf-wrapper {
+  display: none;
+}
+
+.exf-container.exf-survey.end-reached .exf-nav-cnt {
+  display: block;
+  padding-top: 200px;
+}
+
+.exf-container.exf-survey.end-reached .exf-nav-cnt [name] {
+  font-size: smaller;
+  padding: 0.2em;
+  margin-top: 20px;
+}
+
+.exf-container.exf-survey.end-reached .exf-nav-cnt [name="prev"],
+.exf-container.exf-survey.end-reached .exf-nav-cnt [name="next"] {
+  display: none;
+}
+
+.exf-container.exf-survey.end-reached .exf-nav-cnt [name="send"] {
+  font-size: x-large;
+}
+
+.exf-container.exf-survey .exf-page {
+  font-size: 1.1em;
+  padding-top: 3em;
+  padding-bottom: 3em;
+  -webkit-transition: all 0.6s;
+  transition: all 0.6s;
+}
+
+.exf-container.exf-survey .exf-page [name] {
+  padding: 1em;
+  font-size: 1.2em;
+  outline: none;
+  border: 0;
+  -webkit-box-shadow: 0 0 6px 2px var(--field-box-shadow);
+          box-shadow: 0 0 6px 2px var(--field-box-shadow);
+}
+
+.exf-container.exf-survey .exf-page [name][type="checkbox"], .exf-container.exf-survey .exf-page [name][type="radio"] {
+  -webkit-box-shadow: 0px 0px;
+          box-shadow: 0px 0px;
+}
+
+.exf-container.exf-survey ::-webkit-input-placeholder {
+  /* Chrome/Opera/Safari */
+  color: #ccc;
+}
+
+.exf-container.exf-survey ::-moz-placeholder {
+  /* Firefox 19+ */
+  color: #ccc;
+}
+
+.exf-container.exf-survey :-ms-input-placeholder {
+  /* IE 10+ */
+  color: #ccc;
+}
+
+.exf-container.exf-survey :-moz-placeholder {
+  /* Firefox 18- */
+  color: #ccc;
+}
+/*# sourceMappingURL=exf-survey.css.map */

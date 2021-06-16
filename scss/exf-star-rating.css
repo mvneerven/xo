@@ -1,0 +1,74 @@
+.exf-star-rating-cnt svg {
+  position: absolute;
+}
+
+.exf-star-rating-cnt .exf-star-rating {
+  overflow: hidden;
+  font-size: 0;
+  -webkit-clip-path: url(#allStars);
+          clip-path: url(#allStars);
+}
+
+.exf-star-rating-cnt .exf-star-rating > input[type="range"] {
+  -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none;
+}
+
+.exf-star-rating-cnt .exf-star-rating > input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+          appearance: none;
+}
+
+.exf-star-rating-cnt .exf-star-rating > input[type="range"]:focus {
+  outline: 0;
+}
+
+.exf-star-rating-cnt .exf-star-rating > input[type="range"] {
+  width: 250px;
+  height: 50px;
+  background: gold;
+}
+
+.exf-star-rating-cnt .exf-star-rating > input[type="range"]::-webkit-slider-runnable-track {
+  background: gold;
+}
+
+.exf-star-rating-cnt .exf-star-rating > input[type="range"]::-webkit-slider-thumb {
+  background: gold;
+  height: 50px;
+  width: 50px;
+  -webkit-box-shadow: 5px 0 0 0 lightgray, 0px 0 0 0 lightgray, 50px 0 0 0 lightgray, 100px 0 0 0 lightgray, 150px 0 0 0 lightgray, 200px 0 0 0 lightgray, 250px 0 0 0 lightgray;
+          box-shadow: 5px 0 0 0 lightgray, 0px 0 0 0 lightgray, 50px 0 0 0 lightgray, 100px 0 0 0 lightgray, 150px 0 0 0 lightgray, 200px 0 0 0 lightgray, 250px 0 0 0 lightgray;
+  border: none;
+}
+
+.exf-star-rating-cnt .exf-star-rating > input[type="range"]::-moz-range-track {
+  background: gold;
+}
+
+.exf-star-rating-cnt .exf-star-rating > input[type="range"]::-moz-range-thumb {
+  background: gold;
+  height: 50px;
+  width: 50px;
+  box-shadow: 5px 0 0 0 lightgray, 0px 0 0 0 lightgray, 50px 0 0 0 lightgray, 100px 0 0 0 lightgray, 150px 0 0 0 lightgray, 200px 0 0 0 lightgray, 250px 0 0 0 lightgray;
+  border: none;
+}
+
+.exf-star-rating-cnt .exf-star-rating > input[type="range"]::ms-track {
+  background: gold;
+}
+
+.exf-star-rating-cnt .exf-star-rating > input[type="range"]::ms-thumb {
+  background: gold;
+  height: 50px;
+  width: 50px;
+  -webkit-box-shadow: 5px 0 0 0 lightgray, 0px 0 0 0 lightgray, 50px 0 0 0 lightgray, 100px 0 0 0 lightgray, 150px 0 0 0 lightgray, 200px 0 0 0 lightgray, 250px 0 0 0 lightgray;
+          box-shadow: 5px 0 0 0 lightgray, 0px 0 0 0 lightgray, 50px 0 0 0 lightgray, 100px 0 0 0 lightgray, 150px 0 0 0 lightgray, 200px 0 0 0 lightgray, 250px 0 0 0 lightgray;
+  border: none;
+}
+
+.exf-star-rating-cnt .exf-star-rating > input[type="range"]:focus {
+  outline: 0;
+}
+/*# sourceMappingURL=exf-star-rating.css.map */

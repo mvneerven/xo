@@ -25,7 +25,7 @@ class HomeRoute extends xo.route {
     async renderForm() {
 
         const schema = {
-            //navigation: "static",
+            navigation: "static",
             model: {
                 schemas: {
                     data: "/data/schemas/product-schema.json"
@@ -376,6 +376,7 @@ class ProductsRoute extends xo.route {
 
 class PWA extends xo.pwa {
     routerReady() {
+
         this.omniBox = new PWA.OmniBox({
             useRoutes: true,
             placeholder: "The start of everything...",
