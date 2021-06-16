@@ -1,107 +1,166 @@
-
-import ExoElementControl from './ExoElementControl';
-import DOM from '../../../pwa/DOM';
+import ExoElementControl from "./ExoElementControl";
+import DOM from "../../../pwa/DOM";
 
 /**
  * Renders a button
  */
 class ExoButtonControl extends ExoElementControl {
-    constructor(context) {
-        super(context);
+  constructor(context) {
+    super(context);
 
-        this._useContainer = false; // no container by default
-        
-        this.iconHtml = "";
-        
-        this.htmlElement = DOM.parseHTML('<button class="exf-btn" />')
+    this._useContainer = false; // no container by default
 
-        this.acceptProperties(
-            {
-                name: "icon",
-                description: "Icon class to be used (using a span)"
-            },
-            {
-                name: "click",
-                description: "Click method"
-            },
-            {
-                name: "action",
-                description: `Possible values: 
+    this.iconHtml = "";
+
+    this.htmlElement = DOM.parseHTML('<button class="exf-btn" />');
+
+    this.acceptProperties(
+      {
+        name: "icon",
+        description: "Icon class to be used (using a span)",
+      },
+      {
+        name: "click",
+        description: "Click method",
+      },
+      {
+        name: "action",
+        description: `Possible values: 
                     - 'next' (next page in Wizard)
                     - 'reset' (back to first page)
                     - 'goto:[page]' (jump to given page)
-                `
-            });
+                `,
+      },
+      {
+        name: "dropdown",
+        description: "A list of items that shows on hover",
+      }
+    );
+  }
+
+  async render() {
+    await super.render();
+
+    if (this.icon) {
+      this.htmlElement.appendChild(
+        DOM.parseHTML('<span class="' + this.icon + '"></span>')
+      );
+      this.htmlElement.appendChild(document.createTextNode(" "));
     }
 
-    async render() {
-        const _ = this;
-        await super.render();
+    if (this.caption) {
+        this.htmlElement.appendChild(
+            DOM.parseHTML(`<span class="exf-caption">${this.caption}</span>`)
+          );
+    } else {
+        this.htmlElement.classList.add("exf-btn-compact");
+    }
 
-
-
-        if (_.icon) {
-            _.htmlElement.appendChild(DOM.parseHTML('<span class="' + _.icon + '"></span>'))
-            this.htmlElement.appendChild(document.createTextNode(' '));
+    this.htmlElement.addEventListener("click", (e) => {
+      if (this.click) {
+        let data = this.context.exo.getFormValues();
+        let f = this.click;
+        if (typeof f !== "function") {
+          f = this.context.exo.options.customMethods[f];
         }
-
-        _.htmlElement.appendChild(DOM.parseHTML(`<span class="exf-caption">${this.caption}</span>`))
-
-        let elm = await super.render();
-
-        _.htmlElement.addEventListener("click", e => {
-            if (_.click) {
-                let data = _.context.exo.getFormValues();
-                let f = _.click;
-                if (typeof (f) !== "function") {
-                    f = _.context.exo.options.customMethods[f];
-                }
-                if (typeof (f) !== "function") {
-                    if (_.context.exo.options.host) {
-                        if (typeof (_.context.exo.options.host[_.click]) === "function") {
-                            f = _.context.exo.options.host[_.click];
-                            f.apply(_.context.exo.options.host, [data, e]);
-                            return;
-                        }
-                    }
-                    else {
-                        throw "Not a valid function: " + _.click
-                    }
-                }
-                f.apply(_, [data, e]);
+        if (typeof f !== "function") {
+          if (this.context.exo.options.host) {
+            if (
+              typeof this.context.exo.options.host[this.click] === "function"
+            ) {
+              f = this.context.exo.options.host[this.click];
+              f.apply(this.context.exo.options.host, [data, e]);
+              return;
             }
-            else if (_.action) {
-                let actionParts = _.action.split(":");
+          } else {
+            throw "Not a valid function: " + this.click;
+          }
+        }
+        f.apply(this, [data, e]);
+      } else if (this.action) {
+        let actionParts = this.action.split(":");
 
-                switch (actionParts[0]) {
-                    case "next":
-                        _.context.exo.addins.navigation.nextPage();
-                        break;
-                    case "reset":
-                        _.context.exo.addins.navigation.goto(1);
-                        break;
+        switch (actionParts[0]) {
+          case "next":
+            this.context.exo.addins.navigation.nextPage();
+            break;
+          case "reset":
+            this.context.exo.addins.navigation.goto(1);
+            break;
 
-                    case "goto":
-                        _.context.exo.addins.navigation.goto(parseInt(actionParts[1]));
-                        break;
-                }
-            }
-        })
+          case "goto":
+            this.context.exo.addins.navigation.goto(parseInt(actionParts[1]));
+            break;
+        }
+      }
+    });
 
-        this.container.classList.add("exf-btn-cnt");
-        this.htmlElement.classList.add("exf-btn");
-
-        return this.container;
+    if (this.dropdown && Array.isArray(this.dropdown)) {
+      const btnClone = this.htmlElement.cloneNode(true);
+      this.htmlElement = DOM.parseHTML(`<div class="exf-dropdown-cnt"></div>`);
+      this.htmlElement.appendChild(btnClone);
+      this.htmlElement.appendChild(await this.renderDropdown());
+      this.container.textContent = "";
+      this.container.appendChild(this.htmlElement);
+    } else if (this.dropdown) {
+      throw new Error("Invalid dropdown value: value must be an Array");
     }
 
-    set icon(value) {
-        this._icon = value;
-    }
+    this.container.classList.add("exf-btn-cnt");
+    return this.container;
+  }
 
-    get icon() {
-        return this._icon;
+  async renderDropdown() {
+    const listElement = DOM.parseHTML(`<ul class="exf-btn-dropdown" />`);
+    for (const item of this.dropdown) {
+      listElement.appendChild(await this.getListItem(item));
     }
+    return listElement;
+  }
 
+  async getListItem(item) {
+    let template = DOM.parseHTML("<li/>");
+    switch (item.type) {
+      case "event":
+        template = DOM.parseHTML(
+          DOM.format(
+            `<li title="{{tooltip}}"><a class="{{class}}">{{name}}</a></li>`,
+            item
+          )
+        );
+        template.addEventListener("click", () => {
+          const ev = new Event(item.title);
+          this.container.dispatchEvent(ev);
+        });
+        break;
+      case "field":
+        template = DOM.parseHTML(
+          DOM.format(
+            `<li title="{{tooltip}}"><a class="{{class}}">{{name}}</a></li>`,
+            item
+          )
+        );
+        template.querySelector("a").appendChild(await xo.form.run(item.field));
+        break;
+      default:
+        template = DOM.parseHTML(
+          DOM.format(
+            `<li title="{{tooltip}}"><a class="{{class}}" href="{{url}}">{{name}}</a></li>`,
+            item
+          )
+        );
+        break;
+    }
+    return template;
+  }
+
+  set icon(value) {
+    this._icon = value;
+  }
+
+  get icon() {
+    return this._icon;
+  }
 }
 
 export default ExoButtonControl;
