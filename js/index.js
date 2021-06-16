@@ -12,7 +12,6 @@ class HomeRoute extends xo.route {
         // let jsc = await xo.form.factory.readJSONSchema("/data/schemas/product-schema.json")
         // debugger;
 
-
         try {
             await this.renderForm();
             // await xo.form.factory.run();
@@ -38,6 +37,7 @@ class HomeRoute extends xo.route {
                         price: {
                             amount: 34.45,
                             currency: 978
+                            
                         },
                         isForSale: true,
                         vatPercentage: 9,
@@ -77,7 +77,8 @@ class HomeRoute extends xo.route {
                             amount: {
                                 type: "number",
                                 prefix: "€",
-                                required: true
+                                required: true,
+                                step: 0.01
                             }
                         },
                         columns: "6em 4em",

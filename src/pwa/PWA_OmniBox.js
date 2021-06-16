@@ -42,7 +42,8 @@ class PWA_OmniBox {
             }
 
             this.getRoutes(this.options.useRoutes).forEach(r => {
-                let add = r.module.omniBoxCategories;
+                
+                let add = r.module.module.omniBoxCategories;
                 if (add) {
 
                     this.options.categories = {
