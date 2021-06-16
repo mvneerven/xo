@@ -461,6 +461,10 @@
             overflow: hidden;
             box-shadow: $shadow-2;
 
+            &-compact {
+                padding: ($mf-gap / 2) ($mf-gap / 2);
+            }
+
             span {
                 color: var(--color-button-text);
                 position: relative;

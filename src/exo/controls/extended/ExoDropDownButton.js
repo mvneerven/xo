@@ -8,7 +8,6 @@ class ExoDropDownButton extends ExoListControl {
   constructor(context) {
     super(context);
     this.events = new Core.Events(this);
-    this.context.field.type = "hidden";
 
     this.acceptProperties(
       {

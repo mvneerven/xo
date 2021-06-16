@@ -44,10 +44,9 @@ const schema = {
       intro: "My form description",
       fields: [
         {
-          name: "name",
-          type: "dropdownbutton",
+          type: "button",
           icon: "ti-menu",
-          items: [
+          dropdown: [
             {
               name: "Edit",
               title: "edit",
@@ -58,18 +57,7 @@ const schema = {
               name: "Delete",
               type: "event",
               title: "delete",
-            },
-            {
-              name: "Dark mode",
-              class: "set-theme",
-              value: "",
-              type: "field",
-              field: {
-                type: "switch",
-                name: "dark",
-                value: "",
-              },
-            },
+            }
           ],
         },
         {
