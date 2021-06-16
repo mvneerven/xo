@@ -9,6 +9,16 @@ class HomeRoute extends xo.route {
 
     async render() {
 
+        var btn = await xo.form.run({
+            type: "button",
+            name: "btn1",
+            icon: "ti-menu",
+            class: "btn-primary btn-compact aaaa"
+            
+        });
+
+        this.app.UI.areas.main.add(btn)
+
         // let jsc = await xo.form.factory.readJSONSchema("/data/schemas/product-schema.json")
         // debugger;
 

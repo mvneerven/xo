@@ -33,8 +33,16 @@ class ExoButtonControl extends ExoElementControl {
       },
       {
         name: "dropdown",
+        type: Object,
         description: "A list of items that shows on hover",
+      },
+
+      {
+        name: "class",
+        type: String,
+        description: "Class(es) to add on button element"
       }
+
     );
   }
 
@@ -108,6 +116,15 @@ class ExoButtonControl extends ExoElementControl {
 
     this.container.classList.add("exf-btn-cnt");
     return this.container;
+  }
+
+  set class(value){
+    this._class = value;
+    this.htmlElement.classList.add(...this._class.split(' '))
+  }
+
+  get class(){
+    return _class;
   }
 
   async renderDropdown() {

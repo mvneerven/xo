@@ -46,7 +46,7 @@ class ExoControlBase {
 
         else if (!this.useContainer) {
 
-            const tpl = /*html*/`<div data-id="{{id}}" class="exf-ctl-cnt exf-ctl-bare {{class}}"><span data-replace="true"></span></div>`;
+            const tpl = /*html*/`<div data-id="{{id}}" class="exf-ctl-cnt exf-ctl-bare"><span data-replace="true"></span></div>`;
 
             return DOM.format(tpl, this._getContainerAttributes(obj))
         }
