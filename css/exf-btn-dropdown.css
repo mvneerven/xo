@@ -11,6 +11,9 @@
 
 .exf-dropdown-cnt .exf-btn {
   margin: 0 !important;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
 }
 
 .exf-dropdown-cnt ul.exf-btn-dropdown {

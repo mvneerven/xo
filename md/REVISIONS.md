@@ -940,3 +940,7 @@ this.omniBox = new PWA.OmniBox({
 ```
 
 
+# New in 1.3.26
+
+- dropdownbutton DEPRECATED: use button with 'dropdown' property instead of dropdownbutton. 
+

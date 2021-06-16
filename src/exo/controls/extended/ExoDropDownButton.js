@@ -7,6 +7,7 @@ class ExoDropDownButton extends ExoListControl {
 
   constructor(context) {
     super(context);
+    console.warn("DEPRECATED: use button with 'dropdown' property instead of dropdownbutton")
     this.events = new Core.Events(this);
 
     this.acceptProperties(
