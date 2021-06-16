@@ -922,3 +922,21 @@ mappings: {
   });
 ```
 
+# New in 1.3.24 
+
+## OmniBox options
+
+Apart from passing in *useRoutes: true* in the OmniBox options, you can now also use a function to filter routes to be included.
+
+```js
+this.omniBox = new PWA.OmniBox({
+      useRoutes: i => {
+        return this.routeValid(i.module) 
+      },
+      categories: {
+        ...
+      }
+});
+```
+
+
