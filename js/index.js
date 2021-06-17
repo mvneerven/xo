@@ -501,9 +501,9 @@ class PWA extends xo.pwa {
             this.UI.areas.header.add(elm)
         })
 
-        // this.router.generateMenu(this.UI.areas.menu, m=>{
-        //     return m.name !== "SettingsRoute"
-        // });
+         this.router.generateMenu(this.UI.areas.menu, m=>{
+             return m.name !== "SettingsRoute"
+         });
     }
 }
 

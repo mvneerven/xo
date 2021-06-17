@@ -156,6 +156,10 @@ class Router {
                     route: o.route,
                     url: "#" + o.path,
                     path: o.path,
+                    title: o.title,
+                    menuTitle: o.menuTitle,
+                    menuIcon: o.menuIcon,
+                    class: o.class || "",
                     module: o
                 });
 
