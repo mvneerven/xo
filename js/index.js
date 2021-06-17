@@ -221,7 +221,13 @@ class SettingsRoute extends xo.route {
 
 
     async render(path) {
-        let frm = await pwa.settings.render();
+        let frm = await pwa.settings.render({
+            on: {
+                interactive: e=>{
+                    debugger;
+                }
+            }
+        });
         this.area.add(frm);
     }
 

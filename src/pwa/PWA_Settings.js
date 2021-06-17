@@ -62,10 +62,10 @@ class PWA_Settings {
         this.schema.pages = this.generateFormPages()
     }
 
-    async render() {
+    async render(options) {
         this.build();
 
-        return xo.form.run(this.schema, {
+        const defOptions = {
             on: {
                 schemaParsed: e => {
                     let instances = e.detail.host.schema.model.instance;
@@ -91,7 +91,16 @@ class PWA_Settings {
                     }
                 }
             }
-        })
+        }
+
+        options = options || {};
+        options.on = {
+            ...options.on || {},
+            ...defOptions.on
+        }
+
+
+        return xo.form.run(this.schema, options)
     }
 
     generateFormPages() {
