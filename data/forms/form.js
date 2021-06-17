@@ -45,7 +45,7 @@ const schema = {
       fields: [
         {
           type: "button",
-          icon: "ti-menu",
+          icon: "ti-user",
           dropdown: [
             {
               name: "Edit",
