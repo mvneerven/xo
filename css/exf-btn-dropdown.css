@@ -31,6 +31,10 @@
           box-shadow: 0 3px 10px -2px rgba(0, 0, 0, 0.1);
   list-style: none;
   z-index: 99;
+  -webkit-animation: slideDown 300ms ease-in-out forwards;
+          animation: slideDown 300ms ease-in-out forwards;
+  -webkit-transform-origin: top center;
+          transform-origin: top center;
 }
 
 .exf-dropdown-cnt ul.exf-btn-dropdown > li {
@@ -43,11 +47,37 @@
 
 .exf-dropdown-cnt ul.exf-btn-dropdown > li a {
   display: block;
-  padding: .5rem .75rem;
+  padding: 0.5rem 0.75rem;
   color: var(--color-dropdown-text);
   font-size: 0.9em;
   letter-spacing: 1px;
   text-decoration: none;
   text-transform: uppercase;
+}
+
+@-webkit-keyframes slideDown {
+  0% {
+    opacity: 0;
+    -webkit-transform: translateY(-30px);
+            transform: translateY(-30px);
+  }
+  100% {
+    opacity: 1;
+    -webkit-transform: translateY(0);
+            transform: translateY(0);
+  }
+}
+
+@keyframes slideDown {
+  0% {
+    opacity: 0;
+    -webkit-transform: translateY(-30px);
+            transform: translateY(-30px);
+  }
+  100% {
+    opacity: 1;
+    -webkit-transform: translateY(0);
+            transform: translateY(0);
+  }
 }
 /*# sourceMappingURL=exf-btn-dropdown.css.map */
