@@ -32,7 +32,7 @@ class JSONSchema {
         }
 
         if (!field.type) {
-            let els = this.mapJsonSchemaType(field, props)
+            let els = JSONSchema.mapType(field, props)
             for (var p in els) {
 
                 field[p] = els[p];
@@ -49,27 +49,24 @@ class JSONSchema {
 
     }
 
-    mapJsonSchemaType(field, prop) {
+    static mapType(field, prop) {
         // string, number, integer, object, array, boolean, null
         switch (prop.type) {
 
-            case "string": return this.applyStringType(field, prop);
-            case "number": return this.applyNumericType(field,prop);
-            case "integer": return this.applyIntegerRestrictions(field, this.applyNumericType(field, prop));
+            case "string": return JSONSchema.applyStringType(field, prop);
+            case "number": return JSONSchema.applyNumericType(field,prop);
+            case "integer": return JSONSchema.applyIntegerRestrictions(field, JSONSchema.applyNumericType(field, prop));
             case "boolean": return { type: "checkbox" };
             case "array": return { type: "checkboxlist" };
             case "object": 
-                return this.applyObjectType(field, prop);
-
-            //default: throw "Not implemented";
-
+                return JSONSchema.applyObjectType(field, prop);
 
         }
 
         return { type: "text" }
     }
 
-    applyObjectType(field, props){
+    static applyObjectType(field, props){
         let obj = { type: "multiinput" };
         
         if(!field.fields){
@@ -77,13 +74,13 @@ class JSONSchema {
             
             for(var name in props.properties){
                 var p = props.properties[name];
-                obj.fields[name] = this.mapJsonSchemaType(obj, p)
+                obj.fields[name] = JSONSchema.mapType(obj, p)
             }
         }
         return obj;
     }
 
-    applyStringType(field, props) {
+    static applyStringType(field, props) {
         let obj = { type: "text" };
 
         switch (props.format) {
@@ -110,7 +107,7 @@ class JSONSchema {
         return obj;
     }
 
-    applyNumericType(field, props) {
+    static applyNumericType(field, props) {
         let obj = { type: "number", step: "0.01" }
 
         if (props.minimum !== undefined) {
@@ -132,7 +129,7 @@ class JSONSchema {
         return obj;
     }
 
-    applyIntegerRestrictions(field, props) {
+    static applyIntegerRestrictions(field, props) {
 
         props.step = 1;
 

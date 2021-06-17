@@ -944,3 +944,101 @@ this.omniBox = new PWA.OmniBox({
 
 - dropdownbutton DEPRECATED: use button with 'dropdown' property instead of dropdownbutton. 
 
+# New in 1.3.29
+
+## Distributed Settings Handling
+
+In a large scale SaaS product, many configuration settings will exist, with storage on several parts of the SaaS account, each module having a scope on what settings it needs, what scope  settings have and where it wants to read and write them.
+
+For end-users, it doesn't matter. The user simply wants to use the settings to configure the SaaS system as he/she likes, preferably in an intuitive way, and preferably in one central location: settings.
+
+## Enter PWA.Settings
+
+In any compomnent:
+
+Declare a group of settings
+
+```js
+get settings() {
+    return pwa.settings.createGroup("Account",
+        {
+            type: "string",
+            name: "name",
+            title: "Your name"
+        },
+        {
+            type: "string",
+            name: "email",
+            format: "email",
+            title: "Email address"
+        }
+    );
+}
+```
+
+... then add them to the PWA's settings container:
+
+```js
+ pwa.settings.add(this.settings)
+  .on("read", e => {
+      e.detail.instance.data = this.accountSettings
+  })
+  .on("write", e => {
+      this.accountSettings = e.detail.instance.data
+  });
+```
+
+## Make OmniBox aware of settings:
+
+Let people find out where they can configure something by making the omnibox component aware of all settings:
+
+
+![OmniBox](https://xo-js.dev/assets/img/omnibox-settings.png "An OmniBox")
+
+In a router component:
+
+```js
+ get omniBoxCategories() {
+    return {
+        Settings: {
+
+            trigger: options => { return options.search.length >= 2 },
+            getItems: async options => {
+
+                // return al, settings that match in name or title/caption
+                return this.collectSettings().filter(i => {
+                    let text = `${i.name} ${i.title}`.toLowerCase();
+                    return text.indexOf(options.search) > -1;
+                }).map(r => {
+                    return {
+                        text: "Settings/" + r.title,
+                        description: "Go to settings",
+                        field: r.name
+                    }
+                })
+            },
+            text: "Search for '%search%' products",
+            icon: "ti-package",
+            action: options => {
+                document.location.hash = "/settings/" + options.field
+            }
+
+        }
+    }
+}
+
+// get all settings from each route component
+collectSettings() {
+    let ar = [];
+
+    pwa.router.modules.forEach(r => {
+        if (!r.hidden) {
+            if (r.module.settings) {
+                ar = ar.concat(r.module.settings.settings);
+            }
+        }
+    });
+
+    return ar;
+}
+```

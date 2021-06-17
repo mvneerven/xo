@@ -104,7 +104,11 @@ class PWA_OmniBox {
         for (var c in options.categories) {
             let catHandler = options.categories[c];
             if (catHandler.trigger(options)) {
-                let catResults = await catHandler.getItems(options);
+                let catResults = [];
+                try{
+                    catResults = await catHandler.getItems(options);
+                }
+                catch(ex){ console.warn(`Error loading items for omniBox category '${c}'.`, ex)}
 
                 arr = arr.concat(catResults.map(i => {
                     i.category = c;

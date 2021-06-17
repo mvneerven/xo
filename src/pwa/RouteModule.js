@@ -60,6 +60,8 @@ class RouteModule {
             _.app.UI.areas[a].empty = false;
         }
     }
+
+    get settings() { }
 }
 
 export default RouteModule;

@@ -7,24 +7,31 @@ class HomeRoute extends xo.route {
 
     menuIcon = "ti-home";
 
-    async render() {
-
-        var btn = await xo.form.run({
-            type: "button",
-            name: "btn1",
-            icon: "ti-menu",
-            class: "btn-primary btn-compact aaaa"
-            
+    get settings() {
+        return pwa.settings.createGroup("General", {
+            type: "boolean",
+            name: "darkmode",
+            title: "Dark Mode"
         });
 
-        this.app.UI.areas.main.add(btn)
+    }
 
-        // let jsc = await xo.form.factory.readJSONSchema("/data/schemas/product-schema.json")
-        // debugger;
+    constructor() {
+        super(...arguments);
 
+        pwa.settings.add(this.settings)
+            .on("read", e => {
+                // debugger
+            })
+            .on("write", e => {
+                // debugger
+            })
+
+    }
+
+    async render() {
         try {
             await this.renderForm();
-            // await xo.form.factory.run();
         }
         catch (ex) {
             this.app.UI.areas.main.add("Could not render form: " + ex.toString)
@@ -47,7 +54,7 @@ class HomeRoute extends xo.route {
                         price: {
                             amount: 34.45,
                             currency: 978
-                            
+
                         },
                         isForSale: true,
                         vatPercentage: 9,
@@ -145,6 +152,40 @@ class TestRoute extends xo.route {
 
     menuIcon = "ti-gift";
 
+    accountSettings = {
+        email: "marc@van-neerven.net",
+        name: "Marc van Neerven"
+    }
+
+    get settings() {
+        return pwa.settings.createGroup("Account",
+            {
+                type: "string",
+                name: "name",
+                title: "Your name"
+            },
+            {
+                type: "string",
+                name: "email",
+                format: "email",
+                title: "Email address"
+            }
+        );
+
+    }
+
+    constructor() {
+        super(...arguments);
+
+        pwa.settings.add(this.settings)
+            .on("read", e => {
+                e.detail.instance.data = this.accountSettings
+            })
+            .on("write", e => {
+                this.accountSettings = e.detail.instance.data
+            });
+    }
+
     async render() {
         this.elm = await xo.form.run({
             pages: [
@@ -178,45 +219,10 @@ class SettingsRoute extends xo.route {
 
     menuIcon = "ti-settings";
 
-    schema = {
-        pages: [
-            {
-                fields: [
-                    {
-                        type: "name",
-                        name: "name",
-                        caption: "Your name",
-                        tooltip: "Your full name"
-                    },
-                    {
-                        type: "email",
-                        name: "email",
-                        caption: "Email address",
-                        tooltip: "Email address linked to your account"
-                    },
-                    {
-                        type: "tel",
-                        name: "phone",
-                        caption: "Phone number",
-                        tooltip: "Your phone number"
-                    }
-                ]
-            }
-        ]
-    }
 
     async render(path) {
-        this.area.add(await xo.form.run(this.schema, {
-            on: {
-                interactive: e => {
-                    let fieldName = path.replace("/", "");
-                    var field = e.detail.host.get(fieldName);
-                    if (field) {
-                        field._control.focus();
-                    }
-                }
-            }
-        }));
+        let frm = await pwa.settings.render();
+        this.area.add(frm);
     }
 
     get area() {
@@ -224,18 +230,18 @@ class SettingsRoute extends xo.route {
     }
 
     get omniBoxCategories() {
+
         return {
             Settings: {
 
                 trigger: options => { return options.search.length >= 2 },
                 getItems: async options => {
-
-                    return this.schema.pages[0].fields.filter(i => {
-                        let text = `${i.caption} ${i.tooltip}`.toLowerCase();
+                    return this.collectSettings().filter(i => {
+                        let text = `${i.name} ${i.title}`.toLowerCase();
                         return text.indexOf(options.search) > -1;
                     }).map(r => {
                         return {
-                            text: "Settings/" + r.caption,
+                            text: "Settings/" + r.title,
                             description: "Go to settings",
                             field: r.name
                         }
@@ -249,7 +255,21 @@ class SettingsRoute extends xo.route {
 
             }
         }
-    };
+    }
+
+    collectSettings() {
+        let ar = [];
+
+        pwa.router.modules.forEach(r => {
+            if (!r.hidden) {
+                if (r.module.settings) {
+                    ar = ar.concat(r.module.settings.settings);
+                }
+            }
+        });
+
+        return ar;
+    }
 }
 
 class HelpRoute extends xo.route {

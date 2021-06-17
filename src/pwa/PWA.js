@@ -5,6 +5,8 @@ import PWA_UI from './PWA_UI';
 import PWA_EventHub from './PWA_EventHub';
 import PWA_RESTService from './PWA_RESTService';
 import PWA_OmniBox from './PWA_OmniBox';
+import PWA_Settings from './PWA_Settings';
+import PWA_SettingsGroup from './PWA_SettingsGroup';
 
 /**
  * Progressive Web App container 
@@ -13,6 +15,7 @@ class PWA {
     static RouteModule = RouteModule;
     static Router = Router;
     static OmniBox = PWA_OmniBox;
+    
 
     defaults = {
         UI: {
@@ -29,6 +32,8 @@ class PWA {
      */
     constructor(options) {
         window.pwa = this;
+
+        this._settings = new PWA_Settings();
 
         this.events = new Core.Events(this);
 
@@ -171,6 +176,10 @@ class PWA {
      * Called when all routes have been set up (asynchronously)
      */
     routerReady() { } // to be subclassed
+
+    get settings(){
+        return this._settings;
+    }
 }
 
 export default PWA;

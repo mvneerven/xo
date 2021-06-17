@@ -7,7 +7,7 @@ class ExoDropDownButton extends ExoListControl {
 
   constructor(context) {
     super(context);
-    console.warn("DEPRECATED: use button with 'dropdown' property instead of dropdownbutton")
+    
     this.events = new Core.Events(this);
 
     this.acceptProperties(
@@ -23,6 +23,7 @@ class ExoDropDownButton extends ExoListControl {
   }
 
   async render() {
+    console.warn("DEPRECATED: use button with 'dropdown' property instead of dropdownbutton")
     this.htmlElement = DOM.parseHTML(this.getNavTemplate());
     await super.render();
     const tpl = /*html*/ `<li title="{{tooltip}}"><a>{{name}}</a></li>`;
