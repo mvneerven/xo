@@ -1,5 +1,6 @@
 import ExoElementControl from "./ExoElementControl";
 import DOM from "../../../pwa/DOM";
+import Core from "../../../pwa/Core";
 
 /**
  * Renders a button
@@ -40,9 +41,8 @@ class ExoButtonControl extends ExoElementControl {
       {
         name: "class",
         type: String,
-        description: "Class(es) to add on button element"
+        description: "Class(es) to add on button element",
       }
-
     );
   }
 
@@ -57,11 +57,11 @@ class ExoButtonControl extends ExoElementControl {
     }
 
     if (this.caption) {
-        this.htmlElement.appendChild(
-            DOM.parseHTML(`<span class="exf-caption">${this.caption}</span>`)
-          );
+      this.htmlElement.appendChild(
+        DOM.parseHTML(`<span class="exf-caption">${this.caption}</span>`)
+      );
     } else {
-        this.htmlElement.classList.add("exf-btn-compact");
+      this.htmlElement.classList.add("exf-btn-compact");
     }
 
     this.htmlElement.addEventListener("click", (e) => {
@@ -103,33 +103,31 @@ class ExoButtonControl extends ExoElementControl {
       }
     });
 
-    if (this.dropdown && Array.isArray(this.dropdown)) {
+    if (this.dropdown) {
       const btnClone = this.htmlElement.cloneNode(true);
       this.htmlElement = DOM.parseHTML(`<div class="exf-dropdown-cnt"></div>`);
       this.htmlElement.appendChild(btnClone);
-      this.htmlElement.appendChild(await this.renderDropdown());
+      this.htmlElement.appendChild(await this.renderDropdown(await this.getData(this.dropdown)));
       this.container.textContent = "";
       this.container.appendChild(this.htmlElement);
-    } else if (this.dropdown) {
-      throw new Error("Invalid dropdown value: value must be an Array");
     }
 
     this.container.classList.add("exf-btn-cnt");
     return this.container;
   }
 
-  set class(value){
+  set class(value) {
     this._class = value;
-    this.htmlElement.classList.add(...this._class.split(' '))
+    this.htmlElement.classList.add(...this._class.split(" "));
   }
 
-  get class(){
+  get class() {
     return _class;
   }
 
-  async renderDropdown() {
+  async renderDropdown(items) {
     const listElement = DOM.parseHTML(`<ul class="exf-btn-dropdown" />`);
-    for (const item of this.dropdown) {
+    for (const item of items) {
       listElement.appendChild(await this.getListItem(item));
     }
     return listElement;
@@ -169,6 +167,26 @@ class ExoButtonControl extends ExoElementControl {
         break;
     }
     return template;
+  }
+
+  async getData(data, options) {
+    return new Promise((resolve) => {
+      if (Core.isUrl(data)) {
+        fetch(data).then((x) => {
+          if (x.status === 200) {
+            resolve(x.json());
+            return;
+          }
+          throw new Error(`HTTP error ${x.status} - ${data}`);
+        });
+      } else if (Array.isArray(data)) {
+        resolve(data);
+      } else if (typeof data === "function") {
+        resolve(data(options || {}));
+      } else {
+        return resolve(Promise.resolve(data));
+      }
+    });
   }
 
   set icon(value) {
