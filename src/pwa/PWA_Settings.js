@@ -34,23 +34,21 @@ class PWA_Settings {
      */
     add(settingsGroup) {
         let sec = settingsGroup.section;
-        //sec.items = sec.items || [];
-        //sec.items = sec.items.concat(settingsGroup.settings);
         sec.items = settingsGroup.settings;
-
         return sec;
     }
 
-    _getSection(id) {
+    _getSection(name) {
+        let id = Core.toPascalCase(name).replace(" ", "");
         let sec = this._sections[id];
         if (!sec) {
-            sec = new PWA_SettingsSection(id);
-            sec.title = id;
-            sec.id = Core.toPascalCase(sec.title).replace(" ", "");
+            sec = new PWA_SettingsSection(name);
+            sec.title = name;
+            sec.id = id;
             sec.binding = "instance." + sec.id + ".";
             this.schema.model.instance[sec.id] = {};
 
-            this._sections[id] = sec;
+            this._sections[sec.id] = sec;
         }
         return sec;
     }
