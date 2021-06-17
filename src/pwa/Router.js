@@ -150,10 +150,12 @@ class Router {
 
         return Promise.all(promises).then(e => {
             e.forEach(o => {
+                //debugger;
                 this.modules.push({
-                    ...o,
+                    //...o,
                     route: o.route,
                     url: "#" + o.path,
+                    path: o.path,
                     module: o
                 });
 

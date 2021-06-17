@@ -152,6 +152,8 @@ class TestRoute extends xo.route {
 
     menuIcon = "ti-gift";
 
+    hidden = true;
+
     accountSettings = {
         email: "marc@van-neerven.net",
         name: "Marc van Neerven"
@@ -172,6 +174,30 @@ class TestRoute extends xo.route {
             }
         );
 
+    }
+
+    get omniBoxCategories() {
+
+        return {
+            Test: {
+
+                trigger: options => { return options.search.length >= 2 },
+                getItems: async options => {
+                    return [ 
+                        {
+                            text: "Test",
+                            description: "Go to test"
+                            
+                        }
+                    ]
+                },
+                icon: "ti-package",
+                action: options => {
+                    document.location.hash = "/settings/" + options.field
+                }
+
+            }
+        }
     }
 
     constructor() {
@@ -224,7 +250,7 @@ class SettingsRoute extends xo.route {
         let frm = await pwa.settings.render({
             on: {
                 interactive: e=>{
-                    debugger;
+                    //debugger;
                 }
             }
         });
@@ -415,7 +441,9 @@ class PWA extends xo.pwa {
     routerReady() {
 
         this.omniBox = new PWA.OmniBox({
-            useRoutes: true,
+            useRoutes: r=>{
+                return true
+            },
             placeholder: "The start of everything...",
             tooltip: "Navigate through this app by clicking & typing here..",
 

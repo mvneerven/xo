@@ -19,13 +19,17 @@ class PWA_OmniBox {
 
     async render() {
         if (this.options.useRoutes) {
+            const routes = this.getRoutes(this.options.useRoutes);
 
             this.options.categories.App = {
                 sortIndex: 10,
                 trigger: options => { return true },
                 getItems: options => {
 
-                    return this.getRoutes(this.options.useRoutes).filter(i => {
+                    return routes.filter(i => {
+                        if(i.module.hidden)
+                            return false;
+
                         if (!options.search)
                             return true;
                         else {
@@ -41,9 +45,9 @@ class PWA_OmniBox {
                 }
             }
 
-            this.getRoutes(this.options.useRoutes).forEach(r => {
-                
-                let add = r.module.module.omniBoxCategories;
+            routes.forEach(r => {
+
+                let add = r.module.omniBoxCategories;
                 if (add) {
 
                     this.options.categories = {
@@ -105,10 +109,10 @@ class PWA_OmniBox {
             let catHandler = options.categories[c];
             if (catHandler.trigger(options)) {
                 let catResults = [];
-                try{
+                try {
                     catResults = await catHandler.getItems(options);
                 }
-                catch(ex){ console.warn(`Error loading items for omniBox category '${c}'.`, ex)}
+                catch (ex) { console.warn(`Error loading items for omniBox category '${c}'.`, ex) }
 
                 arr = arr.concat(catResults.map(i => {
                     i.category = c;
@@ -127,20 +131,17 @@ class PWA_OmniBox {
         let ar = []
 
         pwa.router.modules.forEach(r => {
-            if (!r.hidden) {
-                ar.push({
-                    category: "App",
-                    text: r.title || r.menuTitle,
-                    icon: r.menuIcon,
-                    route: r.path,
-                    module: r
-
-                });
-
-            }
+            let c = r.module;
+            ar.push({
+                category: "App",
+                text: c.title || c.menuTitle,
+                icon: c.menuIcon,
+                route: c.path,
+                module: c
+            });
         });
 
-        if(typeof(filter) === "function"){
+        if (typeof (filter) === "function") {
             ar = ar.filter(filter);
         }
 
