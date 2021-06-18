@@ -6,7 +6,7 @@ class ExoFormDefaultNavigation extends ExoFormNavigationBase {
             name: "send",
             type: "button",
             caption: "Submit",
-            class: "form-post"
+            class: "form-post exf-btn"
         }
     ]
 }

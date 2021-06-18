@@ -6,19 +6,19 @@ class ExoFormWizardNavigation extends ExoFormDefaultNavigation {
             name: "prev",
             type: "button",
             caption: "◁ Back",
-            class: "form-prev"
+            class: "form-prev exf-btn"
         },
         {
             name: "next",
             type: "button",
             caption: "Next ▷",
-            class: "form-next"
+            class: "form-next exf-btn"
         },
         {
             name: "send",
             type: "button",
             caption: "Submit",
-            class: "form-post"
+            class: "form-post exf-btn"
         }
     ];
 }

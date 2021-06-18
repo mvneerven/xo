@@ -113,7 +113,7 @@ class ExoButtonControl extends ExoElementControl {
     }
 
     this.container.classList.add("exf-btn-cnt");
-    this.htmlElement.classList.add("exf-btn");
+    //this.htmlElement.classList.add("exf-btn");
     return this.container;
   }
 
