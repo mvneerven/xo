@@ -129,6 +129,14 @@ class PWA_Settings {
             for (var e in els) {
                 field[e] = els[e];
             }
+
+            if(i.ui){
+                field = {
+                    ...field,
+                    ...i.ui
+                }
+            }
+
             ar.push(field);
         });
         return ar;

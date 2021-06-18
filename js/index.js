@@ -11,7 +11,10 @@ class HomeRoute extends xo.route {
         return pwa.settings.createGroup("General", {
             type: "boolean",
             name: "darkmode",
-            title: "Dark Mode"
+            title: "Dark Mode",
+            ui: {
+                type: "switch"
+            }
         });
 
     }
@@ -217,13 +220,13 @@ class HomeRoute extends xo.route {
                     name: "prev",
                     type: "button",
                     caption: "◁ Back",
-                    class: "form-prev"
+                    class: "form-prev exf-btn"
                 },
                 {
                     name: "next1",
                     type: "button",
                     caption: " @bindings.nextCaption",
-                    class: "form-next1",
+                    class: "form-next exf-btn",
                     disabled: "@bindings.block",
                     action: "next"
                 },
@@ -231,7 +234,7 @@ class HomeRoute extends xo.route {
                     name: "send",
                     type: "button",
                     caption: "Submit",
-                    class: "form-post"
+                    class: "form-post exf-btn"
                 }
             ]
         }
@@ -279,7 +282,10 @@ class TestRoute extends xo.route {
             {
                 type: "string",
                 name: "name",
-                title: "Your name"
+                title: "Your name",
+                ui: {
+                    placeholder: "Enter your name"
+                }
             },
             {
                 type: "string",
