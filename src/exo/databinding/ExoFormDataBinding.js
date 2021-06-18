@@ -106,6 +106,7 @@ class ExoFormDataBinding {
         let returnValue = null;
         try {
             returnValue = Core.getObjectValue(this._model, path, defaultValue);
+            console.debug("ExoFormDataBinding", "resolved", path, returnValue);
         }
         catch (ex) {
             this._signalDataBindingError(ex);
