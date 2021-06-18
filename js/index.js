@@ -236,6 +236,7 @@ class HomeRoute extends xo.route {
             ]
         }
 
+        const schema2 = "/data/forms/form.js";
 
 
         let form = await xo.form.run(schema, {

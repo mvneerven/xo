@@ -44,6 +44,52 @@ const schema = {
       intro: "My form description",
       fields: [
         {
+          type: "listview",
+          icon: "ti-user",
+          name: "grid",
+          pageSize: 8,
+          view: "grid",
+          items: [{id: "firstuser", first: "Inbar", last: "Azulay"}],
+          controls: [
+            {
+              type: "search",
+              name: "filter",
+              placeholder: "Type to filter...",
+              listener: "input",
+              class: "exf-listview-flt",
+            },
+            {
+              type: "button",
+              name: "del",
+              icon: "ti-close",
+              tooltip: "Delete selected",
+              useSelection: true,
+            },
+            {
+              type: "button",
+              name: "add",
+              class: "btn-primary",
+              icon: "ti-plus",
+              tooltip: "Add item",
+            },
+          ],
+          // dataCallback: (columnValue) => {
+          //   return columnValue;
+          // },
+          columns: [
+            {
+              mappedTo: "first",
+              name: "First name",
+              sort: true,
+            },
+            {
+              mappedTo: "last",
+              name: "Last name",
+              sort: false,
+            },
+          ],
+        },
+        {
           type: "button",
           icon: "ti-user",
           dropdown: [
@@ -57,7 +103,7 @@ const schema = {
               name: "Delete",
               type: "event",
               title: "delete",
-            }
+            },
           ],
         },
         {

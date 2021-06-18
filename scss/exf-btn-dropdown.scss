@@ -7,6 +7,7 @@
   .exf-btn {
     margin: 0 !important;
     display: flex;
+    align-items: center;
   }
   ul.exf-btn-dropdown {
     min-width: calc(100% - 2px);
@@ -26,6 +27,7 @@
     transform-origin: top center;
     > li {
       cursor: pointer;
+      white-space: nowrap;
       &:hover {
         background-color: var(--color-dropdown-hover);
       }
