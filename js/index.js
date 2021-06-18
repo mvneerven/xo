@@ -222,7 +222,7 @@ class HomeRoute extends xo.route {
                 {
                     name: "next1",
                     type: "button",
-                    caption: "aa @bindings.nextCaption",
+                    caption: " @bindings.nextCaption",
                     class: "form-next1",
                     disabled: "@bindings.block",
                     action: "next"
