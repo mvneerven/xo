@@ -40,7 +40,7 @@ class HomeRoute extends xo.route {
 
     async renderForm() {
 
-        const schema = {
+        const schema1 = {
             navigation: "static",
             model: {
                 schemas: {
@@ -123,6 +123,121 @@ class HomeRoute extends xo.route {
                 },
             ]
         }
+
+
+        const schema = {
+            validation: "inline",
+            model: {
+                instance: {
+                    data: {
+                        email: "",
+                        emailSent: false,
+                        confirmationRecenived: false
+                    }
+                },
+                logic: context => {
+                    const m = context.model, data = m.instance.data,
+                        b = m.bindings, a = context.exo.addins;
+                    b.block = false;
+                    b.nextCaption = "Send Email ▷";
+                    if (data.email) {
+                        data.confirmationSent = true
+                    }
+
+                    if (data.email && data.confirmationSent) {
+                        b.nextCaption = "Select Pricing Tier ▷"
+                    }
+                }
+
+            },
+            pages: [
+                {
+                    legend: "Upgrade",
+                    intro: "In order to upgrade your account, we need to send you an email for confirmation.",
+                    fields: [
+                        {
+                            type: "email",
+                            required: true,
+                            bind: "instance.data.email",
+                            name: "email",
+                            caption: "Email address to use for confirmation",
+                            placeholder: "john@doe.com"
+                        }
+                    ]
+                },
+                {
+                    legend: "Check your inbox",
+                    intro: "You should have received an email with a link.",
+                    fields: [
+                        {
+                            type: "div",
+                            name: "info",
+
+                            class: "exf-std-lbl",
+                            html: `You `
+                        }
+                    ]
+                },
+                {
+                    legend: "Pricing Tier",
+                    intro: "",
+                    fields: [
+                        {
+                            name: "shoptype",
+                            type: "radiobuttonlist",
+                            view: "tiles",
+                            required: true,
+                            caption: "Pricing Tiers",
+                            items: [
+                                {
+                                    value: "starter",
+                                    name: "Starter",
+                                    description: "19.95/month",
+                                    disabled: true
+                                },
+                                {
+                                    value: "standard",
+                                    name: "Standard",
+                                    checked: true,
+                                    description: "free"
+                                },
+                                {
+                                    value: "professional",
+                                    name: "Professional",
+                                    description: "199.00/month",
+                                    disabled: true
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ],
+            controls: [
+                {
+                    name: "prev",
+                    type: "button",
+                    caption: "◁ Back",
+                    class: "form-prev"
+                },
+                {
+                    name: "next1",
+                    type: "button",
+                    caption: "aa @bindings.nextCaption",
+                    class: "form-next1",
+                    disabled: "@bindings.block",
+                    action: "next"
+                },
+                {
+                    name: "send",
+                    type: "button",
+                    caption: "Submit",
+                    class: "form-post"
+                }
+            ]
+        }
+
+
+
         let form = await xo.form.run(schema, {
             on: {
                 post: e => {
@@ -183,11 +298,11 @@ class TestRoute extends xo.route {
 
                 trigger: options => { return options.search.length >= 2 },
                 getItems: async options => {
-                    return [ 
+                    return [
                         {
                             text: "Test",
                             description: "Go to test"
-                            
+
                         }
                     ]
                 },
@@ -249,7 +364,7 @@ class SettingsRoute extends xo.route {
     async render(path) {
         let frm = await pwa.settings.render({
             on: {
-                interactive: e=>{
+                interactive: e => {
                     //debugger;
                 }
             }
@@ -441,7 +556,7 @@ class PWA extends xo.pwa {
     routerReady() {
 
         this.omniBox = new PWA.OmniBox({
-            useRoutes: r=>{
+            useRoutes: r => {
                 return true
             },
             placeholder: "The start of everything...",
@@ -501,9 +616,9 @@ class PWA extends xo.pwa {
             this.UI.areas.header.add(elm)
         })
 
-         this.router.generateMenu(this.UI.areas.menu, m=>{
-             return m.name !== "SettingsRoute"
-         });
+        this.router.generateMenu(this.UI.areas.menu, m => {
+            return m.name !== "SettingsRoute"
+        });
     }
 }
 

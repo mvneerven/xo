@@ -90,7 +90,7 @@ class ExoButtonControl extends ExoElementControl {
 
         switch (actionParts[0]) {
           case "next":
-            this.context.exo.addins.navigation.nextPage();
+            this.context.exo.addins.navigation.next();
             break;
           case "reset":
             this.context.exo.addins.navigation.goto(1);
