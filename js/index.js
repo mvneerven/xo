@@ -34,9 +34,6 @@ class HomeRoute extends xo.route {
 
     async render(path) {
 
-
-
-
         try {
             await this.renderForm(path);
         }
