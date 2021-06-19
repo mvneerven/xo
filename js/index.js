@@ -446,7 +446,7 @@ class HelpRoute extends xo.route {
         pwa.on("omnibox-init", e => {
             e.detail.options.categories["Help"] = {
                 sortIndex: 50,
-                trigger: options => { return options.search.length >= 2 },
+                trigger: options => { return options.results.length === 0 && options.search.length >= 2 },
                 getItems: async options => {
                     await this.getMD();
                     return this.readMeMD.split('\n').filter(l => {
@@ -460,7 +460,6 @@ class HelpRoute extends xo.route {
                         }
                     })
                 },
-                text: "Search for '%search%' in help",
                 icon: "ti-help",
                 action: options => {
                     document.location.hash = "/help/" + options.text;

@@ -1049,11 +1049,11 @@ collectSettings() {
 
 ### OmniBox
 
-Each OmniBox category can have a *sortIndex* property, which specifies where the results within that category are shown in the list of results.
+- Each OmniBox category can have a *sortIndex* property, which specifies where the results within that category are shown in the list of results.
 
-OmniBox now fires an 'omnibox-init' event on the pwa object. This gives any component the chance to hook into the creation and add categories.
+- OmniBox now fires an 'omnibox-init' event on the pwa object. This gives any component the chance to hook into the creation and add categories.
 
-Add a 'Products' category, 
+Add a 'Products' category:
 
 ```js
  pwa.on("omnibox-init", e => {
@@ -1073,6 +1073,34 @@ Add a 'Products' category,
             document.location.hash = '/products/' + options.text
         }
 
+    }
+});
+```
+
+- OmniBox categories can now be triggered depending on other results. Using the *sortIndex* property, you can specify that your category is only activated when other categories have already had the chance of adding their results, so that your data can be skipped if other results are already showm. This can be handy for 'catch all' categories such as delegating to an external help system.
+
+In the case below, we're showing the option to search in ZenDesk, but only if there were no other results:
+
+```js
+pwa.on("omnibox-init", e => {
+    e.detail.options.categories["Help"] = {
+          sortIndex: 400,
+          trigger: (options) => {
+            return options.results.length === 0 && options.search.length >= 2;
+          },
+          getItems: (options) => {
+            return [
+              {
+                text: `Search for help on '${options.search}'`,
+              },
+            ];
+          },
+          icon: "ti-help",
+          action: (options) => {
+            options.url = `https://help.mydomain.com/hc/nl/search?utf8=%E2%9C%93&query=${options.search}`;
+          },
+          newTab: true,
+        }
     }
 });
 ```
