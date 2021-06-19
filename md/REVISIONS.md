@@ -1042,3 +1042,97 @@ collectSettings() {
     return ar;
 }
 ```
+
+# New in 1.3.37
+
+## Improvements
+
+### OmniBox
+
+Each OmniBox category can have a *sortIndex* property, which specifies where the results within that category are shown in the list of results.
+
+OmniBox now fires an 'omnibox-init' event on the pwa object. This gives any component the chance to hook into the creation and add categories.
+
+Add a 'Products' category, 
+
+```js
+ pwa.on("omnibox-init", e => {
+    e.detail.options.categories["Products"] = {
+        sortIndex: 1,
+        trigger: options => { return options.search.length >= 2 },
+        getItems: async options => {
+            return this.client.productApi.find(options.search, {max: 3}).map(i => {
+              return {
+                text: i.name,
+                description: i.description
+              }
+            })
+        },
+        icon: "ti-package",
+        action: options => {
+            document.location.hash = '/products/' + options.text
+        }
+
+    }
+});
+```
+
+### Textbox (and derived inputs - search, url, etc.)
+
+The *prefix* property can now be an object that specifies font, size and/or icon:
+
+```json
+  {
+    "type": "search",
+    "prefix": {
+       "char": "◷",
+       "font": "Segoe UI"
+    }
+  }
+```
+
+... or
+
+```json
+  {
+    "type": "search",
+    "prefix": {
+       "icon": "ti-search"
+    }
+  }
+```
+
+### List controls
+
+Items in the *items* array in list controls can now have a *disabled* property.
+
+```js
+{
+  name: "shoptype",
+  type: "radiobuttonlist",
+  view: "tiles",
+  required: true,
+  caption: "Pricing Tiers",
+  items: [
+    {
+      value: "starter",
+      name: "Starter",
+      description: "unavailable",
+      disabled: true
+    },
+    {
+      value: "standard",
+      name: "Standard",
+      checked: true,
+      description: "free"
+    },
+    {
+      value: "professional",
+      name: "Professional",
+      description: "unavailable",
+      disabled: true
+    }
+  ]
+}
+```
+

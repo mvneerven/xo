@@ -16,7 +16,7 @@ class ExoInputListControl extends ExoListControl {
         let f = this.context.field;
 
         const tpl = /*html*/`<div class="exf-ilc-cnt" title="{{tooltip}}">
-            <input class="{{class}}" {{checked}} name="{{inputname}}" value="{{value}}" type="{{type}}" id="{{oid}}" />
+            <input class="{{class}}" {{disabled}} {{checked}} name="{{inputname}}" value="{{value}}" type="{{type}}" id="{{oid}}" />
             <label for="{{oid}}" class="exf-caption">
                 <div class="exf-caption-main">{{name}}</div>
                 <div title="{{description}}" class="exf-caption-description">{{description}}</div>

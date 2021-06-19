@@ -11,8 +11,12 @@ class ExoTextControl extends ExoInputControl {
 
         this.acceptProperties({
             name: "prefix",
-            type: String,
-            description: "Prefix to display in input (e.g. '$')"
+            type: Object,
+            description: `Prefix to display in input (e.g. '$'). 
+                Use object notation to specify icon or font. 
+                - prefix: {char: "◷", font: "Segoe UI"}
+                - prefix: {icon: "ti-search"}`
+
         },
             {
                 name: "autocomplete",
@@ -35,14 +39,24 @@ class ExoTextControl extends ExoInputControl {
 
 
         if (this.prefix) {
-            this.htmlElement.closest(".exf-ctl").setAttribute("data-prefix", this.prefix)
+            //this.htmlElement.closest(".exf-ctl").setAttribute("data-prefix", this.prefix)
             this.container.classList.add("exf-std-lbl");
-
+            let pos = "";
             let pfx = document.createElement("span");
-            pfx.innerText = this.prefix;
-            pfx.style = "position: absolute; top: .25rem; left: 0"
+            if (this.prefix.icon) {
+                pfx.classList.add(this.prefix.icon);
+                pos = "top: .65rem; left: 0.5rem";
+            }
+            else {
+                pfx.innerHTML = this.prefix.char ? this.prefix.char : this.prefix;
+                pos = "top: .45rem; left: 0.5rem";
+            }
+
+            pfx.style = `position: absolute; ${pos}; ${(this.prefix.font ? "font-family: "
+                + this.prefix.font : "")}; ${(this.prefix.size ? "font-size: " + this.prefix.size + "; line-height: " + this.prefix.size : "")}`;
+
             this.container.appendChild(pfx);
-            this.htmlElement.style.paddingLeft = "1rem";
+            this.htmlElement.style.paddingLeft = "2rem";
         }
 
         if (this.autocomplete) {
@@ -59,8 +73,8 @@ class ExoTextControl extends ExoInputControl {
     set prefix(value) {
         this._prefix = value;
 
-        if (this.rendered)
-            this.htmlElement.closest(".exf-ctl").setAttribute("data-prefix", this._prefix);
+        // if (this.rendered)
+        //     this.htmlElement.closest(".exf-ctl").setAttribute("data-prefix", this._prefix);
     }
 
     set autocomplete(obj) {

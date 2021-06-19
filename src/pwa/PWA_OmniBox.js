@@ -18,6 +18,13 @@ class PWA_OmniBox {
     }
 
     async render() {
+
+        let details = {
+            options: this.options
+
+        }
+        pwa.events.trigger("omnibox-init", details);
+
         if (this.options.useRoutes) {
             const routes = this.getRoutes(this.options.useRoutes);
 
@@ -27,7 +34,7 @@ class PWA_OmniBox {
                 getItems: options => {
 
                     return routes.filter(i => {
-                        if(i.module.hidden)
+                        if (i.module.hidden)
                             return false;
 
                         if (!options.search)
@@ -45,19 +52,20 @@ class PWA_OmniBox {
                 }
             }
 
-            routes.forEach(r => {
+            // routes.forEach(r => {
 
-                let add = r.module.omniBoxCategories;
-                if (add) {
+            //     let add = r.module.omniBoxCategories;
+            //     if (add) {
 
-                    this.options.categories = {
-                        ...this.options.categories,
-                        ...add
-                    }
-                }
-            });
+            //         this.options.categories = {
+            //             ...this.options.categories,
+            //             ...add
+            //         }
+            //     }
+            // });
         }
 
+        this.categories = this.getCategories(); // finalize and sort options.categories
 
         this.elm = await xo.form.run({
             navigation: "none",
@@ -67,12 +75,15 @@ class PWA_OmniBox {
                     fields: [
                         {
                             name: "autocomplete",
-                            type: "text",
+                            type: "search",
                             caption: "",
+                            prefix: {
+                                icon: "ti-search"
+                            },
                             placeholder: this.options.placeholder || "Start here...",
                             tooltip: this.options.tooltip || "Click & type to search...",
                             autocomplete: {
-                                categories: this.options.categories,
+                                categories: this.categories,
                                 items: this.items
                             }
 
@@ -100,13 +111,39 @@ class PWA_OmniBox {
         return this.elm;
     }
 
+    // finalize and sort options.categories
+    getCategories() {
+        let ar = [];
+        
+        for (var n in this.options.categories) {
+            this.options.categories[n].id = n;
+            this.options.categories[n].sortIndex = this.options.categories[n].sortIndex || 1000;
+            ar.push(this.options.categories[n])
+        }
+        ar.sort((a, b) => {
+            if (a.sortIndex < b.sortIndex) {
+                return -1;
+            }
+            if (a.sortIndex > b.sortIndex) {
+                return 1;
+            }
+            return 0;
+        })
+
+        let categories = {};
+        ar.forEach(i => {
+            categories[i.id] = i;
+        });
+        return categories;
+    }
+
     async items(options) {
         let arr = [];
+        options.results = [];
 
-        //todo create array sorted for categories
-        // based on SortI
         for (var c in options.categories) {
             let catHandler = options.categories[c];
+            options.results = arr;
             if (catHandler.trigger(options)) {
                 let catResults = [];
                 try {
@@ -120,8 +157,6 @@ class PWA_OmniBox {
                 }))
             }
         }
-
-
         console.debug("PWA_OmniBox results: ", arr);
         return arr;
     }
