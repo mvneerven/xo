@@ -351,6 +351,52 @@ class TestRoute extends xo.route {
                                 ///categories: this.options.categories,
                                 items: ["test", "okay", "bla"]
                             }
+                        },
+
+                        {
+                            type: "listview",
+                            name: "lv1",
+                            view: "tiles",
+                            columns: [
+                                {
+                                    name: "Name",
+                                    mappedTo: "name",
+                                    width: "8rem",
+                                    type: "text",
+                                    sort: true
+                                },
+                                {
+                                    name: "Image",
+                                    mappedTo: "imageUri",
+                                    width: "100px",
+                                    type: "image"
+                                },
+                                {
+                                    name: "Description",
+                                    mappedTo: "description",
+                                    autoWidth: true,
+                                    type: "text"
+                                }
+                            ],
+                            items: [
+                                {
+                                    id: "test1",
+                                    name: "Test",
+                                    description: "A test item"
+                                },
+                                {
+                                    id: "test2",
+                                    name: "Lorem",
+                                    description: "... ipsum dolor sit amet"
+                                },
+                                {
+                                    id: "test3",
+                                    name: "Beauty",
+                                    image: "https://images.pexels.com/photos/6500729/pexels-photo-6500729.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=750&w=1260",
+                                    description: "... is in the eye of the beholder"
+                                }
+
+                            ]   
                         }
                     ]
                 }

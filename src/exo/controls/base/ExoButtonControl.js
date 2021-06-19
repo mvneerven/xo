@@ -136,34 +136,23 @@ class ExoButtonControl extends ExoElementControl {
 
   async getListItem(item) {
     let template = DOM.parseHTML("<li/>");
+    let icon = `<span class="${item.icon}"></span>`;
+
     switch (item.type) {
       case "event":
         template = DOM.parseHTML(
-          DOM.format(
-            `<li title="{{tooltip}}"><a class="{{class}}">{{name}}</a></li>`,
-            item
-          )
+          `<li data-action="${item.title}" title="${item.tooltip || ""}"><a  class="${item.class || ""}">${icon} ${item.name}</a></li>`,
         );
-        template.addEventListener("click", () => {
-          const ev = new Event(item.title);
-          this.container.dispatchEvent(ev);
-        });
         break;
       case "field":
         template = DOM.parseHTML(
-          DOM.format(
-            `<li title="{{tooltip}}"><a class="{{class}}">{{name}}</a></li>`,
-            item
-          )
+          `<li title="${item.tooltip}}"><a class="${item.class}">${icon} ${item.name}</a></li>`,
         );
         template.querySelector("a").appendChild(await xo.form.run(item.field));
         break;
       default:
         template = DOM.parseHTML(
-          DOM.format(
-            `<li title="{{tooltip}}"><a class="{{class}}" href="{{url}}">{{name}}</a></li>`,
-            item
-          )
+          `<li title="${item.tooltip}"><a class="${item.class}" href="${item.url}">${icon} ${item.name}</a></li>`,
         );
         break;
     }
