@@ -47,6 +47,7 @@ class ExoListControl extends ExoElementControl {
             inputname: f.name,
             checked: (i.checked || i.selected) ? "checked" : "",
             selected: (i.checked || i.selected) ? "selected" : "",
+            disabled: (i.disabled || i.enabled === false) ? "disabled" : "",
             tooltip: (i.tooltip || i.name || "").replace('{{field}}', ''),
             oid: f.id + "_" + index
         }

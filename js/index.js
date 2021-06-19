@@ -11,7 +11,10 @@ class HomeRoute extends xo.route {
         return pwa.settings.createGroup("General", {
             type: "boolean",
             name: "darkmode",
-            title: "Dark Mode"
+            title: "Dark Mode",
+            ui: {
+                type: "switch"
+            }
         });
 
     }
@@ -29,130 +32,45 @@ class HomeRoute extends xo.route {
 
     }
 
-    async render() {
+    async render(path) {
+
         try {
-            await this.renderForm();
+            await this.renderForm(path);
         }
         catch (ex) {
             this.app.UI.areas.main.add("Could not render form: " + ex.toString)
         }
     }
 
-    async renderForm() {
-
-        const schema1 = {
-            navigation: "static",
-            model: {
-                schemas: {
-                    data: "/data/schemas/product-schema.json"
-                },
-                instance: {
-                    data: {
-                        id: "ea56912e-0f14-489e-af5f-3e4b7d0a966f",
-                        name: "My random photo",
-                        description: "Just an example form showing JSON Schema Binding",
-                        price: {
-                            amount: 34.45,
-                            currency: 978
-
-                        },
-                        isForSale: true,
-                        vatPercentage: 9,
-                        imageUri: "https://xo-js.dev/assets/img/omnibox.png",
-                        tags: ["sunset", "hills", "misty", "clouds"]
-                    }
-                },
-                logic: context => {
-                    let m = context.model;
-                    m.bindings.edit = !m.instance.data.id
-                }
-            },
-
-            mappings: {
-                skip: ["recordVersion"],
-
-                pages: {
-                    one: { legend: "Hello" },
-                    two: { legend: "Bye" }
-                },
-
-                properties: {
-                    id: {
-                        type: "hidden"
-                    },
-                    name: {
-                        autocomplete: { items: ["Good", "Bad", "Ugly"] }
-                    },
-                    imageUri: {
-                        page: "two",
-                        type: "image"
-                    },
-
-                    price: {
-                        class: "compact",
-                        fields: {
-                            amount: {
-                                type: "number",
-                                prefix: "€",
-                                required: true,
-                                step: 0.01
-                            }
-                        },
-                        columns: "6em 4em",
-                        areas: `"amount currency"`
-                    },
-                    tags: {
-                        type: "tags"
-                    },
-                    isForSale: {
-                        type: "switch"
-                    }
-                }
-            },
-
-            controls: [
-                {
-                    name: "save",
-                    type: "button",
-                    caption: "Save"
-                },
-                {
-                    name: "cancel",
-                    type: "button",
-                    caption: "Cancel"
-                },
-            ]
+    async renderForm(path) {
+        let data = {
+            email: "",
+            needsEmail: true,
+            code: "",
+            emailSent: false,
+            nextCaption: "Next ▷"
         }
 
+        if (path) {
+            let s = atob(path.substr(1)).split("/");
+            data.email = s[0];
+            data.code = s[1];
+            data.emailSent = true
+        }
+
+        DOM.changeHash("");
 
         const schema = {
             validation: "inline",
             model: {
                 instance: {
-                    data: {
-                        email: "",
-                        emailSent: false,
-                        confirmationRecenived: false
-                    }
-                },
-                logic: context => {
-                    const m = context.model, data = m.instance.data,
-                        b = m.bindings, a = context.exo.addins;
-                    b.block = false;
-                    b.nextCaption = "Send Email ▷";
-                    if (data.email) {
-                        data.confirmationSent = true
-                    }
-
-                    if (data.email && data.confirmationSent) {
-                        b.nextCaption = "Select Pricing Tier ▷"
-                    }
+                    data: data
                 }
-
             },
             pages: [
                 {
                     legend: "Upgrade",
+                    relevant: "@instance.data.needsEmail",
                     intro: "In order to upgrade your account, we need to send you an email for confirmation.",
                     fields: [
                         {
@@ -167,14 +85,43 @@ class HomeRoute extends xo.route {
                 },
                 {
                     legend: "Check your inbox",
-                    intro: "You should have received an email with a link.",
+                    relevant: "@instance.data.needsEmail",
+                    intro: `We have sent an email to <b>@instance.data.email</b>. <br/><br/>
+                        If you have not received an email within 10 minutes, please try again or contact us.<br/><br/>
+                        Don't forget to check your SPAM box!`,
                     fields: [
                         {
                             type: "div",
-                            name: "info",
+                            html: "Alternatively, you can take the 8 character code from the email and paste it here:"
+                        },
+                        {
+                            type: "text",
+                            name: "code",
+                            bind: "instance.data.code",
+                            caption: "Code (8 characters long)",
+                            class: "exf-std-lbl exf-focus",
+                            placeholder: "AaE5kL9g",
+                            minlength: 8,
+                            maxlength: 8
+                        }
+                    ]
+                },
+                {
+                    legend: "Confirmed!",
+                    intro: `You are now confirmed!`,
+                    fields: [
+                        {
+                            type: "div",
+                            html: "Your email address <b>@instance.data.email</b> has been confirmed."
+                        },
+                        {
+                            type: "text",
+                            name: "code1",
+                            bind: "instance.data.code",
+                            readonly: true,
+                            caption: "Code",
+                            class: "exf-std-lbl exf-focus",
 
-                            class: "exf-std-lbl",
-                            html: `You `
                         }
                     ]
                 },
@@ -192,7 +139,7 @@ class HomeRoute extends xo.route {
                                 {
                                     value: "starter",
                                     name: "Starter",
-                                    description: "19.95/month",
+                                    description: "<i>unavailable</i>",
                                     disabled: true
                                 },
                                 {
@@ -204,7 +151,7 @@ class HomeRoute extends xo.route {
                                 {
                                     value: "professional",
                                     name: "Professional",
-                                    description: "199.00/month",
+                                    description: "contact us",
                                     disabled: true
                                 }
                             ]
@@ -217,48 +164,100 @@ class HomeRoute extends xo.route {
                     name: "prev",
                     type: "button",
                     caption: "◁ Back",
-                    class: "form-prev"
+                    class: "form-prev exf-btn"
                 },
                 {
                     name: "next1",
                     type: "button",
-                    caption: " @bindings.nextCaption",
-                    class: "form-next1",
-                    disabled: "@bindings.block",
+                    caption: " @instance.data.nextCaption",
+                    class: "form-next exf-btn",
+
                     action: "next"
                 },
                 {
                     name: "send",
                     type: "button",
                     caption: "Submit",
-                    class: "form-post"
+                    class: "form-post exf-btn"
                 }
             ]
         }
 
-        const schema2 = "/data/forms/form.js";
+        if (data.email) {
+            schema.pages.shift();
+            schema.pages.shift();
+        }
 
 
         let form = await xo.form.run(schema, {
             on: {
-                post: e => {
-                    alert(JSON.stringify(e.detail.postData, null, 2))
-                },
-                error: e => {
-                    let ex = e.detail.error;
-                    const elm = DOM.parseHTML(`<div>Error: ${ex.toString()}</div>`);
-                    document.querySelector("footer").appendChild(elm);
-                    elm.scrollIntoView();
-                },
-                dom: {
-                    click: e => {
-                        //   debugger;
-                    }
-                }
+                page: this.change.bind(this),
+                post: (e) => { },
+                dataModelChange: this.change.bind(this)
             }
         });
 
         this.app.UI.areas.main.add(form)
+    }
+
+    change(e) {
+        let isPageEvent = e.type === "page";
+        const context = e.detail;
+        const x = isPageEvent ? context.host : context.host.exo;
+        if (x && x.schema) {
+            const m = x.schema.model,
+                data = m.instance.data,
+                a = x.addins;
+
+            let sendMail = !data.emailSent && isPageEvent && e.detail.from === 1 && e.detail.page === 2;
+
+            if (sendMail) {
+                this.sendCode(data.email);
+                data.confirmationSent = true;
+            }
+
+            if (data.email) {
+                if (!data.code)
+                    data.nextCaption = "Send Confirmation Email ▷"
+                else
+                    data.nextCaption = "Finalize upgrade ▷"
+
+            }
+            else {
+                data.nextCaption = "Continue ▷"
+            }
+        }
+    }
+
+    sendCode(email) {
+        let code = this.generateCode();
+        let url = "http://localhost:4748/#//" + btoa(email + "/" + code);
+
+        let data = {
+            toAddress: email,
+            message: "Confirm ",
+            templateId: "d-e345f5fd07504f30b069e5af1c31e851",
+            variables: {
+                title: "Confirm your email for ASF",
+                intro: "Build any Shopping Experience easily with the ASF Order Management System",
+                subject: "Confirm your email for ASF",
+                preheader: "You're one step away from creating your own shop!",
+                cta_intro: "Code: " + code,
+                cta: "Confirm Email Address",
+                url: url
+            }
+        };
+
+        pwa.restService.post("http://localhost:7071/sendmail/", {
+            body: JSON.stringify(data)
+        })
+    }
+
+    generateCode() {
+        return 'xxxxxxxx'.replace(/[xy]/g, function (c) {
+            var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+            return v.toString(16);
+        });
     }
 }
 
@@ -280,44 +279,54 @@ class TestRoute extends xo.route {
             {
                 type: "string",
                 name: "name",
-                title: "Your name"
+                title: "Your name",
+                ui: {
+                    placeholder: "Enter your name"
+                }
             },
             {
                 type: "string",
                 name: "email",
                 format: "email",
                 title: "Email address"
+            },
+            {
+                type: "string",
+                name: "money",
+                format: "currency",
+                title: "Money",
+                ui: {
+                    prefix: {
+                        char: "◷", font: "Segoe UI", size: "1.2rem"
+                    }
+                }
             }
+
         );
 
     }
 
-    get omniBoxCategories() {
+    constructor() {
+        super(...arguments);
 
-        return {
-            Test: {
+        pwa.on("omnibox-init", e => {
+            e.detail.options.categories["Test"] = {
 
                 trigger: options => { return options.search.length >= 2 },
                 getItems: async options => {
                     return [
                         {
                             text: "Test",
-                            description: "Go to test"
-
+                            description: "Go to test!!!!!!"
                         }
                     ]
                 },
                 icon: "ti-package",
                 action: options => {
-                    document.location.hash = "/settings/" + options.field
+                    document.location.hash = "/settings/" + options.search
                 }
-
             }
-        }
-    }
-
-    constructor() {
-        super(...arguments);
+        })
 
         pwa.settings.add(this.settings)
             .on("read", e => {
@@ -362,26 +371,12 @@ class SettingsRoute extends xo.route {
     menuIcon = "ti-settings";
 
 
-    async render(path) {
-        let frm = await pwa.settings.render({
-            on: {
-                interactive: e => {
-                    //debugger;
-                }
-            }
-        });
-        this.area.add(frm);
-    }
+    constructor() {
+        super(...arguments);
 
-    get area() {
-        return this.app.UI.areas.main;
-    }
-
-    get omniBoxCategories() {
-
-        return {
-            Settings: {
-
+        pwa.on("omnibox-init", e => {
+            e.detail.options.categories["Settings"] = {
+                sortIndex: 5,
                 trigger: options => { return options.search.length >= 2 },
                 getItems: async options => {
                     return this.collectSettings().filter(i => {
@@ -400,10 +395,26 @@ class SettingsRoute extends xo.route {
                 action: options => {
                     document.location.hash = "/settings/" + options.field
                 }
-
             }
-        }
+        })
     }
+
+    async render(path) {
+        let frm = await pwa.settings.render({
+            on: {
+                interactive: e => {
+                    //debugger;
+                }
+            }
+        });
+        this.area.add(frm);
+    }
+
+    get area() {
+        return this.app.UI.areas.main;
+    }
+
+
 
     collectSettings() {
         let ar = [];
@@ -426,6 +437,34 @@ class HelpRoute extends xo.route {
 
     menuIcon = "ti-help";
 
+    constructor() {
+        super(...arguments);
+
+        pwa.on("omnibox-init", e => {
+            e.detail.options.categories["Help"] = {
+                sortIndex: 50,
+                trigger: options => { return options.results.length === 0 && options.search.length >= 2 },
+                getItems: async options => {
+                    await this.getMD();
+                    return this.readMeMD.split('\n').filter(l => {
+                        return l.startsWith('#') && l.toLowerCase().indexOf(options.search.toLowerCase()) > -1;
+                    }).map(l => {
+
+                        let text = l.replace(/\#/g, "").substr(0, 25).trim() + '...';
+
+                        return {
+                            text: text
+                        }
+                    })
+                },
+                icon: "ti-help",
+                action: options => {
+                    document.location.hash = "/help/" + options.text;
+                }
+            }
+        });
+    }
+
     async asyncInit() {
         await super.asyncInit();
 
@@ -434,8 +473,22 @@ class HelpRoute extends xo.route {
 
     async render(path) {
 
-        let readmeElement = DOM.parseHTML(await Core.MarkDown.read(this.readMeMD));
+        if (!path || !path.endsWith(".md")) {
+            path = "./README.md";
+        }
+
+        let html = await Core.MarkDown.read(path);
+
+        let readmeElement = DOM.parseHTML(html);
+
         this.area.add(readmeElement);
+
+        readmeElement.querySelectorAll("a[href]").forEach(a => {
+            if (a.href.endsWith(".md")) {
+
+                a.setAttribute("href", "#/help" + new URL(a.href).pathname)
+            }
+        });
 
         if (path) {
             let sentencePart = decodeURIComponent(path.substr(1));
@@ -455,40 +508,14 @@ class HelpRoute extends xo.route {
 
     async getMD() {
         if (!this.readMeMD)
-            this.readMeMD = await fetch("./README.md").then(x => x.text());
+            this.readMeMD = await fetch(this.mdPath).then(x => x.text());
     }
 
     get area() {
         return this.app.UI.areas.main;
     }
 
-    get omniBoxCategories() {
-        return {
-            Help: {
 
-                trigger: options => { return options.search.length >= 2 },
-                getItems: async options => {
-                    await this.getMD();
-                    return this.readMeMD.split('\n').filter(l => {
-                        return l.startsWith('#') && l.toLowerCase().indexOf(options.search.toLowerCase()) > -1;
-                    }).map(l => {
-
-                        let text = l.replace(/\#/g, "").substr(0, 25).trim() + '...';
-
-                        return {
-                            text: text
-                        }
-                    })
-                },
-                text: "Search for '%search%' in help",
-                icon: "ti-help",
-                action: options => {
-                    document.location.hash = "/help/" + options.text;
-                }
-
-            }
-        }
-    };
 }
 
 class ProductsRoute extends xo.route {
@@ -496,10 +523,12 @@ class ProductsRoute extends xo.route {
 
     title = "Products";
 
-    get omniBoxCategories() {
-        return {
-            Products: {
-                sortIndex: 100,
+    constructor(){
+        super(...arguments);
+
+        pwa.on("omnibox-init", e => {
+            e.detail.options.categories["Products"] = {
+                sortIndex: 1,
                 trigger: options => { return options.search.length >= 2 },
                 getItems: async options => {
 
@@ -521,8 +550,8 @@ class ProductsRoute extends xo.route {
                 }
 
             }
-        }
-    };
+        });
+    }   
 
     async render(path) {
         let search = decodeURIComponent(path.substr(1));
@@ -566,7 +595,7 @@ class PWA extends xo.pwa {
             categories: {
                 Google: {
                     sortIndex: 500,
-                    trigger: options => { return options.search.length >= 2 },
+                    trigger: options => { return options.results.length === 0 && options.search.length >= 2 },
                     text: "Search on Google for '%search%'",
                     getItems: options => {
                         return [{
@@ -617,9 +646,9 @@ class PWA extends xo.pwa {
             this.UI.areas.header.add(elm)
         })
 
-        this.router.generateMenu(this.UI.areas.menu, m => {
-            return m.name !== "SettingsRoute"
-        });
+        // this.router.generateMenu(this.UI.areas.menu, m => {
+        //     return m.name !== "SettingsRoute"
+        // });
     }
 }
 

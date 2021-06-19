@@ -159,6 +159,7 @@ class ExoTextControlAutoCompleteExtension {
         };
 
         this.getItems(options).then(r => {
+            this.clear();
             this.resultsHandler(r, options)
         })
     }
@@ -223,7 +224,7 @@ class ExoTextControlAutoCompleteExtension {
             this.resultsDiv.innerHTML += `<div data-index="${index}" class="${this.cssClasses.item}">
                 <span class="${i.icon || catHandler.icon}"></span>
                 <span class="text">${this.formatResultItem(i, options, catHandler)}</span>
-                <span class="category">${i.category || ""}</span></div>`;
+                <span title="Sortindex: ${catHandler.sortIndex}" class="category">${i.category || ""}</span></div>`;
 
             index++;
         });
@@ -259,7 +260,6 @@ class ExoTextControlAutoCompleteExtension {
     }
 
     async getItems(options) {
-        //this.options = options;
         return new Promise(resolve => {
             if (Core.isUrl(this.items)) {
                 fetch(this.items + "?" + this.createQueryParam(options)).then(x => {
@@ -271,14 +271,12 @@ class ExoTextControlAutoCompleteExtension {
                 })
             }
             else if (Array.isArray(this.items)) {
-
                 this.items = this.items.map(i => {
                     if (typeof (i) === "string") {
                         return { text: i }
                     }
                     return i;
                 })
-
                 resolve(this.items.filter(i => {
                     return this.isMatch(options, i)
                 }));
