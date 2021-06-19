@@ -75,6 +75,13 @@
   position: relative;
   padding-top: 2rem;
 
+  .exf-lv-grid-img {
+    height: 80px;
+    width: 100%;
+    background-size: contain;
+    background-repeat: no-repeat;
+  }
+
   #validityInput {
     width: 100%;
     height: calc(100% - 2rem);
@@ -297,8 +304,7 @@
             justify-content: center;
           }
         }
-        .exf-lv-item__grid:not([data-column="actions"])
-          .exf-lv-item__grid__content,
+        .exf-lv-item__grid:not([data-column="actions"]) .exf-lv-item__grid__content,
         .exf-lv-headers__header {
           overflow: hidden;
           text-overflow: ellipsis;
@@ -382,11 +388,7 @@
               text-align: center;
               margin: 0;
               padding: 50px 0 0;
-              background-image: linear-gradient(
-                to bottom,
-                rgba(white, 0) 0%,
-                var(--lv-tile-color) 100%
-              );
+              background-image: linear-gradient(to bottom, rgba(white, 0) 0%, var(--lv-tile-color) 100%);
             }
           }
 

@@ -1,3 +1,4 @@
+@charset "UTF-8";
 .non-empty .if-empty {
   display: none;
 }
@@ -2867,6 +2868,13 @@ html.theme-dark .exf-ctl-cnt.exf-switch input[type="range"] {
   padding-top: 2rem;
 }
 
+.exf-listview .exf-lv-grid-img {
+  height: 80px;
+  width: 100%;
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
 .exf-listview #validityInput {
   width: 100%;
   height: calc(100% - 2rem);
@@ -3180,11 +3188,9 @@ html.theme-dark .exf-ctl-cnt.exf-switch input[type="range"] {
           justify-content: center;
 }
 
-.exf-listview[data-view="grid"] .exf-listview-list > .exf-lv-headers .exf-lv-item__grid:not([data-column="actions"])
-.exf-lv-item__grid__content,
+.exf-listview[data-view="grid"] .exf-listview-list > .exf-lv-headers .exf-lv-item__grid:not([data-column="actions"]) .exf-lv-item__grid__content,
 .exf-listview[data-view="grid"] .exf-listview-list > .exf-lv-headers .exf-lv-headers__header,
-.exf-listview[data-view="grid"] .exf-listview-list > .exf-lv-item .exf-lv-item__grid:not([data-column="actions"])
-.exf-lv-item__grid__content,
+.exf-listview[data-view="grid"] .exf-listview-list > .exf-lv-item .exf-lv-item__grid:not([data-column="actions"]) .exf-lv-item__grid__content,
 .exf-listview[data-view="grid"] .exf-listview-list > .exf-lv-item .exf-lv-headers__header {
   overflow: hidden;
   text-overflow: ellipsis;

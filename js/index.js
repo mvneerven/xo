@@ -368,8 +368,8 @@ class TestRoute extends xo.route {
                                 {
                                     name: "Image",
                                     mappedTo: "imageUri",
-                                    width: "100px",
-                                    type: "image"
+                                    autoWidth: true,
+                                    type: "img"
                                 },
                                 {
                                     name: "Description",
@@ -392,7 +392,7 @@ class TestRoute extends xo.route {
                                 {
                                     id: "test3",
                                     name: "Beauty",
-                                    image: "https://images.pexels.com/photos/6500729/pexels-photo-6500729.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=750&w=1260",
+                                    image: "https://stasfassetsdev.z6.web.core.windows.net/c737a2dd-1bad-4d23-836a-2c8c4bb977b2/assets/Sol-bier-mexican-500x500_1_1",
                                     description: "... is in the eye of the beholder"
                                 }
 

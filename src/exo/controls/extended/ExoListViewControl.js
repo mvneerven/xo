@@ -137,10 +137,21 @@ class ExoListViewControl extends ExoDivControl {
         else if (header === "tile-description")
           val = value["description"]
 
-        else if (header === "tile-img")
-          val = value["image"]
-        else
+        else if (header === "tile-img" || header === "imageUri"){
+          val = value["image"] || value["imageUri"]
+          
+
+          if(header === "imageUri"){
+            val = DOM.parseHTML(
+              /*html*/ `<div class="exf-lv-grid-img" style="background-image: url(${val})"></div>`
+            );
+          }
+        }
+        else{
+          
           val = ""
+        }
+
       }
       return val;
     };
@@ -829,8 +840,8 @@ class ExoListViewControl extends ExoDivControl {
       el.appendChild(cellData);
       cellData = el.innerHTML;
     }
-    const cellTemplate = `<div class="exf-lv-item__grid ${col.class} ${first ? "first-of-grid" : ""
-      }" style="${col.style}" data-column="${col.mappedTo}">
+    const cellTemplate = `<div class="exf-lv-item__grid ${col.class || ""} ${first ? "first-of-grid" : ""
+      }" style="${col.style || ""}" data-column="${col.mappedTo}">
         <div class="exf-lv-item__grid__content">{{content}}</div>
     </div>`;
 
