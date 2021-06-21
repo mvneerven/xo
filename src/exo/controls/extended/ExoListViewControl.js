@@ -92,6 +92,11 @@ class ExoListViewControl extends ExoDivControl {
         type: Array | Function,
       },
       {
+        name: "contextMenu",
+        type: Array | Function,
+      },
+
+      {
         name: "minimum",
         type: Number,
         description: "Minimum number of selected items",
@@ -137,18 +142,18 @@ class ExoListViewControl extends ExoDivControl {
         else if (header === "tile-description")
           val = value["description"]
 
-        else if (header === "tile-img" || header === "imageUri"){
+        else if (header === "tile-img" || header === "imageUri") {
           val = value["image"] || value["imageUri"]
-          
 
-          if(header === "imageUri"){
+
+          if (header === "imageUri") {
             val = DOM.parseHTML(
               /*html*/ `<div class="exf-lv-grid-img" style="background-image: url(${val})"></div>`
             );
           }
         }
-        else{
-          
+        else {
+
           val = ""
         }
 
@@ -438,6 +443,17 @@ class ExoListViewControl extends ExoDivControl {
       elm.addEventListener("click", (e) => {
         // if clicked on element inside action dropdown, don't select
         if (e.target.closest(".exf-dropdown-cnt")) {
+
+          let act = e.target.closest("[data-action]");
+          if(act){
+            let itemId = act.closest("article").getAttribute("data-id");
+            act = act.getAttribute("data-action");
+            this.events.trigger("action", {
+              id: act,
+              items: [itemId] 
+            });
+          }
+
           e.stopPropagation();
           e.returnValue = false;
           return;
@@ -451,6 +467,38 @@ class ExoListViewControl extends ExoDivControl {
     this.setSelectedItems(this.value);
 
     document.addEventListener("mousemove", () => this.addOverflowBars());
+
+
+    // create single contextmenu and move it to article hovered over
+    if (this.contextMenu) {
+      const am = await this.getData(this.contextMenu);
+      let btn = await xo.form.run({
+        type: "button",
+        name: `context-actions`,
+        icon: "ti-menu",
+        direction: "left",
+        dropdown: am
+      });
+      this.listDiv.appendChild(btn);
+      btn.style.display = 'none';
+      this.listDiv.addEventListener("mousemove", e => {
+
+        let art = e.target.closest("article");
+        if (art && this.hoveredArt === art)
+          return;
+
+        if (art) {
+          this.hoveredArt = art;
+          art.style.position = "relative";
+          btn.style.position = "absolute";
+          btn.style.right = "5px";
+          btn.style.top = "-10px";
+          btn.style.display = 'block';
+
+          art.appendChild(btn);
+        }
+      })
+    }
 
     this.events.trigger("ready");
   }
@@ -529,7 +577,7 @@ class ExoListViewControl extends ExoDivControl {
 
         let id = c.name;
         e.addEventListener(c.listener || "click", (ev) => {
-
+          
           let act = ev.target.closest("[data-action]");
           if (act) {
             id = act.getAttribute("data-action")
@@ -654,17 +702,17 @@ class ExoListViewControl extends ExoDivControl {
     this.value = v;
   }
 
-  toggleSelection(){
-    
+  toggleSelection() {
+
     this.currentItems.forEach((ci) => {
-      
+
       const item = this.listDiv.querySelector(
         `article.exf-lv-item[data-id="${ci.id}"]`
       );
-      
+
       item.classList.toggle("selected");
-        
-      
+
+
     });
 
     this.value = this.getSelectedIds();

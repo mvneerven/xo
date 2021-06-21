@@ -42,6 +42,44 @@
       }
     }
   }
+
+  &.drop-dir-left {
+    ul.exf-btn-dropdown{
+      animation: slideLeft 300ms ease-in-out forwards;
+      transform-origin: right center;
+
+      position: absolute !important;
+      top: 0 !important;
+      right: 100% !important;
+    }
+
+    > .exf-btn {
+      display: flex;
+      align-items: center;
+    }
+    > .exf-btn-dropdown {
+      white-space: nowrap;
+    }
+
+    &:hover .exf-btn-dropdown {
+      display: flex;
+      flex-direction: row-reverse;
+    }
+  }
+}
+
+@keyframes slideLeft {
+  0% {
+    opacity: 0;
+    z-index: -1;
+    transform: translateX(30px);
+  }
+
+  100% {
+    opacity: 1;
+    z-index: 1;
+    transform: translateX(0);
+  }
 }
 
 @keyframes slideDown {

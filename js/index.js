@@ -348,7 +348,6 @@ class TestRoute extends xo.route {
                             caption: "Autocomplete test",
                             placeholder: "Start typing...",
                             autocomplete: {
-                                ///categories: this.options.categories,
                                 items: ["test", "okay", "bla"]
                             }
                         },
@@ -382,12 +381,15 @@ class TestRoute extends xo.route {
                                 {
                                     id: "test1",
                                     name: "Test",
+                                    image: "https://stasfassetsdev.z6.web.core.windows.net/3cd3ef51-deab-47d3-944b-1d0e1e8ebe22/assets/boon-kriek.jpg",
                                     description: "A test item"
                                 },
                                 {
                                     id: "test2",
                                     name: "Lorem",
+                                    image: "https://stasfassetsdev.z6.web.core.windows.net/3cd3ef51-deab-47d3-944b-1d0e1e8ebe22/assets/Lucifer",
                                     description: "... ipsum dolor sit amet"
+                                    
                                 },
                                 {
                                     id: "test3",
@@ -396,11 +398,32 @@ class TestRoute extends xo.route {
                                     description: "... is in the eye of the beholder"
                                 }
 
-                            ]   
+                            ],
+                            contextMenu: [
+                                {
+                                    tooltip: "Edit",
+                                    icon: "ti-pencil",
+                                    action: "edit",
+                                },  
+                                {
+                                    tooltip: "Delete",
+                                    icon: "ti-close",
+                                    action: "delete"
+                                }
+                            ]
+
                         }
                     ]
                 }
             ]
+        }, {
+            on: {
+                interactive: e => {
+                    e.detail.host.get("lv1")._control.on("action", e => {
+                        debugger;
+                    })
+                }
+            }
         });
         this.area.add(this.elm)
     }
@@ -569,7 +592,7 @@ class ProductsRoute extends xo.route {
 
     title = "Products";
 
-    constructor(){
+    constructor() {
         super(...arguments);
 
         pwa.on("omnibox-init", e => {
@@ -597,7 +620,7 @@ class ProductsRoute extends xo.route {
 
             }
         });
-    }   
+    }
 
     async render(path) {
         let search = decodeURIComponent(path.substr(1));
