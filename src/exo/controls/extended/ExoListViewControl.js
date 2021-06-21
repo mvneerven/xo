@@ -88,10 +88,6 @@ class ExoListViewControl extends ExoDivControl {
           "Object array containing item key as key, the column header as title and the width op the column as width",
       },
       {
-        name: "actionMenu",
-        type: Array | Function,
-      },
-      {
         name: "contextMenu",
         type: Array | Function,
       },
@@ -396,46 +392,7 @@ class ExoListViewControl extends ExoDivControl {
 
     for (const i of items) {
       const template = DOM.parseHTML(this.getTemplate(i));
-      if (this.actionMenu) {
-        const abGrid = await this.createActionButton(i);
-        template
-          .querySelector(`[data-column="actions"] .exf-lv-item__grid__content`)
-          .appendChild(abGrid);
-
-        const abTile = await this.createActionButton(i);
-        abTile.classList.add("exf-lv-item__tile", "action-button");
-        abTile.dataset.column = "actions";
-        template.appendChild(abTile);
-
-        [abGrid, abTile].forEach(async (actionButton) => {
-          const am = await this.getData(this.actionMenu, i);
-          am.forEach((menuItem) => {
-            // add listener for button press
-            actionButton.addEventListener(menuItem.title, (e) => {
-              const parentArticle = actionButton.closest("article.exf-lv-item");
-              const data = this.tableItems.find(
-                (tableItem) => tableItem.id === parentArticle.dataset.id
-              );
-              this.events.trigger(menuItem.title, {
-                data,
-                items: this.tableItems,
-              });
-            });
-          });
-
-          // set fixed position of dropdown menu
-          const actionBtn = actionButton.querySelector(".exf-dropdown-cnt");
-          actionBtn.addEventListener("mouseenter", () => {
-            const rect = actionBtn.getBoundingClientRect();
-            const menu = actionBtn.querySelector(".exf-btn-dropdown");
-            menu.style.position = "fixed";
-            menu.style.top = `${rect.y + rect.height}px`;
-            menu.style.right = `${document.body.clientWidth - rect.x - rect.width
-              }px`;
-          });
-        });
-      }
-
+     
       const pagingRow = this.listDiv.querySelector(".exf-lv-paging");
       if (pagingRow) this.listDiv.insertBefore(template, pagingRow);
       else this.listDiv.appendChild(template);
@@ -812,8 +769,7 @@ class ExoListViewControl extends ExoDivControl {
     this.columns.forEach((col) => {
       columnHeaders += /*html*/ `<div class="exf-lv-headers__header ${col.class}" data-column="${col.mappedTo}">${col.name}</div>`;
     });
-    if (this.actionMenu)
-      columnHeaders += `<div class="exf-lv-headers__header" data-column="actions"></div>`;
+
     this.setColumnGrid();
 
     return /*html*/ `<div class="exf-lv-headers">
@@ -827,10 +783,7 @@ class ExoListViewControl extends ExoDivControl {
       columnHtml += this.getTableCell(item, col);
     });
 
-    if (this.actionMenu)
-      columnHtml += `<div class="exf-lv-item__grid last-of-grid" data-column="actions">
-        <div class="exf-lv-item__grid__content"></div>
-    </div>`;
+   
 
     return /*html*/ `<article data-id="${item.id}" class="exf-lv-item">
 
@@ -944,15 +897,6 @@ class ExoListViewControl extends ExoDivControl {
     );
   }
 
-  async createActionButton(item) {
-    const am = await this.getData(this.actionMenu, item);
-    return xo.form.run({
-      type: "button",
-      name: `actions-${item.id}`,
-      icon: "ti-menu",
-      dropdown: am,
-    });
-  }
 
   getSearchString() {
     let searchString = "";
