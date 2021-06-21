@@ -338,7 +338,8 @@ class TestRoute extends xo.route {
     }
 
     async render() {
-        this.elm = await xo.form.run({
+
+        const schema = {
             pages: [
                 {
                     fields: [
@@ -416,7 +417,119 @@ class TestRoute extends xo.route {
                     ]
                 }
             ]
-        }, {
+        };
+
+        const schema1 = {
+            pages: [
+                {
+                    fields: [
+                        {
+                            name: "autocomplete",
+                            type: "text",
+                            caption: "Autocomplete test",
+                            placeholder: "Start typing...",
+                            autocomplete: {
+                                items: ["test", "okay", "bla"]
+                            }
+                        },
+
+                        {
+                            type: "listview",
+                            name: "lv1",
+                            view: "grid",
+                        
+                            mappings: {
+                                tiles: `'imageUri' 'name size' 'combi1'`,
+                                grid: [
+                                    {
+                                        key: "name",
+                                        width: "8rem",    
+                                        sort: true
+                                    },
+                                    {
+                                        key: "imageUri",
+                                        width: "120px"
+                                    },
+
+                                    {
+                                        key: "description",
+                                        autoWidth: true
+                                    }
+                                ]
+                            },
+                        
+                            properties: [
+                                {
+                                    key: "name",
+                                    type: "text"
+                                    
+                                },
+                                {
+                                    name: "Image",
+                                    key: "imageUri",
+                                    type: "img",
+                                },
+                                {
+                                    name: "Description",
+                                    key: "description",
+                                    
+                                    type: "text"
+                                },
+
+                                {
+                                    
+                                    key: "fileSizeAndType",
+                                    caption: "Details",
+                                    visible: ["tiles"]
+                                }
+                            ],
+
+                        
+                            items: [
+                                {
+                                    id: "test1",
+                                    name: "Test",
+                                    image: "https://stasfassetsdev.z6.web.core.windows.net/3cd3ef51-deab-47d3-944b-1d0e1e8ebe22/assets/boon-kriek.jpg",
+                                    description: "A test item",
+                                    fileSizeAndType: 3455677,
+                                    type: "image/jpeg"
+                                },
+                                {
+                                    id: "test2",
+                                    name: "Lorem",
+                                    image: "https://stasfassetsdev.z6.web.core.windows.net/3cd3ef51-deab-47d3-944b-1d0e1e8ebe22/assets/Lucifer",
+                                    description: "... ipsum dolor sit amet"
+
+                                },
+                                {
+                                    id: "test3",
+                                    name: "Beauty",
+                                    image: "https://stasfassetsdev.z6.web.core.windows.net/c737a2dd-1bad-4d23-836a-2c8c4bb977b2/assets/Sol-bier-mexican-500x500_1_1",
+                                    description: "... is in the eye of the beholder"
+                                }
+
+                            ],
+                            contextMenu: [
+                                {
+                                    tooltip: "Edit",
+                                    icon: "ti-pencil",
+                                    action: "edit",
+                                },
+                                {
+                                    tooltip: "Delete",
+                                    icon: "ti-close",
+                                    action: "delete"
+                                }
+                            ]
+
+                        }
+                    ]
+                }
+            ]
+        }
+
+
+        this.elm = await xo.form.run(schema, {
             on: {
                 interactive: e => {
                     e.detail.host.get("lv1")._control.on("action", e => {

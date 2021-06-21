@@ -1043,6 +1043,69 @@ html.theme-light nav.ul-drop ul li > ul {
   text-transform: uppercase;
 }
 
+.exf-dropdown-cnt.drop-dir-left ul.exf-btn-dropdown {
+  -webkit-animation: slideLeft 300ms ease-in-out forwards;
+          animation: slideLeft 300ms ease-in-out forwards;
+  -webkit-transform-origin: right center;
+          transform-origin: right center;
+  position: absolute !important;
+  top: 0 !important;
+  right: 100% !important;
+}
+
+.exf-dropdown-cnt.drop-dir-left > .exf-btn {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+.exf-dropdown-cnt.drop-dir-left > .exf-btn-dropdown {
+  white-space: nowrap;
+}
+
+.exf-dropdown-cnt.drop-dir-left:hover .exf-btn-dropdown {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: reverse;
+      -ms-flex-direction: row-reverse;
+          flex-direction: row-reverse;
+}
+
+@-webkit-keyframes slideLeft {
+  0% {
+    opacity: 0;
+    z-index: -1;
+    -webkit-transform: translateX(30px);
+            transform: translateX(30px);
+  }
+  100% {
+    opacity: 1;
+    z-index: 1;
+    -webkit-transform: translateX(0);
+            transform: translateX(0);
+  }
+}
+
+@keyframes slideLeft {
+  0% {
+    opacity: 0;
+    z-index: -1;
+    -webkit-transform: translateX(30px);
+            transform: translateX(30px);
+  }
+  100% {
+    opacity: 1;
+    z-index: 1;
+    -webkit-transform: translateX(0);
+            transform: translateX(0);
+  }
+}
+
 @-webkit-keyframes slideDown {
   0% {
     opacity: 0;
@@ -3474,21 +3537,6 @@ html.theme-dark .exf-ctl-cnt.exf-switch input[type="range"] {
     -webkit-transform: scale(0.95);
             transform: scale(0.95);
     opacity: 0.3;
-  }
-}
-
-@-webkit-keyframes slideLeft {
-  0% {
-    opacity: 0;
-    z-index: -1;
-    -webkit-transform: translateX(30px);
-            transform: translateX(30px);
-  }
-  100% {
-    opacity: 1;
-    z-index: 1;
-    -webkit-transform: translateX(0);
-            transform: translateX(0);
   }
 }
 
