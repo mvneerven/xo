@@ -624,7 +624,7 @@
 }
 
 .exf-listview[data-view="tiles"] .exf-listview-list .exf-lv-item__cell__content__img {
-  background-position: center;
+  background-position: center top;
 }
 
 .exf-listview[data-view="tiles"] .exf-listview-list .exf-lv-item__tile.action-button {

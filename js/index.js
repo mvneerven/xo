@@ -436,18 +436,9 @@ class TestRoute extends xo.route {
                         {
                             type: "listview",
                             name: "lv1",
-                            view: "tiles",
+                            view: "grid",
                             pageSize: 2,
-                            views: ["tiles"],
-                            controls: [
-                                {
-                                  type: "search",
-                                  name: "filter",
-                                  placeholder: "Type to filter...",
-                                  listener: "input",
-                                  class: "exf-listview-flt"
-                                },
-                            ],
+                            views: ["grid", "tiles"],
                             mappings: {
                                 tiles: [
                                     {
@@ -462,27 +453,27 @@ class TestRoute extends xo.route {
                                         key: "fileSizeAndType"
                                     },
                                 ],
-                                // grid: [
-                                //     {
-                                //         key: "name",
-                                //         width: "8rem",
-                                //         sort: true,
-                                //         filterInPlace: true,
-                                //         searchURL: `${location.origin}/#/users/`,
-                                //     },
-                                //     {
-                                //         key: "imageUri",
-                                //         width: "120px"
-                                //     },
-                                //     {
-                                //         key: "description",
-                                //         autoWidth: true,
-                                //         sort: true
-                                //     },
-                                //     {
-                                //         key: "fileSizeAndType"
-                                //     },
-                                // ]
+                                grid: [
+                                    {
+                                        key: "name",
+                                        width: "8rem",
+                                        sort: true,
+                                        filterInPlace: true,
+                                        searchURL: `${location.origin}/#/users/`,
+                                    },
+                                    {
+                                        key: "imageUri",
+                                        width: "120px"
+                                    },
+                                    {
+                                        key: "description",
+                                        autoWidth: true,
+                                        sort: true
+                                    },
+                                    {
+                                        key: "fileSizeAndType"
+                                    },
+                                ]
                             },
                             properties: [
                                 {
