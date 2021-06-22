@@ -2860,13 +2860,14 @@ html.theme-dark .exf-ctl-cnt.exf-switch input[type="range"] {
 .nsp-xs .exf-lv-item {
   -ms-grid-columns: var(--lv-grid-template-xs);
       grid-template-columns: var(--lv-grid-template-xs);
+      grid-template-areas: var(--lv-grid-template-xs-areas);
 }
 
 .nsp-xs .exf-lv-headers__header.hide-xs, .nsp-xs .exf-lv-headers__header.hide-sm, .nsp-xs .exf-lv-headers__header.hide-md, .nsp-xs .exf-lv-headers__header.hide-lg,
-.nsp-xs .exf-lv-item__grid.hide-xs,
-.nsp-xs .exf-lv-item__grid.hide-sm,
-.nsp-xs .exf-lv-item__grid.hide-md,
-.nsp-xs .exf-lv-item__grid.hide-lg {
+.nsp-xs .exf-lv-item__cell.hide-xs,
+.nsp-xs .exf-lv-item__cell.hide-sm,
+.nsp-xs .exf-lv-item__cell.hide-md,
+.nsp-xs .exf-lv-item__cell.hide-lg {
   display: none !important;
 }
 
@@ -2874,12 +2875,13 @@ html.theme-dark .exf-ctl-cnt.exf-switch input[type="range"] {
 .nsp-sm .exf-lv-item {
   -ms-grid-columns: var(--lv-grid-template-sm);
       grid-template-columns: var(--lv-grid-template-sm);
+      grid-template-areas: var(--lv-grid-template-sm-areas);
 }
 
 .nsp-sm .exf-lv-headers__header.hide-sm, .nsp-sm .exf-lv-headers__header.hide-md, .nsp-sm .exf-lv-headers__header.hide-lg,
-.nsp-sm .exf-lv-item__grid.hide-sm,
-.nsp-sm .exf-lv-item__grid.hide-md,
-.nsp-sm .exf-lv-item__grid.hide-lg {
+.nsp-sm .exf-lv-item__cell.hide-sm,
+.nsp-sm .exf-lv-item__cell.hide-md,
+.nsp-sm .exf-lv-item__cell.hide-lg {
   display: none !important;
 }
 
@@ -2887,11 +2889,12 @@ html.theme-dark .exf-ctl-cnt.exf-switch input[type="range"] {
 .nsp-md .exf-lv-item {
   -ms-grid-columns: var(--lv-grid-template-md);
       grid-template-columns: var(--lv-grid-template-md);
+      grid-template-areas: var(--lv-grid-template-md-areas);
 }
 
 .nsp-md .exf-lv-headers__header.hide-md, .nsp-md .exf-lv-headers__header.hide-lg,
-.nsp-md .exf-lv-item__grid.hide-md,
-.nsp-md .exf-lv-item__grid.hide-lg {
+.nsp-md .exf-lv-item__cell.hide-md,
+.nsp-md .exf-lv-item__cell.hide-lg {
   display: none !important;
 }
 
@@ -2899,10 +2902,11 @@ html.theme-dark .exf-ctl-cnt.exf-switch input[type="range"] {
 .nsp-lg .exf-lv-item {
   -ms-grid-columns: var(--lv-grid-template-lg);
       grid-template-columns: var(--lv-grid-template-lg);
+      grid-template-areas: var(--lv-grid-template-lg-areas);
 }
 
 .nsp-lg .exf-lv-headers__header.hide-lg,
-.nsp-lg .exf-lv-item__grid.hide-lg {
+.nsp-lg .exf-lv-item__cell.hide-lg {
   display: none !important;
 }
 
@@ -2912,6 +2916,7 @@ html.theme-dark .exf-ctl-cnt.exf-switch input[type="range"] {
 .nsp-uw .exf-lv-item {
   -ms-grid-columns: var(--lv-grid-template-xl);
       grid-template-columns: var(--lv-grid-template-xl);
+      grid-template-areas: var(--lv-grid-template-xl-areas);
 }
 
 .nsp-xs .exf-lv-paging,
@@ -3071,6 +3076,14 @@ html.theme-dark .exf-ctl-cnt.exf-switch input[type="range"] {
   visibility: visible;
 }
 
+.exf-listview .exf-listview-list .exf-lv-item .exf-lv-item__cell__content__img {
+  width: 100%;
+  height: 100%;
+  min-height: 70px;
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
 .exf-listview .exf-listview-list > .exf-lv-headers,
 .exf-listview .exf-listview-list > .exf-lv-item {
   /* Demo-Specific Styles */
@@ -3100,6 +3113,10 @@ html.theme-dark .exf-ctl-cnt.exf-switch input[type="range"] {
 .exf-listview .exf-listview-list > .exf-lv-headers .text p,
 .exf-listview .exf-listview-list > .exf-lv-item .text p {
   margin-top: 0.2em;
+}
+
+.exf-listview[data-view="grid"] .hide-in-grid {
+  display: none !important;
 }
 
 .exf-listview[data-view="grid"] .exf-ctl {
@@ -3219,9 +3236,9 @@ html.theme-dark .exf-ctl-cnt.exf-switch input[type="range"] {
           animation: borealisBar 2s linear infinite;
 }
 
-.exf-listview[data-view="grid"] .exf-listview-list > .exf-lv-headers .exf-lv-item__grid__content,
+.exf-listview[data-view="grid"] .exf-listview-list > .exf-lv-headers .exf-lv-item__cell__content,
 .exf-listview[data-view="grid"] .exf-listview-list > .exf-lv-headers .exf-lv-headers__header,
-.exf-listview[data-view="grid"] .exf-listview-list > .exf-lv-item .exf-lv-item__grid__content,
+.exf-listview[data-view="grid"] .exf-listview-list > .exf-lv-item .exf-lv-item__cell__content,
 .exf-listview[data-view="grid"] .exf-listview-list > .exf-lv-item .exf-lv-headers__header {
   min-height: -webkit-fit-content;
   min-height: -moz-fit-content;
@@ -3229,15 +3246,15 @@ html.theme-dark .exf-ctl-cnt.exf-switch input[type="range"] {
   padding: 12px 24px;
 }
 
-.exf-listview[data-view="grid"] .exf-listview-list > .exf-lv-headers .exf-lv-item__grid[data-column="actions"],
-.exf-listview[data-view="grid"] .exf-listview-list > .exf-lv-item .exf-lv-item__grid[data-column="actions"] {
+.exf-listview[data-view="grid"] .exf-listview-list > .exf-lv-headers .exf-lv-item__cell[data-column="actions"],
+.exf-listview[data-view="grid"] .exf-listview-list > .exf-lv-item .exf-lv-item__cell[data-column="actions"] {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
 }
 
-.exf-listview[data-view="grid"] .exf-listview-list > .exf-lv-headers .exf-lv-item__grid[data-column="actions"] .exf-lv-item__grid__content,
-.exf-listview[data-view="grid"] .exf-listview-list > .exf-lv-item .exf-lv-item__grid[data-column="actions"] .exf-lv-item__grid__content {
+.exf-listview[data-view="grid"] .exf-listview-list > .exf-lv-headers .exf-lv-item__cell[data-column="actions"] .exf-lv-item__cell__content,
+.exf-listview[data-view="grid"] .exf-listview-list > .exf-lv-item .exf-lv-item__cell[data-column="actions"] .exf-lv-item__cell__content {
   padding: 0 12px 0 0;
   position: relative;
   display: -webkit-box;
@@ -3251,9 +3268,11 @@ html.theme-dark .exf-ctl-cnt.exf-switch input[type="range"] {
           justify-content: center;
 }
 
-.exf-listview[data-view="grid"] .exf-listview-list > .exf-lv-headers .exf-lv-item__grid:not([data-column="actions"]) .exf-lv-item__grid__content,
+.exf-listview[data-view="grid"] .exf-listview-list > .exf-lv-headers .exf-lv-item__cell:not([data-column="actions"])
+.exf-lv-item__cell__content,
 .exf-listview[data-view="grid"] .exf-listview-list > .exf-lv-headers .exf-lv-headers__header,
-.exf-listview[data-view="grid"] .exf-listview-list > .exf-lv-item .exf-lv-item__grid:not([data-column="actions"]) .exf-lv-item__grid__content,
+.exf-listview[data-view="grid"] .exf-listview-list > .exf-lv-item .exf-lv-item__cell:not([data-column="actions"])
+.exf-lv-item__cell__content,
 .exf-listview[data-view="grid"] .exf-listview-list > .exf-lv-item .exf-lv-headers__header {
   overflow: hidden;
   text-overflow: ellipsis;
@@ -3264,11 +3283,12 @@ html.theme-dark .exf-ctl-cnt.exf-switch input[type="range"] {
   position: sticky;
   top: 0;
   z-index: 2;
+  padding-left: 4px;
+  border-bottom: 1px solid var(--lv-grid-border-color);
 }
 
 .exf-listview[data-view="grid"] .exf-listview-list .exf-lv-headers__header {
   font-weight: bold;
-  border-bottom: 1px solid var(--lv-grid-border-color);
   position: relative;
   background-color: var(--lv-grid-header-color);
   overflow: hidden;
@@ -3325,34 +3345,34 @@ html.theme-dark .exf-ctl-cnt.exf-switch input[type="range"] {
   display: none;
 }
 
-.exf-listview[data-view="grid"] .exf-listview-list .exf-lv-item__grid {
+.exf-listview[data-view="grid"] .exf-listview-list .exf-lv-item__cell {
   max-height: 100px;
   -webkit-box-sizing: content-box;
           box-sizing: content-box;
   text-overflow: ellipsis;
 }
 
-.exf-listview[data-view="grid"] .exf-listview-list .exf-lv-item__grid:not([data-column="actions"]) {
+.exf-listview[data-view="grid"] .exf-listview-list .exf-lv-item__cell:not([data-column="actions"]) {
   overflow: hidden;
 }
 
-.exf-listview[data-view="grid"] .exf-listview-list .exf-lv-item__grid:not(.last-of-grid):not(.first-of-grid) {
+.exf-listview[data-view="grid"] .exf-listview-list .exf-lv-item__cell:not(.first-of-grid) {
   border-left: 1px solid rgba(204, 204, 204, 0.3);
 }
 
-.exf-listview[data-view="grid"] .exf-listview-list .exf-lv-item__grid.overflowing {
+.exf-listview[data-view="grid"] .exf-listview-list .exf-lv-item__cell.overflowing {
   position: relative;
 }
 
-.exf-listview[data-view="grid"] .exf-listview-list .exf-lv-item__grid.overflowing:hover {
+.exf-listview[data-view="grid"] .exf-listview-list .exf-lv-item__cell.overflowing:hover {
   overflow: auto;
 }
 
-.exf-listview[data-view="grid"] .exf-listview-list .exf-lv-item__grid.overflowing:hover .overflow-bar {
+.exf-listview[data-view="grid"] .exf-listview-list .exf-lv-item__cell.overflowing:hover .overflow-bar {
   display: none;
 }
 
-.exf-listview[data-view="grid"] .exf-listview-list .exf-lv-item__grid.overflowing .overflow-bar {
+.exf-listview[data-view="grid"] .exf-listview-list .exf-lv-item__cell.overflowing .overflow-bar {
   position: -webkit-sticky;
   position: sticky;
   bottom: 0;
@@ -3365,12 +3385,8 @@ html.theme-dark .exf-ctl-cnt.exf-switch input[type="range"] {
   background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0) 0%, var(--lv-tile-color) 100%);
 }
 
-.exf-listview[data-view="grid"] .exf-listview-list .exf-lv-item__grid[data-column="image"] .exf-lv-item__grid__content, .exf-listview[data-view="grid"] .exf-listview-list .exf-lv-item__grid[data-column="imageUri"] .exf-lv-item__grid__content {
-  width: 100%;
-  height: 100%;
-  min-height: 70px;
-  background-size: contain;
-  background-repeat: no-repeat;
+.exf-listview[data-view="tiles"] .hide-in-tile {
+  display: none !important;
 }
 
 .exf-listview[data-view="tiles"] .exf-listview-list {
@@ -3394,8 +3410,9 @@ html.theme-dark .exf-ctl-cnt.exf-switch input[type="range"] {
   position: relative;
   display: -ms-grid;
   display: grid;
-  -ms-grid-rows: 200px 34px 1fr 30px;
-      grid-template-rows: 200px 34px 1fr 30px;
+      grid-template-areas: var(--lv-tile-content-template-areas);
+  -ms-grid-rows: var(--lv-tile-content-template);
+      grid-template-rows: var(--lv-tile-content-template);
   -ms-grid-columns: 1fr !important;
       grid-template-columns: 1fr !important;
   text-align: center;
@@ -3454,9 +3471,16 @@ html.theme-dark .exf-ctl-cnt.exf-switch input[type="range"] {
   border-color: var(--color-tile-active);
 }
 
-.exf-listview[data-view="tiles"] .exf-listview-list .exf-lv-item__grid,
 .exf-listview[data-view="tiles"] .exf-listview-list .exf-lv-item .action-button {
   display: none;
+}
+
+.exf-listview[data-view="tiles"] .exf-listview-list .exf-lv-item__cell__content {
+  height: 100%;
+}
+
+.exf-listview[data-view="tiles"] .exf-listview-list .exf-lv-item__cell__content__img {
+  background-position: center;
 }
 
 .exf-listview[data-view="tiles"] .exf-listview-list .exf-lv-item__tile.action-button {
@@ -3553,5 +3577,64 @@ html.theme-dark .exf-ctl-cnt.exf-switch input[type="range"] {
     -webkit-transform: translateX(0);
             transform: translateX(0);
   }
+}
+
+.exf-treeview {
+  display: flexbox;
+  font-family: Arial, Helvetica, sans-serif;
+  overflow: auto;
+  width: 100%;
+  height: 100%;
+}
+
+.exf-treeview ul > li::first-line {
+  display: none;
+}
+
+.exf-treeview ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  white-space: nowrap;
+  overflow: visible;
+}
+
+.exf-treeview ul li {
+  cursor: pointer;
+  text-overflow: ellipsis;
+  margin-left: 1vw;
+}
+
+.exf-treeview ul li::first-line {
+  text-decoration: underline;
+  -webkit-text-decoration-color: transparent;
+          text-decoration-color: transparent;
+  -webkit-text-decoration-style: solid;
+          text-decoration-style: solid;
+}
+
+.exf-treeview ul li:hover::first-line {
+  -webkit-text-decoration-color: #666;
+          text-decoration-color: #666;
+}
+
+.exf-treeview ul li:not(.tv-empty):before {
+  content: "\025B8";
+  font-size: 1.2em;
+  opacity: 0.5;
+}
+
+.exf-treeview ul li.expanded:before {
+  content: "\025BE";
+}
+
+.exf-treeview ul li.tv-empty {
+  opacity: 0.5;
+  font-size: smaller;
+  font-style: italic;
+}
+
+.exf-treeview ul ul ul {
+  display: none;
 }
 /*# sourceMappingURL=xo.css.map */
