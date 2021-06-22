@@ -136,7 +136,6 @@ class ExoListViewControl extends ExoDivControl {
     await super.render();
 
     this.mapProperties();
-    console.log("Mapped properties", this.mappedProperties);
     this.renderList();
     this.renderLoading();
     if (this.controls) await this.addControls();
@@ -551,7 +550,6 @@ class ExoListViewControl extends ExoDivControl {
     btns.classList.add("exf-listview-btns", "exf-cnt");
     const controls = await this.getData(this.controls);
     for (const c of controls) {
-      console.log("Specific control", c);
       // render single controls
       await xo.form.run(c).then((e) => {
         btns.appendChild(e);
@@ -578,7 +576,6 @@ class ExoListViewControl extends ExoDivControl {
         });
       });
     }
-    console.log("selection dependencies", this.selectionDependencies);
     this.container.appendChild(btns);
 
     this.listenDOM();
@@ -636,6 +633,12 @@ class ExoListViewControl extends ExoDivControl {
         case "paging":
           this.pagingButtonClickEvent(e.detail.value);
           break;
+        default:
+          this.events.trigger(e.detail.id, {
+            data: e.detail.items,
+            items: this.tableItems,
+          });
+          break;
       }
     });
   }
@@ -645,8 +648,10 @@ class ExoListViewControl extends ExoDivControl {
     if (!items) items = this.tableItems;
     items.forEach((item) => {
       let content = "";
-      this.columns.forEach((col) => {
-        const data = this.dataCallback(col.mappedTo, item) || "";
+      this.properties.forEach((prop) => {
+        const data = prop.dataCallback
+          ? prop.dataCallback(prop.key, item[prop.key], item)
+          : item[prop.key];
         if (["number", "string"].includes(typeof data)) {
           content += data;
         }
@@ -837,7 +842,6 @@ class ExoListViewControl extends ExoDivControl {
   }
 
   returnValue(key, val, item) {
-    console.log(val);
     return val;
   }
 
@@ -862,9 +866,12 @@ class ExoListViewControl extends ExoDivControl {
     if (!prop.tiles) classes.push("hide-in-tile");
 
     const mappingOrders = this.getMappingOrder();
-    if (mappingOrders.grid.indexOf(prop.key) === 0)
+    if (mappingOrders.grid && mappingOrders.grid.indexOf(prop.key) === 0)
       classes.push("first-of-grid");
-    if (mappingOrders.grid.indexOf(prop.key) === mappingOrders.grid.length - 1)
+    if (
+      mappingOrders.grid &&
+      mappingOrders.grid.indexOf(prop.key) === mappingOrders.grid.length - 1
+    )
       classes.push("last-of-grid");
 
     const cellTemplate = `<div class="${classes.join(" ")}" style="grid-area: ${
@@ -891,8 +898,12 @@ class ExoListViewControl extends ExoDivControl {
     const gridTemplate = {};
     sizes.forEach((s) => (gridTemplate[s] = { columns: [], areas: [] }));
     const mappingOrders = this.getMappingOrder();
-    const tileTemplate = new Array(mappingOrders.tiles.length).fill(true);
-    const tileTemplateAreas = new Array(mappingOrders.tiles.length).fill(true);
+    const tileTemplate = mappingOrders.tiles
+      ? new Array(mappingOrders.tiles.length).fill(true)
+      : [];
+    const tileTemplateAreas = mappingOrders.tiles
+      ? new Array(mappingOrders.tiles.length).fill(true)
+      : [];
     this.mappedProperties.forEach((prop) => {
       if (prop.grid) {
         const width =
@@ -931,27 +942,29 @@ class ExoListViewControl extends ExoDivControl {
       }
     });
 
-    Object.keys(gridTemplate).forEach((size) => {
-      gridTemplate[size].columns.sort((a, b) => {
-        const areaA =
-          gridTemplate[size].areas[gridTemplate[size].columns.indexOf(a)];
-        const areaB =
-          gridTemplate[size].areas[gridTemplate[size].columns.indexOf(b)];
-        return mappingOrders.grid.indexOf(areaA) >
-          mappingOrders.grid.indexOf(areaB)
-          ? 1
-          : -1;
-      });
-      gridTemplate[size].areas.sort((a, b) =>
-        mappingOrders.grid.indexOf(a) > mappingOrders.grid.indexOf(b) ? 1 : -1
-      );
+    if (mappingOrders.grid) {
+      Object.keys(gridTemplate).forEach((size) => {
+        gridTemplate[size].columns.sort((a, b) => {
+          const areaA =
+            gridTemplate[size].areas[gridTemplate[size].columns.indexOf(a)];
+          const areaB =
+            gridTemplate[size].areas[gridTemplate[size].columns.indexOf(b)];
+          return mappingOrders.grid.indexOf(areaA) >
+            mappingOrders.grid.indexOf(areaB)
+            ? 1
+            : -1;
+        });
+        gridTemplate[size].areas.sort((a, b) =>
+          mappingOrders.grid.indexOf(a) > mappingOrders.grid.indexOf(b) ? 1 : -1
+        );
 
-      this.cssVariables[`--lv-grid-template-${size}`] =
-        gridTemplate[size].columns.join(" ");
-      this.cssVariables[`--lv-grid-template-${size}-areas`] = `'${gridTemplate[
-        size
-      ].areas.join(" ")}'`;
-    });
+        this.cssVariables[`--lv-grid-template-${size}`] =
+          gridTemplate[size].columns.join(" ");
+        this.cssVariables[
+          `--lv-grid-template-${size}-areas`
+        ] = `'${gridTemplate[size].areas.join(" ")}'`;
+      });
+    }
 
     // set css variables for list view grid templates
     this.cssVariables["--lv-tile-template"] =

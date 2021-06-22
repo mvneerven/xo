@@ -285,6 +285,7 @@
           border: 0;
           text-align: center;
           grid-template-columns: 1fr;
+          grid-template-areas: unset;
           pointer-events: none;
           .loading-container {
             width: 100%;
@@ -331,11 +332,11 @@
         top: 0;
         z-index: 2;
         padding-left: 4px;
-        border-bottom: 1px solid var(--lv-grid-border-color);
+        background-color: var(--lv-grid-header-color);
+        border-bottom: 2px solid var(--lv-grid-border-color);
         &__header {
           font-weight: bold;
           position: relative;
-          background-color: var(--lv-grid-header-color);
           overflow: hidden;
           text-overflow: ellipsis;
           &[data-sort] {
@@ -484,7 +485,7 @@
           &__content {
             height: 100%;
             &__img {
-              background-position: center;
+              background-position: center top;
             }
           }
         }
