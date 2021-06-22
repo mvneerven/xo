@@ -439,6 +439,15 @@ class TestRoute extends xo.route {
                             view: "grid",
                             pageSize: 2,
                             views: ["grid", "tiles"],
+                            controls: [
+                                {
+                                  type: "search",
+                                  name: "filter",
+                                  placeholder: "Type to filter...",
+                                  listener: "input",
+                                  class: "exf-listview-flt"
+                                },
+                            ],
                             mappings: {
                                 tiles: [
                                     {

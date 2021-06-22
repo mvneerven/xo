@@ -136,7 +136,6 @@ class ExoListViewControl extends ExoDivControl {
     await super.render();
 
     this.mapProperties();
-    console.log("Mapped properties", this.mappedProperties);
     this.renderList();
     this.renderLoading();
     if (this.controls) await this.addControls();
@@ -551,7 +550,6 @@ class ExoListViewControl extends ExoDivControl {
     btns.classList.add("exf-listview-btns", "exf-cnt");
     const controls = await this.getData(this.controls);
     for (const c of controls) {
-      console.log("Specific control", c);
       // render single controls
       await xo.form.run(c).then((e) => {
         btns.appendChild(e);
@@ -578,7 +576,6 @@ class ExoListViewControl extends ExoDivControl {
         });
       });
     }
-    console.log("selection dependencies", this.selectionDependencies);
     this.container.appendChild(btns);
 
     this.listenDOM();
@@ -645,8 +642,10 @@ class ExoListViewControl extends ExoDivControl {
     if (!items) items = this.tableItems;
     items.forEach((item) => {
       let content = "";
-      this.columns.forEach((col) => {
-        const data = this.dataCallback(col.mappedTo, item) || "";
+      this.properties.forEach((prop) => {
+        const data = prop.dataCallback
+          ? prop.dataCallback(prop.key, item[prop.key], item)
+          : item[prop.key];
         if (["number", "string"].includes(typeof data)) {
           content += data;
         }
@@ -837,7 +836,6 @@ class ExoListViewControl extends ExoDivControl {
   }
 
   returnValue(key, val, item) {
-    console.log(val);
     return val;
   }
 
