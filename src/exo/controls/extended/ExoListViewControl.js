@@ -12,23 +12,10 @@ class ExoListViewControl extends ExoDivControl {
   views = ["tiles", "grid"];
   tileColumns = ["imageUri", "name", "description"];
 
+  _columns = [];
+
   _controls = [
-    {
-      type: "button",
-      name: "del",
-      icon: "ti-close",
-      caption: "",
-      tooltip: "Delete selected",
-      useSelection: true,
-    },
-    {
-      type: "button",
-      name: "add",
-      class: "btn-primary",
-      icon: "ti-plus",
-      caption: "",
-      tooltip: "Add item",
-    },
+
     {
       type: "button",
       name: "view",
@@ -38,18 +25,25 @@ class ExoListViewControl extends ExoDivControl {
     },
     {
       type: "button",
-      name: "deselect",
-      tooltip: "Deselect all",
-      caption: "",
-      icon: "ti-layout-width-full",
-    },
-    {
-      type: "button",
-      name: "select",
-      caption: "",
-      tooltip: "Select all",
+      name: "toggle",
       icon: "ti-check-box",
-    },
+      dropdown: [
+        {
+          name: `Select all`,
+          icon: "ti-check-box",
+          tooltip: "Select all",
+          title: "select",
+          type: "event",
+        },
+        {
+          name: `Deselect all`,
+          icon: "ti-layout-width-full",
+          tooltip: "Deselect all",
+          title: "deselect",
+          type: "event",
+        },
+      ],
+    }
   ];
 
   viewIndex = 0;
@@ -94,9 +88,10 @@ class ExoListViewControl extends ExoDivControl {
           "Object array containing item key as key, the column header as title and the width op the column as width",
       },
       {
-        name: "actionMenu",
+        name: "contextMenu",
         type: Array | Function,
       },
+
       {
         name: "minimum",
         type: Number,
@@ -110,6 +105,15 @@ class ExoListViewControl extends ExoDivControl {
       }
     );
   }
+
+  set columns(value) {
+    this._columns = value;
+  }
+
+  get columns() {
+    return this._columns;
+  }
+
 
   set listen(obj) {
     this._listen = obj || {};
@@ -126,7 +130,31 @@ class ExoListViewControl extends ExoDivControl {
     await super.render();
 
     this.dataCallback = (header, value) => {
-      return value[header];
+      let val = value[header];
+      if (!val) {
+        if (header === "tile-name") {
+          val = value["name"]
+        }
+        else if (header === "tile-description")
+          val = value["description"]
+
+        else if (header === "tile-img" || header === "imageUri") {
+          val = value["image"] || value["imageUri"]
+
+
+          if (header === "imageUri") {
+            val = DOM.parseHTML(
+              /*html*/ `<div class="exf-lv-grid-img" style="background-image: url(${val})"></div>`
+            );
+          }
+        }
+        else {
+
+          val = ""
+        }
+
+      }
+      return val;
     };
     this.dataCallback = this.context.field.dataCallback || this.dataCallback;
 
@@ -227,9 +255,8 @@ class ExoListViewControl extends ExoDivControl {
       const start = (this.currentPage - 1) * this.pageSize;
       const pagingTemplate = DOM.parseHTML(/*html*/ `<div class="exf-lv-paging">
         <p class="exf-text">
-          Showing items ${start + 1}-${start + this.currentItems.length} of ${
-        items.length
-      }
+          Showing items ${start + 1}-${start + this.currentItems.length} of ${items.length
+        }
         </p>
       </div>`);
       const buttonsTemplate = DOM.parseHTML(
@@ -365,47 +392,7 @@ class ExoListViewControl extends ExoDivControl {
 
     for (const i of items) {
       const template = DOM.parseHTML(this.getTemplate(i));
-      if (this.actionMenu) {
-        const abGrid = await this.createActionButton(i);
-        template
-          .querySelector(`[data-column="actions"] .exf-lv-item__grid__content`)
-          .appendChild(abGrid);
-
-        const abTile = await this.createActionButton(i);
-        abTile.classList.add("exf-lv-item__tile", "action-button");
-        abTile.dataset.column = "actions";
-        template.appendChild(abTile);
-
-        [abGrid, abTile].forEach(async (actionButton) => {
-          const am = await this.getData(this.actionMenu, i);
-          am.forEach((menuItem) => {
-            // add listener for button press
-            actionButton.addEventListener(menuItem.title, (e) => {
-              const parentArticle = actionButton.closest("article.exf-lv-item");
-              const data = this.tableItems.find(
-                (tableItem) => tableItem.id === parentArticle.dataset.id
-              );
-              this.events.trigger(menuItem.title, {
-                data,
-                items: this.tableItems,
-              });
-            });
-          });
-
-          // set fixed position of dropdown menu
-          const actionBtn = actionButton.querySelector(".exf-dropdown-cnt");
-          actionBtn.addEventListener("mouseenter", () => {
-            const rect = actionBtn.getBoundingClientRect();
-            const menu = actionBtn.querySelector(".exf-btn-dropdown");
-            menu.style.position = "fixed";
-            menu.style.top = `${rect.y + rect.height}px`;
-            menu.style.right = `${
-              document.body.clientWidth - rect.x - rect.width
-            }px`;
-          });
-        });
-      }
-
+     
       const pagingRow = this.listDiv.querySelector(".exf-lv-paging");
       if (pagingRow) this.listDiv.insertBefore(template, pagingRow);
       else this.listDiv.appendChild(template);
@@ -413,6 +400,17 @@ class ExoListViewControl extends ExoDivControl {
       elm.addEventListener("click", (e) => {
         // if clicked on element inside action dropdown, don't select
         if (e.target.closest(".exf-dropdown-cnt")) {
+
+          let act = e.target.closest("[data-action]");
+          if(act){
+            let itemId = act.closest("article").getAttribute("data-id");
+            act = act.getAttribute("data-action");
+            this.events.trigger("action", {
+              id: act,
+              items: [itemId] 
+            });
+          }
+
           e.stopPropagation();
           e.returnValue = false;
           return;
@@ -426,6 +424,38 @@ class ExoListViewControl extends ExoDivControl {
     this.setSelectedItems(this.value);
 
     document.addEventListener("mousemove", () => this.addOverflowBars());
+
+
+    // create single contextmenu and move it to article hovered over
+    if (this.contextMenu) {
+      const am = await this.getData(this.contextMenu);
+      let btn = await xo.form.run({
+        type: "button",
+        name: `context-actions`,
+        icon: "ti-menu",
+        direction: "left",
+        dropdown: am
+      });
+      this.listDiv.appendChild(btn);
+      btn.style.display = 'none';
+      this.listDiv.addEventListener("mousemove", e => {
+
+        let art = e.target.closest("article");
+        if (art && this.hoveredArt === art)
+          return;
+
+        if (art) {
+          this.hoveredArt = art;
+          art.style.position = "relative";
+          btn.style.position = "absolute";
+          btn.style.right = "5px";
+          btn.style.top = "-10px";
+          btn.style.display = 'block';
+
+          art.appendChild(btn);
+        }
+      })
+    }
 
     this.events.trigger("ready");
   }
@@ -492,7 +522,7 @@ class ExoListViewControl extends ExoDivControl {
     btns.classList.add("exf-listview-btns", "exf-cnt");
     const controls = await this.getData(this.controls);
     for (const c of controls) {
-        console.log("Specific control", c);
+      console.log("Specific control", c);
       // render single controls
       await xo.form.run(c).then((e) => {
         btns.appendChild(e);
@@ -502,10 +532,17 @@ class ExoListViewControl extends ExoDivControl {
           DOM.disable(e);
         }
 
+        let id = c.name;
         e.addEventListener(c.listener || "click", (ev) => {
+          
+          let act = ev.target.closest("[data-action]");
+          if (act) {
+            id = act.getAttribute("data-action")
+          }
+
           ev.stopPropagation();
           this.events.trigger("action", {
-            id: c.name,
+            id: id,
             value: ev.target.value || null,
           });
 
@@ -543,6 +580,7 @@ class ExoListViewControl extends ExoDivControl {
 
   listenDOM() {
     this.on("action", (e) => {
+
       switch (e.detail.id) {
         case "del":
           const selected = this.value;
@@ -554,6 +592,9 @@ class ExoListViewControl extends ExoDivControl {
           break;
         case "view":
           this.toggleView();
+          break;
+        case "toggle":
+          this.toggleSelection(true);
           break;
         case "select":
           this.selectAll(true);
@@ -616,6 +657,23 @@ class ExoListViewControl extends ExoDivControl {
     });
 
     this.value = v;
+  }
+
+  toggleSelection() {
+
+    this.currentItems.forEach((ci) => {
+
+      const item = this.listDiv.querySelector(
+        `article.exf-lv-item[data-id="${ci.id}"]`
+      );
+
+      item.classList.toggle("selected");
+
+
+    });
+
+    this.value = this.getSelectedIds();
+
   }
 
   // toggles between the available views
@@ -711,8 +769,7 @@ class ExoListViewControl extends ExoDivControl {
     this.columns.forEach((col) => {
       columnHeaders += /*html*/ `<div class="exf-lv-headers__header ${col.class}" data-column="${col.mappedTo}">${col.name}</div>`;
     });
-    if (this.actionMenu)
-      columnHeaders += `<div class="exf-lv-headers__header" data-column="actions"></div>`;
+
     this.setColumnGrid();
 
     return /*html*/ `<div class="exf-lv-headers">
@@ -726,10 +783,7 @@ class ExoListViewControl extends ExoDivControl {
       columnHtml += this.getTableCell(item, col);
     });
 
-    if (this.actionMenu)
-      columnHtml += `<div class="exf-lv-item__grid last-of-grid" data-column="actions">
-        <div class="exf-lv-item__grid__content"></div>
-    </div>`;
+   
 
     return /*html*/ `<article data-id="${item.id}" class="exf-lv-item">
 
@@ -787,9 +841,8 @@ class ExoListViewControl extends ExoDivControl {
       el.appendChild(cellData);
       cellData = el.innerHTML;
     }
-    const cellTemplate = `<div class="exf-lv-item__grid ${col.class} ${
-      first ? "first-of-grid" : ""
-    }" style="${col.style}" data-column="${col.mappedTo}">
+    const cellTemplate = `<div class="exf-lv-item__grid ${col.class || ""} ${first ? "first-of-grid" : ""
+      }" style="${col.style || ""}" data-column="${col.mappedTo}">
         <div class="exf-lv-item__grid__content">{{content}}</div>
     </div>`;
 
@@ -844,15 +897,6 @@ class ExoListViewControl extends ExoDivControl {
     );
   }
 
-  async createActionButton(item) {
-    const am = await this.getData(this.actionMenu, item);
-    return xo.form.run({
-      type: "button",
-      name: `actions-${item.id}`,
-      icon: "ti-menu",
-      dropdown: am,
-    });
-  }
 
   getSearchString() {
     let searchString = "";

@@ -34,8 +34,14 @@ class ExoButtonControl extends ExoElementControl {
       },
       {
         name: "dropdown",
-        type: Object,
+        type: Object | Array,
         description: "A list of items that shows on hover",
+      },
+
+      {
+        name:"direction",
+        type: "string",
+        description: "Optional direction form dropdown. Options: 'down' (default), 'left'" 
       },
 
       {
@@ -65,6 +71,7 @@ class ExoButtonControl extends ExoElementControl {
     }
 
     this.htmlElement.addEventListener("click", (e) => {
+      
       if (this.click) {
         let data = this.context.exo.getFormValues();
         let f = this.click;
@@ -105,7 +112,7 @@ class ExoButtonControl extends ExoElementControl {
 
     if (this.dropdown) {
       const btnClone = this.htmlElement.cloneNode(true);
-      this.htmlElement = DOM.parseHTML(`<div class="exf-dropdown-cnt"></div>`);
+      this.htmlElement = DOM.parseHTML(`<div class="exf-dropdown-cnt drop-dir-${this.direction || "down"}"></div>`);
       this.htmlElement.appendChild(btnClone);
       this.htmlElement.appendChild(await this.renderDropdown(await this.getData(this.dropdown)));
       this.container.textContent = "";
@@ -136,34 +143,31 @@ class ExoButtonControl extends ExoElementControl {
 
   async getListItem(item) {
     let template = DOM.parseHTML("<li/>");
+    let icon = `<span class="${item.icon}"></span>`;
+
+    item.type=item.type || "action";
+
     switch (item.type) {
+      case "action":
+        template = DOM.parseHTML(
+          `<li data-action="${item.action}" title="${item.tooltip || ""}"><a  class="${item.class || ""}">${icon} ${item.name || ""}</a></li>`,
+        );
+        break;
+
       case "event":
         template = DOM.parseHTML(
-          DOM.format(
-            `<li title="{{tooltip}}"><a class="{{class}}">{{name}}</a></li>`,
-            item
-          )
+          `<li data-action="${item.title}" title="${item.tooltip || ""}"><a  class="${item.class || ""}">${icon} ${item.name || ""}</a></li>`,
         );
-        template.addEventListener("click", () => {
-          const ev = new Event(item.title);
-          this.container.dispatchEvent(ev);
-        });
         break;
       case "field":
         template = DOM.parseHTML(
-          DOM.format(
-            `<li title="{{tooltip}}"><a class="{{class}}">{{name}}</a></li>`,
-            item
-          )
+          `<li title="${item.tooltip}}"><a class="${item.class}">${icon} ${item.name || "" }</a></li>`,
         );
         template.querySelector("a").appendChild(await xo.form.run(item.field));
         break;
       default:
         template = DOM.parseHTML(
-          DOM.format(
-            `<li title="{{tooltip}}"><a class="{{class}}" href="{{url}}">{{name}}</a></li>`,
-            item
-          )
+          `<li title="${item.tooltip}"><a class="${item.class}" href="${item.url}">${icon} ${item.name || ""}</a></li>`,
         );
         break;
     }

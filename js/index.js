@@ -338,7 +338,8 @@ class TestRoute extends xo.route {
     }
 
     async render() {
-        this.elm = await xo.form.run({
+
+        const schema = {
             pages: [
                 {
                     fields: [
@@ -348,13 +349,194 @@ class TestRoute extends xo.route {
                             caption: "Autocomplete test",
                             placeholder: "Start typing...",
                             autocomplete: {
-                                ///categories: this.options.categories,
                                 items: ["test", "okay", "bla"]
                             }
+                        },
+
+                        {
+                            type: "listview",
+                            name: "lv1",
+                            view: "tiles",
+                            columns: [
+                                {
+                                    name: "Name",
+                                    mappedTo: "name",
+                                    width: "8rem",
+                                    type: "text",
+                                    sort: true
+                                },
+                                {
+                                    name: "Image",
+                                    mappedTo: "imageUri",
+                                    autoWidth: true,
+                                    type: "img"
+                                },
+                                {
+                                    name: "Description",
+                                    mappedTo: "description",
+                                    autoWidth: true,
+                                    type: "text"
+                                }
+                            ],
+                            items: [
+                                {
+                                    id: "test1",
+                                    name: "Test",
+                                    image: "https://stasfassetsdev.z6.web.core.windows.net/3cd3ef51-deab-47d3-944b-1d0e1e8ebe22/assets/boon-kriek.jpg",
+                                    description: "A test item"
+                                },
+                                {
+                                    id: "test2",
+                                    name: "Lorem",
+                                    image: "https://stasfassetsdev.z6.web.core.windows.net/3cd3ef51-deab-47d3-944b-1d0e1e8ebe22/assets/Lucifer",
+                                    description: "... ipsum dolor sit amet"
+
+                                },
+                                {
+                                    id: "test3",
+                                    name: "Beauty",
+                                    image: "https://stasfassetsdev.z6.web.core.windows.net/c737a2dd-1bad-4d23-836a-2c8c4bb977b2/assets/Sol-bier-mexican-500x500_1_1",
+                                    description: "... is in the eye of the beholder"
+                                }
+
+                            ],
+                            contextMenu: [
+                                {
+                                    tooltip: "Edit",
+                                    icon: "ti-pencil",
+                                    action: "edit",
+                                },
+                                {
+                                    tooltip: "Delete",
+                                    icon: "ti-close",
+                                    action: "delete"
+                                }
+                            ]
+
                         }
                     ]
                 }
             ]
+        };
+
+        const schema1 = {
+            pages: [
+                {
+                    fields: [
+                        {
+                            name: "autocomplete",
+                            type: "text",
+                            caption: "Autocomplete test",
+                            placeholder: "Start typing...",
+                            autocomplete: {
+                                items: ["test", "okay", "bla"]
+                            }
+                        },
+
+                        {
+                            type: "listview",
+                            name: "lv1",
+                            view: "grid",
+
+                            mappings: {
+                                tiles: `'imageUri' 'name size' 'combi1'`,
+                                grid: [
+                                    {
+                                        key: "name",
+                                        width: "8rem",
+                                        sort: true
+                                    },
+                                    {
+                                        key: "imageUri",
+                                        width: "120px"
+                                    },
+
+                                    {
+                                        key: "description",
+                                        autoWidth: true
+                                    }
+                                ]
+                            },
+
+                            properties: [
+                                {
+                                    key: "name",
+                                    type: "text"
+
+                                },
+                                {
+                                    name: "Image",
+                                    key: "imageUri",
+                                    type: "img",
+                                },
+                                {
+                                    name: "Description",
+                                    key: "description",
+
+                                    type: "text"
+                                },
+
+                                {
+
+                                    key: "fileSizeAndType",
+                                    caption: "Details",
+                                    visible: ["tiles"]
+                                }
+                            ],
+
+
+                            items: [
+                                {
+                                    id: "test1",
+                                    name: "Test",
+                                    image: "https://stasfassetsdev.z6.web.core.windows.net/3cd3ef51-deab-47d3-944b-1d0e1e8ebe22/assets/boon-kriek.jpg",
+                                    description: "A test item",
+                                    fileSizeAndType: 3455677,
+                                    type: "image/jpeg"
+                                },
+                                {
+                                    id: "test2",
+                                    name: "Lorem",
+                                    image: "https://stasfassetsdev.z6.web.core.windows.net/3cd3ef51-deab-47d3-944b-1d0e1e8ebe22/assets/Lucifer",
+                                    description: "... ipsum dolor sit amet"
+
+                                },
+                                {
+                                    id: "test3",
+                                    name: "Beauty",
+                                    image: "https://stasfassetsdev.z6.web.core.windows.net/c737a2dd-1bad-4d23-836a-2c8c4bb977b2/assets/Sol-bier-mexican-500x500_1_1",
+                                    description: "... is in the eye of the beholder"
+                                }
+
+                            ],
+                            contextMenu: [
+                                {
+                                    tooltip: "Edit",
+                                    icon: "ti-pencil",
+                                    action: "edit",
+                                },
+                                {
+                                    tooltip: "Delete",
+                                    icon: "ti-close",
+                                    action: "delete"
+                                }
+                            ]
+
+                        }
+                    ]
+                }
+            ]
+        }
+
+
+        this.elm = await xo.form.run(schema, {
+            on: {
+                interactive: e => {
+                    e.detail.host.get("lv1")._control.on("action", e => {
+                        debugger;
+                    })
+                }
+            }
         });
         this.area.add(this.elm)
     }
@@ -431,6 +613,81 @@ class SettingsRoute extends xo.route {
     }
 }
 
+class CMS {
+    tree = {};
+
+    index = {};
+
+    async load(path) {
+        this.tree[path] = {
+            title: "Home"
+        };
+        await this.readMd(this.tree[path], path);
+        return this.tree;
+    }
+
+    async readMd(node, path) {
+        node.url = path;
+        node.path = this.getBasePath(path);
+        node.html = await Core.MarkDown.read(path);
+        let elm = DOM.parseHTML(node.html);
+        node.children = {};
+        await this.addIndex(node, elm);
+        await this.getChildren(node, elm);
+    }
+
+    async getChildren(node, elm) {
+        let links = elm.querySelectorAll("a[href]");
+        for (const a of links) {
+            if (a.href.endsWith(".md")) {
+                let link = node.path + new URL(a.href).pathname;
+                a.setAttribute("href", "#/help" + link)
+                node.children[link] = {
+                    title: a.innerText
+                }
+                await this.readMd(node.children[link], link, this.index);
+            }
+        };
+    }
+
+    addIndex(node, elm) {
+        let s = [node.title];
+        elm.querySelectorAll("h1,h2,h3").forEach(h => {
+            s.push(h.innerText);
+        })
+        this.index[node.url] = {
+            text: s,
+            node: node
+        }
+    }
+
+    getBasePath(path) {
+        let d = path.split("/");
+        d.length--;
+        let s = d.join("/");
+        return s;
+    }
+
+    find(search) {
+        search = search.toLowerCase();
+        let ar = [];
+        for (var url in this.index) {
+            let item = this.index[url];
+            item.text.filter(i => {
+                return  i.toLowerCase().indexOf(search) > -1;
+            }).forEach(i=> {
+                let res = {
+                    url: url,
+                    node: item.node
+                }
+                if(!ar.includes(res))
+                    ar.push(res)
+            })
+        }
+        return ar;
+    }
+}
+
 class HelpRoute extends xo.route {
 
     title = "Help";
@@ -443,23 +700,21 @@ class HelpRoute extends xo.route {
         pwa.on("omnibox-init", e => {
             e.detail.options.categories["Help"] = {
                 sortIndex: 50,
-                trigger: options => { return options.results.length === 0 && options.search.length >= 2 },
+                trigger: options => { return options.search.length >= 2 },
                 getItems: async options => {
-                    await this.getMD();
-                    return this.readMeMD.split('\n').filter(l => {
-                        return l.startsWith('#') && l.toLowerCase().indexOf(options.search.toLowerCase()) > -1;
-                    }).map(l => {
+                    let results = this.cms.find(options.search.toLowerCase());
 
-                        let text = l.replace(/\#/g, "").substr(0, 25).trim() + '...';
-
+                    return results.map(i=>{
                         return {
-                            text: text
+                            path: i.url,
+                            text: i.node.title
                         }
                     })
+
                 },
                 icon: "ti-help",
                 action: options => {
-                    document.location.hash = "/help/" + options.text;
+                    document.location.hash = "/help/" + options.path;
                 }
             }
         });
@@ -469,9 +724,14 @@ class HelpRoute extends xo.route {
         await super.asyncInit();
 
         await this.getMD();
+
+        this.cms = new CMS();
+        await this.cms.load("./README.md");
+       
     }
 
     async render(path) {
+        
 
         if (!path || !path.endsWith(".md")) {
             path = "./README.md";
@@ -483,10 +743,15 @@ class HelpRoute extends xo.route {
 
         this.area.add(readmeElement);
 
+        let basePath = this.getBasePath(path);
+
         readmeElement.querySelectorAll("a[href]").forEach(a => {
             if (a.href.endsWith(".md")) {
+                if (basePath === ".")
+                    basePath = "";
 
-                a.setAttribute("href", "#/help" + new URL(a.href).pathname)
+                let link = basePath + new URL(a.href).pathname;
+                a.setAttribute("href", "#/help" + link)
             }
         });
 
@@ -506,6 +771,14 @@ class HelpRoute extends xo.route {
         }
     }
 
+    getBasePath(path) {
+        let d = path.split("/");
+        d.length--;
+        let s = d.join("/");
+        return s;
+
+    }
+
     async getMD() {
         if (!this.readMeMD)
             this.readMeMD = await fetch(this.mdPath).then(x => x.text());
@@ -523,7 +796,7 @@ class ProductsRoute extends xo.route {
 
     title = "Products";
 
-    constructor(){
+    constructor() {
         super(...arguments);
 
         pwa.on("omnibox-init", e => {
@@ -551,7 +824,7 @@ class ProductsRoute extends xo.route {
 
             }
         });
-    }   
+    }
 
     async render(path) {
         let search = decodeURIComponent(path.substr(1));
