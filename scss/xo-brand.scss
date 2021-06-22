@@ -1,0 +1,23 @@
+header {
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    h1 {
+        margin-top: 0.4vmax;
+        line-height: 30px;
+        display: inline-block;
+        font-size: 1.4vmax;
+        color: var(--color-heading);
+        a {
+            text-decoration: none;
+        }
+    }
+}
+
+body {
+    position: relative;
+    font-size: 1rem;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}

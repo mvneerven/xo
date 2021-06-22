@@ -1,7 +1,10 @@
 import Core from './Core';
 import DOM from './DOM';
+import MarkDownCMS from './MarkDownCMS';
 
 class MarkDown {
+
+    static CMS = MarkDownCMS;
 
     // static constructor
     static _staticConstructor = (function () {

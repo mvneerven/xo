@@ -19,7 +19,7 @@ import ExoProgressControl from './ExoProgressControl';
 import ExoLinkControl from './ExoLinkControl';
 import ExoImageControl from './ExoImageControl';
 
-class ExoBaseControls {
+class ExoBaseControls { 
 
     static controls = {
 

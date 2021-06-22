@@ -1,0 +1,191 @@
+:root {
+    --font: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    --scrollbar-width: 1rem;
+    --scrollbar-border: 0.2rem;
+    --label-font-weight: normal;
+}
+
+html.theme-light {
+    &:root {
+        --color-background: white;
+        --color-background-variation: #efefef;
+        --color-panel-background: #ddd;
+        --color-disabled: #ebebe4;
+        --color-readonly: #fcfcfc;
+        --color-text: #333;
+        --color-button: #343434; 
+        --color-button-primary: #cc2e44;
+        --color-button-text: #ffffff;
+        --color-label-active: #333;
+        --scrollbar-bg: #bfcadb;
+        --color-base: 352; /*the base color*/
+        --l: 53%; /*the initial lightness*/
+        
+        --color-text-lessbright: hsl(var(--color-text), 78%, calc(var(--l), -20%));
+        --color-primary: hsl(var(--color-base), 78%, var(--l));
+        --color-primary-dark: hsl(var(--color-base), 78%, calc(var(--l) - 5%));
+        --color-primary-darker: hsl(var(--color-base), 78%, calc(var(--l) - 10%));
+        --color-primary-darkest: hsl(var(--color-base), 78%, calc(var(--l) - 25%));
+        --color-primary-light: hsl(var(--color-base), 78%, calc(var(--l) + 5%));
+        --color-primary-lighter: hsl(var(--color-base), 78%, calc(var(--l) + 10%));
+        --color-primary-lightest: hsl(var(--color-base), 78%, calc(var(--l) + 25%));
+        --color-secondary: var(--color-primary-darker);
+        --color-shade: #bfcadb;
+
+        --color-heading: rgb(173, 58, 4);
+        --placeholder-color: #ccc;
+        --shadow-color: var(--color-primary-lighter);
+        --color-button: var(--color-primary);
+        --color-button-text: black;
+        --field-box-shadow: #bbb;
+        --field-box-shadow-subtle: #ddd;
+        --button-shadow-color: #999;
+
+        --label-color: #444;
+
+        --color-input-shade: #666;
+        --color-input-shade-focus: rgb(173, 58, 4);
+        
+    }
+}
+html.theme-dark {
+    &:root {
+        --color-background: #444;
+        --color-background-variation: #343434;
+        --color-panel-background: #333;
+        --color-disabled: #333;
+        --color-readonly: #333;
+        --scrollbar-bg: #444;
+        --color-text: #ddd;
+        --color-button: #bbb; 
+        --color-button-primary: #cc2e44;
+        --color-button-text: #ffffff;
+        --color-label-active: #efefef;
+
+        --color-base: 96; /*the base color*/
+        --l: 23%; /*the initial lightness*/
+        --color-text-lessbright: hsl(var(--color-text), 78%, calc(var(--l), -20%));
+        --color-primary: hsl(var(--color-base), 78%, var(--l));
+        --color-primary-dark: hsl(var(--color-base), 78%, calc(var(--l) - 5%));
+        --color-primary-darker: hsl(var(--color-base), 78%, calc(var(--l) - 10%));
+        --color-primary-darkest: hsl(var(--color-base), 78%, calc(var(--l) - 25%));
+        --color-primary-light: hsl(var(--color-base), 78%, calc(var(--l) + 5%));
+        --color-primary-lighter: hsl(var(--color-base), 78%, calc(var(--l) + 10%));
+        --color-primary-lightest: hsl(var(--color-base), 78%, calc(var(--l) + 25%));
+        --color-secondary: var(--color-primary-darker);
+        --color-shade: #333;
+        --color-heading: rgb(223, 108, 14);
+        --placeholder-color: #777;
+        --shadow-color: var(--color-primary-darker);
+        --color-button: var(--color-primary-darkest);
+        --color-button-text: white;
+        --field-box-shadow: #888;
+        --field-box-shadow-subtle: #666;
+        --button-shadow-color: #222;
+        --label-color: #aaa;
+
+        --color-input-shade: #666;
+        --color-input-shade-focus: rgba(255, 255, 0, 0.87);
+    }
+}
+
+header {
+    background-color: #ccc;
+}
+
+body {
+    background-color: #eee;
+    font-family: var(--font);
+
+    a {
+        &:link, &:active, &:visited{
+            color: var(--color-text);
+        }
+    }
+
+}
+
+html.theme-dark {
+    body {
+        background-color: #121212;
+        color: white;
+    }
+
+    header {
+        background-color: #121212;
+    }
+
+
+
+    [data-pwa-area="main"] {
+        background-color: #1e1e1e;
+    }
+
+    [data-pwa-area="panel"] {
+        border: none;
+        background-color: #232323;
+
+        &::after {
+            background-color: #fff;
+        }
+    }
+
+    [data-pwa-area="menu"] {
+        background-color: #232323;
+
+        nav.main-menu {
+            ul {
+                li {
+                    border: 1px solid #232323;
+                    background-color: #242424;
+
+                    a {
+                        &:link,
+                        &:visited,
+                        &:active {
+                            color: #aaa;
+                        }
+                    }
+
+                    &:hover {
+                        background-color: #353535;
+                    }
+                }
+            }
+        }
+    }
+
+    .exf-container {
+        .exf-filedrop {
+            .file-preview {
+                background-color: #333;
+
+                &:before {
+                    color: rgba(255, 255, 255, 0.2);
+                }
+
+                border-color: rgba(255, 255, 255, 0.2);
+            }
+
+            &.drag-over {
+                .file-preview {
+                    border-color: rgba(255, 255, 255, 0.4);
+                }
+            }
+        }
+    }
+
+    .exf-container.default .exf-ctl-cnt input {
+        color: #eee;
+    }
+
+    .exf-container.default .exf-ctl-cnt > label {
+        color: #fff;
+    }
+
+    select > option {
+        background-color: #333;
+        color: #ddd;
+    }
+
+}

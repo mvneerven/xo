@@ -1,0 +1,39 @@
+{
+    "pages": [
+        {
+            "legend": "Contact",
+            "intro": "Contact Details",
+            "fields": [
+                {
+                    "name": "name",
+                    "caption": "Your name",
+                    "type": "name",
+                    "required": true
+                },
+                {
+                    "name": "email",
+                    "caption": "Your email address",
+                    "type": "email",
+                    "required": true
+                },
+                {
+                    "name": "phone",
+                    "caption": "Your phone number",
+                    "type": "tel"
+                },
+                {
+                    "name": "address",
+                    "caption": "Your address",
+                    "type": "nladdress"
+                },
+                {
+                    "name": "message",
+                    "caption": "Your message",
+                    "type": "multiline",
+                    "autogrow": true,
+                    "required": true
+                }
+            ]
+        }
+    ]
+}

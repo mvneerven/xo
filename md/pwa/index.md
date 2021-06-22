@@ -4,13 +4,11 @@ When Building Single Page Applications (SPAs) and Progressive Web Apps (PWAs), y
 
 The XO PWA class gives you:
 
-- A hash based Router
-- UI building features (areas, CSS3 grid helpers, dialogs, REST, notifications, etc)
+- A hash based [Router](./router.md)
+- [UI](./ui.md) building features (areas, CSS3 grid helpers, dialogs, REST, notifications, etc)
 - [The OmniBox](./omnibox.md)
-- Utility methods (DOM parsing, etc)
+- [Helper classes](./helpers.md) (DOM parsing, etc)
 
 ## Futher Reading
 
 - [Getting Started](./getting-started.md)
-- [Router](./router.md)
-- [UI](./ui.md)

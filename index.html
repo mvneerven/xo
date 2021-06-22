@@ -1,35 +1,119 @@
 <!DOCTYPE html>
-<html id="xo-test" lang="en" class="nsp-grid nsp-grid-3rc theme-light">
+<html lang="en" id="xo-portal" class="nsp-grid nsp-grid-3rc">
 
 <head>
     <meta charset="utf-8" />
-    <title>ExoForm - Flexible Vanilla JavaScript Form Generation</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <meta name="color-scheme" content="light">
-    <link rel="stylesheet" href="/css/exf.css" />
-
-    <style>
-        @import url("css/exf-index.css");
-    </style>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/themify-icons/0.1.2/css/themify-icons.css" />
+    <meta name="color-scheme" content="dark">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <link rel="shortcut icon" href="/favicon.ico" />
+
+    <!-- Primary Meta Tags -->
+    <title>ExoForm - Next Level Form Generator</title>
+    <meta name="title" content="ExoForm - Next Level Form Generator">
+    <meta name="description"
+        content="ExoForm - Developer-friendly, Flexible and Extensible, Vanilla JavaScript (ES6) Form Generation using declarative JSON syntax">
+    <meta name="keywords" content="ExoForm, Forms, HTML Forms, XForms, Wufoo, JotForm, Formstack, TypeForm" />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://www.xo-js.dev/">
+    <meta property="og:title" content="ExoForm - Next Level Form Generator">
+    <meta property="og:description"
+        content="ExoForm - Developer-friendly, Flexible and Extensible, Vanilla JavaScript (ES6) Form Generation using declarative JSON syntax">
+    <meta property="og:image" content="https://www.xo-js.dev/img/screenshot.png">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://www.xo-js.dev/">
+    <meta property="twitter:title" content="ExoForm - Next Level Form Generator">
+    <meta property="twitter:description"
+        content="ExoForm - Developer-friendly, Flexible and Extensible, Vanilla JavaScript (ES6) Form Generation using declarative JSON syntax">
+    <meta property="twitter:image" content="https://www.xo-js.dev/img/screenshot.png">
+
+
+    <link rel="stylesheet" href="/css/xo-portal.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/themify-icons/0.1.2/css/themify-icons.css" />
 </head>
 
 <body>
-    <header data-pwa-area="header"></header>
-    
-    <main>
-        <section data-pwa-area="menu" data-reset="none"></section>
-        <section data-pwa-area="main" data-reset="route"></section>
+    <header>
+        <section data-pwa-area="header"></section>
+    </header>
+
+    <main data-resize-grid="160px 1fr 400px">
+        <section data-pwa-area="menu"></section>
+        <section data-pwa-area="main" data-reset="route" ></section>
+        <section data-pwa-area="panel" class="pwa-pinnable">
+
+            <img class="xo-logo" src="/img/banner.png" />
+
+        </section>
     </main>
+    <footer>&copy; 2021 Neerventure</footer>
+
+    <span id="forkongithub"><a href="https://github.com/mvneerven/xo">Fork me on GitHub</a></span>
+
+    <span class="hidden" id="main-data">
+        <div>
+            <div class="hero">
+                <h2>ExoForm</h2>
+                <h3>Next Level Forms Generation</h3>
+
+                <div class="summary">
+                    <p>
+                        ExoForm is an ES6 JavaScript Framework for complex HTML Forms.
+                    </p>
+
+                    <h3>Experience</h3>
+                    <p>
+                        
+                        Based on earlier work in Dynamic Form Generation <br/>
+                        <small>Such as a W3C Compliant XForms Engine</small>
+
+                       
+                    </p>
+
+                    <h3>Features</h3>
+
+                    <ul class="progressive">
+                        <li>Declarative JSON syntax</li>
+                        <li>Single & Multiple page forms</li>
+                        <li>Wizards, Surveys, custom paging</li>
+                        <li>Typed, nested POST data for easy REST/GraphQL calls</li>
+                        <li><a href="https://developer.mozilla.org/en-US/docs/Glossary/Semantics"
+                                target="_blank">Semantic HTML</a>, CSS3 Grid</li>
+                        <li>HTML5 validations, plus any custom validation</li>
+                        <li>Extremely Developer-Friendly (<a href="https://codepen.io/collection/XLwaxp"
+                                target="_blank">see for yourself</a>)</li>
+                        <li>All <a href="https://html.spec.whatwg.org/multipage/forms.html" target="_blank">standard
+                                HTML5 controls</a>, plus many more</li>
+                        <li><a href="https://ckeditor.com/" target="_blank">CKEditor</a>,
+                            <a href="https://ace.c9.io/" target="_blank">ACE Editor</a>,
+                            <a href="https://microsoft.github.io/monaco-editor/">MonacoEditor included</a>
+                        </li>
+                        <li>Flexible and Extensible</li>
+                        <li><a href="https://vanillajstoolkit.com/" target="_blank">Vanilla JavaScript</a> (ES6) </li>
+                        <li>No dependencies</li>
+                        <li>Open Sourced on <a href="https://github.com/mvneerven/xo" target="_blank">GitHub</a>
+                            &amp; <a href="https://www.npmjs.com/package/@mvneerven/xo-js" target="_blank">NPM</a></li>
+                        <li><a href="/#/explore">Builder environment</a> included</li>
+                        <li>Easy integration in Vue, Angular, React, etc.</li>
+                        <li><a href="https://codepen.io/collection/XLwaxp" target="_blank">CodePen examples</a>
+                            available
+                        </li>
+                    </ul>
+
+                </div>
+
+            </div>
+        </div>
+    </span>
+
+    <!-- <script type="module" src="https://xo-js.dev/v1.3/xo.js"></script> -->
+    <script src="/dist/xo.js"></script>
+    <script src="/dist/portal.js"></script>
     
-    <footer data-pwa-area="footer">&copy; 2021 Marc van Neerven</footer>
-
-    <script type="module" src="/dist/xo.js"></script>
-
-    <script type="module" src="/js/index.js"></script>
-
 </body>
 
 </html>

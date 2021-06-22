@@ -1,0 +1,80 @@
+{
+    "navigation": "survey",
+    "pages": [
+        {
+            "legend": "What's your favorite color?",
+            "intro": "",
+            "fields": [
+                {
+                    "name": "color",
+                    "type": "dropdown",
+                    "containerClass": "33p",
+                    "items": [
+                        {
+                            "value": "-",
+                            "name": "Please choose..."
+                        },
+                        {
+                            "value": "red",
+                            "name": "Red"
+                        },
+                        {
+                            "value": "blue",
+                            "name": "Blue"
+                        },
+                        {
+                            "value": "green",
+                            "name": "Green"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "legend": "Select your preferences?",
+            "intro": "",
+            "fields": [
+                {
+                    "type": "tags",
+                    "name": "interests",
+                    "tags": [
+                        "Sports",
+                        "Culture",
+                        "Philosophy",
+                        "Travel",
+                        "Music",
+                        "Movies",
+                        "Crafts",
+                        "Nature",
+                        "Spirituality"
+                    ]
+                }
+            ]
+        },
+        {
+            "legend": "Mail",
+            "intro": "Fill out your email address",
+            "fields": [
+                {
+                    "name": "email",
+                    "type": "email",
+                    "required": true
+                }
+            ]
+        },
+        {
+            "legend": "Age",
+            "intro": "Your age please",
+            "fields": [
+                {
+                    "name": "age",
+                    "type": "number",
+                    "min": 16,
+                    "max": 120,
+                    "size": 3,
+                    "maxlength": 3
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,58 @@
+{
+  "model": {
+    "instance": {
+      "person": {
+        "name": {
+          "first": "John",
+          "last": "Doe"
+        },
+        "birthdate": "1972-08-12",
+        "gender": "m"
+      }
+    }
+  },
+  "pages": [
+    {
+      "legend": "Model Binding Form",
+      "intro": "This form shows how to manage a bound datamodel using ExoForm, using the 'bind' property",
+      "fields": [
+        {
+          "name": "testField1",
+          "type": "name",
+          "caption": "Name",
+          "bind": "instance.person.name"
+        },
+        {
+          "name": "testField2",
+          "type": "date",
+          "caption": "Birthdate",
+          "bind": "instance.person.birthdate"
+        },
+        {
+          "name": "testField3",
+          "type": "dropdown",
+          "caption": "Your age please, @person.name",
+          "bind": "instance.person.gender",
+          "items": [
+            {
+              "name": "Please choose",
+              "value": ""
+            },
+            {
+              "name": "Male",
+              "value": "m"
+            },
+            {
+              "name": "Female",
+              "value": "f"
+            },
+            {
+              "name": "Wish not to share",
+              "value": "u"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
