@@ -390,7 +390,7 @@ class TestRoute extends xo.route {
                                     name: "Lorem",
                                     image: "https://stasfassetsdev.z6.web.core.windows.net/3cd3ef51-deab-47d3-944b-1d0e1e8ebe22/assets/Lucifer",
                                     description: "... ipsum dolor sit amet"
-                                    
+
                                 },
                                 {
                                     id: "test3",
@@ -405,7 +405,7 @@ class TestRoute extends xo.route {
                                     tooltip: "Edit",
                                     icon: "ti-pencil",
                                     action: "edit",
-                                },  
+                                },
                                 {
                                     tooltip: "Delete",
                                     icon: "ti-close",
@@ -437,13 +437,13 @@ class TestRoute extends xo.route {
                             type: "listview",
                             name: "lv1",
                             view: "grid",
-                        
+
                             mappings: {
                                 tiles: `'imageUri' 'name size' 'combi1'`,
                                 grid: [
                                     {
                                         key: "name",
-                                        width: "8rem",    
+                                        width: "8rem",
                                         sort: true
                                     },
                                     {
@@ -457,12 +457,12 @@ class TestRoute extends xo.route {
                                     }
                                 ]
                             },
-                        
+
                             properties: [
                                 {
                                     key: "name",
                                     type: "text"
-                                    
+
                                 },
                                 {
                                     name: "Image",
@@ -472,19 +472,19 @@ class TestRoute extends xo.route {
                                 {
                                     name: "Description",
                                     key: "description",
-                                    
+
                                     type: "text"
                                 },
 
                                 {
-                                    
+
                                     key: "fileSizeAndType",
                                     caption: "Details",
                                     visible: ["tiles"]
                                 }
                             ],
 
-                        
+
                             items: [
                                 {
                                     id: "test1",
@@ -613,6 +613,81 @@ class SettingsRoute extends xo.route {
     }
 }
 
+class CMS {
+    tree = {};
+
+    index = {};
+
+    async load(path) {
+        this.tree[path] = {
+            title: "Home"
+        };
+        await this.readMd(this.tree[path], path);
+        return this.tree;
+    }
+
+    async readMd(node, path) {
+        node.url = path;
+        node.path = this.getBasePath(path);
+        node.html = await Core.MarkDown.read(path);
+        let elm = DOM.parseHTML(node.html);
+        node.children = {};
+        await this.addIndex(node, elm);
+        await this.getChildren(node, elm);
+    }
+
+    async getChildren(node, elm) {
+        let links = elm.querySelectorAll("a[href]");
+        for (const a of links) {
+            if (a.href.endsWith(".md")) {
+                let link = node.path + new URL(a.href).pathname;
+                a.setAttribute("href", "#/help" + link)
+                node.children[link] = {
+                    title: a.innerText
+                }
+                await this.readMd(node.children[link], link, this.index);
+            }
+        };
+    }
+
+    addIndex(node, elm) {
+        let s = [node.title];
+        elm.querySelectorAll("h1,h2,h3").forEach(h => {
+            s.push(h.innerText);
+        })
+        this.index[node.url] = {
+            text: s,
+            node: node
+        }
+    }
+
+    getBasePath(path) {
+        let d = path.split("/");
+        d.length--;
+        let s = d.join("/");
+        return s;
+    }
+
+    find(search) {
+        search = search.toLowerCase();
+        let ar = [];
+        for (var url in this.index) {
+            let item = this.index[url];
+            item.text.filter(i => {
+                return  i.toLowerCase().indexOf(search) > -1;
+            }).forEach(i=> {
+                let res = {
+                    url: url,
+                    node: item.node
+                }
+                if(!ar.includes(res))
+                    ar.push(res)
+            })
+        }
+        return ar;
+    }
+}
+
 class HelpRoute extends xo.route {
 
     title = "Help";
@@ -625,23 +700,21 @@ class HelpRoute extends xo.route {
         pwa.on("omnibox-init", e => {
             e.detail.options.categories["Help"] = {
                 sortIndex: 50,
-                trigger: options => { return options.results.length === 0 && options.search.length >= 2 },
+                trigger: options => { return options.search.length >= 2 },
                 getItems: async options => {
-                    await this.getMD();
-                    return this.readMeMD.split('\n').filter(l => {
-                        return l.startsWith('#') && l.toLowerCase().indexOf(options.search.toLowerCase()) > -1;
-                    }).map(l => {
+                    let results = this.cms.find(options.search.toLowerCase());
 
-                        let text = l.replace(/\#/g, "").substr(0, 25).trim() + '...';
-
+                    return results.map(i=>{
                         return {
-                            text: text
+                            path: i.url,
+                            text: i.node.title
                         }
                     })
+
                 },
                 icon: "ti-help",
                 action: options => {
-                    document.location.hash = "/help/" + options.text;
+                    document.location.hash = "/help/" + options.path;
                 }
             }
         });
@@ -651,9 +724,14 @@ class HelpRoute extends xo.route {
         await super.asyncInit();
 
         await this.getMD();
+
+        this.cms = new CMS();
+        await this.cms.load("./README.md");
+       
     }
 
     async render(path) {
+        
 
         if (!path || !path.endsWith(".md")) {
             path = "./README.md";
@@ -665,10 +743,15 @@ class HelpRoute extends xo.route {
 
         this.area.add(readmeElement);
 
+        let basePath = this.getBasePath(path);
+
         readmeElement.querySelectorAll("a[href]").forEach(a => {
             if (a.href.endsWith(".md")) {
+                if (basePath === ".")
+                    basePath = "";
 
-                a.setAttribute("href", "#/help" + new URL(a.href).pathname)
+                let link = basePath + new URL(a.href).pathname;
+                a.setAttribute("href", "#/help" + link)
             }
         });
 
@@ -686,6 +769,14 @@ class HelpRoute extends xo.route {
                 }
             }
         }
+    }
+
+    getBasePath(path) {
+        let d = path.split("/");
+        d.length--;
+        let s = d.join("/");
+        return s;
+
     }
 
     async getMD() {
