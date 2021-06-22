@@ -11,6 +11,6 @@ The XO PWA class gives you:
 
 ## Futher Reading
 
-- [Getting Started]("./getting-started.md)
+- [Getting Started](./getting-started.md)
 - [Router](./router.md)
 - [UI](./ui.md)
