@@ -19,6 +19,20 @@ main {
   --color-dropdown-hover: #b6b6b6;
   --color-dropdown-text: rgba(0, 0, 0, 0.8);
   --color-dropdown-border: rgba(0, 0, 0, 0.1);
+  --lv-grid-template-xs: repeat(5, 1fr);
+  --lv-grid-template-xs-areas: '.';
+  --lv-grid-template-sm: repeat(5, 1fr);
+  --lv-grid-template-sm-areas: '.';
+  --lv-grid-template-md: repeat(5, 1fr);
+  --lv-grid-template-md-areas: '.';
+  --lv-grid-template-lg: repeat(5, 1fr);
+  --lv-grid-template-lg-areas: '.';
+  --lv-grid-template-xl: repeat(5, 1fr);
+  --lv-grid-template-xl-areas: '.';
+  --lv-tile-template: repeat(auto-fill, minmax(200px, 1fr));
+  --lv-tile-content-template: 200px 2rem 1fr 30px;
+  --lv-tile-content-areas: '.';
+  --lv-grid-border-color: #ccc;
 }
 
 html,
