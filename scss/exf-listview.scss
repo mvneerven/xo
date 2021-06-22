@@ -285,6 +285,7 @@
           border: 0;
           text-align: center;
           grid-template-columns: 1fr;
+          grid-template-areas: unset;
           pointer-events: none;
           .loading-container {
             width: 100%;

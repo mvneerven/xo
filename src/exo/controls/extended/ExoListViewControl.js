@@ -634,7 +634,10 @@ class ExoListViewControl extends ExoDivControl {
           this.pagingButtonClickEvent(e.detail.value);
           break;
         default:
-          this.events.trigger(e.detail.id, { data: e.detail.items, items: this.tableItems });
+          this.events.trigger(e.detail.id, {
+            data: e.detail.items,
+            items: this.tableItems,
+          });
           break;
       }
     });

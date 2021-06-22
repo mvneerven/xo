@@ -352,6 +352,7 @@
   text-align: center;
   -ms-grid-columns: 1fr;
       grid-template-columns: 1fr;
+      grid-template-areas: unset;
   pointer-events: none;
 }
 
