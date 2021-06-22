@@ -437,32 +437,49 @@ class TestRoute extends xo.route {
                             type: "listview",
                             name: "lv1",
                             view: "grid",
-
+                            pageSize: 2,
+                            views: ["grid", "tiles"],
                             mappings: {
-                                tiles: `'imageUri' 'name size' 'combi1'`,
+                                tiles: [
+                                    {
+                                        key: "imageUri",
+                                        height: "200px"
+                                    },
+                                    {
+                                        key: "name",
+                                        height: "2rem"
+                                    },
+                                    {
+                                        key: "fileSizeAndType"
+                                    },
+                                ],
                                 grid: [
                                     {
                                         key: "name",
                                         width: "8rem",
-                                        sort: true
+                                        sort: true,
+                                        filterInPlace: true,
+                                        searchURL: `${location.origin}/#/users/`,
                                     },
                                     {
                                         key: "imageUri",
                                         width: "120px"
                                     },
-
                                     {
                                         key: "description",
-                                        autoWidth: true
-                                    }
+                                        autoWidth: true,
+                                        sort: true
+                                    },
+                                    {
+                                        key: "fileSizeAndType"
+                                    },
                                 ]
                             },
-
                             properties: [
                                 {
+                                    name: "Name",
                                     key: "name",
                                     type: "text"
-
                                 },
                                 {
                                     name: "Image",
@@ -472,40 +489,39 @@ class TestRoute extends xo.route {
                                 {
                                     name: "Description",
                                     key: "description",
-
-                                    type: "text"
+                                    type: "text",
+                                    class: "bold-text hide-sm"
                                 },
-
                                 {
-
                                     key: "fileSizeAndType",
                                     caption: "Details",
-                                    visible: ["tiles"]
+                                    dataCallback: (col, val, item) => {return `<span>${Core.formatByteSize(item.size) || ""} - ${item.type || ""}</span>`}
                                 }
                             ],
-
-
                             items: [
                                 {
                                     id: "test1",
                                     name: "Test",
-                                    image: "https://stasfassetsdev.z6.web.core.windows.net/3cd3ef51-deab-47d3-944b-1d0e1e8ebe22/assets/boon-kriek.jpg",
+                                    imageUri: "https://stasfassetsdev.z6.web.core.windows.net/3cd3ef51-deab-47d3-944b-1d0e1e8ebe22/assets/boon-kriek.jpg",
                                     description: "A test item",
-                                    fileSizeAndType: 3455677,
+                                    size: 3455677,
                                     type: "image/jpeg"
                                 },
                                 {
                                     id: "test2",
-                                    name: "Lorem",
-                                    image: "https://stasfassetsdev.z6.web.core.windows.net/3cd3ef51-deab-47d3-944b-1d0e1e8ebe22/assets/Lucifer",
-                                    description: "... ipsum dolor sit amet"
-
+                                    name: "Lorem ipsum",
+                                    imageUri: "https://stasfassetsdev.z6.web.core.windows.net/3cd3ef51-deab-47d3-944b-1d0e1e8ebe22/assets/Lucifer",
+                                    description: "... ipsum dolor sit amet",
+                                    size: 3455677,
+                                    type: "image/gif"
                                 },
                                 {
                                     id: "test3",
                                     name: "Beauty",
-                                    image: "https://stasfassetsdev.z6.web.core.windows.net/c737a2dd-1bad-4d23-836a-2c8c4bb977b2/assets/Sol-bier-mexican-500x500_1_1",
-                                    description: "... is in the eye of the beholder"
+                                    imageUri: "https://stasfassetsdev.z6.web.core.windows.net/c737a2dd-1bad-4d23-836a-2c8c4bb977b2/assets/Sol-bier-mexican-500x500_1_1",
+                                    description: "... is in the eye of the beholder",
+                                    size: 3455677,
+                                    type: "image/png"
                                 }
 
                             ],
@@ -529,11 +545,11 @@ class TestRoute extends xo.route {
         }
 
 
-        this.elm = await xo.form.run(schema, {
+        this.elm = await xo.form.run(schema1, {
             on: {
                 interactive: e => {
                     e.detail.host.get("lv1")._control.on("action", e => {
-                        debugger;
+                        // debugger;
                     })
                 }
             }
