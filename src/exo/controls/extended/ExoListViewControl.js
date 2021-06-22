@@ -866,9 +866,12 @@ class ExoListViewControl extends ExoDivControl {
     if (!prop.tiles) classes.push("hide-in-tile");
 
     const mappingOrders = this.getMappingOrder();
-    if (mappingOrders.grid.indexOf(prop.key) === 0)
+    if (mappingOrders.grid && mappingOrders.grid.indexOf(prop.key) === 0)
       classes.push("first-of-grid");
-    if (mappingOrders.grid.indexOf(prop.key) === mappingOrders.grid.length - 1)
+    if (
+      mappingOrders.grid &&
+      mappingOrders.grid.indexOf(prop.key) === mappingOrders.grid.length - 1
+    )
       classes.push("last-of-grid");
 
     const cellTemplate = `<div class="${classes.join(" ")}" style="grid-area: ${
@@ -895,8 +898,12 @@ class ExoListViewControl extends ExoDivControl {
     const gridTemplate = {};
     sizes.forEach((s) => (gridTemplate[s] = { columns: [], areas: [] }));
     const mappingOrders = this.getMappingOrder();
-    const tileTemplate = new Array(mappingOrders.tiles.length).fill(true);
-    const tileTemplateAreas = new Array(mappingOrders.tiles.length).fill(true);
+    const tileTemplate = mappingOrders.tiles
+      ? new Array(mappingOrders.tiles.length).fill(true)
+      : [];
+    const tileTemplateAreas = mappingOrders.tiles
+      ? new Array(mappingOrders.tiles.length).fill(true)
+      : [];
     this.mappedProperties.forEach((prop) => {
       if (prop.grid) {
         const width =
@@ -935,27 +942,29 @@ class ExoListViewControl extends ExoDivControl {
       }
     });
 
-    Object.keys(gridTemplate).forEach((size) => {
-      gridTemplate[size].columns.sort((a, b) => {
-        const areaA =
-          gridTemplate[size].areas[gridTemplate[size].columns.indexOf(a)];
-        const areaB =
-          gridTemplate[size].areas[gridTemplate[size].columns.indexOf(b)];
-        return mappingOrders.grid.indexOf(areaA) >
-          mappingOrders.grid.indexOf(areaB)
-          ? 1
-          : -1;
-      });
-      gridTemplate[size].areas.sort((a, b) =>
-        mappingOrders.grid.indexOf(a) > mappingOrders.grid.indexOf(b) ? 1 : -1
-      );
+    if (mappingOrders.grid) {
+      Object.keys(gridTemplate).forEach((size) => {
+        gridTemplate[size].columns.sort((a, b) => {
+          const areaA =
+            gridTemplate[size].areas[gridTemplate[size].columns.indexOf(a)];
+          const areaB =
+            gridTemplate[size].areas[gridTemplate[size].columns.indexOf(b)];
+          return mappingOrders.grid.indexOf(areaA) >
+            mappingOrders.grid.indexOf(areaB)
+            ? 1
+            : -1;
+        });
+        gridTemplate[size].areas.sort((a, b) =>
+          mappingOrders.grid.indexOf(a) > mappingOrders.grid.indexOf(b) ? 1 : -1
+        );
 
-      this.cssVariables[`--lv-grid-template-${size}`] =
-        gridTemplate[size].columns.join(" ");
-      this.cssVariables[`--lv-grid-template-${size}-areas`] = `'${gridTemplate[
-        size
-      ].areas.join(" ")}'`;
-    });
+        this.cssVariables[`--lv-grid-template-${size}`] =
+          gridTemplate[size].columns.join(" ");
+        this.cssVariables[
+          `--lv-grid-template-${size}-areas`
+        ] = `'${gridTemplate[size].areas.join(" ")}'`;
+      });
+    }
 
     // set css variables for list view grid templates
     this.cssVariables["--lv-tile-template"] =
