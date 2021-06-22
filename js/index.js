@@ -618,16 +618,40 @@ class CMS {
 
     index = {};
 
+    homeUrl = null;
+
+    _ready = false;
+
     async load(path) {
+        if (path.startsWith("."))
+            path = path.substr(1);
+
         this.tree[path] = {
             title: "Home"
         };
         await this.readMd(this.tree[path], path);
+        this._ready = true;
         return this.tree;
     }
 
+    get ready() {
+        return this._ready;
+    }
+
     async readMd(node, path) {
+        if (path.startsWith("."))
+            path = path.substr(1);
+
         node.url = path;
+        if (this.homeUrl === null)
+            this.homeUrl = node.url;
+
+        if (this.index[node.url]) {
+            //debugger;
+            return;
+        }
+
+
         node.path = this.getBasePath(path);
         node.html = await Core.MarkDown.read(path);
         let elm = DOM.parseHTML(node.html);
@@ -655,6 +679,7 @@ class CMS {
         elm.querySelectorAll("h1,h2,h3").forEach(h => {
             s.push(h.innerText);
         })
+
         this.index[node.url] = {
             text: s,
             node: node
@@ -668,19 +693,38 @@ class CMS {
         return s;
     }
 
+    async get(url) {
+
+        await Core.waitFor(() => {
+            return this.ready
+        }, 5000, 100);
+
+        if (!url)
+            url = this.homeUrl;
+
+        let item = this.index[url]
+        if (!item)
+            throw TypeError("Not found: " + url);
+
+        return item.node;
+
+    }
+
     find(search) {
         search = search.toLowerCase();
         let ar = [];
         for (var url in this.index) {
             let item = this.index[url];
             item.text.filter(i => {
-                return  i.toLowerCase().indexOf(search) > -1;
-            }).forEach(i=> {
+                return i.toLowerCase().indexOf(search) > -1;
+            }).forEach(i => {
                 let res = {
                     url: url,
                     node: item.node
                 }
-                if(!ar.includes(res))
+                if (!ar.find(i => {
+                    return i.url === res.url
+                }))
                     ar.push(res)
             })
         }
@@ -694,6 +738,12 @@ class HelpRoute extends xo.route {
 
     menuIcon = "ti-help";
 
+    // static constructor
+    static _staticConstructor = (function () {
+        HelpRoute.cms = new CMS();
+        HelpRoute.cms.load("./README.md");
+    })();
+
     constructor() {
         super(...arguments);
 
@@ -702,9 +752,9 @@ class HelpRoute extends xo.route {
                 sortIndex: 50,
                 trigger: options => { return options.search.length >= 2 },
                 getItems: async options => {
-                    let results = this.cms.find(options.search.toLowerCase());
+                    let results = HelpRoute.cms.find(options.search.toLowerCase());
 
-                    return results.map(i=>{
+                    return results.map(i => {
                         return {
                             path: i.url,
                             text: i.node.title
@@ -714,7 +764,7 @@ class HelpRoute extends xo.route {
                 },
                 icon: "ti-help",
                 action: options => {
-                    document.location.hash = "/help/" + options.path;
+                    document.location.hash = "/help" + options.path;
                 }
             }
         });
@@ -722,30 +772,51 @@ class HelpRoute extends xo.route {
 
     async asyncInit() {
         await super.asyncInit();
-
-        await this.getMD();
-
-        this.cms = new CMS();
-        await this.cms.load("./README.md");
-       
     }
 
     async render(path) {
-        
 
-        if (!path || !path.endsWith(".md")) {
-            path = "./README.md";
-        }
+        let node = await HelpRoute.cms.get(path);
 
-        let html = await Core.MarkDown.read(path);
+        let cms = HelpRoute.cms;
 
-        let readmeElement = DOM.parseHTML(html);
 
-        this.area.add(readmeElement);
+        let tv = await xo.form.run({
+            type: "treeview",
+            name: "tv1",
+            items: {
+                url: "/home",
+                title: "Home",
+                children: [
+                    {
+                        url: "/test",
+                        title: "Test",
+                        children: [
+                            {
+                                url: "/Bla",
+                                title: "Bla"
+                            }
+                        ]
+                    }
+                ]
+            },
 
+        })
+
+        this.area.add(tv)
+
+
+
+        let elm = this.mapLinks(DOM.parseHTML(node.html), path);
+        this.area.add(elm);
+
+
+    }
+
+    mapLinks(elm, path) {
         let basePath = this.getBasePath(path);
 
-        readmeElement.querySelectorAll("a[href]").forEach(a => {
+        elm.querySelectorAll("a[href]").forEach(a => {
             if (a.href.endsWith(".md")) {
                 if (basePath === ".")
                     basePath = "";
@@ -754,21 +825,7 @@ class HelpRoute extends xo.route {
                 a.setAttribute("href", "#/help" + link)
             }
         });
-
-        if (path) {
-            let sentencePart = decodeURIComponent(path.substr(1));
-            if (sentencePart.endsWith("..."))
-                sentencePart = sentencePart.substr(0, sentencePart.length - 3);
-
-            let headings = readmeElement.querySelectorAll("h1, h2, h3");
-            for (var i = 0; i < headings.length; i++) {
-                let h = headings[i];
-                if (h.innerText.startsWith(sentencePart)) {
-                    h.scrollIntoView();
-                    break;
-                }
-            }
-        }
+        return elm;
     }
 
     getBasePath(path) {
@@ -776,19 +833,11 @@ class HelpRoute extends xo.route {
         d.length--;
         let s = d.join("/");
         return s;
-
-    }
-
-    async getMD() {
-        if (!this.readMeMD)
-            this.readMeMD = await fetch(this.mdPath).then(x => x.text());
     }
 
     get area() {
-        return this.app.UI.areas.main;
+        return pwa.UI.areas.main;
     }
-
-
 }
 
 class ProductsRoute extends xo.route {

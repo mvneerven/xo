@@ -30,7 +30,7 @@ let div = await xo.form.run({
 
 # See Also:
 
-- [Introduction to ExoForm ](./INTRODUCTION.md)
+- [Getting Started](./getting-started.md)
 - [ExoForm Databinding](./data-binding.md)
 - [JSON Schemas](./json-schema.md)
 

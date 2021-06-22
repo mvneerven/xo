@@ -18,7 +18,7 @@ Show inline validation messages to be shown instead of the default HTML5 validat
 }
 ```
 
-See [Validation](./validation.md)
+See [Validation](./md/exo/validation.md)
 
 ## Progress
 Show the progress within a multi-page form.
@@ -129,7 +129,7 @@ const context = await window.xo.form.factory.build({
 });
 ```
 
-See [Validation](./validation.md)
+See [Validation](./md/exo/validation.md)
 
 ## Changes:
 -	Custom controls must now implement a value getter and setter, instead of setting functions on the field object
@@ -160,7 +160,7 @@ get value() {
 
 You can now bind your ExoForm data to a model.
 
-See [Model Binding](./data-binding.md)
+See [Model Binding](./md/exo/data-binding.md)
 
 ## Support for JS schemes
 
@@ -186,7 +186,7 @@ CDN link: https://xo-js.dev/v1.2/xo.js
 
 You can now specify a *controls* array in the ExoForm schema.
 
-See [Navigation](./navigation.md)
+See [Navigation](./md/exo/navigation.md)
 
 # New in 1.2.8
 
@@ -254,7 +254,7 @@ CDN link: https://xo-js.dev/v1.3/xo.js
 
 Support for JSON Schema (V7) references in the model.
 
-See [JSON Schema Support](./json-schema.md)
+See [JSON Schema Support](./md/exo/json-schema.md)
 
 # New in 1.3.5 
 
@@ -313,7 +313,7 @@ All textbox controls, including derived ones such as email, tel, url, now have a
 
 ## PWA OmniBox
 
-See [OmniBox](./omnibox.md);
+See [OmniBox](./md/pwa/omnibox.md);
 
 ## Core.MarkDown
 
@@ -330,7 +330,7 @@ document.body.appendChild(DOM.parseHTML(html));
 
 The *mappings* property for JSON Schema Bound forms.
 
-See [JSON Schema](./json-schema.md)
+See [JSON Schema](./md/exo/json-schema.md)
 
 
 # New in 1.3.22 
@@ -479,4 +479,4 @@ Items in the *items* array in list controls can now have a *disabled* property.
 
 ## ListView Control (type: "listview")
 
-See [ListView Control](./controls/listview.md)
+See [ListView Control](./md/exo/controls/listview.md)

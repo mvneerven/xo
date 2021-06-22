@@ -3052,4 +3052,63 @@ html.theme-dark .exf-ctl-cnt.exf-switch input[type="range"] {
             transform: translateX(0);
   }
 }
+
+.exf-treeview {
+  display: flexbox;
+  font-family: Arial, Helvetica, sans-serif;
+  overflow: auto;
+  width: 100%;
+  height: 100%;
+}
+
+.exf-treeview ul > li::first-line {
+  display: none;
+}
+
+.exf-treeview ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  white-space: nowrap;
+  overflow: visible;
+}
+
+.exf-treeview ul li {
+  cursor: pointer;
+  text-overflow: ellipsis;
+  margin-left: 1vw;
+}
+
+.exf-treeview ul li::first-line {
+  text-decoration: underline;
+  -webkit-text-decoration-color: transparent;
+          text-decoration-color: transparent;
+  -webkit-text-decoration-style: solid;
+          text-decoration-style: solid;
+}
+
+.exf-treeview ul li:hover::first-line {
+  -webkit-text-decoration-color: #666;
+          text-decoration-color: #666;
+}
+
+.exf-treeview ul li:not(.tv-empty):before {
+  content: "\025B8";
+  font-size: 1.2em;
+  opacity: 0.5;
+}
+
+.exf-treeview ul li.expanded:before {
+  content: "\025BE";
+}
+
+.exf-treeview ul li.tv-empty {
+  opacity: 0.5;
+  font-size: smaller;
+  font-style: italic;
+}
+
+.exf-treeview ul ul ul {
+  display: none;
+}
 /*# sourceMappingURL=exf.css.map */

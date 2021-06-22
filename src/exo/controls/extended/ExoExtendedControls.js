@@ -18,6 +18,7 @@ import ExoStarRatingControl from './ExoStarRatingControl';
 import ExoCreditCardControl from './ExoCreditCardControl';
 import ExoLeafletMapControl from './ExoLeafletMapControl';
 import ExoListViewControl from './ExoListViewControl';
+import ExoTreeViewControl from './ExoTreeViewControl';
 
 class ExoExtendedControls {
     static controls = {
@@ -46,7 +47,8 @@ class ExoExtendedControls {
         info: { type: ExoInfoControl, note: "An info panel", demo: { title: "Info", icon: "ti-info", body: "Your informational text" } },
        
         map: {type: ExoLeafletMapControl, note: "Leaflet interactive map" },
-        listview: {type: ExoListViewControl, note: "Listview control"}
+        listview: {type: ExoListViewControl, note: "Listview control"},
+        treeview: {type: ExoTreeViewControl, note: "Treeview control"}
     }
 }
 
