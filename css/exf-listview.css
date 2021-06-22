@@ -427,13 +427,13 @@
   top: 0;
   z-index: 2;
   padding-left: 4px;
-  border-bottom: 1px solid var(--lv-grid-border-color);
+  background-color: var(--lv-grid-header-color);
+  border-bottom: 2px solid var(--lv-grid-border-color);
 }
 
 .exf-listview[data-view="grid"] .exf-listview-list .exf-lv-headers__header {
   font-weight: bold;
   position: relative;
-  background-color: var(--lv-grid-header-color);
   overflow: hidden;
   text-overflow: ellipsis;
 }
