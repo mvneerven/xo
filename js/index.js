@@ -501,7 +501,7 @@ class TestRoute extends xo.route {
                                     id: "test2",
                                     name: "Lorem ipsum",
                                     imageUri: "https://stasfassetsdev.z6.web.core.windows.net/3cd3ef51-deab-47d3-944b-1d0e1e8ebe22/assets/Lucifer",
-                                    description: "... ipsum dolor sit amet",
+                                    description: "Gebrouwen uit 6 verschillende mouten, waardoor het bijzonder rijk van smaak is! Gebrouwen uit 6 verschillende mouten, waardoor het bijzonder rijk van smaak is! Gebrouwen uit 6 verschillende mouten, waardoor het bijzonder rijk van smaak is! Gebrouwen uit 6 verschillende mouten, waardoor het bijzonder rijk van smaak is!Gebrouwen uit 6 verschillende mouten, waardoor het bijzonder rijk van smaak is!Gebrouwen uit 6 verschillende mouten, waardoor het bijzonder rijk van smaak is!",
                                     size: 3455677,
                                     type: "image/gif"
                                 },
@@ -515,18 +515,21 @@ class TestRoute extends xo.route {
                                 }
 
                             ],
-                            contextMenu: [
-                                {
-                                    tooltip: "Edit",
-                                    icon: "ti-pencil",
-                                    action: "edit",
-                                },
-                                {
-                                    tooltip: "Delete",
-                                    icon: "ti-close",
-                                    action: "delete"
-                                }
-                            ]
+                            contextMenu: {
+                                direction: "left",
+                                items:  [
+                                    {
+                                        tooltip: "Edit",
+                                        icon: "ti-pencil",
+                                        action: "edit",
+                                    },
+                                    {
+                                        tooltip: "Delete",
+                                        icon: "ti-close",
+                                        action: "delete"
+                                    }
+                                ]
+                            }
 
                         }
                     ]

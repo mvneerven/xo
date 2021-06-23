@@ -458,12 +458,12 @@ class ExoListViewControl extends ExoDivControl {
 
     // create single contextmenu and move it to article hovered over
     if (this.contextMenu) {
-      const am = await this.getData(this.contextMenu);
+      const am = await this.getData(this.contextMenu.items);
       let btn = await xo.form.run({
         type: "button",
         name: `context-actions`,
         icon: "ti-menu",
-        direction: "left",
+        ...this.contextMenu,
         dropdown: am,
       });
       this.listDiv.appendChild(btn);
@@ -516,7 +516,7 @@ class ExoListViewControl extends ExoDivControl {
   addOverflowBars() {
     this.container
       .querySelectorAll(
-        ".exf-lv-item__grid:not(.overflowing):not([data-column=actions])"
+        ".exf-lv-item__cell:not(.overflowing)"
       )
       .forEach((e) => {
         if (e.scrollHeight > e.clientHeight) {
@@ -990,7 +990,7 @@ class ExoListViewControl extends ExoDivControl {
   }
 
   set valid(valid) {
-    this._valid = valid;
+    this._valid = this.required ? valid : true;
   }
 
   get valid() {
