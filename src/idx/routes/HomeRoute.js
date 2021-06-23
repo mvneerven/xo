@@ -56,8 +56,9 @@ class HomeRoute extends xo.route {
     
 
     async render() {
-        let data = document.querySelector("#main-data").innerHTML;
-        this.app.UI.areas.main.add(DOM.parseHTML(data));
+        this.app.UI.areas.main.add(document.getElementById("summary").outerHTML);
+
+        this.app.UI.areas.panel.add(document.getElementById("features").outerHTML);
     }
 }
 

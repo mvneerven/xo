@@ -1,6 +1,10 @@
 # XO-JS
 
-Compact, Developer Friendly, pure JavaScript (ES6) Component Library, no dependencies.
+XO-JS is a compact, developer-friendly, pure JavaScript (ES6) Component Library that helps with [Progressive Web App](./md/pwa/index.md) development and includes a [Declarative Web Forms Engine](./md/exo/index.md)
+
+> - 49KB minified and GZipped
+> - No dependencies
+> - Vue, React, Angular, Vanilla JS supported
 
 # Modules
 

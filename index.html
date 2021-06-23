@@ -44,8 +44,8 @@
 
     <main data-resize-grid="160px 1fr 400px">
         <section data-pwa-area="menu"></section>
-        <section data-pwa-area="main" data-reset="route" ></section>
-        <section data-pwa-area="panel" class="pwa-pinnable">
+        <section data-pwa-area="main" data-reset="route"></section>
+        <section data-pwa-area="panel" class="pwa-pinnable" data-reset="route">
 
             <img class="xo-logo" src="/img/banner.png" />
 
@@ -61,20 +61,22 @@
                 <h2>ExoForm</h2>
                 <h3>Next Level Forms Generation</h3>
 
-                <div class="summary">
+                <div id="summary">
                     <p>
                         ExoForm is an ES6 JavaScript Framework for complex HTML Forms.
                     </p>
 
+                    <img width="95%" src="https://xo-js.dev/assets/img/xo-promo-02.png" alt="XO Factsheet" />
+
                     <h3>Experience</h3>
                     <p>
-                        
-                        Based on earlier work in Dynamic Form Generation <br/>
+
+                        Based on earlier work in Dynamic Form Generation <br />
                         <small>Such as a W3C Compliant XForms Engine</small>
-
-                       
                     </p>
+                </div>
 
+                <div id="features">
                     <h3>Features</h3>
 
                     <ul class="progressive">
@@ -98,14 +100,34 @@
                         <li>No dependencies</li>
                         <li>Open Sourced on <a href="https://github.com/mvneerven/xo" target="_blank">GitHub</a>
                             &amp; <a href="https://www.npmjs.com/package/@mvneerven/xo-js" target="_blank">NPM</a></li>
-                        <li><a href="/#/explore">Builder environment</a> included</li>
+                        <li><a href="/#/studio">Builder environment</a> included</li>
                         <li>Easy integration in Vue, Angular, React, etc.</li>
                         <li><a href="https://codepen.io/collection/XLwaxp" target="_blank">CodePen examples</a>
                             available
                         </li>
                     </ul>
-
                 </div>
+
+                <div id="sources">
+                    <h3>Other sources</h3>
+
+                    <ul>
+                        <li>
+                            <a href="https://codepen.io/collection/XLwaxp" target="_blank">CodePen </a>
+                            <div>
+                                <small>CodePen Examples</small>
+                            </div>
+                        </li>
+
+                        <li>
+                            <a href="https://github.com/mvneerven/xo" target="_blank">GitHub</a>
+                            <div>
+                                <small>XO-JS on GitHub</small>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
 
             </div>
         </div>
@@ -114,7 +136,7 @@
     <!-- <script type="module" src="https://xo-js.dev/v1.3/xo.js"></script> -->
     <script src="/dist/xo.js"></script>
     <script src="/dist/portal.js"></script>
-    
+
 </body>
 
 </html>

@@ -3429,10 +3429,6 @@ html.theme-dark .exf-ctl-cnt.autocomplete .exf-ac-rs .exf-ac-itm.active {
   background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0) 0%, var(--lv-tile-color) 100%);
 }
 
-.exf-listview[data-view="tiles"] {
-  grid-gap: 0.5rem;
-}
-
 .exf-listview[data-view="tiles"] .hide-in-tile {
   display: none !important;
 }
@@ -3458,6 +3454,7 @@ html.theme-dark .exf-ctl-cnt.autocomplete .exf-ac-rs .exf-ac-itm.active {
   position: relative;
   display: -ms-grid;
   display: grid;
+  grid-gap: 0.5rem;
       grid-template-areas: var(--lv-tile-content-template-areas);
   -ms-grid-rows: var(--lv-tile-content-template);
       grid-template-rows: var(--lv-tile-content-template);

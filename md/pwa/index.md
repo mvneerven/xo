@@ -9,6 +9,9 @@ The XO PWA class gives you:
 - [The OmniBox](./omnibox.md)
 - [Helper classes](./helpers.md) (DOM parsing, etc)
 
+> # [This site](/) is entirely built with XO.
+
 ## Futher Reading
 
-- [Getting Started](./getting-started.md)
+- [Getting Started with XO PWA Building](./getting-started.md)
+

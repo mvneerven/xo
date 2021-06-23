@@ -133,3 +133,7 @@ xo.form.run("/data/forms/account.json", {
     myDiv.appendChild(elm)
 })
 ```
+
+### ExoForm in Frontend Frameworks (Vue, React, Angular, etc.)
+
+- [CodePen Vue Example](https://codepen.io/isazulay/pen/ExWBgEJ)

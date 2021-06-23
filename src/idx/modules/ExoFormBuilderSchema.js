@@ -52,7 +52,7 @@ class ExoFormBuilderSchema {
                     title: "Reset",
                     icon: "ti-close",
                     caption: "",
-                    class: "btn btn-asf abs-top-right",
+                    class: "btn btn-reset abs-top-right",
                     click: e => {
                         x.addins.navigation.restart();
                         x.form.reset();
