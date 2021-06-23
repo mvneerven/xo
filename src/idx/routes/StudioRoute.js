@@ -425,15 +425,13 @@ class StudioRoute extends xo.route {
         var ar = []
         for (var ev in window.xo.form.factory.events) {
             ar.push(
-                `this.on(events.${ev}, e => {
+                `this.on("${ev}", e => {
     //console.log('>> ExoForm Event: ${ev}", e.detail);
     })`)
-        }
+        } 
 
         const defaultScript = `
     // Add your logic here...
-    
-    const events = window.xo.form.factory.events;
     
     ` + ar.join('\n\n');
 

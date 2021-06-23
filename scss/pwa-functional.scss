@@ -62,6 +62,15 @@ html {
     }
 }
 
+.user-select {
+    -webkit-touch-callout: initial!important;
+    -webkit-user-select: text!important;
+    -khtml-user-select: text!important;
+    -moz-user-select: text!important;
+    -ms-user-select: text!important;
+    user-select: text!important;
+}
+
 .no-wrap {
     white-space: nowrap;
 }

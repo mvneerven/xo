@@ -6,7 +6,6 @@ class ExoFormStudio extends window.xo.pwa {
     routerReady() {
         this.router.generateMenu(this.UI.areas.menu);
 
-
         this.router.on(window.xo.pwa.Router.events.route, e =>{
            document.title = "ExoForm - " + e.detail.module.title 
         })

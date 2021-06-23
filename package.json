@@ -1,6 +1,6 @@
 {
   "name": "@mvneerven/xo-js",
-  "version": "1.3.41",
+  "version": "1.4.0",
   "description": "XO - Pure JS Progressive Web Apps & Declarative Forms - No dependencies",
   "repository": {
     "type": "git",
@@ -34,7 +34,7 @@
     "build1": "npm run compile&&npm run test&&npm run doc",
     "test": "cross-env NODE_OPTIONS=--experimental-vm-modules jest",
     "dev": "node esbuild-dev.js",
-    "build": "node esbuild-build.js"
+    "build": "node esbuild-build.js&&npm run test&&npm run doc"
   },
   "license": "MIT",
   "devDependencies": {
@@ -42,6 +42,7 @@
     "esbuild": "^0.11.23",
     "jest": "^26.6.3",
     "jest-junit": "^12.0.0",
+    "jsdoc": "^3.6.7",
     "regenerator-runtime": "^0.13.7",
     "typescript": "^4.2.4"
   }

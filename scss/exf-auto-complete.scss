@@ -1,4 +1,4 @@
-.exf-ctl-cnt.autocomplete{
+.exf-ctl-cnt.autocomplete {
     position: relative;
     width: auto;
     margin: auto;
@@ -6,12 +6,12 @@
 
     .exf-ac-rs {
         font-size: 0.9rem;
-        background-color: rgb(240,240,240);
+        background-color: rgb(240, 240, 240);
         position: fixed;
-       
+
         box-shadow: 0 5px 10px 2px rgba(0, 0, 0, 0.1);
         border: 1px solid rgba(0, 0, 0, 0.1);
-        padding: .2rem;
+        padding: 0.2rem;
         max-height: 300px;
         max-width: 500px;
         overflow-y: auto;
@@ -25,15 +25,15 @@
             padding: 0.5rem;
 
             &:hover {
-                background-color: rgba(0,0,0, 0.05);
+                background-color: rgba(0, 0, 0, 0.05);
             }
 
-            span.text{
+            span.text {
                 display: inline-block;
                 min-width: 100px;
 
                 small {
-                    color: rgba(0,0,0, 0.5);
+                    color: rgba(0, 0, 0, 0.5);
                     word-wrap: normal;
                     display: inline-block;
                 }
@@ -43,20 +43,53 @@
                 }
             }
 
-            span.category{
+            span.category {
                 float: right;
                 text-align: right;
-                color: rgba(0,0,0,0.5);
+                color: rgba(0, 0, 0, 0.5);
                 font-size: smaller;
             }
 
-            &.selected{
-                background-color: rgba(255,0,0, 0.15);
+            &.selected {
+                background-color: rgba(255, 0, 0, 0.15);
             }
 
-            &.active{
-                background-color: rgba(255,0,0, 0.25);
+            &.active {
+                background-color: rgba(255, 0, 0, 0.25);
                 transition: all 0.1s;
+            }
+        }
+    }
+}
+
+html.theme-dark {
+    .exf-ctl-cnt.autocomplete {
+        .exf-ac-rs {
+            background-color: rgb(40, 40, 40);
+
+            box-shadow : 0 5px 10px 2px rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 2555, 255, 0.1);
+
+            .exf-ac-itm {
+                &:hover {
+                    background-color: rgba(255, 255, 255, 0.05);
+                }
+                span.text {
+                    small {
+                        color: rgba(255, 255, 255, 0.5);
+                    }
+                }
+                span.category {
+                    color: rgba(255, 255, 255, 0.5);
+                }
+
+                &.selected {
+                    background-color: rgba(255, 0, 0, 0.5);
+                }
+
+                &.active {
+                    background-color: rgba(255, 0, 0, 0.65);
+                }
             }
         }
     }

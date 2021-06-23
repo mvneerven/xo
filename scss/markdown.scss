@@ -1,0 +1,43 @@
+@import "highlightjs-darkmode";
+
+.md-converted-html {
+    max-width: 90%;
+    
+    table {
+        border: 1px solid #999;
+        background-color: rgba(125,125,125, 0.05);;
+        thead {
+            text-align: left;
+            background-color: rgba(125,125,125, 0.5);
+            
+        }
+
+        tr {
+            border-bottom: 1px dotted rgba(125,125,125, 0.5);
+        }
+
+        td, th{
+            padding: 0.4rem 0.6rem;
+        }       
+    }
+
+    img {
+        width: 90%;
+        max-width: 900px;
+    }
+
+    code {
+        font-size: 1rem;
+        font-family: Consolas, "Courier New", Courier, monospace;
+    }
+
+    pre{
+        overflow: auto;
+        max-width: 99%;
+    }
+
+    blockquote {
+        border-left: 10px solid #c04e58;
+        padding: 0.5rem 1rem;
+    }
+}

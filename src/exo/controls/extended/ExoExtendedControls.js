@@ -23,17 +23,17 @@ import ExoTreeViewControl from './ExoTreeViewControl';
 class ExoExtendedControls {
     static controls = {
         filedrop: {
-            type: ExoFileDropControl, alias: "file", note: "An input for file uploading", demo: {
+            type: ExoFileDropControl, alias: "file", note: "An input for file uploading - supports drag and drop and previewing", demo: {
                 max: 1, "fileTypes": ["image/"],
                 maxSize: 4096000,
                 caption: "Select your profile image",
                 class: "image-upload"
             }
         },
-        switch: { type: ExoSwitchControl },
-        richtext: { type: ExoCKRichEditor, note: "A CKEditor wrapper for ExoForm" },
+        switch: { type: ExoSwitchControl, bote: "Checkbox replacement for boolean values " },
+        richtext: { type: ExoCKRichEditor, note: "A CKEditor wysiwyg/html editor wrapper for ExoForm" },
         tags: { caption: "Tags control", type: ExoTaggingControl, note: "A control for adding multiple tags", demo: { tags: ["JavaScript", "CSS", "HTML"] } },
-        multiinput: { type: ExoMultiInputControl },
+        multiinput: { type: ExoMultiInputControl, note: "Input container for collecting multiple values and display in a grid" },
         creditcard: { caption: "Credit Card", type: ExoCreditCardControl, note: "A credit card control" },
         name: { caption: "Name (first, last) group", type: ExoNameControl, note: "Person name control" },
         nladdress: { caption: "Dutch address", type: ExoNLAddressControl, note: "Nederlands adres" },

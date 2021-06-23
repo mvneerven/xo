@@ -1,10 +1,12 @@
 // @import url(http://localhost:4748/css/xo.css);
-@import url(https://xo-js.dev/v1.3/xo.css);
+@import url(/css/xo.css);
 
 @import "exf-wysiwyg";
 @import "ul-tabs";
 @import "xo-brand";
 @import "xo-theme";
+@import "markdown";
+
 @import url("https://fonts.googleapis.com/css2?family=Lato:wght@100&display=swap");
 
 .ul-tabs.full-height {
@@ -52,6 +54,43 @@ img.xo-logo {
 html:not(.route-Portal) {
     img.xo-logo {
         display: none;
+    }
+}
+
+.exf-container {
+    &.pwa-omnibox {
+        .exf-wrapper {
+            text-align: center;
+        }
+
+        padding-top: 0.5rem;
+        fieldset {
+            margin: auto;
+            border: 0;
+            padding: 0;
+
+            .exf-ctl-cnt {
+                text-align: left;
+                input {
+                    padding: 0.6rem 0.9rem;
+                    border: 2px solid rgba(0, 0, 0, 0.2);
+                    border-radius: 0.5rem;
+                    outline: none;
+
+                    &:focus {
+                        border-color: rgba(200, 0, 0, 0.4);
+                    }
+                }
+            }
+        }
+    }
+}
+
+.theme-dark {
+    .exf-container {
+        &.pwa-omnibox {
+            border-color: rgba(220, 0, 0, 0.8);
+        }
     }
 }
 

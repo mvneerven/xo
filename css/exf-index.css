@@ -72,6 +72,14 @@ body footer {
   max-width: 90%;
 }
 
+#xo-test .md-converted-html table {
+  border: 1px solid #999;
+}
+
+#xo-test .md-converted-html table thead {
+  text-align: left;
+}
+
 #xo-test .md-converted-html img {
   width: 90%;
   max-width: 900px;

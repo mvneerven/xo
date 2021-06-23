@@ -53,7 +53,7 @@ class MarkDownCMS {
         for (const a of links) {
             if (a.href.endsWith(".md")) {
                 let link = node.path + new URL(a.href).pathname;
-                a.setAttribute("href", "#/help" + link)
+                a.setAttribute("href", "#/docs" + link)
                 node.children[link] = {
                     title: a.innerText
                 }

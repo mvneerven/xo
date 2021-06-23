@@ -438,3 +438,9 @@ Items in the *items* array in list controls can now have a *disabled* property.
 ## ListView Control (type: "listview")
 
 See [ListView Control](./md/exo/controls/listview.md)
+
+# New in 1.4.0
+
+- XO Portal rewrite 
+- week (input[type=week]) wrapper
+- Listview improvements

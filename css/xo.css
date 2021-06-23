@@ -50,6 +50,14 @@ html:not(.pwa-signed-in) .if-signed-out {
   display: block;
 }
 
+.user-select {
+  -webkit-touch-callout: initial !important;
+  -webkit-user-select: text !important;
+  -moz-user-select: text !important;
+  -ms-user-select: text !important;
+  user-select: text !important;
+}
+
 .no-wrap {
   white-space: nowrap;
 }
@@ -108,6 +116,14 @@ html.pwa-signed-in .if-signed-in {
 
 html:not(.pwa-signed-in) .if-signed-out {
   display: block;
+}
+
+.user-select {
+  -webkit-touch-callout: initial !important;
+  -webkit-user-select: text !important;
+  -moz-user-select: text !important;
+  -ms-user-select: text !important;
+  user-select: text !important;
 }
 
 .no-wrap {
@@ -2803,7 +2819,7 @@ html.theme-dark .exf-ctl-cnt.exf-switch input[type="range"] {
   -webkit-box-shadow: 0 5px 10px 2px rgba(0, 0, 0, 0.1);
           box-shadow: 0 5px 10px 2px rgba(0, 0, 0, 0.1);
   border: 1px solid rgba(0, 0, 0, 0.1);
-  padding: .2rem;
+  padding: 0.2rem;
   max-height: 300px;
   max-width: 500px;
   overflow-y: auto;
@@ -2854,6 +2870,33 @@ html.theme-dark .exf-ctl-cnt.exf-switch input[type="range"] {
   background-color: rgba(255, 0, 0, 0.25);
   -webkit-transition: all 0.1s;
   transition: all 0.1s;
+}
+
+html.theme-dark .exf-ctl-cnt.autocomplete .exf-ac-rs {
+  background-color: #282828;
+  -webkit-box-shadow: 0 5px 10px 2px rgba(255, 255, 255, 0.1);
+          box-shadow: 0 5px 10px 2px rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+html.theme-dark .exf-ctl-cnt.autocomplete .exf-ac-rs .exf-ac-itm:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+html.theme-dark .exf-ctl-cnt.autocomplete .exf-ac-rs .exf-ac-itm span.text small {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+html.theme-dark .exf-ctl-cnt.autocomplete .exf-ac-rs .exf-ac-itm span.category {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+html.theme-dark .exf-ctl-cnt.autocomplete .exf-ac-rs .exf-ac-itm.selected {
+  background-color: rgba(255, 0, 0, 0.5);
+}
+
+html.theme-dark .exf-ctl-cnt.autocomplete .exf-ac-rs .exf-ac-itm.active {
+  background-color: rgba(255, 0, 0, 0.65);
 }
 
 .nsp-xs .exf-lv-headers,
@@ -3209,6 +3252,7 @@ html.theme-dark .exf-ctl-cnt.exf-switch input[type="range"] {
   text-align: center;
   -ms-grid-columns: 1fr;
       grid-template-columns: 1fr;
+      grid-template-areas: unset;
   pointer-events: none;
 }
 
@@ -3284,13 +3328,13 @@ html.theme-dark .exf-ctl-cnt.exf-switch input[type="range"] {
   top: 0;
   z-index: 2;
   padding-left: 4px;
-  border-bottom: 1px solid var(--lv-grid-border-color);
+  background-color: var(--lv-grid-header-color);
+  border-bottom: 2px solid var(--lv-grid-border-color);
 }
 
 .exf-listview[data-view="grid"] .exf-listview-list .exf-lv-headers__header {
   font-weight: bold;
   position: relative;
-  background-color: var(--lv-grid-header-color);
   overflow: hidden;
   text-overflow: ellipsis;
 }
@@ -3480,7 +3524,7 @@ html.theme-dark .exf-ctl-cnt.exf-switch input[type="range"] {
 }
 
 .exf-listview[data-view="tiles"] .exf-listview-list .exf-lv-item__cell__content__img {
-  background-position: center;
+  background-position: center top;
 }
 
 .exf-listview[data-view="tiles"] .exf-listview-list .exf-lv-item__tile.action-button {

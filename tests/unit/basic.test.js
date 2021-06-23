@@ -1,4 +1,4 @@
-import xo from "../../dist/xo.min";
+const xo = require("../../dist/xo.min");
 
 describe("ExoForm basic Tests", () => {
     let context = {};

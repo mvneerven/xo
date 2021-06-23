@@ -9,9 +9,6 @@ esbuild.build({
     outfile: 'dist/xo.min.js',
   }).catch(() => process.exit(1))
 
-  //"build1": "npm run compile&&npm run test&&npm run doc",
-
-
   esbuild.build({
     entryPoints: ['js/portal.js'],
     bundle: true,
@@ -19,3 +16,5 @@ esbuild.build({
     minify: true,
     outfile: 'dist/portal.min.js',
   }).catch(() => process.exit(1))
+
+

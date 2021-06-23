@@ -1,7 +1,7 @@
 const schema = {
     model: {
         schemas: {
-            person: "/data/json/schemas/person-schema.json",
+            person: "/data/schemas/person-schema.json",
         },
         instance: {
             person: {

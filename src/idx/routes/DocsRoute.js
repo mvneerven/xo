@@ -33,7 +33,7 @@ class DocsRoute extends xo.route {
                 },
                 icon: "ti-help",
                 action: options => {
-                    document.location.hash = "/help" + options.path;
+                    document.location.hash = "/docs" + options.path;
                 }
             }
         });
@@ -48,7 +48,6 @@ class DocsRoute extends xo.route {
         let node = await DocsRoute.cms.get(path);
 
         let cms = DocsRoute.cms;
-
 
         let tv = await xo.form.run({
             type: "treeview",
@@ -72,11 +71,12 @@ class DocsRoute extends xo.route {
 
         })
 
-        this.area.add(tv)
+        //this.area.add(tv)
 
 
 
         let elm = this.mapLinks(DOM.parseHTML(node.html), path);
+        elm.classList.add("user-select")
         this.area.add(elm);
 
 
@@ -91,7 +91,7 @@ class DocsRoute extends xo.route {
                     basePath = "";
 
                 let link = basePath + new URL(a.href).pathname;
-                a.setAttribute("href", "#/help" + link)
+                a.setAttribute("href", "#/docs" + link)
             }
         });
         return elm;

@@ -12,7 +12,7 @@
   -webkit-box-shadow: 0 5px 10px 2px rgba(0, 0, 0, 0.1);
           box-shadow: 0 5px 10px 2px rgba(0, 0, 0, 0.1);
   border: 1px solid rgba(0, 0, 0, 0.1);
-  padding: .2rem;
+  padding: 0.2rem;
   max-height: 300px;
   max-width: 500px;
   overflow-y: auto;
@@ -63,5 +63,32 @@
   background-color: rgba(255, 0, 0, 0.25);
   -webkit-transition: all 0.1s;
   transition: all 0.1s;
+}
+
+html.theme-dark .exf-ctl-cnt.autocomplete .exf-ac-rs {
+  background-color: #282828;
+  -webkit-box-shadow: 0 5px 10px 2px rgba(255, 255, 255, 0.1);
+          box-shadow: 0 5px 10px 2px rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+html.theme-dark .exf-ctl-cnt.autocomplete .exf-ac-rs .exf-ac-itm:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+html.theme-dark .exf-ctl-cnt.autocomplete .exf-ac-rs .exf-ac-itm span.text small {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+html.theme-dark .exf-ctl-cnt.autocomplete .exf-ac-rs .exf-ac-itm span.category {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+html.theme-dark .exf-ctl-cnt.autocomplete .exf-ac-rs .exf-ac-itm.selected {
+  background-color: rgba(255, 0, 0, 0.5);
+}
+
+html.theme-dark .exf-ctl-cnt.autocomplete .exf-ac-rs .exf-ac-itm.active {
+  background-color: rgba(255, 0, 0, 0.65);
 }
 /*# sourceMappingURL=exf-auto-complete.css.map */

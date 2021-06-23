@@ -77,6 +77,13 @@ body {
     .md-converted-html {
         max-width: 90%;
         
+        table {
+            border: 1px solid #999;
+            
+            thead {
+                text-align: left;
+            }
+        }
 
         img {
             width: 90%;

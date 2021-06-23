@@ -22,13 +22,12 @@ Compact, Developer Friendly, pure JavaScript (ES6) Component Library, no depende
 
 ## CDN
 
-To use ExoForm 1.01, use the new JS versions at:
+Use XO directly from the CDN:
 
 ```html
 <script src="https://xo-js.dev/v1.3/xo.js"></script>
 or...
 <script src="https://xo-js.dev/v1.3/xo.min.js"></script>
-
 ```
 
 ## NPM
