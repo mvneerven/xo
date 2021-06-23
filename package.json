@@ -1,10 +1,6 @@
 {
   "name": "@mvneerven/xo-js",
-<<<<<<< HEAD
   "version": "1.4.0",
-=======
-  "version": "1.3.40",
->>>>>>> d2767012ffd27fa38ac2c4b5b5564c6b028e171c
   "description": "XO - Pure JS Progressive Web Apps & Declarative Forms - No dependencies",
   "repository": {
     "type": "git",
@@ -35,15 +31,10 @@
     "dev1": "esbuild js/xo.js --bundle --watch --outfile=dist/xo.js",
     "compile": "esbuild js/xo.js --bundle --minify --platform=node --target=node12 --format=esm --outfile=dist/xo.min.js&&tsc",
     "doc": "jsdoc src/exo src/pwa -r",
-<<<<<<< HEAD
     "build1": "npm run compile&&npm run test&&npm run doc",
     "test": "cross-env NODE_OPTIONS=--experimental-vm-modules jest",
     "dev": "node esbuild-dev.js",
     "build": "node esbuild-build.js&&npm run test&&npm run doc"
-=======
-    "build": "npm run compile&&npm run test&&npm run doc",
-    "test": "esbuild js/xo.js --bundle --format=cjs --outfile=dist/xo.cjs.js&&cross-env NODE_OPTIONS=--experimental-vm-modules jest"
->>>>>>> d2767012ffd27fa38ac2c4b5b5564c6b028e171c
   },
   "license": "MIT",
   "devDependencies": {
