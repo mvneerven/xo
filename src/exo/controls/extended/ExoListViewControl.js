@@ -458,12 +458,12 @@ class ExoListViewControl extends ExoDivControl {
 
     // create single contextmenu and move it to article hovered over
     if (this.contextMenu) {
-      const am = await this.getData(this.contextMenu);
+      const am = await this.getData(this.contextMenu.items);
       let btn = await xo.form.run({
         type: "button",
         name: `context-actions`,
         icon: "ti-menu",
-        direction: "left",
+        ...this.contextMenu,
         dropdown: am,
       });
       this.listDiv.appendChild(btn);

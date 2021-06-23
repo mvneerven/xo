@@ -525,18 +525,21 @@ class TestRoute extends xo.route {
                                 }
 
                             ],
-                            contextMenu: [
-                                {
-                                    tooltip: "Edit",
-                                    icon: "ti-pencil",
-                                    action: "edit",
-                                },
-                                {
-                                    tooltip: "Delete",
-                                    icon: "ti-close",
-                                    action: "delete"
-                                }
-                            ]
+                            contextMenu: {
+                                direction: "left",
+                                items:  [
+                                    {
+                                        tooltip: "Edit",
+                                        icon: "ti-pencil",
+                                        action: "edit",
+                                    },
+                                    {
+                                        tooltip: "Delete",
+                                        icon: "ti-close",
+                                        action: "delete"
+                                    }
+                                ]
+                            }
 
                         }
                     ]
