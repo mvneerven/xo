@@ -510,6 +510,50 @@ html.theme-dark select > option {
   display: none;
 }
 
+#xo-portal nav.main-menu {
+  padding: 0;
+}
+
+#xo-portal nav.main-menu ul {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+#xo-portal nav.main-menu ul li {
+  border-left-width: 4px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+#xo-portal nav.main-menu ul li a {
+  display: block;
+  padding: 1em;
+  margin: 2px;
+  text-decoration: none;
+}
+
+#xo-portal nav.main-menu ul li:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  -webkit-transition: all 0.2s;
+  transition: all 0.2s;
+}
+
+#xo-portal nav.main-menu ul li.selected {
+  border-left-color: #c11;
+}
+
+#xo-portal.theme-light nav.main-menu ul li {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+#xo-portal.theme-light nav.main-menu ul li:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+#xo-portal.theme-light nav.main-menu ul li.selected {
+  border-left-color: #c11;
+}
+
 #xo-portal [data-pwa-area="panel"] {
   padding: 1rem;
 }
@@ -544,7 +588,7 @@ img.xo-logo {
   max-width: 200px;
 }
 
-html:not(.route-Portal) img.xo-logo {
+html:not([data-pwa-route="/"]) img.xo-logo {
   display: none;
 }
 
@@ -637,7 +681,7 @@ html:not(.route-Portal) img.xo-logo {
   float: left;
 }
 
-.nsp-grid.nsp-grid-3rc.route-ExoFormsStudio [data-id="live-edit-switch-container"] {
+.nsp-grid.nsp-grid-3rc[data-pwa-route="/studio"] [data-id="live-edit-switch-container"] {
   display: none;
   position: absolute;
   z-index: 0;
@@ -645,29 +689,29 @@ html:not(.route-Portal) img.xo-logo {
   right: 25px;
 }
 
-.nsp-grid.nsp-grid-3rc.route-ExoFormsStudio [data-name="renderTabs"] {
+.nsp-grid.nsp-grid-3rc[data-pwa-route="/studio"] [data-name="renderTabs"] {
   height: 100%;
 }
 
-.nsp-grid.nsp-grid-3rc.route-ExoFormsStudio form.form-explorer .exf-nav-cnt,
-.nsp-grid.nsp-grid-3rc.route-ExoFormsStudio form.field-explorer .exf-nav-cnt {
+.nsp-grid.nsp-grid-3rc[data-pwa-route="/studio"] form.form-explorer .exf-nav-cnt,
+.nsp-grid.nsp-grid-3rc[data-pwa-route="/studio"] form.field-explorer .exf-nav-cnt {
   display: none !important;
 }
 
-.nsp-grid.nsp-grid-3rc.route-ExoFormsStudio [data-pwa-area="main"] {
+.nsp-grid.nsp-grid-3rc[data-pwa-route="/studio"] [data-pwa-area="main"] {
   height: 100%;
   overflow: auto;
 }
 
-.nsp-grid.nsp-grid-3rc.route-ExoFormsStudio [data-pwa-area="main"] > .exf-container {
+.nsp-grid.nsp-grid-3rc[data-pwa-route="/studio"] [data-pwa-area="main"] > .exf-container {
   height: 100%;
 }
 
-.nsp-grid.nsp-grid-3rc.route-ExoFormsStudio [data-pwa-area="main"] > .exf-container form.form-explorer {
+.nsp-grid.nsp-grid-3rc[data-pwa-route="/studio"] [data-pwa-area="main"] > .exf-container form.form-explorer {
   height: 100%;
 }
 
-.nsp-grid.nsp-grid-3rc.route-ExoFormsStudio textarea.code {
+.nsp-grid.nsp-grid-3rc[data-pwa-route="/studio"] textarea.code {
   min-height: 350px;
   padding: 0.5em;
   display: block;
@@ -680,12 +724,12 @@ html:not(.route-Portal) img.xo-logo {
   resize: vertical;
 }
 
-.nsp-grid.nsp-grid-3rc.route-ExoFormsStudio:not(.nsp-xs) main {
+.nsp-grid.nsp-grid-3rc[data-pwa-route="/studio"]:not(.nsp-xs) main {
   overflow: hidden;
   height: 100%;
 }
 
-.nsp-grid.nsp-grid-3rc.route-ExoFormsStudio:not(.nsp-xs) [data-pwa-area="panel"] {
+.nsp-grid.nsp-grid-3rc[data-pwa-route="/studio"]:not(.nsp-xs) [data-pwa-area="panel"] {
   z-index: 10 !important;
   height: 100%;
   font-size: 0.8rem;
@@ -695,7 +739,7 @@ html:not(.route-Portal) img.xo-logo {
           box-shadow: -3px 3px 10px 2px rgba(0, 0, 0, 0.4);
 }
 
-.nsp-grid.nsp-grid-3rc.route-ExoFormsStudio:not(.nsp-xs) [data-pwa-area="panel"] #exo-field-selector [data-id="schema-editor"] {
+.nsp-grid.nsp-grid-3rc[data-pwa-route="/studio"]:not(.nsp-xs) [data-pwa-area="panel"] #exo-field-selector [data-id="schema-editor"] {
   height: 120px;
   resize: none;
   position: absolute !important;
@@ -704,7 +748,7 @@ html:not(.route-Portal) img.xo-logo {
   margin-top: 0px;
 }
 
-.nsp-grid.nsp-grid-3rc.route-ExoFormsStudio:not(.nsp-xs) [data-pwa-area="panel"] #exo-field-selector [data-id="schema-editor"] textarea {
+.nsp-grid.nsp-grid-3rc[data-pwa-route="/studio"]:not(.nsp-xs) [data-pwa-area="panel"] #exo-field-selector [data-id="schema-editor"] textarea {
   min-height: 50px;
   height: 120px;
   margin-top: 1em;
@@ -714,7 +758,7 @@ html:not(.route-Portal) img.xo-logo {
   resize: none;
 }
 
-.nsp-grid.nsp-grid-3rc.route-ExoFormsStudio:not(.nsp-xs) [data-pwa-area="panel"] #exo-field-selector [data-id="schema-editor"] > label {
+.nsp-grid.nsp-grid-3rc[data-pwa-route="/studio"]:not(.nsp-xs) [data-pwa-area="panel"] #exo-field-selector [data-id="schema-editor"] > label {
   display: inline-block;
   background-color: white !important;
   padding: 3px;
@@ -723,7 +767,7 @@ html:not(.route-Portal) img.xo-logo {
           box-shadow: 0px -3px 3px 0px rgba(0, 0, 0, 0.4);
 }
 
-.nsp-grid.nsp-grid-3rc.route-ExoFormsStudio:not(.nsp-xs) .split-panel-container {
+.nsp-grid.nsp-grid-3rc[data-pwa-route="/studio"]:not(.nsp-xs) .split-panel-container {
   width: 100%;
   height: 100%;
   border: 1px solid #ccc;
@@ -733,44 +777,44 @@ html:not(.route-Portal) img.xo-logo {
       grid-template-columns: 50% 50%;
 }
 
-.nsp-grid.nsp-grid-3rc.route-ExoFormsStudio:not(.nsp-xs) .split-panel-container .split-panel {
+.nsp-grid.nsp-grid-3rc[data-pwa-route="/studio"]:not(.nsp-xs) .split-panel-container .split-panel {
   margin: 10px;
 }
 
-.nsp-grid.nsp-grid-3rc.route-ExoFormsStudio:not(.nsp-xs) .split-panel-container .exf-container {
+.nsp-grid.nsp-grid-3rc[data-pwa-route="/studio"]:not(.nsp-xs) .split-panel-container .exf-container {
   background-color: #eee;
   border: 1px solid #bbb;
   padding: 10px;
 }
 
-.nsp-grid.nsp-grid-3rc.route-ExoFormsStudio.nsp-xs [data-pwa-area="panel"] {
+.nsp-grid.nsp-grid-3rc[data-pwa-route="/studio"].nsp-xs [data-pwa-area="panel"] {
   z-index: 10 !important;
   height: 400px;
   bottom: -365px;
   font-size: 0.8rem;
 }
 
-.nsp-grid.nsp-grid-3rc.route-ExoFormsStudio.nsp-xs [data-pwa-area="panel"]:before {
+.nsp-grid.nsp-grid-3rc[data-pwa-route="/studio"].nsp-xs [data-pwa-area="panel"]:before {
   bottom: 381px;
 }
 
-.nsp-grid.nsp-grid-3rc.route-ExoFormsStudio.nsp-xs [data-pwa-area="panel"]:hover:before {
+.nsp-grid.nsp-grid-3rc[data-pwa-route="/studio"].nsp-xs [data-pwa-area="panel"]:hover:before {
   bottom: 381px;
 }
 
-.nsp-grid.nsp-grid-3rc.route-ExoFormsStudio.nsp-xs [data-pwa-area="panel"] .exf-ctl-cnt {
+.nsp-grid.nsp-grid-3rc[data-pwa-route="/studio"].nsp-xs [data-pwa-area="panel"] .exf-ctl-cnt {
   position: relative;
   margin-bottom: 0em;
 }
 
-.nsp-grid.nsp-grid-3rc.route-ExoFormsStudio.nsp-xs [data-pwa-area="panel"] .exf-ctl-cnt.exf-input-group > div {
+.nsp-grid.nsp-grid-3rc[data-pwa-route="/studio"].nsp-xs [data-pwa-area="panel"] .exf-ctl-cnt.exf-input-group > div {
   clear: both;
   margin: auto;
   white-space: normal;
   overflow-y: auto;
 }
 
-.nsp-grid.nsp-grid-3rc.route-ExoFormsStudio.nsp-xs [data-pwa-area="panel"] .exf-ctl-cnt.exf-input-group > div > label {
+.nsp-grid.nsp-grid-3rc[data-pwa-route="/studio"].nsp-xs [data-pwa-area="panel"] .exf-ctl-cnt.exf-input-group > div > label {
   display: inline-block;
   width: 30%;
   overflow: hidden;
@@ -785,42 +829,6 @@ html:not(.route-Portal) img.xo-logo {
 
 .exf-container form {
   width: 100% !important;
-}
-
-nav.main-menu {
-  padding: 0;
-}
-
-nav.main-menu ul {
-  padding: 0;
-  margin: 0;
-  list-style: none;
-}
-
-nav.main-menu ul li {
-  margin: 0 0 2px 0;
-  padding: 0;
-  border: 1px solid #ccc;
-  background-color: #eee;
-  -webkit-transition: all 0.2s;
-  transition: all 0.2s;
-}
-
-nav.main-menu ul li a {
-  display: block;
-  padding: 1em;
-  margin: 2px;
-  text-decoration: none;
-}
-
-nav.main-menu ul li a:link, nav.main-menu ul li a:visited, nav.main-menu ul li a:active {
-  color: #666;
-}
-
-nav.main-menu ul li:hover {
-  background-color: #fefefe;
-  -webkit-transition: all 0.2s;
-  transition: all 0.2s;
 }
 
 .nsp-grid.nsp-grid-3rc.nsp-xs body main [data-pwa-area="main"] {
@@ -940,17 +948,24 @@ footer {
 
 #summary > img {
   max-width: 800px;
-  -webkit-box-shadow: 2px 2px 2px rgba(255, 255, 255, 0.1);
-          box-shadow: 2px 2px 2px rgba(255, 255, 255, 0.1);
+}
+
+img#logo {
+  max-width: 800px;
+  background-color: rgba(255, 255, 255, 0.8);
+  border-radius: 50%;
+}
+
+img.box {
+  -webkit-box-shadow: 2px 1px 10px rgba(255, 255, 255, 0.5);
+          box-shadow: 2px 1px 10px rgba(255, 255, 255, 0.5);
 }
 
 ul.progressive {
-  list-style: none;
   font-size: 1rem;
 }
 
 ul.progressive li {
-  display: inline-block;
   width: 200px;
   margin-bottom: 5px;
   padding: 10px;
@@ -958,6 +973,24 @@ ul.progressive li {
           animation: fadeIn 0.1s linear;
   -webkit-animation-fill-mode: both;
           animation-fill-mode: both;
+  margin: 5px 0 15px;
+  padding: 0;
+  list-style: none;
+  position: relative;
+  padding: 0 0 0 20px;
+}
+
+ul.progressive li::before {
+  content: "";
+  position: absolute;
+  left: 2px;
+  top: 5px;
+  width: 3px;
+  height: 6px;
+  border: solid #c11;
+  border-width: 0 2px 2px 0;
+  -webkit-transform: rotate(45deg);
+  transform: rotate(45deg);
 }
 
 ul.progressive li:nth-child(1) {
@@ -1063,6 +1096,69 @@ ul.progressive li:nth-child(16) {
 
 #forkongithub {
   display: none;
+}
+
+[data-pwa-route="/"] #forkongithub a {
+  background: #000;
+  color: #fff;
+  text-decoration: none;
+  font-family: arial, sans-serif;
+  text-align: center;
+  font-weight: bold;
+  padding: 5px 40px;
+  font-size: 1rem;
+  line-height: 2rem;
+  position: relative;
+  -webkit-transition: 0.5s;
+  transition: 0.5s;
+}
+
+[data-pwa-route="/"] #forkongithub a:hover {
+  background: #c11;
+  color: #fff;
+}
+
+[data-pwa-route="/"] #forkongithub a::before,
+[data-pwa-route="/"] #forkongithub a::after {
+  content: "";
+  width: 100%;
+  display: block;
+  position: absolute;
+  top: 1px;
+  left: 0;
+  height: 1px;
+  background: #fff;
+}
+
+[data-pwa-route="/"] #forkongithub a::after {
+  bottom: 1px;
+  top: auto;
+}
+
+@media screen and (min-width: 800px) {
+  [data-pwa-route="/"] #forkongithub {
+    position: fixed;
+    display: block;
+    top: 0;
+    right: 0;
+    width: 200px;
+    overflow: hidden;
+    height: 200px;
+    z-index: 9999;
+  }
+  [data-pwa-route="/"] #forkongithub a {
+    width: 200px;
+    position: absolute;
+    top: 60px;
+    right: -60px;
+    transform: rotate(45deg);
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    -moz-transform: rotate(45deg);
+    -o-transform: rotate(45deg);
+    -webkit-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.8);
+            box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.8);
+  }
 }
 
 .field-search {

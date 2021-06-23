@@ -3,7 +3,8 @@ const DOM = xo.dom;
 
 class DocsRoute extends xo.route {
 
-    title = "Help";
+    title = "XO-JS Documentation";
+    menuTitle = "Docs"
 
     menuIcon = "ti-help";
 
