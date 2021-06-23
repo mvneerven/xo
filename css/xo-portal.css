@@ -660,6 +660,10 @@ html:not([data-pwa-route="/"]) img.xo-logo {
 
 .nsp-grid.nsp-grid-3rc [data-pwa-area="menu"] {
   z-index: 10 !important;
+  background-image: url("/img/nv-logo.png");
+  background-size: 90%;
+  background-repeat: no-repeat;
+  background-position: 20% bottom;
 }
 
 .nsp-grid.nsp-grid-3rc [data-pwa-area="headerright"] {
@@ -920,6 +924,10 @@ footer {
   font-size: smaller;
   padding-top: 0.3em;
   color: #bbb;
+}
+
+footer a:link {
+  text-decoration: none;
 }
 
 .hero {
