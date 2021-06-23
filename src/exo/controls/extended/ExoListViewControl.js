@@ -516,7 +516,7 @@ class ExoListViewControl extends ExoDivControl {
   addOverflowBars() {
     this.container
       .querySelectorAll(
-        ".exf-lv-item__grid:not(.overflowing):not([data-column=actions])"
+        ".exf-lv-item__cell:not(.overflowing)"
       )
       .forEach((e) => {
         if (e.scrollHeight > e.clientHeight) {
@@ -990,7 +990,7 @@ class ExoListViewControl extends ExoDivControl {
   }
 
   set valid(valid) {
-    this._valid = valid;
+    this._valid = this.required ? valid : true;
   }
 
   get valid() {

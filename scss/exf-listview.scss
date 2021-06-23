@@ -438,6 +438,7 @@
         border: 4px solid transparent;
         position: relative;
         display: grid;
+        grid-gap: 0.5rem;
         grid-template-areas: var(--lv-tile-content-template-areas);
         grid-template-rows: var(--lv-tile-content-template);
         grid-template-columns: 1fr !important;

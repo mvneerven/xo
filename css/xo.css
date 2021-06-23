@@ -3209,6 +3209,7 @@ html.theme-dark .exf-ctl-cnt.exf-switch input[type="range"] {
   text-align: center;
   -ms-grid-columns: 1fr;
       grid-template-columns: 1fr;
+      grid-template-areas: unset;
   pointer-events: none;
 }
 
@@ -3284,13 +3285,13 @@ html.theme-dark .exf-ctl-cnt.exf-switch input[type="range"] {
   top: 0;
   z-index: 2;
   padding-left: 4px;
-  border-bottom: 1px solid var(--lv-grid-border-color);
+  background-color: var(--lv-grid-header-color);
+  border-bottom: 2px solid var(--lv-grid-border-color);
 }
 
 .exf-listview[data-view="grid"] .exf-listview-list .exf-lv-headers__header {
   font-weight: bold;
   position: relative;
-  background-color: var(--lv-grid-header-color);
   overflow: hidden;
   text-overflow: ellipsis;
 }
@@ -3383,6 +3384,10 @@ html.theme-dark .exf-ctl-cnt.exf-switch input[type="range"] {
   padding: 50px 0 0;
   background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(255, 255, 255, 0)), to(var(--lv-tile-color)));
   background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0) 0%, var(--lv-tile-color) 100%);
+}
+
+.exf-listview[data-view="tiles"] {
+  grid-gap: 0.5rem;
 }
 
 .exf-listview[data-view="tiles"] .hide-in-tile {
@@ -3480,7 +3485,7 @@ html.theme-dark .exf-ctl-cnt.exf-switch input[type="range"] {
 }
 
 .exf-listview[data-view="tiles"] .exf-listview-list .exf-lv-item__cell__content__img {
-  background-position: center;
+  background-position: center top;
 }
 
 .exf-listview[data-view="tiles"] .exf-listview-list .exf-lv-item__tile.action-button {

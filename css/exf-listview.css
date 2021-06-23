@@ -554,6 +554,7 @@
   position: relative;
   display: -ms-grid;
   display: grid;
+  grid-gap: 0.5rem;
       grid-template-areas: var(--lv-tile-content-template-areas);
   -ms-grid-rows: var(--lv-tile-content-template);
       grid-template-rows: var(--lv-tile-content-template);
