@@ -96,15 +96,13 @@ class ExoListViewControl extends ExoDivControl {
       },
       {
         name: "contextMenu",
-        type: Array | Function,
+        type: Object,
       },
-
       {
         name: "minimum",
         type: Number,
         description: "Minimum number of selected items",
       },
-
       {
         name: "listen",
         type: Object,
@@ -515,9 +513,7 @@ class ExoListViewControl extends ExoDivControl {
 
   addOverflowBars() {
     this.container
-      .querySelectorAll(
-        ".exf-lv-item__cell:not(.overflowing)"
-      )
+      .querySelectorAll(".exf-lv-item__cell:not(.overflowing)")
       .forEach((e) => {
         if (e.scrollHeight > e.clientHeight) {
           e.classList.add("overflowing");
