@@ -1,4 +1,9 @@
+<<<<<<< HEAD
 const xo = require("../../dist/xo.min");
+=======
+const xo = require("../../dist/xo.cjs.js").default;
+
+>>>>>>> d2767012ffd27fa38ac2c4b5b5564c6b028e171c
 
 describe("ExoForm basic Tests", () => {
     let context = {};
