@@ -14,38 +14,9 @@ ExoForm is a Declarative Web Forms Engine written in pure ES6 JavaScript.
 * Autocompletion (using standard HTML5 DataLists, fixed lists, or dynamic API searches)
 * Customizable built-in validation, navigation, progress indication types (or roll your own using the addins interface)
 
-
-Basic JavaScript Flow (1.2+):
-
-```js 
-let div = await xo.form.run(schema[, settings]);
-```
-
-Where *schema* can be a literal (JSON/JS) or a URL, and *settings* an optional object. See [Getting Started](./getting-started.md)
-
-## Minimal Form
-
-```js 
-let div = await xo.form.run({
-  pages: [
-    {
-      legend: "My Form",
-      intro: "My form description",
-      fields: [
-        {
-          name: "text1",
-          caption: "Text",
-          type: "text"
-        }
-      ]
-    }
-  ]
-});
-```
-
 # See Also:
 
-- [Getting Started](./getting-started.md)
+- [Getting Started with ExoForm](./getting-started.md)
 - [ExoForm Databinding](./data-binding.md)
 - [JSON Schemas](./json-schema.md)
 

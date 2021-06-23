@@ -204,6 +204,13 @@ html:not([data-pwa-route="/"]) {
 
     }
 
+    &.nsp-xs{
+        [data-pwa-area="menu"] {
+            background-image: none;
+        }
+    
+    }
+
     [data-pwa-area="headerright"] {
         float: right;
 

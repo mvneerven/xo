@@ -43,4 +43,6 @@ class HomeRoute extends xo.route {
 ## Further reading
 
 - [UI](./ui.md)
-- 
+- [Router](./router.md)
+- [OmniBox](./omnibox.md)
+

@@ -20,75 +20,39 @@ or...
 
 Start by using the [ExoForm Studio](https://www.xo-js.dev/#/studio), or try the [ExoForm Examples](https://codepen.io/collection/XLwaxp) on CodePen.
 
-## Basic Syntax 
+
+## Minimal Form / ExoForm Hello World
 
 In its most simple form, this is what an ExoForm schema looks like:
 
-```json
-{
-  <optional settings>,
-  "pages": [
-    {
-      "fields": [
-         <list of field subschemas>
-      ]
-    }
-  ]
-}
-```
-
-... where each field subschema looks like this:
-
-```json
-{
-    "name": "<unique name>",
-    "caption": "<label text>",
-    "type": "<exoform control type>",
-    <extra properties>
-}
-```
-
-### Hello World
-
-```json
-{
-  "pages": [
-    {
-      "fields": [
-        {
-          "name": "myTextField",
-          "caption": "Hello World",
-          "type": "text"
-        }
-      ]
-    }
-  ]
-}
-```
-... or in JavaScript Literal notation:
-
-```js run
-const schema = {
+```js 
+let div = await xo.form.run({
   pages: [
     {
+      legend: "My Form",
+      intro: "My form description",
       fields: [
         {
-          name: "myTextField",
-          caption: "Hello World",
+          name: "text1",
+          caption: "Text",
           type: "text"
         }
       ]
     }
   ]
-}
+});
 ```
-
 
 ## Run ExoForm inside your own Frontend Code
 
-### Basic Syntax
+Use ```xo.form.run()``` to run a form schema:
 
-Use ```xo.form.run()``` to run a form schema 
+```js 
+let div = await xo.form.run(schema[, settings]);
+```
+
+Where *schema* can be a literal (JSON/JS) or a URL, and *settings* an optional object. See [Getting Started](./getting-started.md)
+
 
 ```js
 document.body.appendChild(await xo.form.run("/data/forms/mi.js"));
@@ -137,3 +101,7 @@ xo.form.run("/data/forms/account.json", {
 ### ExoForm in Frontend Frameworks (Vue, React, Angular, etc.)
 
 - [CodePen Vue Example](https://codepen.io/isazulay/pen/ExWBgEJ)
+
+## More reading
+
+- [ExoForm events](./events.md)

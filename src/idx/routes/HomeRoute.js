@@ -45,15 +45,9 @@ class HomeRoute extends xo.route {
 
     init() {
         this.app.on("pwa.unload", e => {
-
             //e.preventDefault();
         })
-
-
-        
     }
-
-    
 
     async render() {
         this.app.UI.areas.main.add(document.getElementById("summary").outerHTML);

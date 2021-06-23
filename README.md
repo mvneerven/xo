@@ -20,7 +20,6 @@ XO-JS is a compact, developer-friendly, pure JavaScript (ES6) Component Library 
    - [Getting Started](./md/pwa/getting-started.md)
    - [Router](./md/pwa/router.md)
    - [UI](./md/pwa/ui.md)
-   - [Helpers](./md/pwa/helpers.md)
 
 # Installing
 

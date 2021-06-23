@@ -319,26 +319,6 @@ class ExoFormFactory {
         }
         let field = null;
 
-
-
-
-        // if (e.getAttribute("data-exf")) {
-        //     field = e.data["field"];
-        // }
-        // else if (e.classList.contains("exf-ctl-cnt")) {
-        //     e = e.querySelector("[data-exf]");
-        //     if (e) {
-        //         field = e.data["field"];
-        //     }
-        // }
-
-        // else {
-        //     e = e.closest("[data-exf]");
-        //     if (e) {
-        //         field = e.data["field"];
-        //     }
-        // }
-
         if (e && options.master) {
             let masterElement = e.closest("[exf-data-master]");
             if (masterElement) {
