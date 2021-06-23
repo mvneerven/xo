@@ -69,7 +69,7 @@ class ExoFormSchema {
             let schemaProps = this.jsonSchemas[defaultModelInstance].schema.properties;
 
             let mapped = this.tryMappings(defaultModelInstance);
-            
+
             if (this.pages.length === 0)
                 this.pages.push({ fields: [] });
 
@@ -89,15 +89,15 @@ class ExoFormSchema {
     // where json-schema is leading for model and property types. 
     tryMappings(defaultModelInstance) {
         let mapped = [];
-        
+
         const DEFAULT_PAGE_ID = "_defaultPage";
 
         if (typeof (this.mappings) === "object") {
 
             // skip is an Array with fields that need to be excluded from the UI
-            if(Array.isArray(this.mappings.skip)) {
+            if (Array.isArray(this.mappings.skip)) {
                 console.debug("mappings.skip found: exclude from UI:", this.mappings.skip)
-                mapped = mapped.concat(this.mappings.skip) 
+                mapped = mapped.concat(this.mappings.skip)
             }
 
             this.mappings.pages = this.mappings.pages || {}
@@ -112,7 +112,7 @@ class ExoFormSchema {
 
                     this.mappings.pages[prop.page] = this.mappings.pages[prop.page] || {};
                     this.mappings.pages[prop.page].fields = this.mappings.pages[prop.page].fields || [];
-                    
+
                     console.debug("mappings.properties found for", name)
                     this.mappings.pages[prop.page].fields.push({
                         name: name,
@@ -278,6 +278,8 @@ class ExoFormSchema {
             ...this._schemaData
         }
 
+        this.removeEmptyObject(data, 'form')
+
         this.logicToJson(data)
 
         let result = JSON.stringify(data, (key, value) => {
@@ -338,6 +340,8 @@ class ExoFormSchema {
             ...this._schemaData
         }
 
+        this.removeEmptyObject(data, 'form')
+
         this.logicToJs(data)
 
         let str = Core.stringifyJs(data, null, 2);
@@ -347,6 +351,13 @@ class ExoFormSchema {
         return "const schema = " + str;
     }
 
+    removeEmptyObject(obj, name){
+        if (obj[name]) {
+            if (Object.getOwnPropertyNames(obj[name]).length === 0) {
+                delete obj[name]
+            }
+        }
+    }
 
     /**
      * query all fields using matcher and return matches

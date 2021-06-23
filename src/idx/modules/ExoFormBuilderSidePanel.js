@@ -124,7 +124,7 @@ class ExoFormBuilderSidePanel {
             x.container.id = "exo-settings";
         })
 
-        this.addDarkModeSwitch();
+       // this.addDarkModeSwitch();
     }
 
     // update fields in form settings panel 
@@ -168,30 +168,30 @@ class ExoFormBuilderSidePanel {
         this.settingsForm.get("page")._control.value = index;
     }
 
-    async addDarkModeSwitch() {
-        let result = await this.builder.exoContext.renderSingleControl({
-            "type": "switch",
-            "id": "exo-dark-mode",
-            "caption": "Dark Mode",
-            "name": "dark",
-            "value": this.builder.app.UI.theme === "dark"
-        });
+    // async addDarkModeSwitch() {
+    //     let result = await this.builder.exoContext.renderSingleControl({
+    //         "type": "switch",
+    //         "id": "exo-dark-mode",
+    //         "caption": "Dark Mode",
+    //         "name": "dark",
+    //         "value": this.builder.app.UI.theme === "dark"
+    //     });
 
-        this.builder.app.UI.areas.headerright.add(result);
-        result.addEventListener("change", e => {
-            let darkModeEl = e.target.closest("[data-id='exo-dark-mode']");
+    //     this.builder.app.UI.areas.headerright.add(result);
+    //     result.addEventListener("change", e => {
+    //         let darkModeEl = e.target.closest("[data-id='exo-dark-mode']");
 
-            if (darkModeEl) {
-                let darkMode = darkModeEl.querySelector("input").value > 0;
-                this.builder.app.UI.theme = darkMode ? "dark" : "light";
+    //         if (darkModeEl) {
+    //             let darkMode = darkModeEl.querySelector("input").value > 0;
+    //             this.builder.app.UI.theme = darkMode ? "dark" : "light";
 
-                DOM.trigger(document.body, "dark-mode", {
-                    value: darkMode
-                })
-            }
-        })
+    //             DOM.trigger(document.body, "dark-mode", {
+    //                 value: darkMode
+    //             })
+    //         }
+    //     })
 
-    }
+    // }
 
     getFieldMeta() {
         const _ = this;

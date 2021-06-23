@@ -554,10 +554,6 @@ html.theme-dark select > option {
   border-left-color: #c11;
 }
 
-#xo-portal [data-pwa-area="panel"] {
-  padding: 1rem;
-}
-
 #xo-portal [data-pwa-route="/studio"] [data-pwa-area="panel"] {
   padding: 0;
 }
@@ -811,7 +807,6 @@ html:not([data-pwa-route="/"]) img.xo-logo {
   clear: both;
   margin: auto;
   white-space: normal;
-  overflow-y: auto;
 }
 
 .nsp-grid.nsp-grid-3rc[data-pwa-route="/studio"].nsp-xs [data-pwa-area="panel"] .exf-ctl-cnt.exf-input-group > div > label {
@@ -832,12 +827,12 @@ html:not([data-pwa-route="/"]) img.xo-logo {
 }
 
 .nsp-grid.nsp-grid-3rc.nsp-xs body main [data-pwa-area="main"] {
-  margin-left: 35px;
+  margin-left: 55px;
 }
 
 .nsp-grid.nsp-grid-3rc.nsp-xs body main [data-pwa-area="menu"] {
   width: 210px;
-  left: -170px;
+  left: -160px;
 }
 
 .nsp-grid.nsp-grid-3rc.nsp-xs body main [data-pwa-area="menu"]:hover {
@@ -882,6 +877,10 @@ html:not([data-pwa-route="/"]) img.xo-logo {
 
 .nsp-grid.nsp-grid-3rc.nsp-xs body main [data-pwa-area="menu"].clicked nav.main-menu a .name {
   display: none;
+}
+
+.nsp-grid.nsp-grid-3rc.nsp-xs:not([data-pwa-route="/studio"]) [data-pwa-area="panel"] {
+  padding-left: 55px !important;
 }
 
 ul.li-tiles li {

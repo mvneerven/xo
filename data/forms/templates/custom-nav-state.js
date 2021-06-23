@@ -149,8 +149,5 @@ const schema = {
         class: "form-post",
         disabled: "@bindings.sendDisabled"
       }
-    ],
-    form: {
-      
-    }
+    ]
   }

@@ -14,7 +14,7 @@ class ExoFormStudio extends window.xo.pwa {
             useRoutes: r => {
                 return true
             },
-            placeholder: "The start of everything...",
+            placeholder: "Find anything in XO-JS...",
             tooltip: "Navigate through this app by clicking & typing here..",
 
             categories: {

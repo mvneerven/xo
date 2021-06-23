@@ -52,8 +52,6 @@ const schema = {
                 }
             ]
         }
-    ],
-    form: {
-
-    }
+    ]
+    
 }
