@@ -46,31 +46,24 @@ class HomeRoute extends xo.route {
                     view: "tiles",
                     properties: [
                       {
+                        key: "name",
                         name: "Name",
-                        mappedTo: "name",
                         width: "8rem",
                         type: "text",
                         sort: true
                       },{
+                        key: "image",
                         name: "Image",
-                        mappedTo: "imageUri",
                         autoWidth: true,
                         type: "img"
                       },{
-                        name: "Description",
-                        mappedTo: "description",
+                        key: "description",
+                        name: "Desxcription",
                         autoWidth: true,
                         type: "text"
                       }
                     ],
-                    // mappingss: {
-                    //   tiles: [
-                    //     {
-                    //       key: "name",
-                    //       height: "auto"
-                    //     }
-                    //   ]
-                    // },
+                    
                     items: [
                       {
                         id: "test1",
@@ -116,7 +109,7 @@ class HomeRoute extends xo.route {
                 dataModelChange: this.change.bind(this),
                 dom: {
                     beforeContextMenu: e=>{
-                        debugger;
+                       // debugger;
                     }
                 }
             }

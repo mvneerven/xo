@@ -126,9 +126,11 @@ class ExoListViewControl extends ExoDivControl {
       tiles: []
     };
 
+    
     for(const i of this._properties){
+      
       this._mappings.tiles.push({
-        key: i.name
+        key: i.key
       })
     }
   }
