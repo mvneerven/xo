@@ -12,13 +12,13 @@ class HomeRoute extends xo.route {
     constructor() {
         super(...arguments);
 
-        pwa.settings.add(this.settings)
-            .on("read", e => {
-                // debugger
-            })
-            .on("write", e => {
-                // debugger
-            })
+        // pwa.settings.add(this.settings)
+        //     .on("read", e => {
+        //         // debugger
+        //     })
+        //     .on("write", e => {
+        //         // debugger
+        //     })
 
     }
 
@@ -33,157 +33,92 @@ class HomeRoute extends xo.route {
     }
 
     async renderForm(path) {
-        let data = {
-            email: "",
-            needsEmail: true,
-            code: "",
-            emailSent: false,
-            nextCaption: "Next ▷"
-        }
-
-        if (path) {
-            let s = atob(path.substr(1)).split("/");
-            data.email = s[0];
-            data.code = s[1];
-            data.emailSent = true
-        }
-
-        DOM.changeHash("");
-
+        
         const schema = {
-            validation: "inline",
-            model: {
-                instance: {
-                    data: data
-                }
-            },
             pages: [
-                {
-                    legend: "Upgrade",
-                    relevant: "@instance.data.needsEmail",
-                    intro: "In order to upgrade your account, we need to send you an email for confirmation.",
-                    fields: [
+              {
+                legend: "My Form!!!",
+                intro: "My form description",
+                fields: [
+                  {
+                    type: "listview",
+                    name: "lv1",
+                    view: "tiles",
+                    properties: [
+                      {
+                        name: "Name",
+                        mappedTo: "name",
+                        width: "8rem",
+                        type: "text",
+                        sort: true
+                      },{
+                        name: "Image",
+                        mappedTo: "imageUri",
+                        autoWidth: true,
+                        type: "img"
+                      },{
+                        name: "Description",
+                        mappedTo: "description",
+                        autoWidth: true,
+                        type: "text"
+                      }
+                    ],
+                    // mappingss: {
+                    //   tiles: [
+                    //     {
+                    //       key: "name",
+                    //       height: "auto"
+                    //     }
+                    //   ]
+                    // },
+                    items: [
+                      {
+                        id: "test1",
+                        name: "Test",
+                        image: "https://stasfassetsdev.z6.web.core.windows.net/3cd3ef51-deab-47d3-944b-1d0e1e8ebe22/assets/boon-kriek.jpg",
+                        description: "A test item"
+                      },{
+                        id: "test2",
+                        name: "Lorem",
+                        image: "https://stasfassetsdev.z6.web.core.windows.net/3cd3ef51-deab-47d3-944b-1d0e1e8ebe22/assets/Lucifer",
+                        description: "... ipsum dolor sit amet"
+                      },{
+                        id: "test3",
+                        name: "Beauty",
+                        image: "https://stasfassetsdev.z6.web.core.windows.net/c737a2dd-1bad-4d23-836a-2c8c4bb977b2/assets/Sol-bier-mexican-500x500_1_1",
+                        description: "... is in the eye of the beholder"
+                      }
+                    ],
+                    contextMenu: {
+                      direction: "left",
+                      items: [
                         {
-                            type: "email",
-                            required: true,
-                            bind: "instance.data.email",
-                            name: "email",
-                            caption: "Email address to use for confirmation",
-                            placeholder: "john@doe.com"
+                          tooltip: "Edit",
+                          icon: "ti-pencil",
+                          action: "edit"
+                        },{
+                          tooltip: "Delete",
+                          icon: "ti-close",
+                          action: "delete"
                         }
-                    ]
-                },
-                {
-                    legend: "Check your inbox",
-                    relevant: "@instance.data.needsEmail",
-                    intro: `We have sent an email to <b>@instance.data.email</b>. <br/><br/>
-                        If you have not received an email within 10 minutes, please try again or contact us.<br/><br/>
-                        Don't forget to check your SPAM box!`,
-                    fields: [
-                        {
-                            type: "div",
-                            html: "Alternatively, you can take the 8 character code from the email and paste it here:"
-                        },
-                        {
-                            type: "text",
-                            name: "code",
-                            bind: "instance.data.code",
-                            caption: "Code (8 characters long)",
-                            class: "exf-std-lbl exf-focus",
-                            placeholder: "AaE5kL9g",
-                            minlength: 8,
-                            maxlength: 8
-                        }
-                    ]
-                },
-                {
-                    legend: "Confirmed!",
-                    intro: `You are now confirmed!`,
-                    fields: [
-                        {
-                            type: "div",
-                            html: "Your email address <b>@instance.data.email</b> has been confirmed."
-                        },
-                        {
-                            type: "text",
-                            name: "code1",
-                            bind: "instance.data.code",
-                            readonly: true,
-                            caption: "Code",
-                            class: "exf-std-lbl exf-focus",
-
-                        }
-                    ]
-                },
-                {
-                    legend: "Pricing Tier",
-                    intro: "",
-                    fields: [
-                        {
-                            name: "shoptype",
-                            type: "radiobuttonlist",
-                            view: "tiles",
-                            required: true,
-                            caption: "Pricing Tiers",
-                            items: [
-                                {
-                                    value: "starter",
-                                    name: "Starter",
-                                    description: "<i>unavailable</i>",
-                                    disabled: true
-                                },
-                                {
-                                    value: "standard",
-                                    name: "Standard",
-                                    checked: true,
-                                    description: "free"
-                                },
-                                {
-                                    value: "professional",
-                                    name: "Professional",
-                                    description: "contact us",
-                                    disabled: true
-                                }
-                            ]
-                        }
-                    ]
-                }
-            ],
-            controls: [
-                {
-                    name: "prev",
-                    type: "button",
-                    caption: "◁ Back",
-                    class: "form-prev exf-btn"
-                },
-                {
-                    name: "next1",
-                    type: "button",
-                    caption: " @instance.data.nextCaption",
-                    class: "form-next exf-btn",
-
-                    action: "next"
-                },
-                {
-                    name: "send",
-                    type: "button",
-                    caption: "Submit",
-                    class: "form-post exf-btn"
-                }
+                      ]
+                    }
+                  }
+                ]
+              }
             ]
-        }
-
-        if (data.email) {
-            schema.pages.shift();
-            schema.pages.shift();
-        }
-
+          }
 
         let form = await xo.form.run(schema, {
             on: {
                 page: this.change.bind(this),
                 post: (e) => { },
-                dataModelChange: this.change.bind(this)
+                dataModelChange: this.change.bind(this),
+                dom: {
+                    beforeContextMenu: e=>{
+                        debugger;
+                    }
+                }
             }
         });
 
@@ -390,18 +325,22 @@ class TestRoute extends xo.route {
                                 }
 
                             ],
-                            contextMenu: [
-                                {
-                                    tooltip: "Edit",
-                                    icon: "ti-pencil",
-                                    action: "edit",
-                                },
-                                {
-                                    tooltip: "Delete",
-                                    icon: "ti-close",
-                                    action: "delete"
-                                }
-                            ]
+                            contextMenu: {
+                                direction: "left",
+                                items: [
+                                    {
+                                        tooltip: "Edit",
+                                        icon: "ti-pencil",
+                                        action: "edit",
+                                    },
+                                    {
+                                        tooltip: "Delete",
+                                        icon: "ti-close",
+                                        action: "delete"
+                                    }
+                                ]
+                            
+                            }
 
                         }
                     ]
@@ -554,8 +493,6 @@ class TestRoute extends xo.route {
         return this.app.UI.areas.main;
     }
 }
-
-
 
 class ProductsRoute extends xo.route {
     menuIcon = "ti-package";

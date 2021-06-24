@@ -4,10 +4,17 @@ During runtime, ExoForm triggers a number of events you can hook into.
 
 ## Hooking into events
 
+In ```xo.form.run()```, the second paraneter is a generic object you can pass in, with an *on* property that you can use to listen to any of the events ExoForm triggers:
+
+
 ```js
 xo.form.run(schema, {
     on: {
-        post: this.handlePost.bind(this) // use event.detail.postData
+        post: this.handlePost.bind(this), // use event.detail.postData
+        
+        page: e => {
+            // e.detail.from -> e.detail.page
+        }
     }
 })
 ```

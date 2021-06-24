@@ -39,9 +39,9 @@ class ExoButtonControl extends ExoElementControl {
       },
 
       {
-        name:"direction",
+        name: "direction",
         type: "string",
-        description: "Optional direction form dropdown. Options: 'down' (default), 'left'" 
+        description: "Optional direction form dropdown. Options: 'down' (default), 'left'"
       },
 
       {
@@ -71,7 +71,7 @@ class ExoButtonControl extends ExoElementControl {
     }
 
     this.htmlElement.addEventListener("click", (e) => {
-      
+
       if (this.click) {
         let data = this.context.exo.getFormValues();
         let f = this.click;
@@ -134,20 +134,46 @@ class ExoButtonControl extends ExoElementControl {
   }
 
   async renderDropdown(items) {
+
     const listElement = DOM.parseHTML(`<ul class="exf-btn-dropdown" />`);
     for (const item of items) {
       listElement.appendChild(await this.getListItem(item));
     }
+    this.htmlElement.addEventListener("mouseenter", e => {
+      const ev = new CustomEvent("beforeDropdown",
+        {
+          bubbles: true,
+          cancelable: true,
+          detail: {
+            dropdownItems: e.target.querySelectorAll(".exf-btn-dropdown li"),
+            buttonControl: this
+          }
+        });
+      this.htmlElement.dispatchEvent(ev);
+
+    });
     return listElement;
+
   }
 
   async getListItem(item) {
     let template = DOM.parseHTML("<li/>");
     let icon = `<span class="${item.icon}"></span>`;
 
-    item.type=item.type || "action";
+    if (typeof (item.click) === "function") {
+      item.type = "click";
+    }
+    item.type = item.type || "action";
 
     switch (item.type) {
+
+      case "click":
+        template = DOM.parseHTML(
+          `<li title="${item.tooltip || ""}"><a  class="${item.class || ""}">${icon} ${item.name || ""}</a></li>`,
+        );
+        template.addEventListener("click", item.click)
+        break;
+
       case "action":
         template = DOM.parseHTML(
           `<li data-action="${item.action}" title="${item.tooltip || ""}"><a  class="${item.class || ""}">${icon} ${item.name || ""}</a></li>`,
@@ -161,7 +187,7 @@ class ExoButtonControl extends ExoElementControl {
         break;
       case "field":
         template = DOM.parseHTML(
-          `<li title="${item.tooltip}}"><a class="${item.class}">${icon} ${item.name || "" }</a></li>`,
+          `<li title="${item.tooltip}}"><a class="${item.class}">${icon} ${item.name || ""}</a></li>`,
         );
         template.querySelector("a").appendChild(await xo.form.run(item.field));
         break;

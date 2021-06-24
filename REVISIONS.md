@@ -444,3 +444,15 @@ See [ListView Control](./md/exo/controls/listview.md)
 - XO Portal rewrite 
 - week (input[type=week]) wrapper
 - Listview improvements
+
+
+# New in 1.4.2
+
+- beforeDropdown event triggered when hovering buttons with dropdowns 
+  - dropdownItems -> dropdown li collection
+  - buttonControl -> button control instance
+- beforeContextMenu event triggered when hovering contextmenu in listview
+  - dropdownItems -> dropdown li collection
+  - buttonControl -> button control instance
+  - listviewItem -> list item contextmenu is shown for
+
