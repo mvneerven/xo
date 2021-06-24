@@ -454,5 +454,6 @@ See [ListView Control](./md/exo/controls/listview.md)
 - beforeContextMenu event triggered when hovering contextmenu in listview
   - dropdownItems -> dropdown li collection
   - buttonControl -> button control instance
-  - listviewItem -> list item contextmenu is shown for
+  - domItem: list item DOM lement the contextmenu is shown for
+  - item: the item in the current dataset the contextmenu is shown for
 
