@@ -10,7 +10,7 @@ const SortingTypes = {
 
 class ExoListViewControl extends ExoDivControl {
   _views = ["tiles", "grid"];
-
+  selectionDependencies = [];
   _controls = [
     {
       type: "button",
@@ -508,7 +508,7 @@ class ExoListViewControl extends ExoDivControl {
     }
 
     // (re)select all ids inside value
-    this.setSelectedItems(this.value);
+    this.renderSelected();
 
     document.addEventListener("mousemove", () => this.addOverflowBars());
 
@@ -589,47 +589,43 @@ class ExoListViewControl extends ExoDivControl {
   }
 
   selectItems(i, selectAll) {
-    let v =
-      this.value && !this.singleSelect
-        ? JSON.parse(JSON.stringify(this.value))
-        : [];
+    let v = JSON.parse(JSON.stringify(this.value));
+    if (!v && this.singleSelect) v = null;
+    else if (!v && !this.singleSelect) v = [];
 
-    this.currentItems.forEach((ci) => {
-      const a = ci[this.primaryKey],
-        b = i[this.primaryKey];
-      switch (selectAll) {
-        case true:
-          if (!v.includes(a)) v.push(a);
-          break;
-        case false:
-          if (v.includes(a)) v.splice(v.indexOf(a), 1);
-          break;
-        default:
-          if (this.singleSelect) v = [b];
-          else if (!v.includes(b)) v.push(b);
-          break;
+    if (i) {
+      if (this.singleSelect) {
+        v = v === i[this.primaryKey] ? null : i[this.primaryKey];
+      } else if (v.includes(i[this.primaryKey])) {
+        v.splice(v.indexOf(i[this.primaryKey]), 1);
+      } else if (!v.includes(i[this.primaryKey])) {
+        v.push(i[this.primaryKey]);
       }
-    });
-
-    this.listDiv.querySelectorAll("article.exf-lv-item").forEach((art) => {
-      if (v.includes(art.dataset.id)) {
-        art.classList.add("selected");
-      } else {
-        art.classList.remove("selected");
-      }
-    });
+    } else if (selectAll) {
+      const selectingIds = this.currentItems
+        .filter((ci) => !v.includes(ci[this.primaryKey]))
+        .map((ci) => ci[this.primaryKey]);
+      v.push(...selectingIds);
+    } else {
+      const deselectingIds = this.currentItems
+        .filter((ci) => v.includes(ci[this.primaryKey]))
+        .map((ci) => ci[this.primaryKey]);
+      v = v.filter((val) => !deselectingIds.includes(val));
+    }
 
     this.value = v;
   }
 
-  setSelectedItems(items) {
-    if (items) {
-      const i = Array.isArray(items) ? items : [items];
-      i.forEach((id) => {
-        const elm = this.listDiv.querySelector(`article[data-id="${id}"]`);
-
-        if (elm) {
-          elm.classList.add("selected");
+  renderSelected() {
+    if (this.listDiv) {
+      this.listDiv.querySelectorAll("article.exf-lv-item").forEach((art) => {
+        if (
+          (this.singleSelect && this.value === art.dataset.id) ||
+          (!this.singleSelect && this.value.includes(art.dataset.id))
+        ) {
+          art.classList.add("selected");
+        } else {
+          art.classList.remove("selected");
         }
       });
     }
@@ -857,18 +853,17 @@ class ExoListViewControl extends ExoDivControl {
 
   // should set the selected items
   set value(data) {
-    let v = null;
-    if (this.singleSelect && data.length) v = data[0];
-    else if (!this.singleSelect) v = data;
-
     if (
-      !this.value ||
-      (this.singleSelect && data !== this.value) ||
-      (!this.singleSelect &&
-        JSON.stringify(data.sort()) != JSON.stringify(this.value.sort()))
+      !this._value ||
+      data !== this._value ||
+      (Array.isArray(data) &&
+        Array.isArray(this._value) &&
+        JSON.stringify(data.sort()) !== JSON.stringify(this._value.sort()))
     ) {
-      const evData = this.singleSelect ? { item: v } : { items: v };
+      const evData = this.singleSelect ? { item: data } : { items: data };
       this.events.trigger("change", evData);
+    } else {
+      return;
     }
 
     if (this.selectionDependencies.length) {
@@ -878,8 +873,11 @@ class ExoListViewControl extends ExoDivControl {
       });
     }
 
-    this._value = v;
-    this.valid = data.length >= this.minimum;
+    this._value = data;
+    this.valid =
+      (Array.isArray(data) && data.length >= this.minimum) ||
+      (data && this.minimum <= 1);
+    this.renderSelected();
   }
 
   // should return an array of selected ids
