@@ -108,22 +108,22 @@ class ExoListViewControl extends ExoDivControl {
     );
   }
 
-  get properties(){
+  get properties() {
     return this._properties;
   }
 
-  set properties(value){
+  set properties(value) {
     this._properties = value;
 
-    if(!this._mappings){
+    if (!this._mappings) {
       this.setDefaultMappings();
     }
   }
 
-  setDefaultMappings(){
+  setDefaultMappings() {
     this._mappings = {
       grid: [],
-      tiles: []
+      tiles: [],
     };
 
     
@@ -139,13 +139,13 @@ class ExoListViewControl extends ExoDivControl {
   }
 
   get mappings() {
-    return this._mappings || {}
+    return this._mappings || {};
   }
 
   set mappings(value) {
     this._mappings = value;
   }
-  
+
   set listen(obj) {
     this._listen = obj || {};
     for (var n in this._listen) {
@@ -278,8 +278,9 @@ class ExoListViewControl extends ExoDivControl {
       const start = (this.currentPage - 1) * this.pageSize;
       const pagingTemplate = DOM.parseHTML(/*html*/ `<div class="exf-lv-paging">
         <p class="exf-text">
-          Showing items ${start + 1}-${start + this.currentItems.length} of ${items.length
-        }
+          Showing items ${start + 1}-${start + this.currentItems.length} of ${
+        items.length
+      }
         </p>
       </div>`);
       const buttonsTemplate = DOM.parseHTML(
@@ -491,21 +492,20 @@ class ExoListViewControl extends ExoDivControl {
         dropdown: am,
       });
 
-      btn.addEventListener("beforeDropdown", e => {
+      btn.addEventListener("beforeDropdown", (e) => {
         e.stopPropagation();
-
-        const ev = new CustomEvent("beforeContextMenu",
-          {
-            bubbles: true,
-            cancelable: true,
-            detail: {
-              ...e.detail,
-              listviewItem: e.target.closest("article")
-            }
-          });
+        const art = e.target.closest("article");
+        const ev = new CustomEvent("beforeContextMenu", {
+          bubbles: true,
+          cancelable: true,
+          detail: {
+            ...e.detail,
+            item: this.tableItems.find((i) => i.id === art.dataset.id),
+            domItem: art,
+          },
+        });
         this.container.dispatchEvent(ev);
-
-      })
+      });
 
       this.listDiv.appendChild(btn);
       btn.style.display = "none";
@@ -828,9 +828,11 @@ class ExoListViewControl extends ExoDivControl {
       const name = prop.name || "";
       if (!name) console.warn(`No name specified for column "${prop.key}"`);
       if (prop.grid) {
-        columnHeaders += /*html*/ `<div class="exf-lv-headers__header ${prop.class || ""
-          }" data-property="${prop.key}" style="grid-area: ${prop.key
-          };">${name}</div>`;
+        columnHeaders += /*html*/ `<div class="exf-lv-headers__header ${
+          prop.class || ""
+        }" data-property="${prop.key}" style="grid-area: ${
+          prop.key
+        };">${name}</div>`;
       }
     });
 
@@ -869,7 +871,7 @@ class ExoListViewControl extends ExoDivControl {
     else {
       sortedList = items.sort((a, b) =>
         dataCallback(propKey, a[propKey], a) >=
-          dataCallback(propKey, b[propKey], b)
+        dataCallback(propKey, b[propKey], b)
           ? 1
           : -1
       );
@@ -892,8 +894,9 @@ class ExoListViewControl extends ExoDivControl {
       cellData = el.innerHTML;
     }
     if (prop.type && prop.type === "img") {
-      cellData = `<div class="exf-lv-item__cell__content__img" style="background-image: url(${item[prop.key]
-        })"></div>`;
+      cellData = `<div class="exf-lv-item__cell__content__img" style="background-image: url(${
+        item[prop.key]
+      })"></div>`;
     }
 
     const classes = ["exf-lv-item__cell"];
@@ -910,8 +913,9 @@ class ExoListViewControl extends ExoDivControl {
     )
       classes.push("last-of-grid");
 
-    const cellTemplate = `<div class="${classes.join(" ")}" style="grid-area: ${prop.key
-      }; ${prop.style || ""}" data-property="${prop.key}">
+    const cellTemplate = `<div class="${classes.join(" ")}" style="grid-area: ${
+      prop.key
+    }; ${prop.style || ""}" data-property="${prop.key}">
         <div class="exf-lv-item__cell__content">{{content}}</div>
     </div>`;
 
@@ -943,8 +947,8 @@ class ExoListViewControl extends ExoDivControl {
       if (prop.grid) {
         const width =
           !prop.grid.width ||
-            prop.grid.width.trim() === "100%" ||
-            prop.grid.autoWidth
+          prop.grid.width.trim() === "100%" ||
+          prop.grid.autoWidth
             ? "1fr"
             : prop.grid.width.trim();
         const applicableSizes = ["xl"];
@@ -967,8 +971,8 @@ class ExoListViewControl extends ExoDivControl {
       if (prop.tiles) {
         tileTemplate[mappingOrders.tiles.indexOf(prop.key)] =
           !prop.tiles.height ||
-            prop.tiles.height.trim() === "100%" ||
-            prop.tiles.autoHeight
+          prop.tiles.height.trim() === "100%" ||
+          prop.tiles.autoHeight
             ? "1fr"
             : prop.tiles.height.trim();
         tileTemplateAreas[
