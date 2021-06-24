@@ -58,8 +58,7 @@ class HomeRoute extends xo.route {
                         type: "img"
                       },{
                         key: "description",
-                        name: "Desxcription",
-                        autoWidth: true,
+                        name: "Description",
                         type: "text"
                       }
                     ],

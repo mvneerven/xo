@@ -128,9 +128,12 @@ class ExoListViewControl extends ExoDivControl {
 
     
     for(const i of this._properties){
-      
       this._mappings.tiles.push({
         key: i.key
+      })
+      this._mappings.grid.push({
+        key: i.key,
+        autoWidth: true
       })
     }
   }
