@@ -21,6 +21,8 @@ class ExoTextControlAutoCompleteExtension {
 
     attach() {
         this.htmlElement = this.control.htmlElement
+        this.htmlElement.setAttribute("autocomplete", "off");
+        
         this.container = this.control.container;
 
         const on = (a, b) => { this.htmlElement.addEventListener(a, b) };

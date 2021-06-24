@@ -36,7 +36,21 @@ class PWA_EventHub {
                     console.debug("PWA_EventHub", "Starting signalR connection ", sr.notificationServiceUrl);
 
                     signalRConnection.start()
-                        .then(() => reactiveData.isConnected = true)
+                        .then(async () => {
+                            reactiveData.isConnected = true
+                        
+                            console.info('SignalR connected');
+                            
+                            let signalRConnectionId = await signalRConnection.invoke("GetConnectionId");
+                            console.info(`SignalR connectionId = ${signalRConnectionId}`);
+
+                            this.events.trigger("connected", {
+                                connectionId: signalRConnectionId
+
+                            })
+
+                            
+                        })
                         .catch(console.error);
 
                     resolve()
