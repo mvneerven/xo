@@ -46,6 +46,7 @@ class ExoListViewControl extends ExoDivControl {
   pageSize = undefined;
   currentItems = [];
   cssVariables = {};
+  primaryKey = undefined;
 
   constructor() {
     super(...arguments);
@@ -78,6 +79,10 @@ class ExoListViewControl extends ExoDivControl {
       {
         name: "pageSize",
         type: Number,
+      },
+      {
+        name: "singleSelect",
+        type: Boolean,
       },
       {
         name: "controls", // default _controls now used
@@ -114,23 +119,23 @@ class ExoListViewControl extends ExoDivControl {
   set properties(value) {
     this._properties = value;
 
+    this.setPrimaryKey();
     if (!this._mappings) {
       this.setDefaultMappings();
     }
   }
 
   set views(value) {
-    if (Array.isArray(value))
-      this._views = value;
-    else if (typeof (value) === "string")
-      this._views = [value];
+    if (Array.isArray(value)) this._views = value;
+    else if (typeof value === "string") this._views = [value];
     else
-      throw new TypeError("The views propert must be a string or an array of strings")
-
+      throw new TypeError(
+        "The views propert must be a string or an array of strings"
+      );
   }
 
   get views() {
-    return this._views ;
+    return this._views;
   }
 
   setDefaultMappings() {
@@ -139,15 +144,14 @@ class ExoListViewControl extends ExoDivControl {
       tiles: [],
     };
 
-
     for (const i of this._properties) {
       this._mappings.tiles.push({
-        key: i.key
-      })
+        key: i.key,
+      });
       this._mappings.grid.push({
         key: i.key,
-        autoWidth: true
-      })
+        autoWidth: true,
+      });
     }
   }
 
@@ -173,6 +177,7 @@ class ExoListViewControl extends ExoDivControl {
   async render() {
     await super.render();
 
+    this.setPrimaryKey();
     this.mapProperties();
     this.renderList();
     this.renderLoading();
@@ -292,8 +297,9 @@ class ExoListViewControl extends ExoDivControl {
       const start = (this.currentPage - 1) * this.pageSize;
       const pagingTemplate = DOM.parseHTML(/*html*/ `<div class="exf-lv-paging">
         <p class="exf-text">
-          Showing items ${start + 1}-${start + this.currentItems.length} of ${items.length
-        }
+          Showing items ${start + 1}-${start + this.currentItems.length} of ${
+        items.length
+      }
         </p>
       </div>`);
       const buttonsTemplate = DOM.parseHTML(
@@ -413,6 +419,16 @@ class ExoListViewControl extends ExoDivControl {
       });
   }
 
+  setPrimaryKey() {
+    this.primaryKey = undefined;
+    const primaryProp = this.properties.find((p) => p.isPrimaryKey);
+    if (primaryProp) this.primaryKey = primaryProp.key;
+    else if (this.properties.length) {
+      console.warn("No primary key in properties");
+      this.primaryKey = this.properties[0].key;
+    }
+  }
+
   mapProperties() {
     this.mappedProperties = [];
 
@@ -466,7 +482,9 @@ class ExoListViewControl extends ExoDivControl {
       const pagingRow = this.listDiv.querySelector(".exf-lv-paging");
       if (pagingRow) this.listDiv.insertBefore(template, pagingRow);
       else this.listDiv.appendChild(template);
-      const elm = this.listDiv.querySelector(`[data-id="${i.id}"]`);
+      const elm = this.listDiv.querySelector(
+        `[data-id="${i[this.primaryKey]}"]`
+      );
       elm.addEventListener("click", (e) => {
         // if clicked on element inside action dropdown, don't select
         if (e.target.closest(".exf-dropdown-cnt")) {
@@ -485,7 +503,7 @@ class ExoListViewControl extends ExoDivControl {
           return;
         }
 
-        this.selectItem(elm, i);
+        this.selectItems(i);
       });
     }
 
@@ -504,7 +522,6 @@ class ExoListViewControl extends ExoDivControl {
         ...this.contextMenu,
         dropdown: am,
       });
-      console.log("Create context menu");
 
       btn.addEventListener("beforeDropdown", (e) => {
         e.stopPropagation();
@@ -542,7 +559,7 @@ class ExoListViewControl extends ExoDivControl {
             position: fixed !important;
             top: ${rect.y + rect.height}px !important;
             right: ${
-              document.body.clientWidth - rect.x - rect.width - 16
+              document.body.clientWidth - rect.x - rect.width
             }px !important;
           }`;
           document.querySelector("head").appendChild(cssSheet);
@@ -571,15 +588,36 @@ class ExoListViewControl extends ExoDivControl {
     this.events.trigger("ready");
   }
 
-  selectItem(elm, i) {
-    const v = this.value ? JSON.parse(JSON.stringify(this.value)) : [];
-    if (v.includes(i.id)) {
-      elm.classList.remove("selected");
-      v.splice(v.indexOf(i.id), 1);
-    } else {
-      elm.classList.add("selected");
-      v.push(i.id);
-    }
+  selectItems(i, selectAll) {
+    let v =
+      this.value && !this.singleSelect
+        ? JSON.parse(JSON.stringify(this.value))
+        : [];
+
+    this.currentItems.forEach((ci) => {
+      const a = ci[this.primaryKey],
+        b = i[this.primaryKey];
+      switch (selectAll) {
+        case true:
+          if (!v.includes(a)) v.push(a);
+          break;
+        case false:
+          if (v.includes(a)) v.splice(v.indexOf(a), 1);
+          break;
+        default:
+          if (this.singleSelect) v = [b];
+          else if (!v.includes(b)) v.push(b);
+          break;
+      }
+    });
+
+    this.listDiv.querySelectorAll("article.exf-lv-item").forEach((art) => {
+      if (v.includes(art.dataset.id)) {
+        art.classList.add("selected");
+      } else {
+        art.classList.remove("selected");
+      }
+    });
 
     this.value = v;
   }
@@ -630,7 +668,14 @@ class ExoListViewControl extends ExoDivControl {
     const btns = document.createElement("div");
     btns.classList.add("exf-listview-btns", "exf-cnt");
     const controls = await this.getData(this.controls);
-    for (const c of controls) {
+    const filteredControls = controls.filter(
+      (c) =>
+        !Boolean(
+          (this.singleSelect && c.name === "toggle") ||
+            (this.views.length < 2 && c.name === "view")
+        )
+    );
+    for (const c of filteredControls) {
       // render single controls
       await xo.form.run(c).then((e) => {
         btns.appendChild(e);
@@ -702,10 +747,10 @@ class ExoListViewControl extends ExoDivControl {
           this.toggleSelection(true);
           break;
         case "select":
-          this.selectAll(true);
+          this.selectItems(null, true);
           break;
         case "deselect":
-          this.selectAll(false);
+          this.selectItems(null, false);
           break;
         case "filter":
           this.searchString = e.detail.value;
@@ -758,28 +803,10 @@ class ExoListViewControl extends ExoDivControl {
     else this.listDiv.appendChild(emptyDiv);
   }
 
-  selectAll(select) {
-    const v = this.value ? JSON.parse(JSON.stringify(this.value)) : [];
-    this.currentItems.forEach((ci) => {
-      const item = this.listDiv.querySelector(
-        `article.exf-lv-item[data-id="${ci.id}"]`
-      );
-      if (v.includes(ci.id) && !select) {
-        item.classList.remove("selected");
-        v.splice(v.indexOf(ci.id), 1);
-      } else if (!v.includes(ci.id) && select) {
-        item.classList.add("selected");
-        v.push(ci.id);
-      }
-    });
-
-    this.value = v;
-  }
-
   toggleSelection() {
     this.currentItems.forEach((ci) => {
       const item = this.listDiv.querySelector(
-        `article.exf-lv-item[data-id="${ci.id}"]`
+        `article.exf-lv-item[data-id="${ci[this.primaryKey]}"]`
       );
 
       item.classList.toggle("selected");
@@ -870,9 +897,11 @@ class ExoListViewControl extends ExoDivControl {
       const name = prop.name || "";
       if (!name) console.warn(`No name specified for column "${prop.key}"`);
       if (prop.grid) {
-        columnHeaders += /*html*/ `<div class="exf-lv-headers__header ${prop.class || ""
-          }" data-property="${prop.key}" style="grid-area: ${prop.key
-          };">${name}</div>`;
+        columnHeaders += /*html*/ `<div class="exf-lv-headers__header ${
+          prop.class || ""
+        }" data-property="${prop.key}" style="grid-area: ${
+          prop.key
+        };">${name}</div>`;
       }
     });
 
@@ -888,7 +917,9 @@ class ExoListViewControl extends ExoDivControl {
     this.properties.forEach((prop) => {
       columnHtml += this.getGridDiv(item, prop);
     });
-    return /*html*/ `<article data-id="${item.id}" class="exf-lv-item">
+    return /*html*/ `<article data-id="${
+      item[this.primaryKey]
+    }" class="exf-lv-item">
         ${columnHtml}
     </article>`;
   }
@@ -911,7 +942,7 @@ class ExoListViewControl extends ExoDivControl {
     else {
       sortedList = items.sort((a, b) =>
         dataCallback(propKey, a[propKey], a) >=
-          dataCallback(propKey, b[propKey], b)
+        dataCallback(propKey, b[propKey], b)
           ? 1
           : -1
       );
@@ -934,8 +965,9 @@ class ExoListViewControl extends ExoDivControl {
       cellData = el.innerHTML;
     }
     if (prop.type && prop.type === "img") {
-      cellData = `<div class="exf-lv-item__cell__content__img" style="background-image: url(${item[prop.key]
-        })"></div>`;
+      cellData = `<div class="exf-lv-item__cell__content__img" style="background-image: url(${
+        item[prop.key]
+      })"></div>`;
     }
 
     const classes = ["exf-lv-item__cell"];
@@ -952,8 +984,9 @@ class ExoListViewControl extends ExoDivControl {
     )
       classes.push("last-of-grid");
 
-    const cellTemplate = `<div class="${classes.join(" ")}" style="grid-area: ${prop.key
-      }; ${prop.style || ""}" data-property="${prop.key}">
+    const cellTemplate = `<div class="${classes.join(" ")}" style="grid-area: ${
+      prop.key
+    }; ${prop.style || ""}" data-property="${prop.key}">
         <div class="exf-lv-item__cell__content">{{content}}</div>
     </div>`;
 
@@ -985,8 +1018,8 @@ class ExoListViewControl extends ExoDivControl {
       if (prop.grid) {
         const width =
           !prop.grid.width ||
-            prop.grid.width.trim() === "100%" ||
-            prop.grid.autoWidth
+          prop.grid.width.trim() === "100%" ||
+          prop.grid.autoWidth
             ? "1fr"
             : prop.grid.width.trim();
         const applicableSizes = ["xl"];
@@ -1009,8 +1042,8 @@ class ExoListViewControl extends ExoDivControl {
       if (prop.tiles) {
         tileTemplate[mappingOrders.tiles.indexOf(prop.key)] =
           !prop.tiles.height ||
-            prop.tiles.height.trim() === "100%" ||
-            prop.tiles.autoHeight
+          prop.tiles.height.trim() === "100%" ||
+          prop.tiles.autoHeight
             ? "1fr"
             : prop.tiles.height.trim();
         tileTemplateAreas[

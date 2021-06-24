@@ -44,25 +44,66 @@ class HomeRoute extends xo.route {
                     type: "listview",
                     name: "lv1",
                     view: "tiles",
+                    singleSelect: true,
                     properties: [
+                      {
+                          key: "id",
+                          name: "Id",
+                      },
                       {
                         key: "name",
                         name: "Name",
                         width: "8rem",
                         type: "text",
-                        sort: true
-                      },{
+                        sort: true,
+                    },{
                         key: "image",
                         name: "Image",
                         autoWidth: true,
-                        type: "img"
+                        type: "img",
+                        isPrimaryKey: true
                       },{
                         key: "description",
                         name: "Description",
                         type: "text"
                       }
                     ],
-                    
+                    mappings: {
+                        tiles: [
+                            {
+                                key: "image",
+                                height: "200px"
+                            },
+                            {
+                                key: "name",
+                                height: "2rem"
+                            },
+                            {
+                                key: "description"
+                            },
+                        ],
+                        grid: [
+                            {
+                                key: "name",
+                                width: "8rem",
+                                sort: true,
+                                filterInPlace: true,
+                                searchURL: `${location.origin}/#/users/`,
+                            },
+                            {
+                                key: "imageUri",
+                                width: "120px"
+                            },
+                            {
+                                key: "description",
+                                autoWidth: true,
+                                sort: true
+                            },
+                            {
+                                key: "fileSizeAndType"
+                            },
+                        ]
+                    },
                     items: [
                       {
                         id: "test1",
