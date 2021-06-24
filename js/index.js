@@ -82,14 +82,15 @@ class HomeRoute extends xo.route {
                       }
                     ],
                     contextMenu: {
-                      direction: "left",
                       items: [
                         {
                           tooltip: "Edit",
                           icon: "ti-pencil",
+                          name: "Edit",
                           action: "edit"
                         },{
                           tooltip: "Delete",
+                          name: "Delete",
                           icon: "ti-close",
                           action: "delete"
                         }

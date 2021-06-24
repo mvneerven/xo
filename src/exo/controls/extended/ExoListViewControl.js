@@ -504,9 +504,11 @@ class ExoListViewControl extends ExoDivControl {
         ...this.contextMenu,
         dropdown: am,
       });
+      console.log("Create context menu");
 
       btn.addEventListener("beforeDropdown", (e) => {
         e.stopPropagation();
+
         const art = e.target.closest("article");
         const ev = new CustomEvent("beforeContextMenu", {
           bubbles: true,
@@ -518,6 +520,33 @@ class ExoListViewControl extends ExoDivControl {
           },
         });
         this.container.dispatchEvent(ev);
+
+        if (
+          !this.contextMenu.direction ||
+          this.contextMenu.direction === "down"
+        ) {
+          const prevStyleSheet = document.getElementById(
+            `dropdown-${this.context.field.id}`
+          );
+          if (prevStyleSheet) prevStyleSheet.remove();
+
+          const ctxMenu = art.querySelector(".exf-dropdown-cnt");
+          const rect = ctxMenu.getBoundingClientRect();
+
+          const cssSheet = document.createElement("style");
+          cssSheet.id = `dropdown-${this.context.field.id}`;
+          cssSheet.innerHTML = `[data-id=${
+            this.context.field.id
+          }][data-view=grid] .exf-btn-dropdown {
+            min-width: unset;
+            position: fixed !important;
+            top: ${rect.y + rect.height}px !important;
+            right: ${
+              document.body.clientWidth - rect.x - rect.width - 16
+            }px !important;
+          }`;
+          document.querySelector("head").appendChild(cssSheet);
+        }
       });
 
       this.listDiv.appendChild(btn);
