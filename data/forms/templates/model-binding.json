@@ -31,7 +31,7 @@
         {
           "name": "testField3",
           "type": "dropdown",
-          "caption": "Your age please, @person.name",
+          "caption": "Your age please, @instance.person.name.first",
           "bind": "instance.person.gender",
           "items": [
             {
