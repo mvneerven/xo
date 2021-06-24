@@ -15,7 +15,6 @@
 .ul-tabs > ul {
   overflow-x: scroll;
   width: 100%;
-  white-space: nowrap;
 }
 
 .ul-tabs > ul > li {

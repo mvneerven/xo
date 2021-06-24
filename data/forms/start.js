@@ -9,7 +9,8 @@ const schema = {
                     id: "action",
                     name: "action",
                     type: "radiobuttonlist",
-                    view: "tiles",
+                    asview: "tiles",
+                    class: "compact",
                     caption: "Select how you want to get started",
                     items: [
                         {

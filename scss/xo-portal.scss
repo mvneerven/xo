@@ -192,6 +192,7 @@ html:not([data-pwa-route="/"]) {
     [data-pwa-area="menu"],
     [data-pwa-area="panel"] {
         background-color: var(--color-panel-background);
+        overflow-y: auto;
     }
 
     [data-pwa-area="menu"] {
@@ -331,22 +332,7 @@ html:not([data-pwa-route="/"]) {
                 }
             }
 
-            .split-panel-container {
-                width: 100%;
-                height: 100%;
-                border: 1px solid #ccc;
-                display: grid;
-                grid-template-columns: 50% 50%;
-                .split-panel {
-                    margin: 10px;
-                }
-
-                .exf-container {
-                    background-color: #eee;
-                    border: 1px solid #bbb;
-                    padding: 10px;
-                }
-            }
+            
         }
 
         &.nsp-xs {

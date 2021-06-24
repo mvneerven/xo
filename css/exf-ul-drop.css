@@ -30,7 +30,6 @@ nav.ul-drop ul ul {
 nav.ul-drop ul ul li {
   float: none;
   position: relative;
-  white-space: nowrap;
 }
 
 nav.ul-drop ul ul li a {
