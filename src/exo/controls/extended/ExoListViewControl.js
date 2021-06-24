@@ -623,8 +623,9 @@ class ExoListViewControl extends ExoDivControl {
   }
 
   setSelectedItems(items) {
-    if (items && items.length) {
-      items.forEach((id) => {
+    if (items) {
+      const i = Array.isArray(items) ? items : [items];
+      i.forEach((id) => {
         const elm = this.listDiv.querySelector(`article[data-id="${id}"]`);
 
         if (elm) {
@@ -856,13 +857,18 @@ class ExoListViewControl extends ExoDivControl {
 
   // should set the selected items
   set value(data) {
+    let v = null;
+    if (this.singleSelect && data.length) v = data[0];
+    else if (!this.singleSelect) v = data;
+
     if (
       !this.value ||
-      JSON.stringify(data.sort()) != JSON.stringify(this.value.sort())
+      (this.singleSelect && data !== this.value) ||
+      (!this.singleSelect &&
+        JSON.stringify(data.sort()) != JSON.stringify(this.value.sort()))
     ) {
-      this.events.trigger("change", {
-        items: data,
-      });
+      const evData = this.singleSelect ? { item: v } : { items: v };
+      this.events.trigger("change", evData);
     }
 
     if (this.selectionDependencies.length) {
@@ -872,7 +878,7 @@ class ExoListViewControl extends ExoDivControl {
       });
     }
 
-    this._value = data;
+    this._value = v;
     this.valid = data.length >= this.minimum;
   }
 
