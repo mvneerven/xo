@@ -25,9 +25,11 @@ class DocsRoute extends xo.route {
                     let results = DocsRoute.cms.find(options.search.toLowerCase());
 
                     return results.map(i => {
+                       
                         return {
                             path: i.url,
-                            text: i.node.title
+                            text: i.title,
+                            description: i.type !== 0 ? `Found in ${i.node.title} (${i.url})` : i.url
                         }
                     })
 
@@ -45,43 +47,11 @@ class DocsRoute extends xo.route {
     }
 
     async render(path) {
-
         let node = await DocsRoute.cms.get(path);
-
-        let cms = DocsRoute.cms;
-
-
-        // let tv = await xo.form.run({
-        //     type: "treeview",
-        //     name: "tv1",
-        //     items: {
-        //         url: "/home",
-        //         title: "Home",
-        //         children: [
-        //             {
-        //                 url: "/test",
-        //                 title: "Test",
-        //                 children: [
-        //                     {
-        //                         url: "/Bla",
-        //                         title: "Bla"
-        //                     }
-        //                 ]
-        //             }
-        //         ]
-        //     },
-
-        // })
-
-        //this.area.add(tv)
-
-
         let elm = this.mapLinks(DOM.parseHTML(node.html), path);
         elm.classList.add("user-select")
         this.area.add(elm);
-
         pwa.UI.areas.panel.add(document.getElementById("sources").outerHTML)
-
     }
 
     mapLinks(elm, path) {

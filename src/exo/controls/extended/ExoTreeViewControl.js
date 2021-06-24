@@ -98,6 +98,7 @@ class ExoTreeViewControl extends ExoDivControl {
             DOM.trigger(elm, "open", { selected: li })
         });
 
+        this.container.classList.add("exf-std-lbl");
         return this.container
     }
 }

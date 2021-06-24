@@ -30,15 +30,13 @@ class MarkDownCMS {
         if (path.startsWith("."))
             path = path.substr(1);
 
+        if (this.index[path])
+            return;
+
         node.url = path;
+
         if (this.homeUrl === null)
             this.homeUrl = node.url;
-
-        if (this.index[node.url]) {
-            //debugger;
-            return;
-        }
-
 
         node.path = this.getBasePath(path);
         node.html = await Core.MarkDown.read(path);
@@ -63,9 +61,19 @@ class MarkDownCMS {
     }
 
     addIndex(node, elm) {
-        let s = [node.title];
+        let s = [{
+            t: 0, v: node.title
+        }];
+        let firstH1Found = false;
         elm.querySelectorAll("h1,h2,h3").forEach(h => {
-            s.push(h.innerText);
+            let type = parseInt(h.nodeName.substr(1));
+            if (type === 1 && !firstH1Found) {
+                firstH1Found = true;
+                type = 0;
+            }
+            s.push({
+                t: type, v: h.innerText
+            });
         })
 
         this.index[node.url] = {
@@ -104,11 +112,15 @@ class MarkDownCMS {
         for (var url in this.index) {
             let item = this.index[url];
             item.text.filter(i => {
-                return i.toLowerCase().indexOf(search) > -1;
+                return i.v.toLowerCase().indexOf(search) > -1;
             }).forEach(i => {
+
                 let res = {
                     url: url,
-                    node: item.node
+                    node: item.node,
+                    title: i.v,
+                    description: item.title,
+                    type: i.t
                 }
                 if (!ar.find(i => {
                     return i.url === res.url
