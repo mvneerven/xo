@@ -10,14 +10,24 @@ const SortingTypes = {
 
 class ExoListViewControl extends ExoDivControl {
   _views = ["tiles", "grid"];
+  _valid = true;
   selectionDependencies = [];
+  _properties = [];
   _controls = [
+    {
+      type: "search",
+      name: "filter",
+      placeholder: "Type to filter...",
+      listener: "input",
+      class: "exf-listview-flt",
+      value: ""
+    },
     {
       type: "button",
       name: "view",
       icon: "ti-layout-grid3",
       caption: "",
-      tooltip: "Switch view",
+      tooltip: "Switch view"
     },
     {
       type: "button",
@@ -130,7 +140,7 @@ class ExoListViewControl extends ExoDivControl {
     else if (typeof value === "string") this._views = [value];
     else
       throw new TypeError(
-        "The views propert must be a string or an array of strings"
+        "The views property must be a string or an array of strings"
       );
   }
 
@@ -297,9 +307,8 @@ class ExoListViewControl extends ExoDivControl {
       const start = (this.currentPage - 1) * this.pageSize;
       const pagingTemplate = DOM.parseHTML(/*html*/ `<div class="exf-lv-paging">
         <p class="exf-text">
-          Showing items ${start + 1}-${start + this.currentItems.length} of ${
-        items.length
-      }
+          Showing items ${start + 1}-${start + this.currentItems.length} of ${items.length
+        }
         </p>
       </div>`);
       const buttonsTemplate = DOM.parseHTML(
@@ -337,6 +346,7 @@ class ExoListViewControl extends ExoDivControl {
         btn.addEventListener("click", (e) => {
           e.stopPropagation();
           e.preventDefault();
+
           this.events.trigger("action", {
             id: "paging",
             value: button.value,
@@ -394,6 +404,22 @@ class ExoListViewControl extends ExoDivControl {
     }
 
     this.listDiv = this.createListDiv();
+    this.listDiv.addEventListener("click", (e) => {
+
+      e.stopPropagation();
+      e.returnValue = false;
+
+      let art = e.target.closest("[data-id]")
+      if (art) {
+        let id = art.getAttribute("data-id");
+
+        let i = this.currentItems.find(i => {
+          return i[this.primaryKey] === id
+        })
+        this.selectItems(i);
+      }
+    });
+
     this.listDiv.appendChild(DOM.parseHTML(this.getHeaders()));
 
     this.mappedProperties
@@ -485,27 +511,35 @@ class ExoListViewControl extends ExoDivControl {
       const elm = this.listDiv.querySelector(
         `[data-id="${i[this.primaryKey]}"]`
       );
-      elm.addEventListener("click", (e) => {
-        // if clicked on element inside action dropdown, don't select
-        if (e.target.closest(".exf-dropdown-cnt")) {
-          let act = e.target.closest("[data-action]");
-          if (act) {
-            let itemId = act.closest("article").getAttribute("data-id");
-            act = act.getAttribute("data-action");
-            this.events.trigger("action", {
-              id: act,
-              items: [itemId],
-            });
-          }
 
-          e.stopPropagation();
-          e.returnValue = false;
-          return;
-        }
 
-        this.selectItems(i);
-      });
+      // elm.addEventListener("click!", (e) => {
+      //   e.stopPropagation();
+      //     e.returnValue = false;
+      //   // if clicked on element inside action dropdown, don't select
+      //   if (e.target.closest(".exf-dropdown-cnt")) {
+      //     let act = e.target.closest("[data-action]");
+      //     if (act) {
+      //       let itemId = act.closest("article").getAttribute("data-id");
+      //       act = act.getAttribute("data-action");
+
+      //       console.log("TRIIIIIII")
+
+      //       this.events.trigger("action", {
+      //         id: act,
+      //         items: [itemId],
+      //       });
+      //     }
+
+
+      //     return;
+      //   }
+
+      //   this.selectItems(i);
+      // });
     }
+
+
 
     // (re)select all ids inside value
     this.renderSelected();
@@ -521,6 +555,23 @@ class ExoListViewControl extends ExoDivControl {
         icon: "ti-menu",
         ...this.contextMenu,
         dropdown: am,
+      });
+      btn.addEventListener("click", e => {
+        e.stopPropagation();
+        e.returnValue = false;
+        // if clicked on element inside action dropdown, don't select
+        if (e.target.closest(".exf-dropdown-cnt")) {
+          let act = e.target.closest("[data-action]");
+          if (act) {
+            let itemId = act.closest("article").getAttribute("data-id");
+            act = act.getAttribute("data-action");
+            this.events.trigger("action", {
+              id: act,
+              items: [itemId],
+            });
+          }
+        }
+
       });
 
       btn.addEventListener("beforeDropdown", (e) => {
@@ -552,14 +603,12 @@ class ExoListViewControl extends ExoDivControl {
 
           const cssSheet = document.createElement("style");
           cssSheet.id = `dropdown-${this.context.field.id}`;
-          cssSheet.innerHTML = `[data-id=${
-            this.context.field.id
-          }][data-view=grid] .exf-btn-dropdown {
+          cssSheet.innerHTML = `[data-id=${this.context.field.id
+            }][data-view=grid] .exf-btn-dropdown {
             min-width: unset;
             position: fixed !important;
             top: ${rect.y + rect.height}px !important;
-            right: ${
-              document.body.clientWidth - rect.x - rect.width
+            right: ${document.body.clientWidth - rect.x - rect.width
             }px !important;
           }`;
           document.querySelector("head").appendChild(cssSheet);
@@ -589,7 +638,7 @@ class ExoListViewControl extends ExoDivControl {
   }
 
   selectItems(i, selectAll) {
-    let v = JSON.parse(JSON.stringify(this.value));
+    let v = this.value ? JSON.parse(JSON.stringify(this.value)) : undefined;
     if (!v && this.singleSelect) v = null;
     else if (!v && !this.singleSelect) v = [];
 
@@ -620,8 +669,8 @@ class ExoListViewControl extends ExoDivControl {
     if (this.listDiv) {
       this.listDiv.querySelectorAll("article.exf-lv-item").forEach((art) => {
         if (
-          (this.singleSelect && this.value === art.dataset.id) ||
-          (!this.singleSelect && this.value.includes(art.dataset.id))
+          (this.singleSelect && this.value && this.value === art.dataset.id) ||
+          (!this.singleSelect && this.value && this.value.includes(art.dataset.id))
         ) {
           art.classList.add("selected");
         } else {
@@ -669,7 +718,7 @@ class ExoListViewControl extends ExoDivControl {
       (c) =>
         !Boolean(
           (this.singleSelect && c.name === "toggle") ||
-            (this.views.length < 2 && c.name === "view")
+          (this.views.length < 2 && c.name === "view")
         )
     );
     for (const c of filteredControls) {
@@ -690,6 +739,8 @@ class ExoListViewControl extends ExoDivControl {
           }
 
           ev.stopPropagation();
+
+
           this.events.trigger("action", {
             id: id,
             value: ev.target.value || null,
@@ -728,6 +779,8 @@ class ExoListViewControl extends ExoDivControl {
 
   listenDOM() {
     this.on("action", (e) => {
+      console.log("on action " + e.detail.id)
+
       switch (e.detail.id) {
         case "del":
           const selected = this.value;
@@ -757,16 +810,19 @@ class ExoListViewControl extends ExoDivControl {
           this.pagingButtonClickEvent(e.detail.value);
           break;
         default:
-          this.events.trigger(e.detail.id, {
-            data: e.detail.items,
-            items: this.tableItems,
-          });
+          if (e.detail.id !== "action") {
+            this.events.trigger(e.detail.id, {
+              data: e.detail.items,
+              items: this.tableItems,
+            });
+          }
           break;
       }
     });
   }
 
   filterListView(value, items) {
+
     const filteredItems = [];
     if (!items) items = this.tableItems;
     items.forEach((item) => {
@@ -853,16 +909,29 @@ class ExoListViewControl extends ExoDivControl {
 
   // should set the selected items
   set value(data) {
-    if (
-      !this._value ||
-      data !== this._value ||
+
+    if (this._value == undefined || data !== this._value ||
       (Array.isArray(data) &&
         Array.isArray(this._value) &&
-        JSON.stringify(data.sort()) !== JSON.stringify(this._value.sort()))
-    ) {
+        JSON.stringify(data.sort()) !== JSON.stringify(this._value.sort()))) {
+
+      this._value = data;
+
       const evData = this.singleSelect ? { item: data } : { items: data };
       this.events.trigger("change", evData);
-    } else {
+
+      if (this.container) {
+        const ev = new CustomEvent("change", {
+          bubbles: true,
+          cancelable: true,
+          detail: {
+            ...evData
+          },
+        });
+        this.htmlElement.dispatchEvent(ev);
+      }
+    }
+    else {
       return;
     }
 
@@ -873,10 +942,15 @@ class ExoListViewControl extends ExoDivControl {
       });
     }
 
-    this._value = data;
-    this.valid =
-      (Array.isArray(data) && data.length >= this.minimum) ||
-      (data && this.minimum <= 1);
+    if (this.singleSelect) {
+      this.valid = data != null
+    }
+    else {
+      this.valid =
+        (Array.isArray(data) && data.length >= this.minimum) ||
+        (data && this.minimum <= 1);
+    }
+
     this.renderSelected();
   }
 
@@ -901,11 +975,9 @@ class ExoListViewControl extends ExoDivControl {
       const name = prop.name || "";
       if (!name) console.warn(`No name specified for column "${prop.key}"`);
       if (prop.grid) {
-        columnHeaders += /*html*/ `<div class="exf-lv-headers__header ${
-          prop.class || ""
-        }" data-property="${prop.key}" style="grid-area: ${
-          prop.key
-        };">${name}</div>`;
+        columnHeaders += /*html*/ `<div class="exf-lv-headers__header ${prop.class || ""
+          }" data-property="${prop.key}" style="grid-area: ${prop.key
+          };">${name}</div>`;
       }
     });
 
@@ -921,9 +993,8 @@ class ExoListViewControl extends ExoDivControl {
     this.properties.forEach((prop) => {
       columnHtml += this.getGridDiv(item, prop);
     });
-    return /*html*/ `<article data-id="${
-      item[this.primaryKey]
-    }" class="exf-lv-item">
+    return /*html*/ `<article data-id="${item[this.primaryKey]
+      }" class="exf-lv-item">
         ${columnHtml}
     </article>`;
   }
@@ -946,7 +1017,7 @@ class ExoListViewControl extends ExoDivControl {
     else {
       sortedList = items.sort((a, b) =>
         dataCallback(propKey, a[propKey], a) >=
-        dataCallback(propKey, b[propKey], b)
+          dataCallback(propKey, b[propKey], b)
           ? 1
           : -1
       );
@@ -969,9 +1040,8 @@ class ExoListViewControl extends ExoDivControl {
       cellData = el.innerHTML;
     }
     if (prop.type && prop.type === "img") {
-      cellData = `<div class="exf-lv-item__cell__content__img" style="background-image: url(${
-        item[prop.key]
-      })"></div>`;
+      cellData = `<div class="exf-lv-item__cell__content__img" style="background-image: url(${item[prop.key]
+        })"></div>`;
     }
 
     const classes = ["exf-lv-item__cell"];
@@ -988,9 +1058,8 @@ class ExoListViewControl extends ExoDivControl {
     )
       classes.push("last-of-grid");
 
-    const cellTemplate = `<div class="${classes.join(" ")}" style="grid-area: ${
-      prop.key
-    }; ${prop.style || ""}" data-property="${prop.key}">
+    const cellTemplate = `<div class="${classes.join(" ")}" style="grid-area: ${prop.key
+      }; ${prop.style || ""}" data-property="${prop.key}">
         <div class="exf-lv-item__cell__content">{{content}}</div>
     </div>`;
 
@@ -1022,8 +1091,8 @@ class ExoListViewControl extends ExoDivControl {
       if (prop.grid) {
         const width =
           !prop.grid.width ||
-          prop.grid.width.trim() === "100%" ||
-          prop.grid.autoWidth
+            prop.grid.width.trim() === "100%" ||
+            prop.grid.autoWidth
             ? "1fr"
             : prop.grid.width.trim();
         const applicableSizes = ["xl"];
@@ -1046,8 +1115,8 @@ class ExoListViewControl extends ExoDivControl {
       if (prop.tiles) {
         tileTemplate[mappingOrders.tiles.indexOf(prop.key)] =
           !prop.tiles.height ||
-          prop.tiles.height.trim() === "100%" ||
-          prop.tiles.autoHeight
+            prop.tiles.height.trim() === "100%" ||
+            prop.tiles.autoHeight
             ? "1fr"
             : prop.tiles.height.trim();
         tileTemplateAreas[

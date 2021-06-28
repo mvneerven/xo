@@ -74,7 +74,7 @@ class ExoFormAceExtension {
 
                     return "json";
                 }
-                throw "Unknown ace mode: " + value;
+                throw TypeError("Unknown ace mode: " + value);
             }
 
             convertValue(targetMode) {

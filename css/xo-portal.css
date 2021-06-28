@@ -193,7 +193,9 @@ html.theme-light:root {
   --color-button-primary: #cc2e44;
   --color-button-text: #ffffff;
   --color-label-active: #333;
-  --scrollbar-bg: #bfcadb;
+  --scrollbar-bg: rgba(0, 0, 0, 0.25);
+  --scrollbar-bg-hover: rgba(0, 0, 0, 0.15);
+  --scrollbar-bg-active: rgba(0, 0, 0, 0.1);
   --color-base: 352;
   /*the base color*/
   --l: 53%;
@@ -222,15 +224,17 @@ html.theme-light:root {
 }
 
 html.theme-dark:root {
+  --scrollbar-bg: rgba(255, 255, 255, 0.15);
+  --scrollbar-bg-hover: rgba(255, 255, 255, 0.15);
+  --scrollbar-bg-active: rgba(255, 255, 255, 0.1);
   --color-background: #444;
   --color-background-variation: #343434;
   --color-panel-background: #333;
   --color-disabled: #333;
   --color-readonly: #333;
-  --scrollbar-bg: #444;
   --color-text: #ddd;
   --color-button: #bbb;
-  --color-button-primary: #cc2e44;
+  --color-button-primary: #2eb4cc;
   --color-button-text: #ffffff;
   --color-label-active: #efefef;
   --color-base: 96;
@@ -336,6 +340,47 @@ html.theme-dark .exf-container.default .exf-ctl-cnt > label {
 html.theme-dark select > option {
   background-color: #333;
   color: #ddd;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar:hover {
+  width: 13px;
+}
+
+::-webkit-scrollbar-button {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-button {
+  width: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-bg);
+  border: 18px none var(--scrollbar-border);
+  border-radius: 42px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--scrollbar-bg-hover);
+}
+
+::-webkit-scrollbar-thumb:active {
+  background: var(--scrollbar-bg-active);
+}
+
+::-webkit-scrollbar-track {
+  background: var(--scrollbar-track);
+  border-radius: 50px;
+}
+
+::-webkit-scrollbar-corner {
+  background: transparent;
 }
 
 #xo-portal.theme-dark {
@@ -509,6 +554,19 @@ html.theme-dark select > option {
   display: none;
 }
 
+#xo-portal body article.exf-lv-item .small {
+  font-size: smaller;
+  opacity: 0.7;
+}
+
+#xo-portal body .exf-btn {
+  padding: .2rem .4rem;
+  border-radius: .3rem;
+  outline: none;
+  background-color: var(--color-button);
+  color: var(--color-button-text);
+}
+
 #xo-portal nav.main-menu {
   padding: 0;
 }
@@ -656,10 +714,11 @@ html:not([data-pwa-route="/"]) img.xo-logo {
 .nsp-grid.nsp-grid-3rc [data-pwa-area="panel"] {
   background-color: var(--color-panel-background);
   overflow-y: auto;
+  z-index: 1500;
 }
 
 .nsp-grid.nsp-grid-3rc [data-pwa-area="menu"] {
-  z-index: 10 !important;
+  z-index: 1499 !important;
   background-image: url("/img/nv-logo.png");
   background-size: 90%;
   background-repeat: no-repeat;
@@ -734,7 +793,7 @@ html:not([data-pwa-route="/"]) img.xo-logo {
 }
 
 .nsp-grid.nsp-grid-3rc[data-pwa-route="/studio"]:not(.nsp-xs) [data-pwa-area="panel"] {
-  z-index: 10 !important;
+  z-index: 500 !important;
   height: 100%;
   font-size: 0.8rem;
   overflow-y: auto;
@@ -772,7 +831,7 @@ html:not([data-pwa-route="/"]) img.xo-logo {
 }
 
 .nsp-grid.nsp-grid-3rc[data-pwa-route="/studio"].nsp-xs [data-pwa-area="panel"] {
-  z-index: 10 !important;
+  z-index: 500 !important;
   height: 400px;
   bottom: -365px;
   font-size: 0.8rem;

@@ -13,11 +13,19 @@ class ExoFormDataBindingResolver {
         this._boundControlState.push(settings);
     }
 
-    resolve() {
-        this._checkSchemaLogic();
-
-        this._replaceVars(this.exo.container);
-        this._bindControlStateToUpdatedModel()
+    resolve(changedData) {
+        try {
+            //console.log("NO-PROXY")
+            this.dataBinding.noProxy = true;
+            console.debug("ExoFormDataBindingResolver", "Running logic and resolving datamodel changes");
+            this._checkSchemaLogic(changedData);
+            this._replaceVars(this.exo.container, changedData);
+            this._bindControlStateToUpdatedModel(changedData)
+        }
+        finally {
+            this.dataBinding.noProxy = false;
+            //console.log("YES-PROXY")
+        }
     }
 
     _resolveVars(str, cb, ar) {
@@ -33,7 +41,7 @@ class ExoFormDataBindingResolver {
         return result;
     }
 
-    _replaceVars(node) {
+    _replaceVars(node, changedData) {
         let ar = [];
 
         if (node.nodeType == 3) {
@@ -59,37 +67,43 @@ class ExoFormDataBindingResolver {
         }
         if (node.nodeType == 1 && node.nodeName != "SCRIPT") {
             for (var i = 0; i < node.childNodes.length; i++) {
-                this._replaceVars(node.childNodes[i]);
+                this._replaceVars(node.childNodes[i], changedData);
             }
         }
     }
 
+    // Run logic in schema at dataModelChange
+    _checkSchemaLogic(changedData) {
 
-    _checkSchemaLogic() {
+        changedData = changedData || {};
+
         const model = this.exo.dataBinding.model;
         if (model && model.logic) {
 
             if (typeof (model.logic) === "function") {
-                this.applyJSLogic(model.logic, null, model)
+                this.applyJSLogic(model.logic, null, model, changedData)
             }
             else if (model.logic && model.logic.type === "JavaScript") {
-                let script = this.assembleScript(model.logic)
-                this.applyJSLogic(null, script, model)
+                let script = this.assembleScript(model.logic, changedData)
+                this.applyJSLogic(null, script, model, changedData)
             }
         }
     }
 
-    assembleScript(logic) {
+    assembleScript(logic, changedData) {
         if (logic && Array.isArray(logic.lines)) {
-            return `const context = {model: this.dataBinding.model, exo: this};\n` + logic.lines.join('\n');
+            return `const context = {model: this.dataBinding.model, exo: this, changed: changedData};\n` + logic.lines.join('\n');
         }
         return "";
     }
 
-    applyJSLogic(f, js, model) {
+    applyJSLogic(f, js, model, changedData) {
+
+        console.debug("ExoFormDataBindingResolver", "Applying schema logic");
         const context = {
             model: model,
-            exo: this.exo
+            exo: this.exo,
+            changed: changedData
         };
         try {
             if (f) {
@@ -108,12 +122,22 @@ class ExoFormDataBindingResolver {
         }
     }
 
-    _bindControlStateToUpdatedModel() {
+    _bindControlStateToUpdatedModel(changedData) {
+
         this._boundControlState.forEach(obj => {
             let value = this.dataBinding.get(obj.path);
             console.debug("Databinding: bindControlStateToUpdatedModel", obj.propertyName, "on", ExoFormFactory.fieldToString(obj.field), "to", value, obj.path);
+
+            if (obj.propertyName === "bind") {
+                obj.control.value = value;
+            }
+
             obj.control[obj.propertyName] = value;
+
+            obj.updatedValue = value
         });
+
+       // console.log("bcs: ", this._boundControlState);
 
     }
 }

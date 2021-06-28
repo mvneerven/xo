@@ -18,6 +18,7 @@ import ExoButtonControl from './ExoButtonControl';
 import ExoProgressControl from './ExoProgressControl';
 import ExoLinkControl from './ExoLinkControl';
 import ExoImageControl from './ExoImageControl';
+import ExoUrlControl from './ExoUrlControl';
 
 class ExoBaseControls { 
 
@@ -32,7 +33,7 @@ class ExoBaseControls {
         formpage: { hidden: true, type: ExoFormPageControl },
         fieldset: { hidden: true, for: "page", type: ExoFieldSetControl, note: "A fieldset for grouping controls in a form" },
         text: { caption: "Short text", type: ExoTextControl, note: "Standard text input" },
-        url: { caption: "Website Address/URL", base: "text", note: "A text input that will accept URLs only" },
+        url: { type: ExoUrlControl, caption: "Website Address/URL", note: "A text input that will accept URLs only" },
         tel: { caption: "Phone number", base: "input", note: "A text input that is used to input phone numbers", demo: { value: "06 23467899" } },
         week: { caption: "Week number", base: "input", note: "A text input that is used to input week numbers", demo: { value: "2021-W27" } },
         number: { caption: "Numeric Control", type: ExoNumberControl, note: "A text input that is used to input phone numbers", demo: { min: 1, max: 99 } },

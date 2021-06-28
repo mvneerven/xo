@@ -52,7 +52,8 @@ class ExoButtonControl extends ExoElementControl {
     );
   }
 
-  async render() {
+  async render() {   
+    let me = this;
     await super.render();
 
     if (this.icon) {
@@ -71,10 +72,17 @@ class ExoButtonControl extends ExoElementControl {
     }
 
     this.htmlElement.addEventListener("click", (e) => {
+      debugger;
 
-      if (this.click) {
-        let data = this.context.exo.getFormValues();
+      if (me.click) {
+        
+
+        let data = null;
+        try {
+          data = this.context.exo.getFormValues();
+        } catch { }
         let f = this.click;
+        
         if (typeof f !== "function") {
           f = this.context.exo.options.customMethods[f];
         }
@@ -84,11 +92,12 @@ class ExoButtonControl extends ExoElementControl {
               typeof this.context.exo.options.host[this.click] === "function"
             ) {
               f = this.context.exo.options.host[this.click];
+
               f.apply(this.context.exo.options.host, [data, e]);
               return;
             }
           } else {
-            throw "Not a valid function: " + this.click;
+            throw TypeError("Not a valid function: " + this.click);
           }
         }
         f.apply(this, [data, e]);

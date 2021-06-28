@@ -32,7 +32,7 @@ class PWA_Area {
 
         }
         catch (ex) {
-            throw "Area.add failed for " + e + ". " + ex.toString();
+            throw TypeError("Area.add failed for " + e + ". " + ex.toString());
         }
 
     }

@@ -4,8 +4,6 @@ describe("ExoForm databinding Tests", () => {
     let context = {};
 
     beforeAll(() => {
-        
-
         console.debug = e => { };
 
         return form({

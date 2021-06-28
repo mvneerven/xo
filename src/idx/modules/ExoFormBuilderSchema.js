@@ -6,62 +6,22 @@ class ExoFormBuilderSchema {
     }
 
     render(container) {
-        const _ = this;
-
-        _.builder.exoContext.createForm({
-            customMethods: {
-                emptyFormSchema: obj => {
-                    _.builder.tabStrip.tabs.schema.select();
-                },
-                importSchema: obj => {
-                    if (obj.event.detail && obj.event.detail.data) {
-                        let uploadData = obj.event.detail.data[0].b64;
-                        var decodedData = window.atob(uploadData);
-                        obj.field._control.value = decodedData;
-
-
-                        this.builder.renderer.model.schema = decodedData;
-                        
+        
+        xo.form.run("/data/forms/start.js", {
+            on: {
+                action: {
+                    selectTemplate: obj => {
+                        fetch(obj.template).then(x => x.text()).then(text => {
+                            _.builder.loadSchemaInEditor(text);
+                            this.builder.renderer.model.load(text);
+                            this.builder.tabStrip.tabs.schema.select();
+                        })
                     }
-                },
-                generateFromSchema: obj => {
-                    let result = _.builder.exoContext.createGenerator().generateFormSchema(obj.dto);
-                    var schema = JSON.stringify(result, null, 2);
-                    this.builder.loadSchemaInEditor(schema);
-                    this.builder.tabStrip.tabs.schema.select();
-                },
-                selectTemplate: obj => {
-                    fetch(obj.template).then(x => x.text()).then(text => {
-                        _.builder.loadSchemaInEditor(text);
-
-                        this.builder.renderer.model.load(text);
-
-                        this.builder.tabStrip.tabs.schema.select();
-                    })
-
                 }
             }
+        }).then(x=>{
+            container.appendChild(x);
         })
-            .load("/data/forms/start.js")
-            .then(x => x.renderForm())
-            .then(x => {
-                container.appendChild(x.container);
-
-                x.renderSingleControl({
-                    type: "button",
-                    title: "Reset",
-                    icon: "ti-close",
-                    caption: "",
-                    class: "btn btn-reset abs-top-right",
-                    click: e => {
-                        x.addins.navigation.restart();
-                        x.form.reset();
-                    }
-                }).then(b => {
-                    container.insertBefore(b, x.container)
-                })
-
-            });
     }
 }
 

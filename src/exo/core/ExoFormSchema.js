@@ -29,7 +29,7 @@ class ExoFormSchema {
                 if (test.executed)
                     schemaData = test.schema;
                 else {
-                    throw "ExoFormSchema: Error in JavaScript Schema: " + test.error;
+                    throw TypeError("ExoFormSchema: Error in JavaScript Schema: " + test.error);
                 }
             }
             else {
@@ -38,7 +38,7 @@ class ExoFormSchema {
                     this._type = this.types.json;
                 }
                 catch (ex) {
-                    throw "ExoFormSchema: could not convert string to ExoForm schema: " + ex.toString()
+                    throw TypeError("ExoFormSchema: could not convert string to ExoForm schema: " + ex.toString())
                 }
             }
         }
@@ -66,7 +66,15 @@ class ExoFormSchema {
         }
 
         if (this.pages.length === 0) {
-            let schemaProps = this.jsonSchemas[defaultModelInstance].schema.properties;
+
+            console.log("ALL JSON Schemas:", this.jsonSchemas);
+
+            let jsc = this.jsonSchemas[defaultModelInstance];
+            if(!jsc)
+                return;
+
+            let schemaProps = jsc.schema.properties;
+
 
             let mapped = this.tryMappings(defaultModelInstance);
 
@@ -206,6 +214,9 @@ class ExoFormSchema {
         return this._schemaData.rules;
     }
 
+    get id() {
+        return this._schemaData.id;
+    }
 
     get theme() {
         return this._schemaData.theme;

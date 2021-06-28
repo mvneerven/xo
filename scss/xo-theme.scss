@@ -13,14 +13,18 @@ html.theme-light {
         --color-disabled: #ebebe4;
         --color-readonly: #fcfcfc;
         --color-text: #333;
-        --color-button: #343434; 
+        --color-button: #343434;
         --color-button-primary: #cc2e44;
         --color-button-text: #ffffff;
         --color-label-active: #333;
-        --scrollbar-bg: #bfcadb;
+
+        --scrollbar-bg: rgba(0, 0, 0, 0.25);
+        --scrollbar-bg-hover: rgba(0, 0, 0, 0.15);
+        --scrollbar-bg-active: rgba(0, 0, 0, 0.1);
+
         --color-base: 352; /*the base color*/
         --l: 53%; /*the initial lightness*/
-        
+
         --color-text-lessbright: hsl(var(--color-text), 78%, calc(var(--l), -20%));
         --color-primary: hsl(var(--color-base), 78%, var(--l));
         --color-primary-dark: hsl(var(--color-base), 78%, calc(var(--l) - 5%));
@@ -45,20 +49,23 @@ html.theme-light {
 
         --color-input-shade: #666;
         --color-input-shade-focus: rgb(173, 58, 4);
-        
     }
 }
 html.theme-dark {
     &:root {
+        --scrollbar-bg: rgba(255, 255, 255, 0.15);
+        --scrollbar-bg-hover: rgba(255, 255, 255, 0.15);
+        --scrollbar-bg-active: rgba(255, 255, 255, 0.1);
+
         --color-background: #444;
         --color-background-variation: #343434;
         --color-panel-background: #333;
         --color-disabled: #333;
         --color-readonly: #333;
-        --scrollbar-bg: #444;
+        //--scrollbar-bg: #444;
         --color-text: #ddd;
-        --color-button: #bbb; 
-        --color-button-primary: #cc2e44;
+        --color-button: #bbb;
+        --color-button-primary: #2eb4cc;
         --color-button-text: #ffffff;
         --color-label-active: #efefef;
 
@@ -98,11 +105,12 @@ body {
     font-family: var(--font);
 
     a {
-        &:link, &:active, &:visited{
+        &:link,
+        &:active,
+        &:visited {
             color: var(--color-text);
         }
     }
-
 }
 
 html.theme-dark {
@@ -114,8 +122,6 @@ html.theme-dark {
     header {
         background-color: #121212;
     }
-
-
 
     [data-pwa-area="main"] {
         background-color: #1e1e1e;
@@ -187,5 +193,4 @@ html.theme-dark {
         background-color: #333;
         color: #ddd;
     }
-
 }

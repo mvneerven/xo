@@ -52,10 +52,10 @@ class ExoFieldSetControl extends ExoFormPageControl {
 
     set index(value) {
         if (typeof (value) !== "number")
-            throw "Page index must be a number";
+            throw TypeError("Page index must be a number");
 
         if (value < 1 || value > this.context.exo.schema.pages.length)
-            throw "Invalid page index";
+            throw TypeError("Invalid page index");
 
         this._index = value;
     }

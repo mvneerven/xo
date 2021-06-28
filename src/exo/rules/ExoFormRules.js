@@ -135,7 +135,7 @@ class ExoRuleEngine extends ExoRuleEngineBase {
         }
         catch (ex) {
             console.error("Error evaluating rule control value for ", control, compare, v, rawValue, ex);
-            throw "Error evaluating " + rawValue;
+            throw TypeError("Error evaluating " + rawValue);
         }
         console.debug("Value of '" + control.name + "' =", v);
         return Core.compare(compare, v, t)
@@ -182,10 +182,11 @@ class Field {
     }
     static callCustomMethod(obj) {
         if (!obj || !obj.exoForm)
-            throw "Invalid invocation of callCustomMethod";
+            throw TypeError("Invalid invocation of callCustomMethod");
 
         let method = obj.rule.method;
         if (method) {
+            
             let f = obj.exoForm.options.customMethods[method];
             f.apply(obj.exoForm, [obj])
         }

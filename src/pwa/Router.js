@@ -95,7 +95,7 @@ class Router {
     set route(routePath) {
 
         if (!routePath.startsWith("/"))
-            throw "Invalid route";
+            throw TypeError("Invalid route");
 
         let routeParts = routePath.substring(1).split('/');
 
@@ -104,7 +104,7 @@ class Router {
             this.hashChanged();
         }
         else
-            throw "Unknown route: " + routePath;
+            throw TypeError("Unknown route: " + routePath);
     }
 
     get route() {
@@ -128,7 +128,7 @@ class Router {
 
             let route = this.routes[r];
             if (!r.startsWith('/'))
-                throw "Malformed route: " + r;
+                throw TypeError("Malformed route: " + r);
 
             promises.push(new Promise((resolve, reject) => {
 
@@ -145,7 +145,7 @@ class Router {
             }));
         }
         if (!homeRouteFound) {
-            throw "Router misconfiguration: no home (/) route found";
+            throw TypeError("Router misconfiguration: no home (/) route found");
         }
 
         return Promise.all(promises).then(e => {
@@ -176,7 +176,7 @@ class Router {
                 return await import(/* webpackMode: "eager" */ src);
             }
             catch (ex) {
-                throw "Could not load " + src + ": " + ex;
+                throw TypeError(`Could not load ${src}: ${ex.toString()}`);
             }
         };
         return imp(src).then(x => {

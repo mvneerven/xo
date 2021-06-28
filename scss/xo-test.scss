@@ -1,12 +1,11 @@
 @import url("https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap");
-
-main {
-    padding: 1rem;
-    overflow: auto;
-
-}
+@import "exf-scrollbar";
 
 :root {
+    
+    --scrollbar-bg: rgba(0, 0, 0, 0.25);
+    --scrollbar-bg-hover: rgba(0, 0, 0, 0.15);
+    --scrollbar-bg-active: rgba(0, 0, 0, 0.1);
     --color: #333;
     --color-text: #333;
     --color-shade: #ccc;
@@ -23,24 +22,23 @@ main {
     --color-dropdown-border: rgba(0, 0, 0, 0.1);
 
     --lv-grid-template-xs: repeat(5, 1fr);
-    --lv-grid-template-xs-areas: '.';
+    --lv-grid-template-xs-areas: ".";
     --lv-grid-template-sm: repeat(5, 1fr);
-    --lv-grid-template-sm-areas: '.';
+    --lv-grid-template-sm-areas: ".";
     --lv-grid-template-md: repeat(5, 1fr);
-    --lv-grid-template-md-areas: '.';
+    --lv-grid-template-md-areas: ".";
     --lv-grid-template-lg: repeat(5, 1fr);
-    --lv-grid-template-lg-areas: '.';
+    --lv-grid-template-lg-areas: ".";
     --lv-grid-template-xl: repeat(5, 1fr);
-    --lv-grid-template-xl-areas: '.';
+    --lv-grid-template-xl-areas: ".";
     --lv-tile-template: repeat(auto-fill, minmax(200px, 1fr));
     --lv-tile-content-template: 200px 2rem 1fr 30px;
-    --lv-tile-content-areas: '.';
+    --lv-tile-content-areas: ".";
     --lv-grid-border-color: #ccc;
     --lv-grid-border-color: #ccc;
     --lv-grid-header-color: #f9fafb;
     --lv-tile-color: white;
 }
-
 
 html,
 body {
@@ -49,11 +47,37 @@ body {
     font-family: Roboto;
 }
 
-body {
+main {
     
+    padding: 1rem;
+    overflow: auto;
+    margin: auto;
+    max-height: 100%;
+    width: 90%;
+}
+
+#xo-test {
+    [data-field-type="listview"] {
+        &[data-view="tiles"] {
+            article.exf-lv-item {
+
+                .small {
+                    font-size: smaller;
+                    color:rgba(0, 0, 0, 0.5)
+                }
+            }
+        }
+    }
+
+    .exf-dlg-c {
+        background-color: #ddd;
+    }
+}
+
+body {
     display: grid;
     grid-template-rows: 50px 1fr 30px;
-   
+
     color: #333;
     color: var(--color);
 
@@ -76,10 +100,10 @@ body {
 #xo-test {
     .md-converted-html {
         max-width: 90%;
-        
+
         table {
             border: 1px solid #999;
-            
+
             thead {
                 text-align: left;
             }
@@ -112,12 +136,15 @@ body {
             }
 
             &.selected {
-                background-color: yellow
+                background-color: yellow;
             }
         }
     }
 
     .exf-container {
+        width: 90%;
+        
+
         &.exf-theme-material {
             margin-top: 2rem;
 
@@ -126,7 +153,7 @@ body {
             }
 
             form {
-                width: 70%;
+                
                 margin: auto;
                 box-shadow: 1px 1px 50px 1px rgba(0, 0, 0, 0.15);
                 border-radius: 1em;
@@ -173,17 +200,15 @@ body {
         }
 
         .compact.exf-ctl-cnt {
-            padding: 0!important;
-            margin: 0!important;
+            padding: 0 !important;
+            margin: 0 !important;
 
             .exf-ctl-group {
-                padding: 0!important;
-                margin: 0!important;
-                padding-top: 1rem!important;
+                padding: 0 !important;
+                margin: 0 !important;
+                padding-top: 1rem !important;
             }
         }
-
-        
     }
 }
 

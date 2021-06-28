@@ -31,8 +31,12 @@ class ExoLeafletMapControl extends ExoElementControl {
             {
                 name: "width"
             },
-            { 
+            {
                 name: "height"
+            },
+            {
+                name: "markers",
+                type: Object
             }
 
         );
@@ -42,13 +46,13 @@ class ExoLeafletMapControl extends ExoElementControl {
         await super.render();
 
         let elm = document.createElement("div");
-        if(this.width)
-            elm.style.width = typeof(this.width) === "number" ? this.width + "px" : this.width;
+        if (this.width)
+            elm.style.width = typeof (this.width) === "number" ? this.width + "px" : this.width;
 
-        if(this.height)
-            elm.style.height = typeof(this.height) === "number" ? this.height + "px" : this.height;
+        if (this.height)
+            elm.style.height = typeof (this.height) === "number" ? this.height + "px" : this.height;
 
-        this.map = await ExoLeafletMapControl.create(elm, this.value, this.zoom, this.options)
+        this.map = await ExoLeafletMapControl.create(elm, this.value, this.zoom, this)
 
         this.container.appendChild(elm)
 
@@ -60,12 +64,35 @@ class ExoLeafletMapControl extends ExoElementControl {
     }
 
     set value(pos) {
-        if(typeof(pos) === "string")
+        let oldValue = this.value;
+        if (typeof (pos) === "string")
             this._value = pos.split(",");
-        else if(Array.isArray(pos))
+        else if (Array.isArray(pos))
             this._value = pos;
         else
             throw Error("Invalid coordinates for map")
+
+        if (this.rendered && this._value !== oldValue) {
+            this.refresh();
+        }
+    }
+
+    set markers(value){
+        this._markers = value;
+
+        if(this.rendered){
+
+            value.forEach(e => {
+                let map = this.map;
+                L.marker(e.position).addTo(map)
+                    .bindPopup(e.text)
+                    .openPopup();
+            })
+        }
+    }
+
+    get markers(){
+        return this._markers;
     }
 
     set zoom(value) {
@@ -89,7 +116,8 @@ class ExoLeafletMapControl extends ExoElementControl {
 
     static generate(elm, pos, zoom, options, ready) {
         let p = [pos[0], pos[1]];
-        
+
+        elm.data = elm.data || {};
 
         var map = L.map(elm).setView(p, zoom);
 
@@ -99,19 +127,27 @@ class ExoLeafletMapControl extends ExoElementControl {
 
         L.marker(p).addTo(map)
 
-        map._onResize(); 
+        map._onResize();
 
-        // if(options.markers){
-        //     options.markers.forEach(e => {
-        //         L.marker(p).addTo(map)
-        //             .bindPopup('A pretty CSS3 popup.<br> Easily customizable.')
-        //             .openPopup();
-        //     })
-        // }
+        elm.data.map = map;
+
+        if(options.markers){
+            options.markers.forEach(e => {
+                
+                L.marker(e.position).addTo(map)
+                    .bindPopup(e.text)
+                    .openPopup();
+            })
+        }
 
         ready(map)
     }
 
+    refresh() {
+        console.debug("ExoLeafletMapControl", "Update map" + this.value, this.map);
+        this.map.setView(this.value, this.zoom);
+        
+    }
 }
 
 export default ExoLeafletMapControl;

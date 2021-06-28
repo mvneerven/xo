@@ -13,8 +13,8 @@
 
 .exf-container .exf-required:not(.exf-lbl-empty) > .exf-ctl > label::after {
   position: absolute;
-  margin-left: .2rem;
-  margin-top: -.2rem;
+  margin-left: 0.2rem;
+  margin-top: -0.2rem;
   content: " *";
   color: inherit;
   color: var(--color-label-active);
@@ -76,7 +76,7 @@
 
 .exf-container .exf-nav-cnt > .exf-ctl-cnt {
   display: inline-block;
-  margin-right: .6rem;
+  margin-right: 0.6rem;
 }
 
 .exf-container.single-page .exf-page {
@@ -256,6 +256,49 @@
   -ms-grid-column: 1;
   -ms-grid-column-span: 1;
   grid-area: 1 / 1 / 2 / 2;
+}
+
+.exf-container .exf-page > .exf-ctl-cnt.exf-txt-psx {
+  position: relative;
+}
+
+.exf-container .exf-page > .exf-ctl-cnt.exf-txt-psx.prefix input {
+  padding-left: 2rem !important;
+}
+
+.exf-container .exf-page > .exf-ctl-cnt.exf-txt-psx.suffix input {
+  padding-right: 2rem !important;
+}
+
+.exf-container .exf-page > .exf-ctl-cnt.exf-txt-psx .exf-txt-psx-span {
+  position: absolute;
+  top: 0.45rem;
+}
+
+.exf-container .exf-page > .exf-ctl-cnt.exf-txt-psx .exf-txt-psx-span.icon {
+  top: 0.65rem;
+  left: 0.5rem;
+}
+
+.exf-container .exf-page > .exf-ctl-cnt.exf-txt-psx .exf-txt-psx-span.field {
+  top: -.2rem;
+}
+
+.exf-container .exf-page > .exf-ctl-cnt.exf-txt-psx .exf-txt-psx-span.prefix {
+  left: 0.5rem;
+}
+
+.exf-container .exf-page > .exf-ctl-cnt.exf-txt-psx .exf-txt-psx-span.suffix {
+  right: 0.5rem;
+}
+
+.exf-container .exf-page > .exf-ctl-cnt.exf-txt-psx .exf-txt-psx-span > .exf-ctl-cnt {
+  padding: 0;
+  margin: 0;
+}
+
+.exf-container .exf-page > .exf-ctl-cnt.exf-txt-psx .exf-txt-psx-span > .exf-ctl-cnt .exf-btn {
+  padding: 0.1rem 0.2rem;
 }
 
 .exf-container .exf-info {
@@ -1729,8 +1772,8 @@ html.theme-dark .exf-ctl-cnt.exf-switch input[type="range"] {
 .exf-container.exf-theme-material .exf-ctl-cnt:not(.exf-std-lbl) > .exf-ctl > .exf-label {
   position: absolute;
   pointer-events: none;
-  top: 0.7em;
-  line-height: 1;
+  top: 0.5em;
+  line-height: 1.3;
 }
 
 .exf-container.exf-theme-material .exf-ctl-cnt:not(.exf-std-lbl) > .exf-ctl > input {
@@ -1880,7 +1923,7 @@ html.theme-dark .exf-ctl-cnt.exf-switch input[type="range"] {
 .exf-container.exf-theme-material .exf-ctl-cnt.exf-input > .exf-ctl, .exf-container.exf-theme-material .exf-ctl-cnt[data-field-type="dropdown"] > .exf-ctl {
   border-bottom: 1px solid #666;
   border-bottom: 1px solid var(--color-input-shade);
-  padding-bottom: 0.25rem;
+  padding-bottom: 0;
 }
 
 .exf-container.exf-theme-material .exf-ctl-cnt.exf-input:not(.exf-std-lbl).exf-filled > .exf-ctl input,
@@ -2508,9 +2551,7 @@ html.theme-dark .exf-ctl-cnt.autocomplete .exf-ac-rs .exf-ac-itm.active {
 .exf-listview .exf-listview-btns .exf-listview-flt .exf-ctl input {
   width: 8rem !important;
   margin-top: 1rem !important;
-  border: 1px solid #ddd !important;
   padding: 0.2rem 0.4rem !important;
-  background-color: white !important;
   line-height: 1.5rem !important;
 }
 

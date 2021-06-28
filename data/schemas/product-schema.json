@@ -15,9 +15,14 @@
             "type": "string",
             "title": "Name"
         },
+        "imageUri": {
+            "type": "string",
+            "title": "Product Image"
+        },
         "description": {
             "type": "string",
-            "title": "Description"
+            "title": "Description",
+            "maxLength": 512
         },
         "price": {
             "type": "object",
@@ -25,11 +30,15 @@
             "properties": {
                 "amount": {
                     "title": "Price",
-                    "type": "number"
+                    "type": "number",
+                    "minimum": 0,
+                    "multipleOf" : 0.01
+                    
                 },
                 "currency": {
                     "title": "Currency",
                     "type": "integer"
+                    
                 }
             },
             "required": [
@@ -46,17 +55,10 @@
                 "21"
             ]
         },
-        "imageUri": {
-            "type": "string",
-            "title": "Image"
-        },
+        
         "isForSale": {
             "type": "boolean",
             "title": "For sale"
-        },
-
-        "tags": {
-            "type": "array"
         }
     },
     "required": [

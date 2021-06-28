@@ -1,3 +1,8 @@
 {
-    
+    "signalR": {
+        "enabled": false,
+        "notificationServiceUrl": "https://func-notificationservice-dev.azurewebsites.net",
+        "logLevel": "Information",
+        "oncloseReopenTimeout": 10000
+    }
 }

@@ -16,7 +16,9 @@ html.theme-light:root {
   --color-button-primary: #cc2e44;
   --color-button-text: #ffffff;
   --color-label-active: #333;
-  --scrollbar-bg: #bfcadb;
+  --scrollbar-bg: rgba(0, 0, 0, 0.25);
+  --scrollbar-bg-hover: rgba(0, 0, 0, 0.15);
+  --scrollbar-bg-active: rgba(0, 0, 0, 0.1);
   --color-base: 352;
   /*the base color*/
   --l: 53%;
@@ -45,15 +47,17 @@ html.theme-light:root {
 }
 
 html.theme-dark:root {
+  --scrollbar-bg: rgba(255, 255, 255, 0.15);
+  --scrollbar-bg-hover: rgba(255, 255, 255, 0.15);
+  --scrollbar-bg-active: rgba(255, 255, 255, 0.1);
   --color-background: #444;
   --color-background-variation: #343434;
   --color-panel-background: #333;
   --color-disabled: #333;
   --color-readonly: #333;
-  --scrollbar-bg: #444;
   --color-text: #ddd;
   --color-button: #bbb;
-  --color-button-primary: #cc2e44;
+  --color-button-primary: #2eb4cc;
   --color-button-text: #ffffff;
   --color-label-active: #efefef;
   --color-base: 96;

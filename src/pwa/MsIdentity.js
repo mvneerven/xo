@@ -155,7 +155,7 @@ class MsIdentity {
         if (currentAccounts.length === 0) {
             return null;
         } else if (currentAccounts.length > 1) {
-            throw "Multiple accounts detected.";
+            throw TypeError("Multiple accounts detected.");
 
         } else if (currentAccounts.length === 1) {
             _.account = currentAccounts[0];
@@ -173,26 +173,13 @@ class MsIdentity {
         return _.waitForInit().then(() => {
 
             if (!username)
-                throw "No user signed in";
+                throw TypeError("No user signed in");
 
             request.account = _.myMSALObj.getAccountByUsername(username);
             return _.myMSALObj.acquireTokenSilent(request)
                 .catch(error => {
                     if (error instanceof msal.InteractionRequiredAuthError) {
-                        // fallback to interaction when silent call fails
-                        // if (_.options.mode === "popup") {
-                        //     return _.myMSALObj.acquireTokenPopup(request)
-                        //         .then(tokenReinteractionsponse => {
-                        //             console.log(tokenResponse);
-                        //             return tokenResponse;
-                        //         }).catch(error => {
-                        //             console.error(error);
-                        //         });
-                        // }
-                        // else {
                         return _.myMSALObj.acquireTokenRedirect(request);
-                        //}
-
                     } else {
                         console.warn(error);
                     }

@@ -1,5 +1,39 @@
 const schema = {
-    navigation: "none",
+    navigation: "auto",
+    progress: "none",
+    model: {
+        instance: {
+            init: {
+                action: null,
+                template: null
+            },
+            buildForm: {
+                jsonSchemaUrl: "",
+                jsonSchema: ""
+            }
+        },
+        logic: context => {
+            switch (context.changed.property) {
+
+                case "action":
+                    let page = parseInt(context.changed.newValue);
+                    context.exo.addins.navigation.goto(page)
+                    break
+                case "template":
+                    document.location.hash = "/studio/" + context.changed.newValue;
+
+                    break;
+                case "jsonSchemaUrl":
+                    const inst = context.model.instance.buildForm;
+                    let url = context.changed.newValue;
+                    fetch(url).then(x => x.text()).then(x => {
+                        inst.jsonSchema = x;
+                    })
+                    break;
+            }
+        }
+    },
+
     pages: [
         {
             legend: "Build a form",
@@ -7,184 +41,133 @@ const schema = {
             fields: [
                 {
                     id: "action",
+                    bind: "instance.init.action",
                     name: "action",
-                    type: "radiobuttonlist",
-                    asview: "tiles",
-                    class: "compact",
+                    type: "listview",
+                    style: "max-height: 300px",
+                    singleSelect: true,
+                    views: "tiles",
                     caption: "Select how you want to get started",
+                    properties: [
+                        {
+                            key: "id"
+                        },
+                        {
+                            key: "name"
+                        },
+                        {
+                            key: "description",
+                            class: "small"
+                        },
+                        {
+                            key: "image",
+                            type: "img"
+
+                        }
+                    ],
+                    mappings: {
+                        tiles: [
+                            {
+                                key: "name",
+                                height: "2rem"
+                            }, {
+                                key: "description",
+                                height: "4rem"
+                            }, {
+                                key: "image",
+                                height: "80px"
+                            }
+                        ]
+                    },
                     items: [
                         {
-                            name: "Start with a template",
+                            name: "<b>Start with a template</b>",
                             description: "Load one of the existing templates and take it from there",
-                            value: 2
+                            image: "/img/template.png",
+                            id: "2"
                         },
                         {
-                            name: "Start with a data schema/DTO",
-                            description: "Generate a Form schema from your data definition (JSON)",
-                            value: 1
-                        },
-                        {
-                            name: "Advanced",
-                            description: "Start from scratch and show the Form Schema Editor",
-                            value: 0
-                        }
-                    ],
-                    "rules": [
-                        {
-                            description: "Go to template loader when action 2 is selected",
-                            type: "goto",
-                            page: 3,
-                            expression: [
-                                "action",
-                                "change",
-                                "value",
-                                "==",
-                                "2"
-                            ]
-                        },
-                        {
-                            description: "Go to DTO chooser when action 1 is selected",
-                            type: "goto",
-                            page: 2,
-                            expression: [
-                                "action",
-                                "change",
-                                "value",
-                                "==",
-                                "1"
-                            ]
-                        },
-                        {
-                            type: "customMethod",
-                            method: "emptyFormSchema",
-                            expression: [
-                                "action",
-                                "change",
-                                "value",
-                                "==",
-                                "0"
-                            ]
+                            name: "<b>Start with a JSON schema</b>",
+                            description: "Use a JSON schema to generate a form",
+                            image: "/img/json-schema.png",
+                            id: "3"
+
                         }
                     ]
                 }
             ]
-        },
-        {
-            legend: "Data",
-            intro: "Load your DTO",
-            fields: [
-                {
-                    id: "import",
-                    name: "import",
-                    type: "filedrop",
-                    caption: "Select JSON",
-                    max: 1,
-                    fileTypes: [
-                        "application/json"
-                    ],
-                    maxSize: 10240
-                },
-                {
-                    name: "dto",
-                    type: "aceeditor",
-                    mode: "json",
-                    caption: "DTO",
-                    rules: [
-                        {
-                            type: "customMethod",
-                            method: "importSchema",
-                            expression: [
-                                "import",
-                                "change",
-                                "value",
-                                "!=",
-                                ""
-                            ]
-                        }
-                    ]
-                },
-                {
-                    name: "generate",
-                    type: "button",
-                    icon: "ti-wand",
-                    click: "generateFromSchema",
-                    caption: "Generate Form Schema"
-                }
-            ]
-        },
-        {
+        }, {
             legend: "Template",
             intro: "Select a template to start with",
             fields: [
                 {
                     id: "template",
                     name: "template",
-                    type: "radiobuttonlist",
-                    //view: "tiles",
+                    bind: "instance.init.template",
+                    type: "listview",
+                    views: "tiles",
+                    style: "max-height: 300px",
+                    singleSelect: true,
                     caption: "ExoForm Template",
-                    items: [
+                    properties: [
                         {
-                            name: "Starter Form",
-                            value: "/data/forms/templates/empty.json",
-                            description: "A Simple 1 field form to get started with"
+                            key: "value",
+                            isPrimaryKey: true
                         },
                         {
-                            name: "Contact Form",
-                            value: "/data/forms/templates/contact.json",
-                            description: "Illustrating the use of the combined 'name' &amp; 'nladdress' fields.",
-                            "tooltip": "Use of the 'multiinput' control that can be used to build a set of related fields"
+                            key: "name"
                         },
                         {
-                            name: "Wizard",
-                            value: "/data/forms/templates/wizard.json",
-                            description: "A Simple multi-page form that shows how you can build wizards"
-                        },
-                        {
-                            name: "Survey",
-                            value: "/data/forms/templates/survey.json",
-                            description: "A TypeForm-like survey, with one element at a time shown to the user"
-                        },
-                        {
-                            name: "MultiInput Test",
-                            value: "/data/forms/templates/multiinput-test.js",
-                            description: "An example of the use of the multiinput control to collect related data"
-                        },
-                        {
-                            name: "Complex Form with conditional logic",
-                            value: "/data/forms/templates/complex.json",
-                            description: "A multi-page form with interdepedencies, using the ExoForm Rules engine"
-                        },
-                        {
-                            name: "Model Binding",
-                            value: "/data/forms/templates/model-binding.json",
-                            description: "A form that shows how to use model binding"
-                        },
-                        {
-                            name: "Advanced: custom control states",
-                            value: "/data/forms/templates/custom-nav-state.js",
-                            description: "A complete example of Model Data Binding combined with JS logic and custom navigation controls bound to state in the model."
+                            key: "description",
+                            class: "small"
                         }
-                    ]
-                },
-                {
-                    name: "selectTemplate",
-                    type: "button",
-                    click: "selectTemplate",
-                    caption: "Start with this template",
-                    rules: [
-                        {
-                            type: "enabled",
-                            expression: [
-                                "template",
-                                "change",
-                                "value",
-                                "!=",
-                                "undefined"
-                            ]
-                        }
-                    ]
+
+                    ],
+                    mappings: {
+                        tiles: [
+                            {
+                                key: "name",
+                                height: "2rem"
+                            }, {
+                                key: "description",
+                                height: "4rem"
+                            }
+                        ]
+                    },
+                    items: "/data/forms/templates.json"
                 }
             ]
+        },
+        {
+            legend: "Data",
+            intro: "Load a JSON-Schema",
+            fields: [
+                {
+                    type: "url",
+                    caption: "Enter or select a URL of a JSON Schema",
+                    bind: "instance.buildForm.jsonSchemaUrl",
+                    fileTypes: ["application/json"],
+                    dialog: true
+                },
+                {
+                    type: "multiline",
+                    caption: "JSON Schema data",
+                    readonly: true,
+                    class: "code",
+                    rows: 20,
+                    name: "schema-contents",
+                    value: "@instance.buildForm.jsonSchema"
+
+                }
+            ]
+        }
+    ],
+    controls: [
+        {
+            name: "prev",
+            type: "button",
+            caption: "◁ Back",
+            class: "form-prev exf-btn"
         }
     ]
 }

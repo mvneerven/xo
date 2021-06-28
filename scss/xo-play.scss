@@ -1,0 +1,60 @@
+:root {
+    --color-button: rgb(100, 155, 100);
+}
+
+body {
+    background: #cecece;
+}
+
+#xo-play {
+
+    
+    [data-field-type="listview"] {
+        &[data-view="tiles"] {
+            article.exf-lv-item {
+                .name {
+                    font-weight: 800;
+                    color: rgb(60, 58, 189)
+                }
+                .small {
+                    font-size: smaller;
+                    color:rgba(0, 0, 0, 0.5)
+                }
+            }
+        }
+    }
+
+    .exf-dlg-c {
+        background-color: #ddd;
+    }
+    
+    .exf-listview-btns.exf-cnt {
+        
+    }
+
+    .exf-container{
+        background-color: white;
+        border-radius: 2rem;
+        margin: 2rem;
+        max-height: 750px;
+        overflow-y: auto;
+    }
+
+    .exf-btn {
+        background-image: linear-gradient(to right, #614385 0%, #516395 51%, #614385 100%);
+        text-align: center;
+        text-transform: uppercase;
+        transition: 0.5s;
+        background-size: 200% auto;
+        color: white;
+        box-shadow: 0 0 20px #eee;
+        border-radius: 10px;
+        display: block;
+
+        &:hover {
+            background-position: right center; /* change the direction of the change here */
+            color: #fff;
+            text-decoration: none;
+        }
+    }
+}

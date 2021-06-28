@@ -106,7 +106,7 @@ class ExoTaggingControl extends ExoBaseControls.controls.text.type {
             return;
 
         if (!Array.isArray(data))
-            throw "Data for tags control must be array";
+            throw TypeError("Data for tags control must be array");
 
         if (this.rendered) {
             this.wrapper.innerHTML = "";

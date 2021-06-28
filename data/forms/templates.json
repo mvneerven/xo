@@ -1,0 +1,42 @@
+[
+    {
+        "name": "Starter Form",
+        "value": "https://xo-js.dev/assets/forms/templates/empty.json",
+        "description": "A Simple 1 field form to get started with"
+    },
+    {
+        "name": "Contact Form",
+        "value": "https://xo-js.dev/assets/forms/templates/contact.json",
+        "description": "Illustrating the use of the combined 'name' &amp; 'nladdress' fields."
+    },
+    {
+        "name": "Wizard",
+        "value": "https://xo-js.dev/assets/forms/templates/wizard.json",
+        "description": "A Simple multi-page form that shows how you can build wizards"
+    },
+    {
+        "name": "Survey",
+        "value": "https://xo-js.dev/assets/forms/templates/survey.json",
+        "description": "A TypeForm-like survey, with one element at a time shown to the user"
+    },
+    {
+        "name": "MultiInput Test",
+        "value": "https://xo-js.dev/assets/forms/templates/multiinput-test.js",
+        "description": "An example of the use of the multiinput control to collect related data"
+    },
+    {
+        "name": "Complex Form with conditional logic",
+        "value": "https://xo-js.dev/assets/forms/templates/complex.json",
+        "description": "A multi-page form with interdepedencies, using the ExoForm Rules engine"
+    },
+    {
+        "name": "Model Binding",
+        "value": "https://xo-js.dev/assets/forms/templates/model-binding.json",
+        "description": "A form that shows how to use model binding"
+    },
+    {
+        "name": "Advanced: custom control states",
+        "value": "https://xo-js.dev/assets/forms/templates/custom-nav-state.js",
+        "description": "A complete example of Model Data Binding combined with JS logic and custom navigation controls bound to state in the model."
+    }
+]

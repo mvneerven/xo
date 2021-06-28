@@ -1,165 +1,323 @@
 const Core = xo.core;
 const DOM = xo.dom;
 
+let data = null;
+
+xo.on("new-form", e => {
+    if (e.detail.id === "my-form") {
+        e.detail.exoForm.on("schemaLoaded", ev => {
+            data = ev.detail.host.dataBinding.model.instance.data
+        })
+    }
+})
+
 class HomeRoute extends xo.route {
 
     title = "Home";
 
     menuIcon = "ti-home";
 
-    
-
-    constructor() {
-        super(...arguments);
-
-        // pwa.settings.add(this.settings)
-        //     .on("read", e => {
-        //         // debugger
-        //     })
-        //     .on("write", e => {
-        //         // debugger
-        //     })
-
+    async render(path) {
+        const me = this;
+        await this.renderForm(path);
+        
+        this.addNonExoButtons()
     }
 
-    async render(path) {
+    addNonExoButtons() {
+        let btn = document.createElement('button');
+        btn.innerText = "Flinstone?";
+        btn.addEventListener("click", e => {
+            data.name.first = "Fred";
+            data.name.last = "Flintstone";
+        })
+        this.area.add(btn);
 
-        try {
-            await this.renderForm(path);
-        }
-        catch (ex) {
-            this.app.UI.areas.main.add("Could not render form: " + ex.toString)
-        }
+
+        let btn2 = document.createElement('button');
+        btn2.innerText = "Home?";
+        btn2.addEventListener("click", e => {
+            data.coords = [52.85582619118, 5.717743972222222];
+            data.zoom = 17
+        })
+        this.area.add(btn2);
+
+
+        let btn3 = document.createElement('button');
+        btn3.innerText = "Pins?";
+        btn3.addEventListener("click", e => {
+
+            data.coords = [52.25582619118, 5.117743972222222];
+            data.markers.push({
+                position: [52.25582619118, 5.117743972222222],
+                text: "yeah right"
+            }),
+                data.zoom = 7
+        })
+        this.area.add(btn3);
     }
 
     async renderForm(path) {
-        
-        const schema = {
-            pages: [
-              {
-                legend: "My Form!!!",
-                intro: "My form description",
-                fields: [
-                  {
-                    type: "listview",
-                    name: "lv1",
-                    view: "tiles",
-                    singleSelect: true,
-                    properties: [
-                      {
-                          key: "id",
-                          name: "Id",
-                      },
-                      {
-                        key: "name",
-                        name: "Name",
-                        width: "8rem",
-                        type: "text",
-                        sort: true,
-                    },{
-                        key: "image",
-                        name: "Image",
-                        autoWidth: true,
-                        type: "img",
-                        isPrimaryKey: true
-                      },{
-                        key: "description",
-                        name: "Description",
-                        type: "text"
-                      }
-                    ],
-                    mappings: {
-                        tiles: [
-                            {
-                                key: "image",
-                                height: "200px"
-                            },
-                            {
-                                key: "name",
-                                height: "2rem"
-                            },
-                            {
-                                key: "description"
-                            },
-                        ],
-                        grid: [
-                            {
-                                key: "name",
-                                width: "8rem",
-                                sort: true,
-                                filterInPlace: true,
-                                searchURL: `${location.origin}/#/users/`,
-                            },
-                            {
-                                key: "imageUri",
-                                width: "120px"
-                            },
-                            {
-                                key: "description",
-                                autoWidth: true,
-                                sort: true
-                            },
-                            {
-                                key: "fileSizeAndType"
-                            },
-                        ]
+
+        const schema2 = {
+            navigation: "auto",
+            progress: "none",
+            model: {
+                instance: {
+                    init: {
+                        action: null
                     },
-                    items: [
-                      {
-                        id: "test1",
-                        name: "Test",
-                        image: "https://stasfassetsdev.z6.web.core.windows.net/3cd3ef51-deab-47d3-944b-1d0e1e8ebe22/assets/boon-kriek.jpg",
-                        description: "A test item"
-                      },{
-                        id: "test2",
-                        name: "Lorem",
-                        image: "https://stasfassetsdev.z6.web.core.windows.net/3cd3ef51-deab-47d3-944b-1d0e1e8ebe22/assets/Lucifer",
-                        description: "... ipsum dolor sit amet"
-                      },{
-                        id: "test3",
-                        name: "Beauty",
-                        image: "https://stasfassetsdev.z6.web.core.windows.net/c737a2dd-1bad-4d23-836a-2c8c4bb977b2/assets/Sol-bier-mexican-500x500_1_1",
-                        description: "... is in the eye of the beholder"
-                      }
-                    ],
-                    contextMenu: {
-                      items: [
-                        {
-                          tooltip: "Edit",
-                          icon: "ti-pencil",
-                          name: "Edit",
-                          action: "edit"
-                        },{
-                          tooltip: "Delete",
-                          name: "Delete",
-                          icon: "ti-close",
-                          action: "delete"
-                        }
-                      ]
+                    buildForm: {
+                        jsonSchemaUrl: "",
+                        jsonSchema: ""
                     }
-                  }
-                ]
-              }
+                },
+                logic: context => {
+                    if (context.changed.property === "action") {
+                        let page = parseInt(context.changed.newValue);
+                        context.exo.addins.navigation.goto(page)
+                    }
+
+                    if (context.changed.property === "jsonSchemaUrl") {
+                        const inst = context.model.instance.buildForm;
+                        let url = context.changed.newValue;
+                        fetch(url).then(x => x.text()).then(x => {
+                            inst.jsonSchema = x;
+                        })
+                    }
+                }
+            },
+
+            pages: [
+                {
+                    legend: "Build a form",
+                    intro: "Building an ExoForm schema",
+                    fields: [
+                        {
+                            id: "action",
+                            bind: "instance.init.action",
+                            name: "action",
+                            type: "listview",
+                            style: "max-height: 300px",
+                            singleSelect: true,
+                            views: "tiles",
+                            caption: "Select how you want to get started",
+                            properties: [
+                                {
+                                    key: "id"
+                                },
+                                {
+                                    key: "name"
+                                },
+                                {
+                                    key: "description",
+                                    class: "details"
+                                },
+                                {
+                                    key: "image",
+                                    type: "img"
+
+                                }
+                            ],
+                            mappings: {
+                                tiles: [
+                                    {
+                                        key: "name",
+                                        height: "2rem"
+                                    }, {
+                                        key: "description",
+                                        height: "4rem"
+                                    }, {
+                                        key: "image",
+                                        height: "80px"
+                                    }
+                                ]
+                            },
+                            items: [
+                                {
+                                    name: "<b>Start with a template</b>",
+                                    description: "Load one of the existing templates and take it from there",
+                                    image: "/img/template.png",
+                                    id: "2"
+                                },
+                                {
+                                    name: "<b>Start with a data schema/DTO</b>",
+                                    description: "Generate a Form schema from your data definition (JSON)",
+                                    image: "/img/json-schema.png",
+                                    id: "3"
+
+                                }
+                            ]
+                        }
+                    ]
+                }, {
+                    legend: "Template",
+                    intro: "Select a template to start with",
+                    fields: [
+                        {
+                            id: "template",
+                            name: "template",
+                            type: "listview",
+                            views: "tiles",
+                            style: "max-height: 300px",
+                            singleSelect: true,
+                            caption: "ExoForm Template",
+                            properties: [
+                                {
+                                    key: "value",
+                                    isPrimaryKey: true
+                                },
+                                {
+                                    key: "name"
+                                },
+                                {
+                                    key: "description",
+                                    class: "details"
+                                }
+
+                            ],
+                            mappings: {
+                                tiles: [
+                                    {
+                                        key: "name",
+                                        height: "2rem"
+                                    }, {
+                                        key: "description",
+                                        height: "4rem"
+                                    }
+                                ]
+                            },
+                            items: "/data/forms/templates.json"
+                        }, {
+                            name: "selectTemplate",
+                            type: "button",
+                            click: "selectTemplate",
+                            caption: "Start with this template",
+                            rules: [
+                                {
+                                    type: "enabled",
+                                    expression: [
+                                        "template", "change", "value", "!=", "undefined"
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    legend: "Data",
+                    intro: "Load a JSON-Schema",
+                    fields: [
+                        {
+                            type: "url",
+                            caption: "Enter or select a URL of a JSON Schema",
+                            bind: "instance.buildForm.jsonSchemaUrl",
+                            fileTypes: ["application/json"],
+                            dialog: true
+                        },
+                        {
+                            type: "multiline",
+                            caption: "JSON Schema data",
+                            readonly: true,
+                            class: "code",
+                            rows: 20,
+                            name: "schema-contents",
+                            value: "@instance.buildForm.jsonSchema"
+
+                        }
+                    ]
+                }
+            ],
+            controls: [
+                {
+                    name: "prev",
+                    type: "button",
+                    caption: "◁ Back",
+                    class: "form-prev exf-btn"
+                }
             ]
-          }
+        }
+
+        const schema = {
+            model: {
+                instance: {
+                    data: {
+                        id: "test1",
+                        name: {
+                            first: "Marc",
+                            last: "van Neerven"
+                        },
+                        zoom: 8,
+                        coords: [
+                            55.33656310431969, -4.155451581529087
+                        ],
+                        markers: [
+                            {
+                                position: [52.85582619118, 5.717743972222222],
+                                text: "Home!<br/> Is where the <i>heart</i> is!"
+                            }
+                        ]
+                    }
+                }
+            },
+            pages: [
+                {
+                    fields: [
+                        {
+                            type: "name",
+                            name: "text",
+                            caption: "Name",
+                            bind: "instance.data.name"
+                        },
+
+                        {
+                            type: "multiline",
+                            caption: "Hello @instance.data.name.first",
+                            name: "hello",
+                            autogrow: true
+                        },
+
+                        {
+                            type: "map",
+                            name: "map",
+                            caption: "Map",
+                            bind: "instance.data.coords",
+                            zoom: "@instance.data.zoom",
+                            markers: "@instance.data.markers"
+                        }
+
+                    ]
+                }
+            ]
+        }
 
         let form = await xo.form.run(schema, {
+            id: "my-form",
+
             on: {
+
                 page: this.change.bind(this),
-                post: (e) => { },
+
                 dataModelChange: this.change.bind(this),
+
                 dom: {
-                    beforeContextMenu: e=>{
-                       // debugger;
+                    change: e => {
+                        console.log("CHANGED", e.target.name, e.target.value)
                     }
                 }
             }
         });
 
-        this.app.UI.areas.main.add(form)
+        this.area.add(form)
+    }
+
+    get area() {
+        return this.app.UI.areas.main;
     }
 
     change(e) {
+        return
+
         let isPageEvent = e.type === "page";
         const context = e.detail;
         const x = isPageEvent ? context.host : context.host.exo;
@@ -373,7 +531,7 @@ class TestRoute extends xo.route {
                                         action: "delete"
                                     }
                                 ]
-                            
+
                             }
 
                         }
@@ -458,7 +616,7 @@ class TestRoute extends xo.route {
                                 {
                                     key: "fileSizeAndType",
                                     caption: "Details",
-                                    dataCallback: (col, val, item) => {return `<span>${Core.formatByteSize(item.size) || ""} - ${item.type || ""}</span>`}
+                                    dataCallback: (col, val, item) => { return `<span>${Core.formatByteSize(item.size) || ""} - ${item.type || ""}</span>` }
                                 }
                             ],
                             items: [
@@ -490,7 +648,7 @@ class TestRoute extends xo.route {
                             ],
                             contextMenu: {
                                 direction: "left",
-                                items:  [
+                                items: [
                                     {
                                         tooltip: "Edit",
                                         icon: "ti-pencil",
@@ -666,8 +824,8 @@ new PWA({
     routes: {
         "/": HomeRoute,
         "/test": TestRoute,
-       
+
         "/products": ProductsRoute
-        
+
     }
 })

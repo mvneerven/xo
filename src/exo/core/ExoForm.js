@@ -7,6 +7,7 @@ import Core from '../../pwa/Core';
 import DOM from '../../pwa/DOM';
 import ExoFormFactory from './ExoFormFactory';
 import ExoFormDataBinding from '../databinding/ExoFormDataBinding';
+import xo from '../../../js/xo';
 
 /**
  * ExoForm class. 
@@ -47,11 +48,8 @@ class ExoForm {
     static setup() { } // reserved for later  
 
     constructor(context, opts) {
-        this.events = new Core.Events(this);
-
-        // Use const context = await ExoFormFactory.build() and context.createForm()
         if (!context || !(context instanceof ExoFormFactory.Context))
-            throw "ExoForm: invalid instantiation of ExoForm: need ExoFormContext instance";
+            throw TypeError("ExoForm: invalid instantiation of ExoForm: need ExoFormContext instance");
 
         this.context = context;
 
@@ -61,10 +59,18 @@ class ExoForm {
             customMethods: {},
         }
         this.options = { ...defOptions, ...opts };
+        this.id = this.options.id || Core.guid();          
+        this.events = new Core.Events(this);
+
         this.form = document.createElement("form");
         this.form.setAttribute("method", "post");
         this.form.classList.add("exf-form");
         this.container = DOM.parseHTML(ExoForm.meta.templates.exocontainer);
+
+        xo.events.trigger("new-form", {
+            id: this.id,
+            exoForm: this            
+        })
     }
 
     get schema() {
@@ -104,7 +110,7 @@ class ExoForm {
                             if (x.status === 200) {
                                 return x.text()
                             }
-                            throw "HTTP Status " + x.status;
+                            throw TypeError("HTTP Status " + x.status);
                         }).then(r => {
                             loader(r);
                         }).catch(ex => {
@@ -120,7 +126,7 @@ class ExoForm {
                             if (x.status === 200) {
                                 return x.json()
                             }
-                            throw "HTTP Status " + x.status;
+                            throw TypeError("HTTP Status " + x.status);
                         }).then(r => {
                             loader(r);
                         }).catch(ex => {
@@ -151,9 +157,13 @@ class ExoForm {
      */
     async loadSchema(schema) {
 
+        this.events.trigger(ExoFormFactory.events.created);
+        
+
         return new Promise((resolve, reject) => {
             this._schema = this.context.createSchema();
             this.schema.parse(schema);
+
             this.events.trigger(ExoFormFactory.events.schemaParsed);
 
             this.resolveJsonSchemas().then(() => {
@@ -172,7 +182,6 @@ class ExoForm {
                 }).on("error", e => {
                     this.events.trigger(ExoFormFactory.events.error, e.detail);
                 });
-
                 
                 this.events.trigger(ExoFormFactory.events.schemaLoaded);
                 this.schema.refreshStats();
@@ -198,6 +207,8 @@ class ExoForm {
         let promises = [];
         const loadJsonSchema = async (url, instanceName) => {
             let schemaUrl = new URL(url, this.context.baseUrl);
+            
+            console.log("Loading JSON schema", url)
             return await fetch(schemaUrl).then(x => {
                 if (x.status === 200) {
                     return x.json()
@@ -206,7 +217,7 @@ class ExoForm {
                 throw `HTTP Status ${x.status} - ${schemaUrl.toString()}`;
 
             }).then(data => {
-                //this._schema.model.schemas[instanceName] = data;
+                
                 this._schema.addJSONSchema(instanceName, data);
             })
         }
@@ -376,7 +387,7 @@ class ExoForm {
                                 f._control.render().then(rendered => {
 
                                     if (!rendered)
-                                        throw "ExoForm: " + ExoFormFactory.fieldToString(f) + " does not render an HTML element";
+                                        throw TypeError("ExoForm: " + ExoFormFactory.fieldToString(f) + " does not render an HTML element");
 
                                     pageFieldsRendered = this._addRendered(f, rendered, pageFieldsRendered, p, page);
 
@@ -624,21 +635,21 @@ class ExoForm {
 
 
                 if (!f.type)
-                    throw "ExoForm: incorrect field options. Must be object with at least 'type' property. " + JSON.stringify(f)
+                    throw TypeError("ExoForm: incorrect field options. Must be object with at least 'type' property. " + JSON.stringify(f))
 
                 f.id = f.id || _._generateUniqueElementId();
 
                 let field = _.context.get(f.type);
                 if (!field)
-                    throw "ExoForm: " + f.type + " is not a registered ExoForm field type";
+                    throw TypeError("ExoForm: " + f.type + " is not a registered ExoForm field type");
 
                 let baseType = field.type;
 
                 if (!baseType)
-                    throw "ExoForm: class for " + f.type + " not defined";
+                    throw TypeError("ExoForm: class for " + f.type + " not defined");
 
                 if (!_.context.isExoFormControl(f))
-                    throw "ExoForm: cannot create control: class for " + f.type + " is not derived from ExoControlBase";
+                    throw TypeError("ExoForm: cannot create control: class for " + f.type + " is not derived from ExoControlBase");
 
                 let control = null;
 

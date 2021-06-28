@@ -5,6 +5,7 @@
 @import "ul-tabs";
 @import "xo-brand";
 @import "xo-theme";
+@import "exf-scrollbar";
 @import "markdown";
 
 @import url("https://fonts.googleapis.com/css2?family=Lato:wght@100&display=swap");
@@ -22,6 +23,23 @@
 
         #app-title {
             display: none;
+        }
+
+
+        article.exf-lv-item {
+            .small {
+                font-size: smaller;
+                opacity: 0.7;
+            }
+        }
+
+
+        .exf-btn {
+            padding: .2rem .4rem;
+            border-radius: .3rem;
+            outline: none;
+            background-color: var(--color-button);
+            color: var(--color-button-text);
         }
     }
 
@@ -193,10 +211,11 @@ html:not([data-pwa-route="/"]) {
     [data-pwa-area="panel"] {
         background-color: var(--color-panel-background);
         overflow-y: auto;
+        z-index: 1500
     }
 
     [data-pwa-area="menu"] {
-        z-index: 10 !important;
+        z-index: 1499 !important;
 
         background-image: url("/img/nv-logo.png");
         background-size: 90%;
@@ -286,7 +305,7 @@ html:not([data-pwa-route="/"]) {
             }
 
             [data-pwa-area="panel"] {
-                z-index: 10 !important;
+                z-index: 500 !important;
                 height: 100%;
                 font-size: 0.8rem;
                 overflow-y: auto;
@@ -337,7 +356,7 @@ html:not([data-pwa-route="/"]) {
 
         &.nsp-xs {
             [data-pwa-area="panel"] {
-                z-index: 10 !important;
+                z-index: 500 !important;
                 height: 400px;
                 bottom: -365px;
                 font-size: 0.8rem;

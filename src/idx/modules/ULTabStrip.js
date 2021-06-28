@@ -64,7 +64,7 @@ class ULTab {
 
     select() {
         if (!this.tabOptions.enabled)
-            throw "Tab " + this.tabOptions.id + " is disabled";
+            throw TypeError("Tab " + this.tabOptions.id + " is disabled");
 
         let tabInput = this.tabStrip.container.querySelector('#' + this.tabStrip.name + "-" + this.tabOptions.id);
         tabInput.checked = true
@@ -88,7 +88,7 @@ class ULTabStrip {
     tabs = {}
 
     constructor(name, settings) {
-        if (!name) throw "Need name for ULTabStrip";
+        if (!name) throw TypeError("Need name for ULTabStrip");
         this.name = name;
 
         settings = settings || {

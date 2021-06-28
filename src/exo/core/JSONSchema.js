@@ -43,7 +43,7 @@ class JSONSchema {
             field.caption = props.title || path;
         }
 
-        if (props.description) {
+        if (props && props.description) {
             field.info = props.description;
         }
 

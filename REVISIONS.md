@@ -457,3 +457,34 @@ See [ListView Control](./md/exo/controls/listview.md)
   - domItem: list item DOM lement the contextmenu is shown for
   - item: the item in the current dataset the contextmenu is shown for
 
+# New in 1.4.5
+
+## Model binding proxies
+
+Model instances are now wrapped in ECMAScript *Proxy* objects, so object state can be monitored, and state can be shared with hosting environments such as Vue, React or Angular.
+
+Sharing data
+
+```js
+let data = null;
+xo.on("new-form", e => {
+    if (e.detail.id === "my-form") {
+        e.detail.exoForm.on("schemaLoaded", ev => {
+            data = ev.detail.host.dataBinding.model.instance.data
+        })
+    }
+})
+```
+
+... then, launch your form with an id:
+
+```js
+let form = await xo.form.run(schema, {
+            id: "my-form"
+});
+```
+
+## Other changes
+
+- Better error handling
+- xo.on() - xo now triggers events: "new-form" event 

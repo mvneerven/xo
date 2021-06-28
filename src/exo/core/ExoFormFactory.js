@@ -10,7 +10,6 @@ import ExoFormProgress from '../progress/ExoFormProgress';
 import ExoFormRules from '../rules/ExoFormRules'
 import ExoFormContext from './ExoFormContext';
 
-
 /**
  * Factory class for ExoForm - Used to create an ExoForm context.
  * Provides factory methods. Starting point for using ExoForm. 
@@ -20,6 +19,7 @@ import ExoFormContext from './ExoFormContext';
 class ExoFormFactory {
 
     static events = {
+        created: "created",
         schemaParsed: "schemaParsed", // parsed raw schema, no processing done
         schemaLoading: "schemaLoading", // initial processing done, JSON schemas (if any) loaded.
         schemaLoaded: "schemaLoaded", // when loading the form schema is complete
@@ -61,6 +61,7 @@ class ExoFormFactory {
     }
 
     static Context = ExoFormContext;
+   
 
     static defaults = {
         imports: [],
@@ -204,7 +205,8 @@ class ExoFormFactory {
             if (value.$schema) {
                 return "json-schema";
             }
-            if (value.type && value.name) {
+            
+            if (value.type && (value.name || !(value.pages) )) {
                 return "field";
             }
         }

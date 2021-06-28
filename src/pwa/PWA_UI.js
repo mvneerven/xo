@@ -79,7 +79,7 @@ class PWA_UI {
         let ar = document.querySelectorAll("[data-pwa-area]");
 
         if (!ar.length)
-            throw "No PWA areas defined";
+            throw TypeError("No PWA areas defined");
 
         ar.forEach(element => {
             var areaName = element.getAttribute("data-pwa-area")
@@ -126,9 +126,8 @@ class PWA_UI {
     }
 
     async showDialog(options) {
-        let ctx = await window.xo.form.factory.build();
-        let frm = ctx.createForm();
-        let r = await frm.renderSingleControl({
+        
+        let r = await xo.form.run({
             ...options || {},
             type: "dialog"
         });

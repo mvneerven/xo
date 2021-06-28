@@ -16,9 +16,9 @@ class RouteModule {
         this.path = path;
 
         if (!app)
-            throw "RouteModule constructor parameter 'app' not defined";
+            throw TypeError("RouteModule constructor parameter 'app' not defined");
         if (!app.config)
-            throw "app.config not defined";
+            throw TypeError("app.config not defined");
     }
 
     init() { } // called just after instantiation. To be subclassed

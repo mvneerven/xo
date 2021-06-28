@@ -86,6 +86,7 @@ class StudioRoute extends xo.route {
     }
 
     render(path) {
+
         this.app.UI.areas.main.clear()
 
         this.styleSheetHelper = new StyleSheetHelper(this);
@@ -94,7 +95,11 @@ class StudioRoute extends xo.route {
 
         this.showFormExplorer()
 
-        if (this.renderer.cache) {
+        if(path){
+            this.tryOpenPassedSchemaUrl(path)
+        }
+        
+        else if (this.renderer.cache) {
             try {
                 this.renderer.restoreCache();
             }
@@ -108,6 +113,21 @@ class StudioRoute extends xo.route {
         }
 
         new ExoFormBuilderSchema(this).render(this.tabStrip.tabs.start.panel);
+
+        
+    }
+
+    tryOpenPassedSchemaUrl(path){
+        if(Core.isUrl(path.substr(1))){
+            fetch(path.substr(1)).then(x => x.text()).then(text => {
+                this.loadSchemaInEditor(text);
+                this.renderer.model.load(text);
+                this.tabStrip.tabs.schema.select();
+            })
+        }
+        
+        
+        DOM.changeHash("/studio")
     }
 
     // when current schema in editor is rendered

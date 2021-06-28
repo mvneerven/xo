@@ -10,7 +10,7 @@ class ExoElementControl extends ExoControlBase {
             try {
                 this.htmlElement = document.createElement(context.field.tagName);
                 if (this.htmlElement.nodeName !== context.field.tagName.toUpperCase()) {
-                    throw "'" + context.field.tagName + "' is not a valid tagName";
+                    throw TypeError("'" + context.field.tagName + "' is not a valid tagName");
                 }
 
                 if (!this.isSelfClosing) {
@@ -30,7 +30,7 @@ class ExoElementControl extends ExoControlBase {
 
             }
             catch (ex) {
-                throw "Could not generate '" + context.field.tagName + "' element: " + ex.toString();
+                throw TypeError("Could not generate '" + context.field.tagName + "' element: " + ex.toString());
             }
         }
     }

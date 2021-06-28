@@ -15,8 +15,8 @@
 
     .exf-required:not(.exf-lbl-empty) > .exf-ctl > label::after {
         position: absolute;
-        margin-left: .2rem;
-        margin-top: -.2rem;
+        margin-left: 0.2rem;
+        margin-top: -0.2rem;
         content: " *";
         color: inherit;
         color: var(--color-label-active);
@@ -75,7 +75,7 @@
 
         > .exf-ctl-cnt {
             display: inline-block;
-            margin-right: .6rem;
+            margin-right: 0.6rem;
         }
     }
 
@@ -93,7 +93,7 @@
     }
 
     .exf-hidden {
-        display: none!important;
+        display: none !important;
     }
 
     .exf-error {
@@ -104,7 +104,6 @@
         border: 1px solid red;
     }
 
-    
     .exf-input-group {
         &:not(.tiles) {
             .exf-ilc-cnt {
@@ -121,12 +120,11 @@
             position: relative;
             margin-bottom: 2em;
 
-            .exf-label{
+            .exf-label {
                 overflow: hidden;
                 text-overflow: ellipsis;
                 width: 100%;
             }
-
 
             // nested
             .exf-ctl-cnt {
@@ -214,7 +212,6 @@
 
                     > .exf-label {
                         top: -1.7em !important;
-                        
                     }
                 }
             }
@@ -275,6 +272,54 @@
 
                         /* Place on top of each other */
                         grid-area: 1 / 1 / 2 / 2;
+                    }
+                }
+            }
+
+            &.exf-txt-psx {
+                position: relative;
+
+                &.prefix{
+                    input{
+                        padding-left: 2rem!important;
+                    }
+                }
+
+                &.suffix{
+                    input{
+                        padding-right: 2rem!important;
+                    }
+                }
+
+                .exf-txt-psx-span {
+                    position: absolute;
+
+                    top: 0.45rem;
+
+                    &.icon {
+                        top: 0.65rem;
+                        left: 0.5rem;
+                    }
+
+                    &.field{
+                        top: -.2rem;
+                    }
+
+                    &.prefix {
+                        left: 0.5rem;
+                    }
+
+                    &.suffix {
+                        right: 0.5rem;
+                    }
+
+                    > .exf-ctl-cnt {
+                        padding: 0;
+                        margin: 0;
+
+                        .exf-btn {
+                            padding: 0.1rem 0.2rem;
+                        }
                     }
                 }
             }

@@ -12,8 +12,8 @@
 
 .exf-container .exf-required:not(.exf-lbl-empty) > .exf-ctl > label::after {
   position: absolute;
-  margin-left: .2rem;
-  margin-top: -.2rem;
+  margin-left: 0.2rem;
+  margin-top: -0.2rem;
   content: " *";
   color: inherit;
   color: var(--color-label-active);
@@ -75,7 +75,7 @@
 
 .exf-container .exf-nav-cnt > .exf-ctl-cnt {
   display: inline-block;
-  margin-right: .6rem;
+  margin-right: 0.6rem;
 }
 
 .exf-container.single-page .exf-page {
@@ -255,6 +255,49 @@
   -ms-grid-column: 1;
   -ms-grid-column-span: 1;
   grid-area: 1 / 1 / 2 / 2;
+}
+
+.exf-container .exf-page > .exf-ctl-cnt.exf-txt-psx {
+  position: relative;
+}
+
+.exf-container .exf-page > .exf-ctl-cnt.exf-txt-psx.prefix input {
+  padding-left: 2rem !important;
+}
+
+.exf-container .exf-page > .exf-ctl-cnt.exf-txt-psx.suffix input {
+  padding-right: 2rem !important;
+}
+
+.exf-container .exf-page > .exf-ctl-cnt.exf-txt-psx .exf-txt-psx-span {
+  position: absolute;
+  top: 0.45rem;
+}
+
+.exf-container .exf-page > .exf-ctl-cnt.exf-txt-psx .exf-txt-psx-span.icon {
+  top: 0.65rem;
+  left: 0.5rem;
+}
+
+.exf-container .exf-page > .exf-ctl-cnt.exf-txt-psx .exf-txt-psx-span.field {
+  top: -.2rem;
+}
+
+.exf-container .exf-page > .exf-ctl-cnt.exf-txt-psx .exf-txt-psx-span.prefix {
+  left: 0.5rem;
+}
+
+.exf-container .exf-page > .exf-ctl-cnt.exf-txt-psx .exf-txt-psx-span.suffix {
+  right: 0.5rem;
+}
+
+.exf-container .exf-page > .exf-ctl-cnt.exf-txt-psx .exf-txt-psx-span > .exf-ctl-cnt {
+  padding: 0;
+  margin: 0;
+}
+
+.exf-container .exf-page > .exf-ctl-cnt.exf-txt-psx .exf-txt-psx-span > .exf-ctl-cnt .exf-btn {
+  padding: 0.1rem 0.2rem;
 }
 
 .exf-container .exf-info {

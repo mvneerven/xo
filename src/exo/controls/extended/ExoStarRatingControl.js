@@ -43,7 +43,7 @@ class ExoStarRatingControl extends ExoBaseControls.controls.range.type {
         wrapper.classList.add("exf-star-rating")
 
 
-        throw "Not implemented";
+        throw TypeError("Not implemented");
 
         return e;
     }

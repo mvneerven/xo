@@ -1,6 +1,7 @@
 import ExoInputControl from './ExoInputControl';
 import DOM from '../../../pwa/DOM';
 import ExoTextControlAutoCompleteExtension from './ExoTextControlAutoCompleteExtension';
+import xo from '../../../../js/xo';
 
 class ExoTextControl extends ExoInputControl {
     constructor(context) {
@@ -9,15 +10,37 @@ class ExoTextControl extends ExoInputControl {
         this.isTextInput = true;
         this.htmlElement = DOM.parseHTML('<input type="text"/>');
 
-        this.acceptProperties({
-            name: "prefix",
-            type: Object,
-            description: `Prefix to display in input (e.g. '$'). 
+        this.acceptProperties(
+            {
+                name: "prefix",
+                type: Object,
+                description: `Prefix to display in input (e.g. '$'). 
                 Use object notation to specify icon or font. 
                 - prefix: {char: "◷", font: "Segoe UI"}
-                - prefix: {icon: "ti-search"}`
+                - prefix: {icon: "ti-search"}
+                - prefix: {
+                    type: "button",
+                    name: "openbtn"
+                    icon: "ti-open"
+                }`
 
-        },
+            },
+            {
+                name: "suffix",
+                type: Object,
+                description: `Suffix to display in input. 
+                Use object notation to specify icon or font. 
+                - prefix: {char: "◷", font: "Segoe UI"}
+                - prefix: {icon: "ti-search"}
+                - prefix: {
+                    type: "button",
+                    name: "openbtn"
+                    icon: "ti-open"
+                }`
+
+            },
+
+
             {
                 name: "autocomplete",
                 description: "Object with autocomplete settings",
@@ -38,25 +61,13 @@ class ExoTextControl extends ExoInputControl {
         }
 
 
-        if (this.prefix) {
-            //this.htmlElement.closest(".exf-ctl").setAttribute("data-prefix", this.prefix)
-            this.container.classList.add("exf-std-lbl");
-            let pos = "";
-            let pfx = document.createElement("span");
-            if (this.prefix.icon) {
-                pfx.classList.add(this.prefix.icon);
-                pos = "top: .65rem; left: 0.5rem";
-            }
-            else {
-                pfx.innerHTML = this.prefix.char ? this.prefix.char : this.prefix;
-                pos = "top: .45rem; left: 0.5rem";
-            }
 
-            pfx.style = `position: absolute; ${pos}; ${(this.prefix.font ? "font-family: "
-                + this.prefix.font : "")}; ${(this.prefix.size ? "font-size: " + this.prefix.size + "; line-height: " + this.prefix.size : "")}`;
-
-            this.container.appendChild(pfx);
-            this.htmlElement.style.paddingLeft = "2rem";
+        for (const x of ["prefix", "suffix"]) {
+            if (this[x]) {
+                //this.htmlElement.closest(".exf-ctl").setAttribute("data-prefix", this.prefix)
+                this.container.classList.add("exf-std-lbl");
+                await this.addPreOrSuffix(x, this[x])
+            }
         }
 
         if (this.autocomplete) {
@@ -66,16 +77,45 @@ class ExoTextControl extends ExoInputControl {
         return this.container;
     }
 
+    async addPreOrSuffix(type, obj) {
+        this.container.classList.add("exf-txt-psx", type);
+
+        let span = document.createElement("span");
+        span.classList.add("exf-txt-psx-span", type);
+        if (obj.icon) {
+            span.classList.add(obj.icon);
+            span.classList.add("icon");
+        }
+        else if (obj.field) { // field
+            span.classList.add("field")
+            let elm = await xo.form.run(obj.field);
+            span.appendChild(elm);
+        }
+        else {
+            span.classList.add("char")
+            span.innerHTML = obj.char ? obj.char : obj;
+            span.style = `${(obj.font ? "font-family: "
+            + obj.font : "")}; ${(obj.size ? "font-size: " + obj.size + "; line-height: " + obj.size : "")}`;
+        }
+        this.container.appendChild(span);
+    }
+
     get prefix() {
         return this._prefix;
     }
 
     set prefix(value) {
         this._prefix = value;
-
-        // if (this.rendered)
-        //     this.htmlElement.closest(".exf-ctl").setAttribute("data-prefix", this._prefix);
     }
+
+    get suffix() {
+        return this._suffix;
+    }
+
+    set suffix(value) {
+        this._suffix = value;
+    }
+
 
     set autocomplete(obj) {
         this._autoComplete = new ExoTextControlAutoCompleteExtension(this, obj);

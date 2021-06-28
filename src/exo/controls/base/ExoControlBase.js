@@ -21,11 +21,11 @@ class ExoControlBase {
 
     constructor(context) {
         if (this.constructor === ExoControlBase)
-            throw new Error("Can't instantiate abstract class!");
+            throw TypeError("Can't instantiate abstract class!");
 
         this.context = context;
         if (!context || !context.field || !context.exo)
-            throw "Invalid instantiation of ExoControlBase";
+            throw TypeError("Invalid instantiation of ExoControlBase");
 
         this.htmlElement = document.createElement('span');
 
@@ -197,6 +197,7 @@ class ExoControlBase {
             let prop = this.acceptedProperties.find(e => {
                 return e.name === p.name
             })
+
             if (!prop) {
                 this.acceptedProperties.push(p);
                 if (this.context.field[p.name] !== undefined) {
@@ -358,7 +359,7 @@ class ExoControlBase {
             let name = prop.toLowerCase();
             let value = f[name];
 
-            if (ExoForm.meta.properties.reserved.includes(name)) {
+            if (name !== "bind" && ExoForm.meta.properties.reserved.includes(name)) {
                 //f[name] = this._processProp(name, value);
                 continue;
             }
