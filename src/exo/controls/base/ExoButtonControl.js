@@ -72,11 +72,7 @@ class ExoButtonControl extends ExoElementControl {
     }
 
     this.htmlElement.addEventListener("click", (e) => {
-      debugger;
-
       if (me.click) {
-        
-
         let data = null;
         try {
           data = this.context.exo.getFormValues();

@@ -465,26 +465,34 @@ Model instances are now wrapped in ECMAScript *Proxy* objects, so object state c
 
 Sharing data
 
+You can now add an id to your form instance:
+
+```js
+let form = await xo.form.run(schema, {
+  id: "my-form"
+});
+```
+
+Using the events xo now emits, you can then hook into the form runtime:
+
 ```js
 let data = null;
 xo.on("new-form", e => {
     if (e.detail.id === "my-form") {
         e.detail.exoForm.on("schemaLoaded", ev => {
-            data = ev.detail.host.dataBinding.model.instance.data
+            const exo = ev.detail.host;
+            const model = exo.dataBinding.model;
+            // set data to the instance managed within the form
+            data = model.instance.data; 
         })
     }
 })
 ```
 
-... then, launch your form with an id:
-
-```js
-let form = await xo.form.run(schema, {
-            id: "my-form"
-});
-```
 
 ## Other changes
 
 - Better error handling
-- xo.on() - xo now triggers events: "new-form" event 
+- xo.on() - xo now triggers events:
+  - "new-form" event raised when a new form is created
+
