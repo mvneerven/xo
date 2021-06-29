@@ -76,8 +76,8 @@ class ExoFormDataBinding {
         })
             .on(ExoFormFactory.events.interactive, () => {
                 let eventName = this.exo.options.DOMChange || "input" ;
-                
-                exo.form.addEventListener(eventName, e => {
+
+                const handle = e => {
                     if(this.noProxy){
                         console.log("SKIPPED BECAUSE NO-PROXY")
                         return
@@ -93,7 +93,12 @@ class ExoFormDataBinding {
                             this._mapped = this._model.instance; // map back
                         }
                     }
-                })
+                }
+
+                exo.form.addEventListener("change", handle);
+                
+                if(eventName === "input")
+                    exo.form.addEventListener(eventName, handle)
             })
     }
 

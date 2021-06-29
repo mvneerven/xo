@@ -579,7 +579,7 @@ Dropdown action and click parameters now aligns with button action and click.
 See above example.
 
 
-# New in 1.4.57
+# New in 1.4.59
 
 ## Simplified Model Sharing for reactive frameworks.
 

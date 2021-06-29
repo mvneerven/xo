@@ -80,6 +80,11 @@ class ExoFormNavigationBase {
                 this.exo.form.addEventListener("change", e => {
                     this.updatecontrolstates()
                 });
+                if(this.exo.options.DOMChange === "input"){
+                    this.exo.form.addEventListener("input", e => {
+                        this.updatecontrolstates()
+                    });
+                }
     
                 this.exo.on(ExoFormFactory.events.interactive, this._ready.bind(this));
 

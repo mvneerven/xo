@@ -13,6 +13,7 @@ const schema = {
             }
         },
         logic: context => {
+            
             switch (context.changed.property) {
 
                 case "action":

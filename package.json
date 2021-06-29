@@ -1,6 +1,6 @@
 {
   "name": "@mvneerven/xo-js",
-  "version": "1.4.57",
+  "version": "1.4.59",
   "description": "XO - Pure JS Progressive Web Apps & Declarative Forms - No dependencies",
   "repository": {
     "type": "git",
@@ -34,7 +34,7 @@
     "build1": "npm run compile&&npm run test&&npm run doc",
     "test": "esbuild js/xo.js --bundle --format=cjs --outfile=dist/xo.cjs.js&&cross-env NODE_OPTIONS=--experimental-vm-modules jest",
     "dev": "node esbuild-dev.js",
-    "build": "node esbuild-build.js&&npm run test&&npm run doc"
+    "build": "node esbuild-build.js&&npm run test&&npm run doc&&tsc"
   },
   "license": "MIT",
   "devDependencies": {
