@@ -8,6 +8,9 @@ import Core from '../src/pwa/Core';
 import MsIdentity from '../src/pwa/MsIdentity';
 import ExoEntityManager from '../src/exo/databinding/ExoEntityManager';
 
+/**
+ * ExoForm shortcut object
+ */
 class Form {
     get factory() { return ExoFormFactory }
     get entity() { return ExoEntityManager }
@@ -18,6 +21,11 @@ class Form {
     }
     get run() { return ExoFormFactory.run }
 
+    /**
+     * Bind all datamodel changes to a function
+     * @param {Function} f - the function to call
+     * @param {*} verbose - Verbose mode
+     */
     bind(f, verbose) {
         if (typeof (f) !== "function") {
             throw TypeError("Must pass a function");
@@ -39,18 +47,58 @@ class Form {
                         console.log("form.bind", e.detail.state + " - " + (e.detail.log || "none"))
                     }
                     f({
-
-                        exo: e.detail.host.exo,
-                        ...e.detail,
-                        state: state
+                        exo: e.detail.host.exo, ...e.detail, state: state
                     })
 
                 })
             })
         })
     }
+
+    /**
+     * Gets an ExoForm instance from an HTML element
+     * @param {HtmlElement} elm 
+     * @returns {ExoForm}
+     */
+    from(elm) {
+        if (!elm)
+            return;
+
+        let f = ExoFormFactory.getFieldFromElement(elm);
+        if (f && f._control)
+            return f._control.context.exo;
+        else {
+            let cnt = elm.closest(".exf-container");
+            if (cnt) {
+                return xo.form.from(cnt.querySelector(".exf-page"));
+            }
+        }
+    }
+
+    /**
+     * Assign a given ExoForm model instance to a variable 
+     * @param {String} formId 
+     * @param {String} instanceName 
+     */
+    data(formId, instanceName, f) {
+
+        xo.on("new-form", e => {
+            if (e.detail.exoForm.id === formId) {
+                e.detail.exoForm.on("schemaLoaded", ev => {
+                    let inst = ev.detail.host.dataBinding.model.instance;
+                    if (inst[instanceName]) {
+                        f(inst[instanceName])
+                    }
+                })
+            }
+        });
+
+    }
 }
 
+/**
+ * Root XO object. Shortcut to most of XO-JS functionality
+ */
 class XO {
     constructor() {
         this._form = new Form();

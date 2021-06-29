@@ -630,3 +630,37 @@ async createContext(config) {
 
 
 ExoForm now defaults to ```input``` to allow for a more realtime feel, in 
+
+
+# New in 1.4.65
+
+## New method: xo.form.from()
+
+You can now use ```xo.form.from(htmlElement)``` to get access to the ExoForm instance controlling it
+
+## New method: xo.form.data() 
+
+In scenarios where ExoForm model data is shared with reactive environments such as Vue, react, Angular or Svelte (or just plain Vanilla JS), there is now an extremely simple way to get a reference to an ExoForm controlled model data instance.
+
+For instance, you can use this code anywhere in your page:
+
+```js
+let sharedData = xo.form.data("person-form", "data", o => sharedData = o);
+```
+
+... if you bind your form using a JSON Schema:
+
+```js
+const schema = {
+  model: {
+    schema: "https://myserver.com/json-schema/person.json"    
+  }
+}
+
+xo.form.run(schema, {
+    id: "person-form"
+});
+```
+
+The ```sharedData``` variable will then be a direct reference to the instance inside the form.
+

@@ -6,22 +6,75 @@ const panel = document.querySelector("[data-pwa-area='panel']");
 const logElm = document.createElement("div");
 logElm.classList.add("log");
 
-let sharedData = null;
+let sharedData = xo.form.data("my-form", "data", o => sharedData = o);
+
 
 let btn = document.createElement("button")
 btn.innerText = "Click me";
-btn.addEventListener("click", e=>{ sharedData.test = "MarcieMarc"})
+//btn.addEventListener("click", e=>{ sharedData.test = "MarcieMarc"})
+
+btn.addEventListener("click", e => {
+
+    //console.log(xo.form.from(document.querySelector("form")))
+
+    sharedData.test = "mama"
+
+    return;
+
+    let id = new xo.identity.msal({
+        "mode": "popup",
+        "libUrl": "https://alcdn.msauth.net/browser/2.15.0/js/msal-browser.js",
+        "msal": {
+            "auth": {
+                "clientId": "2dcef537-9d58-47ac-b389-6310b8f94216",
+                "knownAuthorities": [
+                    "https://TwelveBCDevTest.b2clogin.com"
+                ],
+                "authority": "https://TwelveBCDevTest.b2clogin.com/TwelveBCDevTest.onmicrosoft.com/B2C_1_ASF_Dev3/",
+                "redirectUri": "<dynamic>"
+            },
+            "cache": {
+                "cacheLocation": "sessionStorage",
+                "storeAuthStateInCookie": false
+            },
+            "loginRequest": {
+                "prompt": "select_account",
+                "scopes": [
+                    "openid",
+                    "offline_access",
+                    "https://TwelveBCDevTest.onmicrosoft.com/asfbackend/ASFBackend.ReadWrite"
+                ]
+            },
+            "tokenRequest": {
+                "scopes": ["https://TwelveBCDevTest.onmicrosoft.com/asfbackend/ASFBackend.ReadWrite"]
+            }
+        }
+    })
+    id.load().then(x => {
+        x.myMSALObj.loginPopup().then(x => {
+            console.log(x.account);
+
+            x.getJWT(x.account.username).then(j => {
+                debugger;
+            });
+
+        });
+    })
+
+})
+
 
 panel.appendChild(btn)
 
 panel.appendChild(logElm)
 
-xo.form.bind(obj=>{
-    log(obj);
-    if(obj.state === "ready"){
-        sharedData = obj.instances.data
-    }
-}, true);
+// xo.form.bind(obj=>{
+//     log(obj);
+//     if(obj.state === "ready"){
+//         sharedData = obj.instances.data
+//     }
+// }, true);
+
 
 xo.form.run({
     model: {
@@ -75,6 +128,7 @@ xo.form.run({
         }
     ]
 }, {
+    id: "my-form",
     DOMChange: "change"
 }).then(x => { area.appendChild(x) });
 
@@ -145,39 +199,6 @@ if (false) {
 
 let data = null;
 
-// let id = new xo.identity.msal( {
-
-//         "mode": "popup",
-//         "msal": {
-//             "auth": {
-//                 "clientId": "2dcef537-9d58-47ac-b389-6310b8f94216",
-//                 "knownAuthorities": [
-//                     "https://TwelveBCDevTest.b2clogin.com"
-//                 ],
-//                 "authority": "https://TwelveBCDevTest.b2clogin.com/TwelveBCDevTest.onmicrosoft.com/B2C_1_ASF_Dev3/",
-//                 "redirectUri": "<dynamic>"
-//             },
-//             "cache": {
-//                 "cacheLocation": "sessionStorage",
-//                 "storeAuthStateInCookie": false
-//             },
-//             "loginRequest": {
-//                 "scopes": [
-//                     "openid",
-//                     "offline_access"
-//                 ]
-//             },
-//             "tokenRequest": {
-//                 "scopes": []
-//             }
-//         }
-
-// })
-// id.load().then(x=>{
-//     x.myMSALObj.loginPopup().then(x=>{
-//         debugger;
-//     });
-// })
 
 
 

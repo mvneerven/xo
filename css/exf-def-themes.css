@@ -292,8 +292,8 @@
 .exf-container.exf-theme-material .exf-ctl-cnt:not(.exf-std-lbl) > .exf-ctl > .exf-label {
   position: absolute;
   pointer-events: none;
-  top: 0.7em;
-  line-height: 1;
+  top: 0.5em;
+  line-height: 1.3;
 }
 
 .exf-container.exf-theme-material .exf-ctl-cnt:not(.exf-std-lbl) > .exf-ctl > input {
@@ -443,7 +443,7 @@
 .exf-container.exf-theme-material .exf-ctl-cnt.exf-input > .exf-ctl, .exf-container.exf-theme-material .exf-ctl-cnt[data-field-type="dropdown"] > .exf-ctl {
   border-bottom: 1px solid #666;
   border-bottom: 1px solid var(--color-input-shade);
-  padding-bottom: 0.25rem;
+  padding-bottom: 0;
 }
 
 .exf-container.exf-theme-material .exf-ctl-cnt.exf-input:not(.exf-std-lbl).exf-filled > .exf-ctl input,

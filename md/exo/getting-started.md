@@ -101,6 +101,7 @@ xo.form.run("/data/forms/account.json", {
 ### ExoForm in Frontend Frameworks (Vue, React, Angular, etc.)
 
 - [CodePen Vue Example](https://codepen.io/isazulay/pen/ExWBgEJ)
+- [Vue & ExoForm integration (GitHub)](https://github.com/inbarazulay1997/xo-examples) by Inbar Azulay
 
 ## More reading
 

@@ -175,9 +175,14 @@ class MsIdentity {
 
             request.account = _.myMSALObj.getAccountByUsername(username);
             return _.myMSALObj.acquireTokenSilent(request)
+                .then(response => {
+                    if (!response.accessToken || response.accessToken === "") {
+                        throw new msal.InteractionRequiredAuthError;
+                    }
+                })
                 .catch(error => {
                     if (error instanceof msal.InteractionRequiredAuthError) {
-                        return _.myMSALObj.acquireTokenRedirect(request);
+                        return _.myMSALObj.acquireTokenPopup(request);
                     } else {
                         console.warn(error);
                     }
