@@ -45,13 +45,13 @@ class PWA_EventHub {
 
             this.signalRConnection = new signalR.HubConnectionBuilder()
                 .withUrl(this.settings.notificationServiceUrl + "/api")
-                .configureLogging(signalR.LogLevel[this.settings.logLevel]) //don't use in production
+                .configureLogging(signalR.LogLevel[this.settings.logLevel]) 
                 .build();
 
             this.signalRConnection.on('newMessage', msg => {
                 console.debug("signalR", msg);
 
-                this.events.trigger(msg.notificationDTO.useCase, {
+                this.events.trigger(msg.notificationDTO.namedEvent, {
                     ...msg.notificationDTO
                 })
             });
@@ -69,6 +69,7 @@ class PWA_EventHub {
             let signalRConnectionId = await this.signalRConnection.invoke("GetConnectionId");
             console.info(`SignalR connectionId = ${signalRConnectionId}`);
 
+            
             this.events.trigger("connected", {
                 connectionId: signalRConnectionId
             })
