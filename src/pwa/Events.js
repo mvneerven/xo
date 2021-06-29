@@ -27,10 +27,15 @@ class Events {
         }
     }
 
-    trigger(eventName, detail, ev) {
-        console.debug(this.host.constructor.name, "triggering event", eventName, "detail: ", detail)
+    trigger(event, detail, ev) {
+        console.debug(this.host.constructor.name, "triggering event", event, "detail: ", detail)
+
+        if( typeof(event) === "object" && event instanceof Event ){
+            return this.host.dispatchEvent(event);    
+        }
+
         if (!ev) {
-            ev = new Event(eventName, { bubbles: false, cancelable: true });
+            ev = new Event(event, { bubbles: false, cancelable: true });
         }
 
         ev.detail = {

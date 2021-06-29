@@ -131,8 +131,12 @@ const ent = new xo.form.entity({
         }
     }
 })
-    .on("edit", e => {
-        debugger;
+    .on("edit", async e => {
+        e.preventDefault();
+        let frm = await e.detail.host.edit(e.detail.item);
+
+
+        //e.returnValue = false;
     })
 
 area.appendChild(await ent.list())

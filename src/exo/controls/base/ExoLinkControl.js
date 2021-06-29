@@ -5,7 +5,10 @@ class ExoLinkControl extends ExoElementControl {
     constructor(context) {
         super(context);
 
-        this.htmlElement = document.createElement("a");
+        this.useContainer = false,
+
+            this.htmlElement = document.createElement("a");
+        this.htmlElement.innerHTML = this.caption
 
         this.acceptProperties(
             {
@@ -16,47 +19,60 @@ class ExoLinkControl extends ExoElementControl {
             {
                 name: "html",
                 type: String
+            },
+
+            {
+                name: "url",
+                type: String
             }
+
+
         );
     }
 
-    set value(href){
+    set value(href) {
         this._value = href;
         this.htmlElement.setAttribute("href", this._value);
     }
 
-    get value(){
+    get value() {
         return this._value;
     }
 
-    get external(){
+    set url(value) {
+        this.value = value;
+    }
+
+    get url() {
+        return this.value
+    }
+
+    get external() {
         return this._external;
     }
 
-    set external(value){
+    set external(value) {
         this._external = value;
-        if(value){
+        if (value) {
             this.htmlElement.setAttribute("target", "_blank");
         }
-        else{
+        else {
             this.htmlElement.removeAttribute("target");
         }
     }
 
-    set html(value){
+    set html(value) {
         this.htmlElement.innerHTML = value
     }
 
-    get html(){
+    get html() {
         return this.htmlElement.innerHTML;
     }
 
-    async render(){
+    async render() {
         await super.render();
-        this.container.classList.add("exf-std-lbl");
-        return this.container;
+        return this.htmlElement
     }
-
 }
 
 export default ExoLinkControl;

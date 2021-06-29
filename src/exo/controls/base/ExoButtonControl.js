@@ -52,7 +52,7 @@ class ExoButtonControl extends ExoElementControl {
     );
   }
 
-  async render() {   
+  async render() {
     let me = this;
     await super.render();
 
@@ -71,49 +71,7 @@ class ExoButtonControl extends ExoElementControl {
       this.htmlElement.classList.add("exf-btn-compact");
     }
 
-    this.htmlElement.addEventListener("click", (e) => {
-      if (me.click) {
-        let data = null;
-        try {
-          data = this.context.exo.getFormValues();
-        } catch { }
-        let f = this.click;
-        
-        if (typeof f !== "function") {
-          f = this.context.exo.options.customMethods[f];
-        }
-        if (typeof f !== "function") {
-          if (this.context.exo.options.host) {
-            if (
-              typeof this.context.exo.options.host[this.click] === "function"
-            ) {
-              f = this.context.exo.options.host[this.click];
-
-              f.apply(this.context.exo.options.host, [data, e]);
-              return;
-            }
-          } else {
-            throw TypeError("Not a valid function: " + this.click);
-          }
-        }
-        f.apply(this, [data, e]);
-      } else if (this.action) {
-        let actionParts = this.action.split(":");
-
-        switch (actionParts[0]) {
-          case "next":
-            this.context.exo.addins.navigation.next();
-            break;
-          case "reset":
-            this.context.exo.addins.navigation.goto(1);
-            break;
-
-          case "goto":
-            this.context.exo.addins.navigation.goto(parseInt(actionParts[1]));
-            break;
-        }
-      }
-    });
+    this.htmlElement.addEventListener("click", this.handleClick.bind(this));
 
     if (this.dropdown) {
       const btnClone = this.htmlElement.cloneNode(true);
@@ -129,6 +87,53 @@ class ExoButtonControl extends ExoElementControl {
     return this.container;
   }
 
+  handleClick(e) {
+    const me = this;
+    let givenAction = this.action, isDropDown = false;
+
+    if (e.target.closest(".exf-btn-dropdown")) {
+      let itm = e.target.closest("[data-action]");
+      if (itm) {
+        isDropDown = true;
+        givenAction = itm.getAttribute("data-action");
+      }
+    }
+    if (me.click) {
+      
+      let ev = new CustomEvent("click", {
+        detail: {
+          origEvent: e,
+          isDropDown: isDropDown,
+          button: me
+        }
+      })
+      me.click.apply(me, [ev]);
+
+    } else if (givenAction) {
+      let actionParts = givenAction.split(":"); givenAction = actionParts[0];
+
+      switch (givenAction) {
+        case "next":
+          this.context.exo.addins.navigation.next();
+          break;
+        case "reset":
+          this.context.exo.addins.navigation.goto(1);
+          break;
+        case "goto":
+          this.context.exo.addins.navigation.goto(parseInt(actionParts[1]));
+          break;
+        default:
+          actionParts.shift()
+          this.context.exo.events.trigger("action", {
+            invoker: this,
+            isDropDown: isDropDown,
+            action: givenAction,
+            parts: actionParts
+          })
+      }
+    }
+  }
+
   set class(value) {
     this._class = value;
     this.htmlElement.classList.add(...this._class.split(" "));
@@ -140,7 +145,7 @@ class ExoButtonControl extends ExoElementControl {
 
   async renderDropdown(items) {
 
-    const listElement = DOM.parseHTML(`<ul class="exf-btn-dropdown" />`);
+    const listElement = DOM.parseHTML(`<ul class="exf-btn-dropdown ${this.direction || "left"}" />`);
     for (const item of items) {
       listElement.appendChild(await this.getListItem(item));
     }
@@ -162,43 +167,45 @@ class ExoButtonControl extends ExoElementControl {
   }
 
   async getListItem(item) {
-    let template = DOM.parseHTML("<li/>");
+    let template = document.createElement("li");
     let icon = `<span class="${item.icon}"></span>`;
 
     if (typeof (item.click) === "function") {
       item.type = "click";
     }
-    item.type = item.type || "action";
+    item.type = item.action ? "action" : item.type || "action";
+    let caption = item.caption || item.name || "";
 
     switch (item.type) {
 
       case "click":
         template = DOM.parseHTML(
-          `<li title="${item.tooltip || ""}"><a  class="${item.class || ""}">${icon} ${item.name || ""}</a></li>`,
+          `<li title="${item.tooltip || ""}"><a  class="${item.class || ""}">${icon} ${caption}</a></li>`,
         );
         template.addEventListener("click", item.click)
         break;
 
       case "action":
         template = DOM.parseHTML(
-          `<li data-action="${item.action}" title="${item.tooltip || ""}"><a  class="${item.class || ""}">${icon} ${item.name || ""}</a></li>`,
+          `<li data-action="${item.action}" title="${item.tooltip || ""}"><a  class="${item.class || ""}">${icon} ${caption}</a></li>`,
         );
+        template.addEventListener("click", this.handleClick.bind(this))
         break;
 
       case "event":
         template = DOM.parseHTML(
-          `<li data-action="${item.title}" title="${item.tooltip || ""}"><a  class="${item.class || ""}">${icon} ${item.name || ""}</a></li>`,
+          `<li data-action="${item.title}" title="${item.tooltip || ""}"><a  class="${item.class || ""}">${icon} ${caption}</a></li>`,
         );
         break;
       case "field":
         template = DOM.parseHTML(
-          `<li title="${item.tooltip}}"><a class="${item.class}">${icon} ${item.name || ""}</a></li>`,
+          `<li title="${item.tooltip}}"><a class="${item.class}">${icon} ${caption}</a></li>`,
         );
         template.querySelector("a").appendChild(await xo.form.run(item.field));
         break;
       default:
         template = DOM.parseHTML(
-          `<li title="${item.tooltip}"><a class="${item.class}" href="${item.url}">${icon} ${item.name || ""}</a></li>`,
+          `<li title="${item.tooltip}"><a class="${item.class}" href="${item.url}">${icon} ${caption}</a></li>`,
         );
         break;
     }

@@ -16,7 +16,7 @@
   max-height: 300px;
   max-width: 500px;
   overflow-y: auto;
-  z-index: 10;
+  z-index: 9999;
 }
 
 .exf-ctl-cnt.autocomplete .exf-ac-rs .exf-ac-itm {

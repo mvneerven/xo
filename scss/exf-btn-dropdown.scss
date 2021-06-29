@@ -41,6 +41,11 @@
         text-transform: uppercase;
       }
     }
+
+    &.right{
+      right: auto;
+      left: 0;
+    }
   }
 
   &.drop-dir-left {

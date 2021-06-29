@@ -1101,6 +1101,11 @@ html.theme-light nav.ul-drop ul li > ul {
   text-transform: uppercase;
 }
 
+.exf-dropdown-cnt ul.exf-btn-dropdown.right {
+  right: auto;
+  left: 0;
+}
+
 .exf-dropdown-cnt.drop-dir-left ul.exf-btn-dropdown {
   -webkit-animation: slideLeft 300ms ease-in-out forwards;
           animation: slideLeft 300ms ease-in-out forwards;
@@ -2864,7 +2869,7 @@ html.theme-dark .exf-ctl-cnt.exf-switch input[type="range"] {
   max-height: 300px;
   max-width: 500px;
   overflow-y: auto;
-  z-index: 10;
+  z-index: 9999;
 }
 
 .exf-ctl-cnt.autocomplete .exf-ac-rs .exf-ac-itm {
@@ -3087,7 +3092,6 @@ html.theme-dark .exf-ctl-cnt.autocomplete .exf-ac-rs .exf-ac-itm.active {
 .exf-listview .exf-listview-btns .exf-listview-flt .exf-ctl input {
   width: 8rem !important;
   margin-top: 1rem !important;
-  border: 1px solid rgba(255, 255, 255, 0.5) !important;
   padding: 0.2rem 0.4rem !important;
   line-height: 1.5rem !important;
 }

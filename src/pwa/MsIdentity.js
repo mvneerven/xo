@@ -85,33 +85,31 @@ class MsIdentity {
 
 
     init() {
-        var _ = this;
+        this.myMSALObj = new msal.PublicClientApplication(this.options.msal);
 
-        _.myMSALObj = new msal.PublicClientApplication(_.options.msal);
-
-        if (_.options.mode !== "popup") {
-            _.myMSALObj.handleRedirectPromise()
-                .then(r => { _.handleResponse(r) })
+        if (this.options.mode !== "popup") {
+            this.myMSALObj.handleRedirectPromise()
+                .then(r => { this.handleResponse(r) })
                 .catch((error) => {
                     console.error(error);
                 });
         }
 
-        _.getAccount();
+        this.getAccount();
 
     }
 
     signIn(email) {
-        var _ = this;
-        const account = _.getAccount();
+
+        const account = this.getAccount();
         if (!account) {
 
-            if (_.options.mode === "popup") {
-                _.myMSALObj.loginPopup(_.options.msal.loginRequest)
+            if (this.options.mode === "popup") {
+                return this.myMSALObj.loginPopup(this.options.msal.loginRequest)
                     .then(response => {
                         if (response !== null) {
-                            _.account = response.account;
-                            _.signedIn();
+                            this.account = response.account;
+                            this.signedIn();
                         }
                     })
                     .catch(error => {
@@ -119,7 +117,7 @@ class MsIdentity {
                     });
             }
             else {
-                _.myMSALObj.loginRedirect(_.options.msal.loginRequest);
+                return this.myMSALObj.loginRedirect(this.options.msal.loginRequest);
             }
         }
     }

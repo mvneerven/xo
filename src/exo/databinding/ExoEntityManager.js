@@ -183,8 +183,30 @@ class ExoEntityManager {
     return frm;
   }
 
-  async edit() {
+  async edit(data) {
+    if (!data || typeof (data) !== "object")
+      throw TypeError("Must provide data to edit");
+
     await this.checkLoaded();
+
+    let schema = {
+      ...this.options.forms.edit.schema
+    }
+    schema.model.instance.data = data;
+
+    const editFrm = await xo.form.run(schema, {
+      context: this.options.exoContext,
+
+      on: {
+        schemaLoaded: async (e) => {
+          this.editorForm = e.detail.host;
+          this.events.trigger("editFormLoaded", {
+            exo: e.detail.host,
+          });
+        },
+      },
+    });
+    return editFrm;
   }
 
   async checkLoaded() {
@@ -194,8 +216,12 @@ class ExoEntityManager {
         if (typeof (this.options.map) === "function") {
           let mapped = this.options.map(this.options.forms);
           this.tryReApplyListProperties(mapped) // object struct to array
-          this.applyMappings(this.options.forms, mapped)
+          this.applyMappings(this.options.forms, mapped);
         }
+        this.tryFixMissingMappings();
+      }
+      catch (ex) {
+        console.error("checkLoaded", ex);
       }
       finally {
         this.state = ExoEntityManager.states.initialized;
@@ -217,6 +243,45 @@ class ExoEntityManager {
         obj[p] = mapped[p] || obj[p]
       }
     }
+  }
+
+  tryFixMissingMappings() {
+    const l = this.options.forms.list;
+
+    if (this.options.forms.list.control.type === "listview") {
+      let fieldName = this.getNameFieldFuzzy();
+      this.options.forms.list.control.views.forEach(v => {
+        let mappings = l.control.mappings[v];
+        if (!mappings) {
+          l.control.mappings[v] = [{ key: fieldName }]
+        }
+      })
+    }
+  }
+
+  getNameFieldFuzzy(){
+    const props = this.jsonSchema.properties;
+    for(var p in props){
+      let s = (props[p].title || p).toLowerCase();
+      if(["name", "title", "naam", "file"].includes(s)){
+        return p;
+      }
+    }
+
+    return this.getFirstStringField()
+  }
+
+  getFirstStringField(){
+    let first = null;
+    const props = this.jsonSchema.properties;
+    for(var p in props){
+      if(!first) first = p;
+      if(props[p].type === "string"){
+        return p;
+      }
+    }
+
+    return first;
   }
 
   // if mapped.list.control.properties are returned by map(),
@@ -346,28 +411,22 @@ class ExoEntityManager {
     data = data || this._getSelectedItemData() || {};
     this.editing = true;
 
-    let schema = {
-      ...this.options.forms.edit.schema
-    }
-    schema.model.instance.data = data;
-
-    const editFrm = await xo.form.run(schema, {
-      context: this.options.exoContext,
-
-      on: {
-        schemaLoaded: async (e) => {
-          this.editorForm = e.detail.host;
-          me.events.trigger("editFormLoaded", {
-            exo: e.detail.host,
-          });
-        },
+    let ev = new CustomEvent("edit", {
+      bubbles: false,
+      cancelable: true,
+      detail: {
+        host: this,
+        item: data
       },
     });
+
+    var returnValue = this.events.trigger(ev)
+    if (!returnValue) return;
 
     this.editDialog = await this.showDialog({
       modal: false,
       title: data.id ? `Edit` : `Add`,
-      body: editFrm,
+      body: await this.edit(data),
       confirmText: "Save",
       cancelText: "Cancel",
 
@@ -421,15 +480,7 @@ class ExoEntityManager {
       return r.id === this.currentId;
     });
 
-    if (data) {
-
-      debugger;
-
-      return {
-        ...data,
-        url: data.imageUri,
-      };
-    }
+    return data;
   }
 
   async showDialog(options) {
@@ -476,12 +527,12 @@ class ExoEntityManager {
   async readJSONSchema() {
     this.state = ExoEntityManager.states.initializing;
 
-    const schema = await xo.form.factory.readJSONSchema(this.options.jsonSchema);
-    this.options.forms.edit.schema.model.schemas.data = this.options.jsonSchema;
+    this.jsonSchema = await xo.form.factory.readJSONSchema(this.options.jsonSchema);
+    this.options.forms.edit.schema.model.schemas.data = this.options.jsonSchema; // set same jsonschema in generated editor model
 
     this.options.forms.list.control = {
       ...this.options.forms.list.control,
-      properties: this.distilListProperties(schema),
+      properties: this.distilListProperties(this.jsonSchema),
     }
 
     this.state = ExoEntityManager.states.initialized

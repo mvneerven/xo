@@ -59,6 +59,11 @@
   text-transform: uppercase;
 }
 
+.exf-dropdown-cnt ul.exf-btn-dropdown.right {
+  right: auto;
+  left: 0;
+}
+
 .exf-dropdown-cnt.drop-dir-left ul.exf-btn-dropdown {
   -webkit-animation: slideLeft 300ms ease-in-out forwards;
           animation: slideLeft 300ms ease-in-out forwards;

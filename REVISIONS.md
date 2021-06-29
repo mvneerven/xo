@@ -496,3 +496,78 @@ xo.on("new-form", e => {
 - xo.on() - xo now triggers events:
   - "new-form" event raised when a new form is created
 
+# New in 1.4.56
+
+## Button control
+
+- More consistent behavior
+
+### Action parameter
+
+The action parameter can now be used to trigger 'action' event in host.
+
+```js
+xo.form.run({ pages: [ {
+      fields: [{
+          type: "button",
+          icon: "ti-file",
+          name: "button1",
+          action: "file",                                        
+      }]
+  } ]}, {
+        on: {
+            action: e=>{
+                // e.detail.action = 'file'
+            }
+        }
+    }
+)
+```
+
+This also goes for dropdown items:
+
+```js
+xo.form.run(
+    {
+        pages: [
+            {
+
+                fields: [{
+                    type: "button",
+                    icon: "ti-menu",
+                    name: "dropper",
+                    dropdown: [
+                        {
+                          caption: `Select all`,
+                          icon: "ti-check-box",
+                          tooltip: "Select all",
+                          action: "select"
+                          
+                        },
+                        {
+                          caption: `Deselect all`,
+                          icon: "ti-layout-width-full",
+                          tooltip: "Deselect all",
+                          action: "deselect"
+                        },
+                      ]
+                }]
+            }
+        ]
+    }, {
+        on: {
+            action: e=>{
+                // e.detail.action -> ...
+                // e.detail.isDropDown -> true
+            }
+        }
+    }
+).then(x => {
+
+    area.appendChild(x)
+
+})
+```
+
+
+### Dropdown parameters alignment ()
