@@ -55,14 +55,14 @@ class PWA {
 
         this.eventHub = new PWA_EventHub(this);
 
-        this.eventHub.init().then(() => {
+        this.eventHub.init();
 
-            this.asyncInit().then(() => {
-                this._UI = new PWA_UI(this);
-                this.init();
-                this.execute()
-            });
-        })
+        this.asyncInit().then(() => {
+            this._UI = new PWA_UI(this);
+            this.init();
+            this.execute()
+        });
+    
 
         let cl = document.querySelector("html").classList;
         this.forceTheme = cl.contains("theme-dark") ? "dark" : cl.contains("theme-light") ? "light" : undefined;
