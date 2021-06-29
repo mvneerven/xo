@@ -40,7 +40,7 @@ body {
   -webkit-box-shadow: 0 0 20px #eee;
           box-shadow: 0 0 20px #eee;
   border-radius: 10px;
-  display: block;
+  display: inline-block;
 }
 
 #xo-play .exf-btn:hover {

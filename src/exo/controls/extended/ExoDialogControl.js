@@ -100,6 +100,7 @@ class ExoDialogControl extends ExoBaseControls.controls.div.type {
         this.dlg.addEventListener("click", c);
 
         document.body.addEventListener("keydown", e => {
+            
             if (e.keyCode === 27) c(e);
             if (e.keyCode === 13) c(e, true);
         }, {
@@ -126,8 +127,10 @@ class ExoDialogControl extends ExoBaseControls.controls.div.type {
 
     remove() {
         //let dlg = document.querySelector("#" + this.dlgId);
-        if (this.dlg)
+        if (this.dlg){
             this.dlg.remove();
+            //this.dlg = null;
+        }
     }
 }
 

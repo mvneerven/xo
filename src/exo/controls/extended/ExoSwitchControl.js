@@ -31,9 +31,6 @@ class ExoSwitchControl extends ExoBaseControls.controls.range.type {
 
         check({ target: e });
 
-        // if (this.context.field.disabled)
-        //     this.enabled = false;
-
         e.addEventListener("click", e => {
             e.stopImmediatePropagation();
             e.cancelBubble = true;
@@ -52,6 +49,14 @@ class ExoSwitchControl extends ExoBaseControls.controls.range.type {
 
         return this.container;
         //return e;
+    }
+
+    get value(){
+        return Boolean(this.htmlElement.value);
+    }
+
+    set value(data){
+        this.htmlElement.value = data ? 1: 0;
     }
 }
 

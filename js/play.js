@@ -1,15 +1,12 @@
 const Core = xo.core;
 const DOM = xo.dom;
 
-let data = null;
+let sharedData = null;
 
-xo.on("new-form", e => {
-    if (e.detail.id === "my-form") {
-        e.detail.exoForm.on("schemaLoaded", ev => {
-            data = ev.detail.host.dataBinding.model.instance.data
-        })
-    }
-})
+xo.form.bind(e=>{
+    if(e.state ==="ready" && e.instances.data)
+     sharedData = e.instances.data
+}, true);
 
 const area = document.querySelector("[data-pwa-area='main']");
 
@@ -87,9 +84,8 @@ const ent = new xo.form.entity({
 
                         imageUri: {
                             page: "prd",
-                            type: "assetselector",
-                            caption: "Linked Asset"//,
-                            //value: data["imageUri"],
+                            type: "image",
+                            caption: "Linked Asset"
                         },
 
                         price: {
@@ -132,8 +128,8 @@ const ent = new xo.form.entity({
     }
 })
     .on("edit", async e => {
-        e.preventDefault();
-        let frm = await e.detail.host.edit(e.detail.item);
+        // e.preventDefault();
+        // let frm = await e.detail.host.edit(e.detail.item);
 
 
         //e.returnValue = false;

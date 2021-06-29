@@ -8,7 +8,7 @@ import Core from '../src/pwa/Core';
 import MsIdentity from '../src/pwa/MsIdentity';
 import ExoEntityManager from '../src/exo/databinding/ExoEntityManager';
 
-class F {
+class Form {
     get factory() { return ExoFormFactory }
     get entity() { return ExoEntityManager }
     get fields() {
@@ -17,18 +17,50 @@ class F {
         }
     }
     get run() { return ExoFormFactory.run }
+
+    bind(f, verbose) {
+        if (typeof (f) !== "function") {
+            throw TypeError("Must pass a function");
+        }
+        xo.on("new-form", e => {
+            e.detail.exoForm.on("schemaLoaded", ev => {
+                f({
+                    state: "ready",
+                    exo: e.detail.exoForm,
+                    instances: ev.detail.host.dataBinding.model.instance
+                })
+
+                e.detail.exoForm.on("dataModelChange", e => {
+                    let state = e.detail.state !== "ready" ? "change" : "modelready";
+                    if (state === "modelready") {
+                        e.detail.log = "Model ready";
+                    }
+                    if (verbose) {
+                        console.log("form.bind", e.detail.state + " - " + (e.detail.log || "none"))
+                    }
+                    f({
+
+                        exo: e.detail.host.exo,
+                        ...e.detail,
+                        state: state
+                    })
+
+                })
+            })
+        })
+    }
 }
 
 class XO {
     constructor() {
-        this._f = new F();
+        this._form = new Form();
         this.events = new Core.Events(this);
     }
     get core() { return Core }
     get dom() { return DOM }
     get pwa() { return PWA }
     get route() { return RouteModule }
-    get form() { return this._f }
+    get form() { return this._form }
 
     identity = {
         msal: MsIdentity

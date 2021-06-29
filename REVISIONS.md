@@ -570,4 +570,63 @@ xo.form.run(
 ```
 
 
-### Dropdown parameters alignment ()
+### Dropdown parameters alignment 
+
+You can now use caption, icon, class and action.
+
+Dropdown action and click parameters now aligns with button action and click.
+
+See above example.
+
+
+# New in 1.4.57
+
+## Simplified Model Sharing for reactive frameworks.
+
+XO now has a simple way to share model data with your reactive framework (Vue, Angular, React, Svelte, etc.).
+
+Simply pass a function to ```xo.form.bind()``` and wait for the state property to be ```ready```. You can then get the instance as mounted in ExoForm and read from and write to it.
+
+```js
+
+let sharedData = null;
+
+xo.form.bind(e=>{
+    if(e.state ==="ready" && e.instances.data)
+        sharedData = e.instances.data
+
+}, true); // bind to all data model events, with verbose=true
+```
+
+The ```verbose``` parameter can be used to watch all binding events in the console.
+
+## DOMChange option
+
+You can now specify the ```DOMChange``` event name ExoForm will use to signal changes. 
+
+```js
+await xo.form.run(schema, {
+    DOMChange: "change"
+})
+```
+
+You can also provide a default in your ```ExoFormContext``` instance"
+
+```js
+async createContext(config) {
+  const factory = xo.form.factory;
+
+  factory.add(MyControlLib.controls);
+
+  return factory.build({
+    defaults: {
+      validation: "inline",
+      DOMChange: "change"
+    },
+    ...(config || {}),
+  });
+}
+```
+
+
+ExoForm now defaults to ```input``` to allow for a more realtime feel, in 

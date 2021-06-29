@@ -69,7 +69,8 @@ class ExoFormFactory {
             navigation: "auto",
             validation: "default",
             progress: "auto",
-            theme: "material"
+            theme: "material",
+            DOMChange: "input"
         }
     }
 

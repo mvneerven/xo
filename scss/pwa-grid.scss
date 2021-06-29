@@ -10,7 +10,7 @@
         display: grid;
     }
 
-    &.nsp-grid-3rc {
+    &.nsp-grid-3rc, &.nsp-grid-3r {
         overflow: hidden;
         height: 100vh;
 
@@ -20,27 +20,7 @@
 
         body {
             height: 100vh;
-            grid-template-rows: minmax(4vh, 40px) 1fr 30px;
-
-            main {
-                display: grid;
-                overflow-y: hidden;
-                grid-template-columns: minmax(10vw, 200px) 1fr minmax(10vw, 300px);
-
-                [data-pwa-area="main"] {
-                    padding: 10px;
-
-                    overflow: auto;
-                }
-
-
-            }
-
-            &.nsp-uw {
-                main {
-                    grid-template-columns: minmax(15vw, 350px) 1fr minmax(15vw, 350px);
-                }
-            }
+            grid-template-rows: minmax(4vh, 40px) 1fr 30px;           
         }
 
         &.nsp-xs {
@@ -198,6 +178,30 @@
             }
         }
     }
+
+    &.nsp-grid-3rc{
+        body {
+            main {
+                display: grid;
+                overflow-y: hidden;
+                grid-template-columns: minmax(10vw, 200px) 1fr minmax(10vw, 300px);
+
+                [data-pwa-area="main"] {
+                    padding: 10px;
+
+                    overflow: auto;
+                }
+            }
+
+            &.nsp-uw {
+                main {
+                    grid-template-columns: minmax(15vw, 350px) 1fr minmax(15vw, 350px);
+                }
+            }
+        }
+    }
+
+    
 }
 
 .nsp-sm {

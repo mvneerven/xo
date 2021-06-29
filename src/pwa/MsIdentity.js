@@ -3,7 +3,7 @@ class MsIdentity {
 
     options = {
         mode: "redirect",
-        libUrl: "https://alcdn.msauth.net/browser/2.7.0/js/msal-browser.js",
+        libUrl: "https://alcdn.msauth.net/browser/2.15.0/js/msal-browser.js",
         msal: {
             auth: {
                 clientId: "<clientid>",

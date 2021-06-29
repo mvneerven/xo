@@ -1,4 +1,5 @@
 import Core from '../../pwa/Core';
+import DOM from '../../pwa/DOM';
 
 class ExoEntityManager {
   _state = -1;
@@ -117,12 +118,13 @@ class ExoEntityManager {
             instance: {
               data: {},
             },
+            mappings: {},
             logic: (context) => {
               let m = context.model;
               m.bindings.edit = !m.instance.data.id;
             },
-          },
-          mappings: {}
+          }
+          
         }
       }
     }
@@ -189,11 +191,8 @@ class ExoEntityManager {
 
     await this.checkLoaded();
 
-    let schema = {
-      ...this.options.forms.edit.schema
-    }
-    schema.model.instance.data = data;
-
+    let schema = this.generateEditSchema(data);
+    
     const editFrm = await xo.form.run(schema, {
       context: this.options.exoContext,
 
@@ -225,8 +224,24 @@ class ExoEntityManager {
       }
       finally {
         this.state = ExoEntityManager.states.initialized;
+
+        // save default edit schema
+        this.editSchemaBase = {
+          ...this.options.forms.edit.schema,
+          mappings: this.options.forms.edit.mappings
+        }
       }
     }
+  }
+
+  generateEditSchema(data){
+    const schema = {
+      ...JSON.parse(JSON.stringify(this.editSchemaBase)),
+    }
+
+    schema.model.instance.data = data;
+
+    return schema;
   }
 
   applyMappings(obj, mapped) {
@@ -420,8 +435,12 @@ class ExoEntityManager {
       },
     });
 
-    var returnValue = this.events.trigger(ev)
-    if (!returnValue) return;
+    var returnValue = this.events.trigger(ev); 
+    if (!returnValue) return; 
+
+    // If host has not cancelled, show dialog
+
+    this.editDialog = null;
 
     this.editDialog = await this.showDialog({
       modal: false,

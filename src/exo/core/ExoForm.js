@@ -57,8 +57,10 @@ class ExoForm {
         const defOptions = {
             type: "form",
             customMethods: {},
+            DOMChange: context.config.defaults.DOMChange || "input"
         }
         this.options = { ...defOptions, ...opts };
+        
         this.id = this.options.id || Core.guid();          
         this.events = new Core.Events(this);
 

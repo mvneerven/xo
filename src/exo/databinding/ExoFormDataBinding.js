@@ -75,8 +75,9 @@ class ExoFormDataBinding {
             this.events.trigger("ready", { model: this._model });
         })
             .on(ExoFormFactory.events.interactive, () => {
-                exo.form.addEventListener("change", e => {
-                    
+                let eventName = this.exo.options.DOMChange || "input" ;
+                
+                exo.form.addEventListener(eventName, e => {
                     if(this.noProxy){
                         console.log("SKIPPED BECAUSE NO-PROXY")
                         return
@@ -89,15 +90,8 @@ class ExoFormDataBinding {
                         let value = field._control.value;
                         Core.setObjectValue(this._model, field.bind, value);
                         if (this._mapped) {
-                            // map back
-                            this._mapped = this._model.instance;
+                            this._mapped = this._model.instance; // map back
                         }
-
-                        this.events.trigger("change", {
-                            model: this._model,
-                            changed: field.bind,
-                            value: value
-                        });
                     }
                 })
             })
@@ -205,19 +199,29 @@ class ExoFormDataBinding {
         }
 
         return proxify(instanceName, obj, function (object, property, oldValue, newValue) {
-            console.log('property ' + property + ' changed from ' + oldValue +
+            console.debug("ExoFormDataBinding", 'property ' + property + ' changed from ' + oldValue +
                 ' to ' + newValue);
 
             if (!me.noProxy) {
-                me.resolver.resolve({
+                const change = {
+                    model: me._model,
                     instanceName: instanceName,
                     object: object,
                     property: property,
                     oldValue: oldValue,
-                    newValue: newValue
-                });
+                    newValue: newValue,
+                }
+
+                change.log = me.verboseLog(change);
+                me.events.trigger("change", change);
+                me.resolver.resolve(change);
             }
         });
+    }
+
+    verboseLog(change){
+        let s = `Instance ${change.instanceName} modified: property ${change.property} changed from ${change.oldValue} to ${change.newValue}.`
+        return s;
     }
 
     _processFieldProperty(control, name, value) {
