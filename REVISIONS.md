@@ -636,7 +636,15 @@ ExoForm now defaults to ```input``` to allow for a more realtime feel, in
 
 ## New method: xo.form.from()
 
-You can now use ```xo.form.from(htmlElement)``` to get access to the ExoForm instance controlling it
+You can now use ```xo.form.from(htmlElement)``` to get access to the ExoForm instance controlling it.
+
+You can pass it any element within an ExoForm container, including the container itself:
+
+```js
+const form = document.querySelector("form.exf-form");
+const exo = xo.form.from(form);
+```
+
 
 ## New method: xo.form.data() 
 

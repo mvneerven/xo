@@ -1,15 +1,7 @@
 const Core = xo.core;
 const DOM = xo.dom;
 
-let data = null;
-
-xo.on("new-form", e => {
-    if (e.detail.id === "my-form") {
-        e.detail.exoForm.on("schemaLoaded", ev => {
-            data = ev.detail.host.dataBinding.model.instance.data
-        })
-    }
-})
+let sharedData = xo.form.data("my-form", "data", o => sharedData = o);
 
 class HomeRoute extends xo.route {
 
@@ -28,8 +20,8 @@ class HomeRoute extends xo.route {
         let btn = document.createElement('button');
         btn.innerText = "Flinstone?";
         btn.addEventListener("click", e => {
-            data.name.first = "Fred";
-            data.name.last = "Flintstone";
+            sharedData.name.first = "Fred";
+            sharedData.name.last = "Flintstone";
         })
         this.area.add(btn);
 
@@ -37,8 +29,8 @@ class HomeRoute extends xo.route {
         let btn2 = document.createElement('button');
         btn2.innerText = "Home?";
         btn2.addEventListener("click", e => {
-            data.coords = [52.85582619118, 5.717743972222222];
-            data.zoom = 17
+            sharedData.coords = [52.85582619118, 5.717743972222222];
+            sharedData.zoom = 17
         })
         this.area.add(btn2);
 
@@ -47,12 +39,12 @@ class HomeRoute extends xo.route {
         btn3.innerText = "Pins?";
         btn3.addEventListener("click", e => {
 
-            data.coords = [52.25582619118, 5.117743972222222];
-            data.markers.push({
+            sharedData.coords = [52.25582619118, 5.117743972222222];
+            sharedData.markers.push({
                 position: [52.25582619118, 5.117743972222222],
                 text: "yeah right"
             }),
-                data.zoom = 7
+            sharedData.zoom = 7
         })
         this.area.add(btn3);
     }
@@ -824,8 +816,6 @@ new PWA({
     routes: {
         "/": HomeRoute,
         "/test": TestRoute,
-
         "/products": ProductsRoute
-
     }
 })
