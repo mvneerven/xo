@@ -662,5 +662,7 @@ xo.form.run(schema, {
 });
 ```
 
-The ```sharedData``` variable will then be a direct reference to the instance inside the form.
+The ```sharedData``` variable will then be a direct reference to the instance inside the form, and reactivity will be both ways as you wish.
+
+> See [an example using Vue](https://github.com/inbarazulay1997/xo-examples/tree/main/vue.js).
 
