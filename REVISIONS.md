@@ -674,3 +674,76 @@ The ```sharedData``` variable will then be a direct reference to the instance in
 
 > See [an example using Vue](https://github.com/inbarazulay1997/xo-examples/tree/main/vue.js).
 
+# New in 1.4.67
+
+## TreeView control
+
+The TreeView control can be used to display hierarchical data structures.
+
+```js
+const schema = {
+    model: {
+        instance: {
+            data: {
+                selectedNodes: null
+            }
+        }
+    },
+    pages: [
+        {
+            legend: "My Form",
+            intro: "Selected: @instance.data.selectedNodes",
+            fields: [
+                {
+                    type: "treeview",
+                    name: "treeview",
+                    bind: "instance.data.selectedNodes",
+                    singleSelect: false,
+                    minimum: 2,
+                    caption: "Treeview!!",
+                    mappings: {
+                        title: "name",
+                        tooltip: "description",
+                        id: "nr"
+                    },
+                    items: "/data/treedata.json"
+
+                }
+            ]
+        }
+    ]
+}
+xo.form.run(schema);
+```
+
+... where treedata.json has the following structure:
+
+```json
+{
+  "nr": 0,
+  "name": "Tree Structure",
+  "children": [
+    {
+      "nr": 1,
+      "name": "Child with nesting",
+      "children": [
+        {
+          "nr": 2,
+          "name": "Deep nesting"
+        }
+      ]
+    },
+    {
+      "nr": 3,
+      "name": "Second child"
+    },
+    {
+      "nr": 4,
+      "name": "Third child"
+    }
+  ]
+}
+```
+
+The ```items``` property accepts both a URL and an inline object defining the tree structure.
+

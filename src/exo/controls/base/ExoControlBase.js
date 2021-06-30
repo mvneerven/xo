@@ -35,7 +35,8 @@ class ExoControlBase {
             { name: "disabled", type: Boolean, description: "Determines whether the control can be interacted with by the user" },
             { name: "caption", type: String, description: "Caption/label to display" },
             { name: "useContainer", type: Boolean, description: "Specifies whether the control should render within the standard control container. Default depends on control." },
-            { name: "bind", type: String, description: "Specifies a path to bind the control to one of the instances in the model, if any. Syntax: 'instance.[instancename].[propertyname]'" }
+            { name: "bind", type: String, description: "Specifies a path to bind the control to one of the instances in the model, if any. Syntax: 'instance.[instancename].[propertyname]'" },
+            
         );
     }
 

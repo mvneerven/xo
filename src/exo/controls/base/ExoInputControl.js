@@ -10,6 +10,8 @@ class ExoInputControl extends ExoElementControl {
     constructor(context) {
         super(context);
         this.htmlElement = document.createElement('input');
+
+        
     }
 
     async render() {

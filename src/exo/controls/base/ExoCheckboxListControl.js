@@ -17,7 +17,6 @@ class ExoCheckboxListControl extends ExoInputListControl {
         return ar;
     }
 
-    //TODO
     set value(data) {
         if(!data){
             this._value = null;

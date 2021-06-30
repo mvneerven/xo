@@ -1,0 +1,24 @@
+{
+    "nr": 0,
+    "name": "Tree Structure",
+    "children": [
+      {
+        "nr": 1,
+        "name": "Child with nesting",
+        "children": [
+          {
+            "nr": 2,
+            "name": "Deep nesting"
+          }
+        ]
+      },
+      {
+        "nr": 3,
+        "name": "Second child"
+      },
+      {
+        "nr": 4,
+        "name": "Third child"
+      }
+    ]
+  }

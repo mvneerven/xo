@@ -19,7 +19,6 @@ import ExoFormFactory from './ExoFormFactory';
         const form = this.createForm({ // needed for meta buildup
             internal: true
         });
-        //form.load({ pages: [{}] }); //TODO: check whether it's safe to remove this
 
         for (var name in library) {
             let field = library[name];

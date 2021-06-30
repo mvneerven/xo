@@ -50,7 +50,21 @@ class ExoExtendedControls {
        
         map: {type: ExoLeafletMapControl, note: "Leaflet interactive map" },
         listview: {type: ExoListViewControl, note: "Listview control"},
-        treeview: {type: ExoTreeViewControl, note: "Treeview control", demo: {columns: {name: "Name"}, items: [{name: "Test"}]}}
+        treeview: {type: ExoTreeViewControl, note: "Treeview control", demo: {mappings: { title: "name", tooltip: "description", id: "nr" },
+            items: {
+                name: "Root item",
+                children: [
+                    {
+                        name: "First Child", children: [ { name: "Deep nesting" }]
+                    },
+                    {
+                        name: "Second child"
+                    },
+                    {
+                        name: "Third child"
+                    }
+                ]
+            }}}
     }
 }
 

@@ -76,23 +76,33 @@ class Form {
     }
 
     /**
-     * Assign a given ExoForm model instance to a variable 
-     * @param {String} formId 
-     * @param {String} instanceName 
+     * Assign a given ExoForm model instance to a variable.
+     * 
+     * Usage:
+     * 
+     * Get access to the instance called 'data':
+     *  let data = xo.form.data("my-form", "data", o => data = o);* 
+     * If you want access to all instances instead of a named one:
+     *  let instances = xo.form.data("my-form", o => instances = o);
+     * 
+     * @param {String} formId - the id of the ExoForm instance 
+     * @param {String} instanceName - the name of the instance to bind to
+     * @param {Function} f - the callback to use when the instance is available
      */
     data(formId, instanceName, f) {
+        if (typeof (instanceName) === "function" && f === undefined) {
+            f = instanceName;
+            instanceName = null;
+        }
 
         xo.on("new-form", e => {
             if (e.detail.exoForm.id === formId) {
                 e.detail.exoForm.on("schemaLoaded", ev => {
-                    let inst = ev.detail.host.dataBinding.model.instance;
-                    if (inst[instanceName]) {
-                        f(inst[instanceName])
-                    }
+                    let instances = ev.detail.host.dataBinding.model.instance;
+                    f(!instanceName ? instances : instances[instanceName])
                 })
             }
         });
-
     }
 }
 

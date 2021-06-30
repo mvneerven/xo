@@ -6,7 +6,7 @@ const panel = document.querySelector("[data-pwa-area='panel']");
 const logElm = document.createElement("div");
 logElm.classList.add("log");
 
-let sharedData = xo.form.data("my-form", "data", o => sharedData = o);
+let sharedData = xo.form.data("my-form", o => sharedData = o);
 
 
 let btn = document.createElement("button")
@@ -17,7 +17,7 @@ btn.addEventListener("click", e => {
 
     //console.log(xo.form.from(document.querySelector("form")))
 
-    sharedData.test = "mama"
+    sharedData.data.test = "mama"
 
     return;
 
@@ -80,49 +80,52 @@ xo.form.run({
     model: {
         instance: {
             data: {
-                test: "Test"
+                selectedNodes: null
             }
         }
     },
     pages: [
         {
             legend: "My Form",
-            intro: "My form description",
+            intro: "Selected: @instance.data.selectedNodes",
             fields: [
                 {
-                    name: "testField",
-                    caption: "Test Field",
-                    type: "text",
-                    bind: "instance.data.test"
-                }, {
-                    type: "button",
-                    name: "treeview1",
-                    caption: "Btn",
-                    dropdown: [
-                        {
-                            name: "Test",
-                            click: e => {
-                                alert(9)
-                            }
-                        }
-                    ]
-                }, {
                     type: "treeview",
                     name: "treeview",
+                    bind: "instance.data.selectedNodes",
+                    singleSelect: false,
+                    minimum: 2,
                     caption: "Treeview",
-                    columns: {
-                        name: "Name"
+                    mappings: {
+                        title: "name",
+                        tooltip: "description",
+                        id: "nr"
                     },
-                    items: [
-                        {
-                            name: "Test"
-                        }
-                    ]
-                }, {
-                    type: "image",
-                    name: "image",
-                    caption: "Image",
-                    value: "https://source.unsplash.com/random/600x400"
+                    items: {
+                        nr: 0,
+                        name: "Tree Structure",
+                        children: [
+                            {
+                                nr: 1,
+                                name: "Child with nesting",
+                                children: [
+                                    {
+                                        nr: 2,
+                                        name: "Deep nesting"
+                                    }
+                                ]
+                            },
+                            {
+                                nr: 3,
+                                name: "Second child"
+                            },
+                            {
+                                nr: 4,
+                                name: "Third child"
+                            }
+                        ]
+                    }
+
                 }
             ]
         }

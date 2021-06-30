@@ -63,20 +63,15 @@ class ExoListViewControl extends ExoDivControl {
 
     this.events = new Core.Events(this);
 
-    this.acceptProperties(
-      {
-        name: "value", // current selection (array of ids)
-      },
-      {
-        name: "required",
-        type: Boolean,
-      },
+    this.acceptProperties(      
       {
         name: "items",
         type: Object,
         description:
           "Object array, url to fetch, callback function, or promise to get the data from",
       },
+      { name: "value" },
+      { name: "required", type: Boolean  },
       {
         name: "view",
         description: "Current view (tiles, grid)",
