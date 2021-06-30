@@ -38,9 +38,9 @@ class Events {
             ev = new Event(event, { bubbles: false, cancelable: true });
         }
 
-        ev.detail = {
-            host: this.host,
-            ...(detail || {})
+        ev.detail = {            
+            ...(detail || {}),
+            host: this.host
         };
 
         return this.host.dispatchEvent(ev);

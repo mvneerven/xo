@@ -66,6 +66,15 @@ class DocsRoute extends xo.route {
                 a.setAttribute("href", "#/docs" + link)
             }
         });
+
+        for (const i of elm.querySelectorAll("img[src]")) {
+            let u = i.getAttribute("src");
+            if(u.indexOf("//") === -1){
+                let link = "/md/refdocs/" + u;
+                i.setAttribute("src",  link)
+            }
+        };
+
         return elm;
     }
 

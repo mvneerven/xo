@@ -218,7 +218,13 @@ class ExoFormDataBinding {
                 }
 
                 change.log = me.verboseLog(change);
-                me.events.trigger("change", change);
+                me.events.trigger("change", {
+                    model: me._model,
+                    changed: property,
+                    value: newValue,
+                    changeData: change
+                
+                });
                 me.resolver.resolve(change);
             }
         });

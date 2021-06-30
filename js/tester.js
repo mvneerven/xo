@@ -282,7 +282,7 @@ class HomeRoute extends xo.route {
                 }
             ]
         }
-
+        
         let form = await xo.form.run(schema, {
             id: "my-form",
 

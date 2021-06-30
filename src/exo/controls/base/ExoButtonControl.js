@@ -123,6 +123,7 @@ class ExoButtonControl extends ExoElementControl {
           this.context.exo.addins.navigation.goto(parseInt(actionParts[1]));
           break;
         default:
+          
           actionParts.shift()
           this.context.exo.events.trigger("action", {
             invoker: this,

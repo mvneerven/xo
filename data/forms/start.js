@@ -9,11 +9,15 @@ const schema = {
             },
             buildForm: {
                 jsonSchemaUrl: "",
-                jsonSchema: ""
+                jsonSchemaRef: "",
+                jsonSchemaText: "",
+                jsonSchema: null,
+                baseForm: null
             }
         },
         logic: context => {
-            
+            const inst = context.model.instance.buildForm;
+
             switch (context.changed.property) {
 
                 case "action":
@@ -25,11 +29,17 @@ const schema = {
 
                     break;
                 case "jsonSchemaUrl":
-                    const inst = context.model.instance.buildForm;
                     let url = context.changed.newValue;
-                    fetch(url).then(x => x.text()).then(x => {
+                    inst.jsonSchemaRef = xo.core.dataURLtoBlob(url);
+
+                    fetch(url).then(x => x.json()).then(x => {
                         inst.jsonSchema = x;
+                        inst.jsonSchemaText = JSON.stringify(x, null, 2);
                     })
+                    break;
+
+                case "jsonSchema":
+                    inst.baseForm = xo.form.entity.generateFromJSONSchema(inst.jsonSchema, inst.jsonSchemaUrl);
                     break;
             }
         }
@@ -97,7 +107,8 @@ const schema = {
                     ]
                 }
             ]
-        }, {
+        },
+        {
             legend: "Template",
             intro: "Select a template to start with",
             fields: [
@@ -148,7 +159,8 @@ const schema = {
                     caption: "Enter or select a URL of a JSON Schema",
                     bind: "instance.buildForm.jsonSchemaUrl",
                     fileTypes: ["application/json"],
-                    dialog: true
+                    dialog: true,
+                    dialogTitle: "Upload a JSON Schema"
                 },
                 {
                     type: "multiline",
@@ -157,18 +169,22 @@ const schema = {
                     class: "code",
                     rows: 20,
                     name: "schema-contents",
-                    value: "@instance.buildForm.jsonSchema"
+                    value: "@instance.buildForm.jsonSchemaText"
 
                 }
             ]
-        }
-    ],
-    controls: [
+        },
         {
-            name: "prev",
-            type: "button",
-            caption: "◁ Back",
-            class: "form-prev exf-btn"
+            legend: "Generate Form",
+            intro: "Translate JSON-Schema",
+            fields: [
+                {
+                    type: "button",
+                    name: "code1",
+                    caption: "Load Form",
+                    action: "load:instance.buildForm.baseForm"
+                }
+            ]
         }
     ]
 }

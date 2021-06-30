@@ -25,6 +25,16 @@
         "description": "An example of the use of the multiinput control to collect related data"
     },
     {
+        "name": "ListView Example",
+        "value": "https://xo-js.dev/assets/forms/templates/listview.json",
+        "description": "An example of the use of the ListView control to display and manage complex data"
+    },
+    {
+        "name": "TreeView Example",
+        "value": "https://xo-js.dev/assets/forms/templates/treeview.json",
+        "description": "An example of the use of the TreeView control to display hierarchical data"
+    },
+    {
         "name": "Complex Form with conditional logic",
         "value": "https://xo-js.dev/assets/forms/templates/complex.json",
         "description": "A multi-page form with interdepedencies, using the ExoForm Rules engine"

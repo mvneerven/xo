@@ -1,0 +1,57 @@
+{
+  "model": {
+    "instance": {
+      "settings": {
+        "tree": {
+          "nr": 0,
+          "name": "Tree Structure",
+          "children": [
+            {
+              "nr": 1,
+              "name": "Child with nesting",
+              "children": [
+                {
+                  "nr": 2,
+                  "name": "Deep nesting"
+                }
+              ]
+            },
+            {
+              "nr": 3,
+              "name": "Second child"
+            },
+            {
+              "nr": 4,
+              "name": "Third child"
+            }
+          ]
+        }
+      },
+      "data": {
+        "selectedNodes": null
+      }
+    }
+  },
+  "pages": [
+    {
+      "legend": "My Form",
+      "intro": "Selected: @instance.data.selectedNodes",
+      "fields": [
+        {
+          "type": "treeview",
+          "name": "treeview",
+          "bind": "instance.data.selectedNodes",
+          "singleSelect": false,
+          "minimum": 2,
+          "caption": "Treeview",
+          "mappings": {
+            "title": "name",
+            "tooltip": "description",
+            "id": "nr"
+          },
+          "items": "@instance.settings.tree"
+        }
+      ]
+    }
+  ]
+}

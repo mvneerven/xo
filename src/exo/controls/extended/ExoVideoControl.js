@@ -5,7 +5,7 @@ class ExoVideoControl extends ExoEmbedControl {
 
     mute = false;
 
-    autoplay = true;
+    autoplay = false;
 
     player = "youtube";
 

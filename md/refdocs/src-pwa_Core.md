@@ -1,6 +1,6 @@
 # Module `pwa/Core`
 
-![category:other](https://img.shields.io/badge/category-other-blue.svg?style=flat-square)
+![category:test](https://img.shields.io/badge/category-test-blue.svg?style=flat-square)
 
 
 

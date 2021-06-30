@@ -77,7 +77,7 @@ html.theme-dark:root {
   --color-heading: rgb(223, 108, 14);
   --placeholder-color: #777;
   --shadow-color: var(--color-primary-darker);
-  --color-button: var(--color-primary-darkest);
+  --color-button: var(--color-heading);
   --color-button-text: white;
   --field-box-shadow: #888;
   --field-box-shadow-subtle: #666;

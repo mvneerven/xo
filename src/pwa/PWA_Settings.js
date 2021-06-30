@@ -53,11 +53,6 @@ class PWA_Settings {
         return sec;
     }
 
-    getSectionFromBinding(b) {
-        let id = b.split(".")[1];
-        return this._sections[id];
-    }
-
     build() {
         this.schema.pages = this.generateFormPages()
     }
@@ -79,9 +74,11 @@ class PWA_Settings {
                     }
                 },
                 dataModelChange: e => {
+                    
                     let b = e.detail.changed;
                     if (b) {
-                        let sec = this.getSectionFromBinding(b);
+                        
+                        let sec = this._sections[e.detail.changeData.instanceName]; 
                         sec.events.trigger("write", {
                             changed: b,
                             instance: {

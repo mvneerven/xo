@@ -14,7 +14,7 @@ class ExoLeafletMapControl extends ExoElementControl {
     constructor() {
         super(...arguments);
 
-        this._zoom = 10;
+        this._zoom = 10;        
         this.width = 640;
         this.height = 480;
 
@@ -52,7 +52,7 @@ class ExoLeafletMapControl extends ExoElementControl {
         if (this.height)
             elm.style.height = typeof (this.height) === "number" ? this.height + "px" : this.height;
 
-        this.map = await ExoLeafletMapControl.create(elm, this.value, this.zoom, this)
+        this.map = await ExoLeafletMapControl.create(elm, this.value || [0,0], this.zoom, this)
 
         this.container.appendChild(elm)
 
@@ -115,6 +115,9 @@ class ExoLeafletMapControl extends ExoElementControl {
     }
 
     static generate(elm, pos, zoom, options, ready) {
+        
+        pos = Array.isArray(pos) && pos.length > 1 ? pos : [0,0];
+
         let p = [pos[0], pos[1]];
 
         elm.data = elm.data || {};
@@ -145,7 +148,7 @@ class ExoLeafletMapControl extends ExoElementControl {
 
     refresh() {
         console.debug("ExoLeafletMapControl", "Update map" + this.value, this.map);
-        this.map.setView(this.value, this.zoom);
+        this.map.setView(this.value || [0,0], this.zoom);
         
     }
 }

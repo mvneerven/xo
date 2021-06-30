@@ -14,6 +14,22 @@ class ExoEntityManager {
     filter: ""
   }
 
+  static baseFormSchema = {
+    navigation: "static",
+    model: {
+      schemas: {
+        data: undefined
+      },
+      instance: {
+        data: {},
+      },
+      logic: (context) => {
+        let m = context.model;
+        m.bindings.edit = !m.instance.data.id;
+      }
+    }
+  }
+
   _defaults = {
     forms: {
       list: {
@@ -22,11 +38,8 @@ class ExoEntityManager {
           type: "listview",
           pageSize: 8,
           views: ["grid", "tiles"],
-
           items: this._getDataAsync.bind(this),
-
           mappings: {},
-
           contextMenu: {
             direction: "left",
             items: [
@@ -43,7 +56,6 @@ class ExoEntityManager {
             ],
 
           },
-
           listen: {
             ready: (e) => {
               if (this.options.search) {
@@ -90,16 +102,15 @@ class ExoEntityManager {
               icon: "ti-check-box",
               dropdown: [
                 {
-                  name: `<span class="ti-check-box"></span> Select all`,
-                  tooltip: "Select all",
-                  title: "select",
-                  type: "event",
+                  icon: "ti-check-box",
+                  caption: "Select all",
+                  action: "select"
+
                 },
                 {
-                  name: `<span class="ti-layout-width-full"></span> Deselect all`,
-                  tooltip: "Deselect all",
-                  title: "deselect",
-                  type: "event",
+                  icon: "ti-layout-width-full",
+                  caption: "Deselect all",
+                  action: "deselect"
                 },
               ],
             },
@@ -109,23 +120,7 @@ class ExoEntityManager {
         }
       },
       edit: {
-        schema: {
-          navigation: "static",
-          model: {
-            schemas: {
-              data: undefined
-            },
-            instance: {
-              data: {},
-            },
-            mappings: {},
-            logic: (context) => {
-              let m = context.model;
-              m.bindings.edit = !m.instance.data.id;
-            },
-          }
-          
-        }
+        schema: ExoEntityManager.baseFormSchema
       }
     }
   }
@@ -149,6 +144,28 @@ class ExoEntityManager {
       ...this._defaults,
       ...options
     };
+  }
+
+  static generateFromJSONSchema(jsonSchema, jsonSchemaUrl) {
+    const schema = ExoEntityManager.baseFormSchema;
+
+    schema.model.schemas.data = jsonSchemaUrl;
+
+    schema.mappings = schema.mappings || {};
+
+    schema.mappings.skip = [];
+        
+    schema.mappings.pages = {};
+
+    schema.mappings.properties = schema.mappings.properties || {};
+
+    for (var p in jsonSchema.properties) {
+      schema.mappings.properties[p] = {}
+    }
+
+    delete schema.pages;
+
+    return schema;
   }
 
   async list() {
@@ -192,7 +209,7 @@ class ExoEntityManager {
     await this.checkLoaded();
 
     let schema = this.generateEditSchema(data);
-    
+
     const editFrm = await xo.form.run(schema, {
       context: this.options.exoContext,
 
@@ -234,7 +251,7 @@ class ExoEntityManager {
     }
   }
 
-  generateEditSchema(data){
+  generateEditSchema(data) {
     const schema = {
       ...JSON.parse(JSON.stringify(this.editSchemaBase)),
     }
@@ -274,11 +291,11 @@ class ExoEntityManager {
     }
   }
 
-  getNameFieldFuzzy(){
+  getNameFieldFuzzy() {
     const props = this.jsonSchema.properties;
-    for(var p in props){
+    for (var p in props) {
       let s = (props[p].title || p).toLowerCase();
-      if(["name", "title", "naam", "file"].includes(s)){
+      if (["name", "title", "naam", "file"].includes(s)) {
         return p;
       }
     }
@@ -286,12 +303,12 @@ class ExoEntityManager {
     return this.getFirstStringField()
   }
 
-  getFirstStringField(){
+  getFirstStringField() {
     let first = null;
     const props = this.jsonSchema.properties;
-    for(var p in props){
-      if(!first) first = p;
-      if(props[p].type === "string"){
+    for (var p in props) {
+      if (!first) first = p;
+      if (props[p].type === "string") {
         return p;
       }
     }
@@ -435,8 +452,8 @@ class ExoEntityManager {
       },
     });
 
-    var returnValue = this.events.trigger(ev); 
-    if (!returnValue) return; 
+    var returnValue = this.events.trigger(ev);
+    if (!returnValue) return;
 
     // If host has not cancelled, show dialog
 

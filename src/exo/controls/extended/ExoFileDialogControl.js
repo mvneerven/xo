@@ -6,7 +6,8 @@ class ExoFileDialogControl extends ExoDialogControl {
 
         this.acceptProperties(
 
-            { name: "fileTypes", type: String | Array, description: 'Array of strings - example: ["image/"]' }
+            { name: "fileTypes", type: String | Array, 
+            description: 'Array of strings - example: ["image/"]' }
 
         )
     }

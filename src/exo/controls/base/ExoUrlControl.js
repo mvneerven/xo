@@ -10,7 +10,17 @@ class ExoUrlControl extends ExoTextControl {
                 description: "Shows a dialog to select a URL with or create a dataUrl"
             },
 
-            { name: "fileTypes", type: String | Array, description: 'Array of strings - example: ["image/"]' }
+            { 
+                name: "fileTypes", 
+                type: String | Array, 
+                description: 'Array of strings - example: ["image/"]' 
+            },
+
+            {
+                name: "dialogTitle",
+                type: String,
+                description: "Title to show in the file upload dialog"
+            }
         )
     }
 
@@ -27,6 +37,7 @@ class ExoUrlControl extends ExoTextControl {
                         const context = {};
                         let r = await xo.form.run({
                             type: "filedialog",
+                            title: this.dialogTitle || "Upload or select a file",
                             fileTypes: me.fileTypes,
                             name: "test",
                             click: async (button, event) => {

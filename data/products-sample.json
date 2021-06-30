@@ -1,0 +1,81 @@
+[
+    {
+        "id": "86e4dc55-4559-441c-8864-1880fda0f4de",
+        "name": "Jupiler",
+        "description": "Standaard pils (25cl)",
+        "price": 2.25,
+        "imageUri": "https://picsum.photos/200/300"
+    },
+    {
+        "id": "8c93b7b0-aec2-4f9d-99a8-af18f41ddda9",
+        "name": "Hertog Jan",
+        "description": "Van de tap, 25cl",
+        "price": 2.5,
+        "imageUri": "https://picsum.photos/200/300?rnd=1"
+    },
+    {
+        "id": "db810312-885f-435a-903b-9ec5cbb71aa9",
+        "name": "Hoegaarden Witbier",
+        "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce bibendum, leo rhoncus aliquam euismod, nisl ipsum congue diam, et sollicitudin nisl dui nec mauris. Donec blandit felis sagittis elit porta venenatis. Quisque nec facilisis sem. Ut nec eleifend ante, vitae scelerisque lacus. Etiam ac orci tellus. Ut scelerisque quam ut nisi pellentesque lacinia. Quisque fringilla imperdiet volutpat. Etiam dignissim venenatis finibus. Nullam facilisis ornare elementum. Curabitur interdum tristique libero sed pulvinar.",
+        "price": 3.95,
+        "imageUri": "https://picsum.photos/200/300?rnd=2"
+    },
+    {
+        "id": "0727c1cb-9ca0-4844-84fc-f7792d6d40f3",
+        "name": "Boon Kriek",
+        "description": "Een betere Lambiek",
+        "price": 4.5,
+        "imageUri": "https://picsum.photos/200/300?rnd=3"
+    },
+    {
+        "id": "aa93bdd8-50e8-4ae6-8c1e-986c9cfa1c6d",
+        "name": "Wahja",
+        "description": "Fruitig bier",
+        "price": 4.5,
+        "imageUri": "https://picsum.photos/200/300?rnd=4"
+    },
+    {
+        "id": "f9093c06-23b2-4628-a653-e73cf975f4f6",
+        "name": "Oettinger",
+        "description": "Duits pils",
+        "price": 3.75,
+        "imageUri": "https://picsum.photos/200/300??rnd=5"
+    },
+    {
+        "id": "9ba879e5-41bf-4327-a1ce-103c36075c40",
+        "name": "Duvel",
+        "description": "Gebrouwen uit 6 verschillende mouten, waardoor het bijzonder rijk van smaak is!",
+        "price": 4.5,
+        "imageUri": "https://picsum.photos/200/300??rnd=6"
+    },
+    {
+        "id": "86e4dc55-4559-441c-8864-1880fda0f4de",
+        "recordVersion": 1,
+        "name": "Grimbergen",
+        "description": "Standaard pils (25cl)",
+        "price": 2.25,
+        "imageUri": "https://picsum.photos/200/300??rnd=7"
+    },
+    {
+        "id": "8c93b7b0-aec2-4f9d-99a8-af18f41ddda9",
+        "recordVersion": 1,
+        "name": "Heineken",
+        "description": "Van de tap, 25cl",
+        "price": 2.5,
+        "imageUri": "https://picsum.photos/200/300?rnd=8"
+    },
+    {
+        "id": "0727c1cb-9ca0-4844-84fc-f7792d6d40f3",
+        "name": "Mort Subite",
+        "description": "Heftig Tripel",
+        "price": 4.5,
+        "imageUri": "https://picsum.photos/200/300?rnd=9"
+    },
+    {
+        "id": "9ba879e5-41bf-4327-a1ce-103c36075c40",
+        "name": "Brugse Zot",
+        "description": "Gebrouwen uit 6 verschillende mouten, waardoor het bijzonder rijk van smaak is!",
+        "price": 4.5,
+        "imageUri": "https://picsum.photos/200/300?rnd=10"
+    }
+]

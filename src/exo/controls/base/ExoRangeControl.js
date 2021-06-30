@@ -36,7 +36,13 @@ class ExoRangeControl extends ExoNumberControl {
         return this.container;
     }
 
-    _sync() {
+    _sync(e) {
+        
+        if(e){
+            this.output = e.target.nextSibling;
+            this.htmlElement = e.target
+        }
+
         if (this.output && this.htmlElement)
             this.output.value = this.htmlElement.value;
     }

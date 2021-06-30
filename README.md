@@ -96,3 +96,7 @@ Contributors:
 # Revision History
 
 [Full revision history](./REVISIONS.md)
+
+# Reference Documentation
+
+[XO-JS Reference Documentation](./md/refdocs/toc.md)

@@ -198,7 +198,7 @@ class ExoTreeViewControl extends ExoDivControl {
             }
         }
 
-        item.id = item.id || item.name;
+        item.id = item.id === undefined ? item.name : item.id;
 
         return item;
     }
