@@ -29,7 +29,7 @@
   "homepage": "https://www.xo-js.dev",
   "scripts": {
     "compile": "esbuild js/xo.js --bundle --minify --platform=node --target=node12 --format=esm --outfile=dist/xo.min.js&&tsc",
-    "doc": "jsdoc -c jsdoc.config.json src/exo src/pwa -r",
+    "doc": "node jsdoc2md.js",
     "test": "esbuild js/xo.js --bundle --format=cjs --outfile=dist/xo.cjs.js&&cross-env NODE_OPTIONS=--experimental-vm-modules jest",
     "dev": "node esbuild-dev.js",
     "build": "node esbuild-build.js&&npm run test&&npm run doc&&tsc"
@@ -38,9 +38,9 @@
   "devDependencies": {
     "cross-env": "^7.0.3",
     "esbuild": "^0.11.23",
+    "file-system": "^2.2.2",
     "jest": "^26.6.3",
     "jest-junit": "^12.0.0",
-    "jsdoc": "^3.6.7",
     "jsdoc-to-markdown": "^7.0.1",
     "regenerator-runtime": "^0.13.7",
     "typescript": "^4.2.4"
