@@ -632,7 +632,7 @@ async createContext(config) {
 ExoForm now defaults to ```input``` to allow for a more realtime feel, in 
 
 
-# New in 1.4.65
+# New in 1.4.67
 
 ## New method: xo.form.from()
 
@@ -670,11 +670,17 @@ xo.form.run(schema, {
 });
 ```
 
+If, instead of binding to a single named instance, you want a reference to the instance root node in an ExoForm model, just omit the ```instanceName``` parameter:
+
+```js
+let sharedData = xo.form.data("person-form", o => sharedData = o);
+```
+
+
 The ```sharedData``` variable will then be a direct reference to the instance inside the form, and reactivity will be both ways as you wish.
 
 > See [an example using Vue](https://github.com/inbarazulay1997/xo-examples/tree/main/vue.js).
 
-# New in 1.4.67
 
 ## TreeView control
 
