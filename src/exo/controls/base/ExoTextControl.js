@@ -129,7 +129,7 @@ class ExoTextControl extends ExoInputControl {
             }
         };
         rv(this.htmlElement);
-        console.debug("ExoControlBase valid", DOM.elementToString(this.htmlElement),  numInvalid === 0)
+        console.debug("ExoTextControl valid", DOM.elementToString(this.htmlElement),  numInvalid === 0)
         return numInvalid === 0;
     }
 

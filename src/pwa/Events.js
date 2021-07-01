@@ -43,6 +43,18 @@ class Events {
             host: this.host
         };
 
+
+        if (event === "fetch") {
+            return new Promise((resolve, reject) => {
+                ev.respondWith = promise => {
+                    promise.then(data => {
+                        resolve(data);
+                    })
+                }
+                this.host.dispatchEvent(ev);
+            });
+        }
+
         return this.host.dispatchEvent(ev);
     }
 
