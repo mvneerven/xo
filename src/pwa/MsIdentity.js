@@ -85,10 +85,10 @@ class MsIdentity {
 
 
     init() {
-        this.myMSALObj = new msal.PublicClientApplication(this.options.msal);
+        this.clientApp = new msal.PublicClientApplication(this.options.msal);
 
         if (this.options.mode !== "popup") {
-            this.myMSALObj.handleRedirectPromise()
+            this.clientApp.handleRedirectPromise()
                 .then(r => { this.handleResponse(r) })
                 .catch((error) => {
                     console.error(error);
@@ -105,7 +105,7 @@ class MsIdentity {
         if (!account) {
 
             if (this.options.mode === "popup") {
-                return this.myMSALObj.loginPopup(this.options.msal.loginRequest)
+                return this.clientApp.loginPopup(this.options.msal.loginRequest)
                     .then(response => {
                         if (response !== null) {
                             this.account = response.account;
@@ -117,7 +117,7 @@ class MsIdentity {
                     });
             }
             else {
-                return this.myMSALObj.loginRedirect(this.options.msal.loginRequest);
+                return this.clientApp.loginRedirect(this.options.msal.loginRequest);
             }
         }
     }
@@ -134,8 +134,8 @@ class MsIdentity {
     signOut() {
         var _ = this;
         if (_.account) {
-            _.myMSALObj.logout({
-                account: _.myMSALObj.getAccountByUsername(_.account.username)
+            _.clientApp.logout({
+                account: _.clientApp.getAccountByUsername(_.account.username)
             }).then(() => {
                 MsIdentity.trigger({
                     type: "signedOut",
@@ -149,7 +149,7 @@ class MsIdentity {
 
     getAccount() {
         var _ = this;
-        const currentAccounts = _.myMSALObj.getAllAccounts();
+        const currentAccounts = _.clientApp.getAllAccounts();
         if (currentAccounts.length === 0) {
             return null;
         } else if (currentAccounts.length > 1) {
@@ -165,24 +165,27 @@ class MsIdentity {
 
     // https://github.com/AzureAD/microsoft-authentication-library-for-js/blob/dev/lib/msal-common/docs/Accounts.md
     getJWT(username) {
-        const _ = this;
-        const request = _.options.msal.tokenRequest;
+        const request = this.options.msal.tokenRequest;
 
-        return _.waitForInit().then(() => {
-
+        return this.waitForInit().then(() => {
             if (!username)
                 throw TypeError("No user signed in");
 
-            request.account = _.myMSALObj.getAccountByUsername(username);
-            return _.myMSALObj.acquireTokenSilent(request)
+            request.account = this.clientApp.getAccountByUsername(username);
+            
+            return this.clientApp.acquireTokenSilent(request)
                 .then(response => {
+                    console.debug("msal", "getJWT silent success");
                     if (!response.accessToken || response.accessToken === "") {
+                        console.debug("msal", "getJWT silent -> no accessToken -> InteractionRequiredAuthError");
                         throw new msal.InteractionRequiredAuthError;
                     }
+                    return response;
                 })
                 .catch(error => {
                     if (error instanceof msal.InteractionRequiredAuthError) {
-                        return _.myMSALObj.acquireTokenPopup(request);
+                        console.debug("msal", "getJWT popup route taken");
+                        return this.clientApp.acquireTokenPopup(request);
                     } else {
                         console.warn(error);
                     }
@@ -194,7 +197,7 @@ class MsIdentity {
     waitForInit() {
         const _ = this;
         const delay = t => new Promise(resolve => setTimeout(resolve, t));
-        if (!_.myMSALObj) {
+        if (!_.clientApp) {
             return delay(200)
         }
         return delay(1)
@@ -212,7 +215,7 @@ class MsIdentity {
     }
 
     isBusy() {
-        return this.myMSALObj.interactionInProgress();
+        return this.clientApp.interactionInProgress();
     }
 
 }

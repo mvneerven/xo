@@ -51,7 +51,7 @@ btn.addEventListener("click", e => {
         }
     })
     id.load().then(x => {
-        x.myMSALObj.loginPopup().then(x => {
+        x.clientApp.loginPopup().then(x => {
             console.log(x.account);
 
             x.getJWT(x.account.username).then(j => {
