@@ -415,6 +415,7 @@ class ExoControlBase {
         let elm = this.container || this.htmlElement;
         rv(elm);
         elm.querySelectorAll("*").forEach(rv);
+        console.debug("ExoControlBase valid", DOM.elementToString(elm),  numInvalid === 0)
         return numInvalid === 0;
     }
 

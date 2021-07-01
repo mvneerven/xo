@@ -44,7 +44,13 @@ class Form {
                         e.detail.log = "Model ready";
                     }
                     if (verbose) {
-                        console.log("form.bind", e.detail.state + " - " + (e.detail.log || "none"))
+                        let log = "none";
+
+                        if (state === "change" && !e.detail.change) {
+                            log = (e.detail.changeData.log || "none")
+                        }
+
+                        console.log("form.bind", e.detail.state + " - " + log)
                     }
                     f({
                         exo: e.detail.host.exo, ...e.detail, state: state
