@@ -84,20 +84,21 @@ class ExoFormDataBindingResolver {
                 this.applyJSLogic(model.logic, null, model, changedData)
             }
             else if (model.logic && model.logic.type === "JavaScript") {
-                let script = this.assembleScript(model.logic, changedData)
+                let script = this.assembleScript(model.logic)
                 this.applyJSLogic(null, script, model, changedData)
             }
         }
     }
 
-    assembleScript(logic, changedData) {
+    assembleScript(logic) {
         if (logic && Array.isArray(logic.lines)) {
-            return `const context = {model: this.dataBinding.model, exo: this, changed: changedData};\n` + logic.lines.join('\n');
+            return `const context = {model: this.exo.dataBinding.model, exo: this, changed: this.changed};\n` + logic.lines.join('\n');
         }
         return "";
     }
 
     applyJSLogic(f, js, model, changedData) {
+        
 
         console.debug("ExoFormDataBindingResolver", "Applying schema logic");
         const context = {
@@ -105,12 +106,14 @@ class ExoFormDataBindingResolver {
             exo: this.exo,
             changed: changedData
         };
+
         try {
             if (f) {
                 model.logic.bind(this.exo)(context);
             }
             else {
-                Core.scopeEval(this.exo, js)
+                
+                Core.scopeEval(context, js)
             }
         }
         catch (ex) {

@@ -161,17 +161,8 @@ const schema = {
                     fileTypes: ["application/json"],
                     dialog: true,
                     dialogTitle: "Upload a JSON Schema"
-                },
-                {
-                    type: "multiline",
-                    caption: "JSON Schema data",
-                    readonly: true,
-                    class: "code",
-                    rows: 20,
-                    name: "schema-contents",
-                    value: "@instance.buildForm.jsonSchemaText"
-
                 }
+                
             ]
         },
         {
@@ -181,7 +172,7 @@ const schema = {
                 {
                     type: "button",
                     name: "code1",
-                    caption: "Load Form",
+                    caption: "Generate Form Schema",
                     action: "load:instance.buildForm.baseForm"
                 }
             ]

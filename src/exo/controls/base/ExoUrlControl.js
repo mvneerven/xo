@@ -28,16 +28,18 @@ class ExoUrlControl extends ExoTextControl {
         const me = this;
 
         if (this.dialog) {
+            let title = this.dialogTitle || "Upload or select a file";
             this.suffix = {
                 field: {
                     type: "button",
                     name: "file-btn",
+                    tooltip: title,
                     icon: "ti-file",
                     click: async e => {
                         const context = {};
                         let r = await xo.form.run({
                             type: "filedialog",
-                            title: this.dialogTitle || "Upload or select a file",
+                            title: title,
                             fileTypes: me.fileTypes,
                             name: "test",
                             click: async (button, event) => {

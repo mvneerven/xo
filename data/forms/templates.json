@@ -48,5 +48,10 @@
         "name": "Advanced: custom control states",
         "value": "https://xo-js.dev/assets/forms/templates/custom-nav-state.js",
         "description": "A complete example of Model Data Binding combined with JS logic and custom navigation controls bound to state in the model."
+    },
+    {
+        "name:": "Leaflet GEO map with data binding",
+        "value": "https://xo-js.dev/assets/forms/templates/leaflet-map-binding.js",
+        "description": "An example showing an OpenStreetMap map using the Leafle-powered map control, with databinding to a model and JSON Schema"
     }
 ]
