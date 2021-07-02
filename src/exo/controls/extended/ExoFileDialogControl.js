@@ -5,18 +5,18 @@ class ExoFileDialogControl extends ExoDialogControl {
         super(...arguments);
 
         this.acceptProperties(
-
-            { name: "fileTypes", type: String | Array, 
-            description: 'Array of strings - example: ["image/"]' }
-
+            {
+                name: "fileTypes", type: String | Array, description: 'Array of strings - example: ["image/"]'
+            },
+            {
+                name: "maxSize", type: Number, description: "Maximum size of uploaded files"
+            }
         )
     }
 
     async render() {
         const me = this;
-
         await super.render();
-
         const schema = {
             navigation: "none",
             pages: [
@@ -25,7 +25,8 @@ class ExoFileDialogControl extends ExoDialogControl {
                         {
                             type: "filedrop",
                             name: "drop",
-                            fileTypes: me.fileTypes
+                            fileTypes: me.fileTypes,
+                            maxSize: me.maxSize
                         }
                     ]
                 }

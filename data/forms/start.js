@@ -158,11 +158,14 @@ const schema = {
                     type: "url",
                     caption: "Enter or select a URL of a JSON Schema",
                     bind: "instance.buildForm.jsonSchemaUrl",
-                    fileTypes: ["application/json"],
-                    dialog: true,
+
+                    dialog: {
+                        fileTypes: ["application/json"],
+                        maxSize: 50000
+                    },
                     dialogTitle: "Upload a JSON Schema"
                 }
-                
+
             ]
         },
         {

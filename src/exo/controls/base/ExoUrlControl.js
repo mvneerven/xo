@@ -7,7 +7,9 @@ class ExoUrlControl extends ExoTextControl {
         this.acceptProperties(
             {
                 name: "dialog",
-                description: "Shows a dialog to select a URL with or create a dataUrl"
+                type: Object,
+                description: `Shows a dialog to select a URL with or create a dataUrl from an uploaded file. 
+                Can be true, or an object structure descibing the dialog: {dialogTitle: "My dialog", }`
             },
 
             { 
@@ -40,7 +42,8 @@ class ExoUrlControl extends ExoTextControl {
                         let r = await xo.form.run({
                             type: "filedialog",
                             title: title,
-                            fileTypes: me.fileTypes,
+                            fileTypes: this.dialog.fileTypes,
+                            maxSize: this.dialog.maxSize ,
                             name: "test",
                             click: async (button, event) => {
                                 if (button === "confirm") {

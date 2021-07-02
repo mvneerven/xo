@@ -155,13 +155,20 @@ class PWA_OmniBox {
 
         pwa.router.modules.forEach(r => {
             let c = r.module;
-            ar.push({
+
+            let item = {
                 category: "App",
-                text: c.title || c.menuTitle,
+                text: c.menuTitle || c.title,
                 icon: c.menuIcon,
                 route: c.path,
                 module: c
-            });
+            }
+            if(c.menuTitle && c.title !== c.menuTitle){
+                item.description = c.title
+            }
+            ar.push(item);
+
+
         });
 
         if (typeof (filter) === "function") {

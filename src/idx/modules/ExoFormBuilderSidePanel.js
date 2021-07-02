@@ -176,8 +176,6 @@ class ExoFormBuilderSidePanel {
 
             let btn = e.target.closest(".add-field");
             if (btn) {
-                debugger;
-                
                 e.preventDefault();
                 let ex = e.target.closest(".example");
                 if (ex && ex.innerText.length) {
