@@ -1,0 +1,68 @@
+.non-empty .if-empty {
+  display: none;
+}
+
+.full-height {
+  height: 100%;
+}
+
+.disabled {
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+.empty .if-non-empty {
+  display: none;
+}
+
+[disabled] {
+  pointer-events: none;
+  opacity: 0.6;
+}
+
+.if-signed-in,
+.if-signed-out {
+  display: none;
+}
+
+.if-debug {
+  display: none;
+}
+
+.pwa-env-debug .if-debug {
+  display: block;
+}
+
+html.no-user-select {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+html.pwa-signed-in .if-signed-in {
+  display: block;
+}
+
+html:not(.pwa-signed-in) .if-signed-out {
+  display: block;
+}
+
+.user-select {
+  -webkit-touch-callout: initial !important;
+  -webkit-user-select: text !important;
+  -moz-user-select: text !important;
+  -ms-user-select: text !important;
+  user-select: text !important;
+}
+
+.no-wrap {
+  white-space: nowrap;
+}
+
+.drag-sort-active {
+  background: rgba(0, 0, 0, 0.2);
+  border: 3px solid #4ca1af;
+}
+/*# sourceMappingURL=pwa-functional.css.map */

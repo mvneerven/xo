@@ -25,7 +25,7 @@ class DocsRoute extends xo.route {
                     let results = DocsRoute.cms.find(options.search.toLowerCase());
 
                     return results.map(i => {
-                       
+
                         return {
                             path: i.url,
                             text: i.title,
@@ -37,9 +37,47 @@ class DocsRoute extends xo.route {
                 icon: "ti-help",
                 action: options => {
                     document.location.hash = "/docs" + options.path;
+                    setTimeout(this.locateText(options.text), 1500)
+                }
+            }
+
+            e.detail.options.categories["Controls"] = {
+                sortIndex: 60,
+                trigger: options => { return options.search.length >= 2 },
+                icon: "ti-widget",
+                getItems: async options => {
+                    let ec = await xo.form.factory.build();
+                    let srch = options.search.toLowerCase()
+                    const meta = xo.form.factory.extractControlMeta(ec.library);
+                    let results = meta.filter(i => {
+                        let text = `${i.name} ${i.description}`.toLowerCase();
+                        return text.indexOf(srch) > -1
+                    });
+
+                    return results.map(i => {
+                        return {
+                            text: i.name,
+                            description: i.description,
+                            example: i.example
+                        }
+                    })
+                },
+                action: options => {
+                    navigator.clipboard.writeText(options.example);
+                    pwa.UI.notifications.add("Copied to clipboard....")
                 }
             }
         });
+    }
+
+    locateText(text) {
+        let first = [...document.querySelectorAll('h1,h2,h3')]
+            .map(e => { return { t: e.innerHTML, c: e } })
+            .find(o => o.t.toLowerCase().includes(text.toLowerCase()));
+
+        if (first)
+            first.c.scrollIntoView(true)
+
     }
 
     async asyncInit() {
@@ -69,9 +107,9 @@ class DocsRoute extends xo.route {
 
         for (const i of elm.querySelectorAll("img[src]")) {
             let u = i.getAttribute("src");
-            if(u.indexOf("//") === -1){
+            if (u.indexOf("//") === -1) {
                 let link = "/md/refdocs/" + u;
-                i.setAttribute("src",  link)
+                i.setAttribute("src", link)
             }
         };
 

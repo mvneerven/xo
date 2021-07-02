@@ -10,8 +10,8 @@ ExoForm is a Declarative Web Forms Engine written in pure ES6 JavaScript.
 * Create and include your own control libraries. 
 * Complete freedom for Frontend Devs: customize styling, validation, navigation, progress indication, etc. 
 * Get typed JSON post data or sync to a data model (optionally using JSON Schema)
-* All HTML5 controls included, plus a large number of custom controls, including wrappers for the Ace Code Editor wrapp, the CkEditor WYSIWYG/HTML editor 
-* Autocompletion (using standard HTML5 DataLists, fixed lists, or dynamic API searches)
+* All HTML5 controls included, plus a large number of custom controls, including wrappers for the Ace Code Editor, the CkEditor WYSIWYG/HTML editor, Leaflet Openstreetmap control, etc.
+* Autocompletion (using standard HTML5 DataLists & more, fixed lists, or dynamic API searches)
 * Customizable built-in validation, navigation, progress indication types (or roll your own using the addins interface)
 
 # See Also:

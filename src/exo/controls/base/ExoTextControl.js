@@ -3,6 +3,9 @@ import DOM from '../../../pwa/DOM';
 import ExoTextControlAutoCompleteExtension from './ExoTextControlAutoCompleteExtension';
 import xo from '../../../../js/xo';
 
+/**
+ * Textbox control
+ */
 class ExoTextControl extends ExoInputControl {
     constructor(context) {
         super(context);
@@ -40,11 +43,18 @@ class ExoTextControl extends ExoInputControl {
 
             },
 
-
             {
                 name: "autocomplete",
-                description: "Object with autocomplete settings",
-                type: Object
+                type: Object,
+                description: `Object describing autocompletion settings.
+
+                - autocomplete: {items: ["Mr", "Mrs", "Ms"]}
+                - autocomplete: this.myAutoCompleteProvider.bind(this)
+                - autocomplete: {
+                    items: "https://restcountries.eu/rest/v2/name/%search%",
+                    map: "name",
+                    minlength: 2
+                  }`
             });
     }
 
@@ -95,7 +105,7 @@ class ExoTextControl extends ExoInputControl {
             span.classList.add("char")
             span.innerHTML = obj.char ? obj.char : obj;
             span.style = `${(obj.font ? "font-family: "
-            + obj.font : "")}; ${(obj.size ? "font-size: " + obj.size + "; line-height: " + obj.size : "")}`;
+                + obj.font : "")}; ${(obj.size ? "font-size: " + obj.size + "; line-height: " + obj.size : "")}`;
         }
         this.container.appendChild(span);
     }
@@ -129,7 +139,7 @@ class ExoTextControl extends ExoInputControl {
             }
         };
         rv(this.htmlElement);
-        console.debug("ExoTextControl valid", DOM.elementToString(this.htmlElement),  numInvalid === 0)
+        console.debug("ExoTextControl valid", DOM.elementToString(this.htmlElement), numInvalid === 0)
         return numInvalid === 0;
     }
 

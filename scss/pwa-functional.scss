@@ -51,13 +51,13 @@ html {
 
     &.pwa-signed-in {
         .if-signed-in {
-            display: block;
+            display: initial;
         }
     }
 
     &:not(.pwa-signed-in) {
         .if-signed-out {
-            display: block;
+            display: initial;
         }
     }
 }

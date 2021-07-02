@@ -1,0 +1,156 @@
+#xo-portal.theme-dark {
+  /*!
+  Theme: StackOverflow Dark
+  Description: Dark theme as used on stackoverflow.com
+  Author: stackoverflow.com
+  Maintainer: @Hirse
+  Website: https://github.com/StackExchange/Stacks
+  License: MIT
+  Updated: 2021-05-15
+
+  Updated for @stackoverflow/stacks v0.64.0
+  Code Blocks: /blob/v0.64.0/lib/css/components/_stacks-code-blocks.less
+  Colors: /blob/v0.64.0/lib/css/exports/_stacks-constants-colors.less
+*/
+}
+
+#xo-portal.theme-dark pre code.hljs {
+  display: block;
+  overflow-x: auto;
+  padding: 1em;
+}
+
+#xo-portal.theme-dark code.hljs {
+  padding: 3px 5px;
+}
+
+#xo-portal.theme-dark .hljs-punctuation, #xo-portal.theme-dark .hljs-tag {
+  color: #fff;
+}
+
+#xo-portal.theme-dark .hljs {
+  color: #fff;
+  background: #1c1b1b;
+}
+
+#xo-portal.theme-dark .hljs-subst {
+  color: #fff;
+}
+
+#xo-portal.theme-dark .hljs-comment {
+  color: #999;
+}
+
+#xo-portal.theme-dark .hljs-attr,
+#xo-portal.theme-dark .hljs-doctag,
+#xo-portal.theme-dark .hljs-keyword,
+#xo-portal.theme-dark .hljs-meta .hljs-keyword,
+#xo-portal.theme-dark .hljs-section,
+#xo-portal.theme-dark .hljs-selector-tag {
+  color: #88aece;
+}
+
+#xo-portal.theme-dark .hljs-attribute {
+  color: #c59bc1;
+}
+
+#xo-portal.theme-dark .hljs-name,
+#xo-portal.theme-dark .hljs-number,
+#xo-portal.theme-dark .hljs-quote,
+#xo-portal.theme-dark .hljs-selector-id,
+#xo-portal.theme-dark .hljs-template-tag,
+#xo-portal.theme-dark .hljs-type {
+  color: #f08d49;
+}
+
+#xo-portal.theme-dark .hljs-selector-class {
+  color: #88aece;
+}
+
+#xo-portal.theme-dark .hljs-link,
+#xo-portal.theme-dark .hljs-regexp,
+#xo-portal.theme-dark .hljs-selector-attr,
+#xo-portal.theme-dark .hljs-string,
+#xo-portal.theme-dark .hljs-symbol,
+#xo-portal.theme-dark .hljs-template-variable,
+#xo-portal.theme-dark .hljs-variable {
+  color: #b5bd68;
+}
+
+#xo-portal.theme-dark .hljs-meta,
+#xo-portal.theme-dark .hljs-selector-pseudo {
+  color: #88aece;
+}
+
+#xo-portal.theme-dark .hljs-built_in,
+#xo-portal.theme-dark .hljs-literal,
+#xo-portal.theme-dark .hljs-title {
+  color: #f08d49;
+}
+
+#xo-portal.theme-dark .hljs-bullet,
+#xo-portal.theme-dark .hljs-code {
+  color: #ccc;
+}
+
+#xo-portal.theme-dark .hljs-meta .hljs-string {
+  color: #b5bd68;
+}
+
+#xo-portal.theme-dark .hljs-deletion {
+  color: #de7176;
+}
+
+#xo-portal.theme-dark .hljs-addition {
+  color: #76c490;
+}
+
+#xo-portal.theme-dark .hljs-emphasis {
+  font-style: italic;
+}
+
+#xo-portal.theme-dark .hljs-strong {
+  font-weight: 700;
+}
+
+.md-converted-html {
+  max-width: 90%;
+}
+
+.md-converted-html table {
+  border: 1px solid #999;
+  background-color: rgba(125, 125, 125, 0.05);
+}
+
+.md-converted-html table thead {
+  text-align: left;
+  background-color: rgba(125, 125, 125, 0.5);
+}
+
+.md-converted-html table tr {
+  border-bottom: 1px dotted rgba(125, 125, 125, 0.5);
+}
+
+.md-converted-html table td, .md-converted-html table th {
+  padding: 0.4rem 0.6rem;
+}
+
+.md-converted-html img {
+  max-width: 90%;
+}
+
+.md-converted-html code {
+  font-size: 1rem;
+  font-family: Consolas, "Courier New", Courier, monospace;
+}
+
+.md-converted-html pre {
+  overflow: auto;
+  max-width: 99%;
+}
+
+.md-converted-html blockquote {
+  border-left: 10px solid #c04e58;
+  padding: 0.5rem 1rem;
+}
+/*# sourceMappingURL=markdown.css.map */

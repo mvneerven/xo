@@ -30,10 +30,10 @@ class ExoFormBuilderSidePanel {
                     break;
                 case "model":
 
-                    if(this.builder.currentForm){
+                    if (this.builder.currentForm) {
                         this.showModelChange(this.builder.currentForm.dataBinding.model)
                     }
-                    
+
                     break;
                 default:
                     break;
@@ -67,7 +67,7 @@ class ExoFormBuilderSidePanel {
 
         this.getSettings().then(x => {
 
-            const update = e=>{
+            const update = e => {
                 this.tabStrip.tabs.addField.enabled = true;
                 this.mapSettingsToModel();
             }
@@ -124,7 +124,7 @@ class ExoFormBuilderSidePanel {
             x.container.id = "exo-settings";
         })
 
-       // this.addDarkModeSwitch();
+        // this.addDarkModeSwitch();
     }
 
     // update fields in form settings panel 
@@ -156,7 +156,7 @@ class ExoFormBuilderSidePanel {
 
     showModelChange(model) {
         let elm = document.getElementById("exo-datamodel");
-        if(elm){
+        if (elm) {
             let f = window.xo.form.factory.getFieldFromElement(elm)
             if (f) {
                 f._control.value = JSON.stringify(model, null, 2);
@@ -168,34 +168,7 @@ class ExoFormBuilderSidePanel {
         this.settingsForm.get("page")._control.value = index;
     }
 
-    // async addDarkModeSwitch() {
-    //     let result = await this.builder.exoContext.renderSingleControl({
-    //         "type": "switch",
-    //         "id": "exo-dark-mode",
-    //         "caption": "Dark Mode",
-    //         "name": "dark",
-    //         "value": this.builder.app.UI.theme === "dark"
-    //     });
-
-    //     this.builder.app.UI.areas.headerright.add(result);
-    //     result.addEventListener("change", e => {
-    //         let darkModeEl = e.target.closest("[data-id='exo-dark-mode']");
-
-    //         if (darkModeEl) {
-    //             let darkMode = darkModeEl.querySelector("input").value > 0;
-    //             this.builder.app.UI.theme = darkMode ? "dark" : "light";
-
-    //             DOM.trigger(document.body, "dark-mode", {
-    //                 value: darkMode
-    //             })
-    //         }
-    //     })
-
-    // }
-
     getFieldMeta() {
-        const _ = this;
-        const exoContext = _.builder.exoContext;
 
         const ul = document.createElement("ul");
         ul.classList.add("meta");
@@ -203,6 +176,8 @@ class ExoFormBuilderSidePanel {
 
             let btn = e.target.closest(".add-field");
             if (btn) {
+                debugger;
+                
                 e.preventDefault();
                 let ex = e.target.closest(".example");
                 if (ex && ex.innerText.length) {
@@ -214,14 +189,10 @@ class ExoFormBuilderSidePanel {
                 }
                 else {
                     let v = e.target.closest(".field").querySelector(".example");
-
                     var obj = JSON.parse(v.innerText);
-
-                    _.builder.renderer.model.add(obj);
+                    this.builder.renderer.model.add(obj);
                 }
-
             }
-
             else {
                 let fld = e.target.closest(".field");
                 if (fld) {
@@ -231,34 +202,7 @@ class ExoFormBuilderSidePanel {
 
         })
 
-        let iter = new Core.Iterator(exoContext.library, "_key")
-
-        var field, i = 0;
-        while (field = iter.next()) {
-            name = field._key;
-            if (field.hidden) continue;
-
-            let data = {
-                ...field,
-                name: name,
-                description: field.note,
-                type: field.type.name,
-                example: field.example || field.demo
-            }
-
-            if (!data.example) {
-                data.example = { type: data.name, name: data.name + "1" }
-            }
-
-            data.example = {
-                type: data.name,
-                name: field._key,
-                caption: Core.toWords(data.name),
-                ...data.example
-            }
-
-            data.example = JSON.stringify(data.example, null, 2).trim();
-
+        xo.form.factory.extractControlMeta(this.builder.exoContext.library).forEach(data => {
             let li = DOM.parseHTML(/*html*/`
                 <li>
                     <div class="field">
@@ -278,9 +222,10 @@ class ExoFormBuilderSidePanel {
             li.querySelector("ul").appendChild(propsDiv);
             propsDiv.appendChild(propsUl)
 
-            for (var name in field.properties) {
+
+            for (var name in data.properties) {
                 let p = {
-                    ...field.properties[name],
+                    ...data.properties[name],
                     name: name
                 }
 
@@ -295,8 +240,9 @@ class ExoFormBuilderSidePanel {
             }
             ul.appendChild(li);
 
-            i++;
-        }
+        })
+
+
         return ul
     }
 
@@ -304,7 +250,7 @@ class ExoFormBuilderSidePanel {
         this.settingsForm = this.builder.exoContext.createForm({ host: this });
 
         await this.settingsForm.load(this.createFormSettingsForm());
-        
+
         return this.settingsForm.renderForm();
 
     }

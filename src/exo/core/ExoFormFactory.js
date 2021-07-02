@@ -9,6 +9,7 @@ import ExoFormNavigation from '../navigation/ExoFormNavigation';
 import ExoFormProgress from '../progress/ExoFormProgress';
 import ExoFormRules from '../rules/ExoFormRules'
 import ExoFormContext from './ExoFormContext';
+import Core from '../../pwa/Core';
 
 /**
  * Factory class for ExoForm - Used to create an ExoForm context.
@@ -160,6 +161,47 @@ class ExoFormFactory {
         }
         return ExoFormFactory.library;
     }
+
+    /**
+     * Generates meta documentation about all controls in the given control library.
+     * @param {Object} library 
+     * @returns {Array} - Array containing control metadata.
+     */
+     static extractControlMeta(library) {
+        let ar = [];
+        let iter = new Core.Iterator(library, "_key")
+
+        let field = null;
+        while (field = iter.next()) {
+            let name = field._key;
+            if (field.hidden) continue;
+
+            let data = {
+                ...field,
+                name: name,
+                description: field.note,
+                type: field.type.name,
+                example: field.example || field.demo
+            }
+
+            if (!data.example) {
+                data.example = { type: data.name, name: data.name + "1" }
+            }
+
+            data.example = {
+                type: data.name,
+                name: field._key,
+                caption: Core.toWords(data.name),
+                ...data.example
+            }
+
+            data.example = JSON.stringify(data.example, null, 2).trim();
+
+            ar.push(data)
+        }
+        return ar;
+    }
+
 
     static lookupBaseType(name, field) {
         let type = field.type;

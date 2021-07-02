@@ -51,18 +51,6 @@ class PWA_OmniBox {
                     document.location.hash = options.route
                 }
             }
-
-            // routes.forEach(r => {
-
-            //     let add = r.module.omniBoxCategories;
-            //     if (add) {
-
-            //         this.options.categories = {
-            //             ...this.options.categories,
-            //             ...add
-            //         }
-            //     }
-            // });
         }
 
         this.categories = this.getCategories(); // finalize and sort options.categories

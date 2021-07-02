@@ -1,5 +1,8 @@
 import Core from '../../../pwa/Core'
 
+/**
+ * Autocomplete helper for all textbox derived controls.
+ */
 class ExoTextControlAutoCompleteExtension {
 
     cssClasses = {
@@ -8,6 +11,8 @@ class ExoTextControlAutoCompleteExtension {
     }
 
     constructor(control, settings) {
+        this.settings = settings;
+
         this.control = control;
 
         this.categories = settings.categories || {};
@@ -22,7 +27,7 @@ class ExoTextControlAutoCompleteExtension {
     attach() {
         this.htmlElement = this.control.htmlElement
         this.htmlElement.setAttribute("autocomplete", "off");
-        
+
         this.container = this.control.container;
 
         const on = (a, b) => { this.htmlElement.addEventListener(a, b) };
@@ -246,7 +251,7 @@ class ExoTextControlAutoCompleteExtension {
         }
 
         if (catHandler.format) {
-            
+
             result = catHandler.format({
                 item: i,
                 result: result,
@@ -262,14 +267,37 @@ class ExoTextControlAutoCompleteExtension {
     }
 
     async getItems(options) {
+        const prop = this.settings.map;
+
+        const map = list => {
+
+            if (!prop) {
+                return list;
+            }
+            return list.map(i => {
+                return {text: i[prop] }
+            })
+        }
+
         return new Promise(resolve => {
             if (Core.isUrl(this.items)) {
-                fetch(this.items + "?" + this.createQueryParam(options)).then(x => {
-                    if (x.status === 200) {
-                        resolve(x.json());
+                if(this.settings.minlength > 0){
+                    if(!options.search || options.search.length < this.settings.minlength){
+                        resolve([])
                         return;
                     }
-                    throw Error(`HTTP error ${x.status} - ${this.items}`);
+                }
+                let url = this.formatSearch(this.items, options)
+                console.log("Search url:" + url, options);
+
+                fetch(url).then(x => {
+                    if (x.status === 200) {
+                        let list = x.json().then(l=>{
+                            resolve(map(l))
+                        });
+                        return;
+                    }
+                    throw Error(`HTTP error ${x.status} - ${url}`);
                 })
             }
             else if (Array.isArray(this.items)) {
@@ -279,17 +307,25 @@ class ExoTextControlAutoCompleteExtension {
                     }
                     return i;
                 })
-                resolve(this.items.filter(i => {
+                resolve(map(this.items.filter(i => {
                     return this.isMatch(options, i)
-                }));
+                })));
             }
             else if (typeof (this.items) === "function") {
-                resolve(this.items(options));
+                resolve(map(this.items(options)));
             }
             else {
                 return resolve(Promise.resolve(this.items.apply(this, options)));
             }
         });
+    }
+
+    formatSearch(url, options) {
+        if (url.indexOf("%search%")) {
+            return url.replace("%search%", options.search || "");
+        }
+
+        return url + "?" + this.createQueryParam(options)
     }
 
     createQueryParam(options) {

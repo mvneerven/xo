@@ -43,20 +43,20 @@ class PWA_RESTService {
 
             fetchOptions.headers = headers;
 
-            if(fetchOptions.method === "DELETE"){
+            if (fetchOptions.method === "DELETE") {
                 return fetch(endpoint, fetchOptions);
             }
-            return fetch(endpoint, fetchOptions).then(x=>{
+            return fetch(endpoint, fetchOptions).then(x => {
 
-                if(x.status === 200){
+                if (x.status === 200) {
                     return x.json()
                 }
 
-                
+
                 throw `HTTP Status ${x.status} - ${x.statusText} (${endpoint})`;
 
             })
-            
+
         })
     }
 

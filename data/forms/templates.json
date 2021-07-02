@@ -53,5 +53,10 @@
         "name": "Leaflet GEO map with data binding",
         "value": "https://xo-js.dev/assets/forms/templates/leaflet-map-binding.js",
         "description": "An example showing an OpenStreetMap map using the Leafle-powered map control, with databinding to a model and JSON Schema"
+    },
+    {
+        "name": "Textbox with countries autocomplete",
+        "value": "https://xo-js.dev/assets/forms/templates/autocomplete-countries.js",
+        "description": "An example showing a textbox with autocompletion using search on a REST API"
     }
 ]
