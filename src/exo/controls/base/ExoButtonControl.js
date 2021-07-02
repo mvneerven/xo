@@ -176,37 +176,38 @@ class ExoButtonControl extends ExoElementControl {
     }
     item.type = item.action ? "action" : item.type || "action";
     let caption = item.caption || item.name || "";
+    let cls = item.class || "";
 
     switch (item.type) {
 
       case "click":
         template = DOM.parseHTML(
-          `<li title="${item.tooltip || ""}"><a  class="${item.class || ""}">${icon} ${caption}</a></li>`,
+          `<li class="${cls}" title="${item.tooltip || ""}"><a>${icon} ${caption}</a></li>`,
         );
         template.addEventListener("click", item.click)
         break;
 
       case "action":
         template = DOM.parseHTML(
-          `<li data-action="${item.action}" title="${item.tooltip || ""}"><a  class="${item.class || ""}">${icon} ${caption}</a></li>`,
+          `<li class="${cls}" data-action="${item.action}" title="${item.tooltip || ""}"><a>${icon} ${caption}</a></li>`,
         );
         template.addEventListener("click", this.handleClick.bind(this))
         break;
 
       case "event":
         template = DOM.parseHTML(
-          `<li data-action="${item.title}" title="${item.tooltip || ""}"><a  class="${item.class || ""}">${icon} ${caption}</a></li>`,
+          `<li class="${cls}" data-action="${item.title}" title="${item.tooltip || ""}"><a>${icon} ${caption}</a></li>`,
         );
         break;
       case "field":
         template = DOM.parseHTML(
-          `<li title="${item.tooltip}}"><a class="${item.class}">${icon} ${caption}</a></li>`,
+          `<li class="${cls}" title="${item.tooltip}}"><a>${icon} ${caption}</a></li>`,
         );
         template.querySelector("a").appendChild(await xo.form.run(item.field));
         break;
       default:
         template = DOM.parseHTML(
-          `<li title="${item.tooltip}"><a class="${item.class}" href="${item.url}">${icon} ${caption}</a></li>`,
+          `<li class="${cls}" title="${item.tooltip}"><a href="${item.url}">${icon} ${caption}</a></li>`,
         );
         break;
     }

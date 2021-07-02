@@ -43,11 +43,11 @@ html.no-user-select {
 }
 
 html.pwa-signed-in .if-signed-in {
-  display: block;
+  display: initial;
 }
 
 html:not(.pwa-signed-in) .if-signed-out {
-  display: block;
+  display: initial;
 }
 
 .user-select {
@@ -111,11 +111,11 @@ html.no-user-select {
 }
 
 html.pwa-signed-in .if-signed-in {
-  display: block;
+  display: initial;
 }
 
 html:not(.pwa-signed-in) .if-signed-out {
-  display: block;
+  display: initial;
 }
 
 .user-select {
