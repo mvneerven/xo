@@ -20,6 +20,19 @@ Build {ExoFormContext} instance.
 
 ---
 
+### `extractControlMeta(library) ► Array`
+
+![modifier: private](images/badges/modifier-private.svg) ![modifier: static](images/badges/modifier-static.svg)
+
+Generates meta documentation about all controls in the given control library.
+
+Parameters | Type | Description
+--- | --- | ---
+__library__ | `Object` | **
+__*return*__ | `Array` | *- Array containing control metadata.*
+
+---
+
 ### `determineSchemaType(value) ► String`
 
 ![modifier: private](images/badges/modifier-private.svg) ![modifier: static](images/badges/modifier-static.svg)
