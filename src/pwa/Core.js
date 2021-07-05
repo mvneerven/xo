@@ -91,14 +91,14 @@ class Core {
         new Emitter(obj);
     }
 
-    
+
     static dataURLtoBlob(dataurl) {
         var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
             bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
-        while(n--){
+        while (n--) {
             u8arr[n] = bstr.charCodeAt(n);
         }
-        return URL.createObjectURL(new Blob([u8arr], {type:mime}));
+        return URL.createObjectURL(new Blob([u8arr], { type: mime }));
     }
 
 
@@ -134,11 +134,19 @@ class Core {
      */
     static stringifyJs(jsLiteral, replacer, indent) {
         const sfy = (o, replacer, indent, level) => {
+
+
             let type = typeof o,
                 tpl,
                 tab = (lvl) => " ".repeat(indent * lvl);
 
-            if (type === "function") {
+            if (o === null) {
+                return "null"
+            }
+            else if (o === undefined) {
+                return "undefined"
+            }
+            else if (type === "function") {
                 return o.toString();
             }
 
@@ -161,25 +169,23 @@ class Core {
                 return s;
             }
 
-
             let result = "";
             level++;
             result += "{\n" + tab(level);
-
-
             let props = Object.keys(o)
                 .filter(key => {
                     return !key.startsWith("_")
                 })
                 .map((key) => {
-
                     return `${key}: ${sfy(o[key], replacer, indent, level)}`;
                 })
+
                 .join(',\n' + tab(level));
 
             result += props + "\n";
             level--;
             result += tab(level) + "}"
+
             return result;
         };
 

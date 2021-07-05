@@ -30,6 +30,7 @@ class ExoButtonControl extends ExoElementControl {
                     - 'next' (next page in Wizard)
                     - 'reset' (back to first page)
                     - 'goto:[page]' (jump to given page)
+                    - dialog:[dialogname]
                 `,
       },
       {
@@ -99,7 +100,7 @@ class ExoButtonControl extends ExoElementControl {
       }
     }
     if (me.click) {
-      
+
       let ev = new CustomEvent("click", {
         detail: {
           origEvent: e,
@@ -110,20 +111,31 @@ class ExoButtonControl extends ExoElementControl {
       me.click.apply(me, [ev]);
 
     } else if (givenAction) {
+
+      let exo = xo.form.from(e.target.closest("form")); // this.context.exo;
       let actionParts = givenAction.split(":"); givenAction = actionParts[0];
 
       switch (givenAction) {
         case "next":
-          this.context.exo.addins.navigation.next();
+          exo.addins.navigation.next();
           break;
         case "reset":
-          this.context.exo.addins.navigation.goto(1);
+          exo.addins.navigation.goto(1);
           break;
         case "goto":
-          this.context.exo.addins.navigation.goto(parseInt(actionParts[1]));
+          exo.addins.navigation.goto(parseInt(actionParts[1]));
           break;
-        default:
+        case "dialog":
           
+          let dname = actionParts[1];
+          let f = exo.get(dname);
+          if (f) {
+            f._control.show()
+          }
+          break;
+
+        default:
+
           actionParts.shift()
           this.context.exo.events.trigger("action", {
             invoker: this,

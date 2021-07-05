@@ -148,6 +148,15 @@ class DOM {
             s.push(el.nodeName);
 
         }
+        if (el.form) {
+            if (el.nodeName === "INPUT") {
+                s.push("[type=" + (el.type || "text") + "]");
+            }
+            if (el.name) {
+                s.push(":" + el.name)
+            }
+
+        }
         if (el.id) {
             s.push('#', el.id)
         }

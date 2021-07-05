@@ -506,35 +506,7 @@ class ExoListViewControl extends ExoDivControl {
       const elm = this.listDiv.querySelector(
         `[data-id="${i[this.primaryKey]}"]`
       );
-
-
-      // elm.addEventListener("click!", (e) => {
-      //   e.stopPropagation();
-      //     e.returnValue = false;
-      //   // if clicked on element inside action dropdown, don't select
-      //   if (e.target.closest(".exf-dropdown-cnt")) {
-      //     let act = e.target.closest("[data-action]");
-      //     if (act) {
-      //       let itemId = act.closest("article").getAttribute("data-id");
-      //       act = act.getAttribute("data-action");
-
-      //       console.log("TRIIIIIII")
-
-      //       this.events.trigger("action", {
-      //         id: act,
-      //         items: [itemId],
-      //       });
-      //     }
-
-
-      //     return;
-      //   }
-
-      //   this.selectItems(i);
-      // });
     }
-
-
 
     // (re)select all ids inside value
     this.renderSelected();
@@ -566,7 +538,6 @@ class ExoListViewControl extends ExoDivControl {
             });
           }
         }
-
       });
 
       btn.addEventListener("beforeDropdown", (e) => {
@@ -774,7 +745,6 @@ class ExoListViewControl extends ExoDivControl {
 
   listenDOM() {
     this.on("action", (e) => {
-      console.log("on action " + e.detail.id)
 
       switch (e.detail.id) {
         case "del":

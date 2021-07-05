@@ -62,7 +62,6 @@ class ExoUrlControl extends ExoTextControl {
                         });
                         context.field = window.xo.form.factory.getFieldFromElement(r);
                         context.field._control.show();
-
                     }
                 }
             }

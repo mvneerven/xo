@@ -34,7 +34,10 @@ class InlineFieldValidator {
     // Hides an error message if one is being displayed
     // and removes error styles and aria attributes
     hideError() {
-        this._field._control.showHelp();
+        console.log("HIDING VALIDATION MESSAGE")
+        this._field._control.showHelp("", {
+            type: "invalid"
+        });
     }
 
     // Suppress the browsers default error messages

@@ -36,6 +36,8 @@ class ExoControlBase {
             { name: "caption", type: String, description: "Caption/label to display" },
             { name: "useContainer", type: Boolean, description: "Specifies whether the control should render within the standard control container. Default depends on control." },
             { name: "bind", type: String, description: "Specifies a path to bind the control to one of the instances in the model, if any. Syntax: 'instance.[instancename].[propertyname]'" },
+            { name: "info", type: String, description: "Information text to show"},
+            { name: "invalidmessage", type: String, description: "Message text to show when the control doesn't validate"}
             
         );
     }
@@ -311,18 +313,19 @@ class ExoControlBase {
             this.container.setAttribute("title", this.tooltip);
         }
 
+        if(this.info){
+            this.showHelp(this.info)
+        }
+
         this._rendered = true;
         return this.container
     }
 
     addEventListeners() {
-        const _ = this;
-        const exo = _.context.exo;
-        const f = _.context.field;
+        const exo = this.context.exo;
+        const f = this.context.field;
 
-        _.htmlElement.addEventListener("invalid", e => {
-            console.debug("check validity on ", e.target, "submitCheck", _.submitCheck);
-
+        this.htmlElement.addEventListener("invalid", e => {
             if (e.target.closest("[data-page]").getAttribute("data-skip") === "true") {
                 console.debug("invalid event on skipped control", e.target.name);
                 e.preventDefault();
@@ -333,12 +336,22 @@ class ExoControlBase {
 
         });
 
-        _.htmlElement.addEventListener("change", e => {
+        this.htmlElement.addEventListener("change", e => {
             let isDirty = e.target.value != e.target.defaultValue;
             let el = e.target.closest(".exf-ctl-cnt");
             if (el)
                 el.classList[isDirty ? "add" : "remove"]("exf-dirty");
         })
+
+        this.htmlElement.addEventListener("input", e => {
+            if(this.htmlElement.validity){
+                if(this.htmlElement.setCustomValidity) this.htmlElement.setCustomValidity('');
+                let valid = this.htmlElement.validity.valid;                
+                this.checkCustomValidity(valid)
+            }
+            
+        })
+
     }
 
     _getContainerAttributes(obj) {
@@ -403,20 +416,36 @@ class ExoControlBase {
     get valid() {
         let numInvalid = 0;
         const rv = el => {
-            if (el.reportValidity) {
-                try {
-                    if (!el.reportValidity()) {
-                        numInvalid++;
-                    }
-                }
-                catch { }
+
+
+            if(el.validity){
+                let valid = el.validity.valid;
+                if(!valid) numInvalid++;
             }
+
+            // if (el.reportValidity) {
+            //     try {
+                    
+            //         if (!el.reportValidity()) {
+            //             numInvalid++;
+            //         }
+            //     }
+            //     catch { } 
+            // }
         };
         let elm = this.container || this.htmlElement;
         rv(elm);
+
         elm.querySelectorAll("*").forEach(rv);
         console.debug("ExoControlBase valid", DOM.elementToString(elm),  numInvalid === 0)
         return numInvalid === 0;
+    }
+
+    checkCustomValidity(valid){
+        if(this.invalidmessage){
+            this.htmlElement.setCustomValidity(valid ? '' : this.invalidmessage);
+            this.htmlElement.reportValidity();
+        }
     }
 
     get validationMessage() {
@@ -442,11 +471,15 @@ class ExoControlBase {
      * @param {Object} options - The options (type: "info|error|invalid")
      */
     showHelp(msg, options) {
+        options = options || { type: "info" };
+        let elmName = "_hlpr_" + options.type;
+        
+        //console.log(elmName, msg)
 
         if (!msg) {
-            if (this._error != null) {
-                this._error.parentNode.removeChild(this._error);
-                this._error = null;
+            if (this[elmName] != null) {
+                this[elmName].parentNode.removeChild(this[elmName]);
+                this[elmName] = null;
             }
 
             if (this.container) {
@@ -456,21 +489,22 @@ class ExoControlBase {
             return;
         }
 
-        options = options || { type: "info" };
+        
 
-        if (this._error != null) {
-            this._error.innerHTML = msg
+        if (this[elmName] != null) {
+            this[elmName].innerHTML = msg
             return;
         }
 
-        this._error = DOM.parseHTML(`<div class="exf-help exf-help-${options.type}">${msg}</div>`)
+        this[elmName] = DOM.parseHTML(`<div class="exf-help exf-help-${options.type}">${msg}</div>`)
 
         if (options.type === "invalid") {
             this.container.setAttribute('aria-invalid', 'true');
             this.container.classList.add('exf-invalid');
         }
 
-        this.container.querySelector(":scope > .exf-fld-details > .exf-help-wrapper").appendChild(this._error);
+        this.container.querySelector(":scope > .exf-fld-details > .exf-help-wrapper")
+            .appendChild(this[elmName]);
 
     }
 }

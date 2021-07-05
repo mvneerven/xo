@@ -79,7 +79,7 @@ class ExoFormDataBinding {
 
                 const handle = e => {
                     if(this.noProxy){
-                        console.log("SKIPPED BECAUSE NO-PROXY")
+                        console.debug("ExoFormDataBinding", "DOMChange event SKIPPED BECAUSE NO-PROXY")
                         return
                     }
 

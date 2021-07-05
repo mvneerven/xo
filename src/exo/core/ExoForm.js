@@ -209,17 +209,12 @@ class ExoForm {
         let promises = [];
         const loadJsonSchema = async (url, instanceName) => {
             let schemaUrl = new URL(url, this.context.baseUrl);
-            
-            console.log("Loading JSON schema", url)
             return await fetch(schemaUrl).then(x => {
                 if (x.status === 200) {
                     return x.json()
                 }
-
                 throw `HTTP Status ${x.status} - ${schemaUrl.toString()}`;
-
             }).then(data => {
-                
                 this._schema.addJSONSchema(instanceName, data);
             })
         }

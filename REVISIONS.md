@@ -255,19 +255,7 @@ let container = await xo.form.run("/data/forms/account.json", {
 
 ## Textbox Autocomplete
 
-All textbox controls, including derived ones such as email, tel, url, now have a property *autocomplete*, which accepts an object with *items* and *categories*.
-
-```js
-{
-    name: "autocomplete",
-    type: "text",
-    caption: "Autocomplete test",
-    placeholder: "Start typing...",
-    autocomplete: {
-        items: ["", "okay", "bla"]
-    }
-}
-```
+See [Textbox](./md/exo/controls/textcontrol.md)
 
 ## PWA OmniBox
 
@@ -376,28 +364,7 @@ get settings() {
 
 ### Textbox (and derived inputs - search, url, etc.)
 
-The *prefix* property can now be an object that specifies font, size and/or icon:
-
-```json
-  {
-    "type": "search",
-    "prefix": {
-       "char": "◷",
-       "font": "Segoe UI"
-    }
-  }
-```
-
-... or
-
-```json
-  {
-    "type": "search",
-    "prefix": {
-       "icon": "ti-search"
-    }
-  }
-```
+See [TextBox Control](./md/exo/controls/textcontrol.md)
 
 ### List controls
 
@@ -764,36 +731,56 @@ The ```items``` property accepts both a URL and an inline object defining the tr
 
 ## Automcomplete improvements
 
-You can now use ```%search%``` and ```map``` in your autosuggest settings on textbox controls, for more control over API connected autosuggestions.
+See [Textbox](./md/exo/controls/textcontrol.md)
 
-In the example below, a country input is shown with autocompletion provided by a REST API.
 
-The ```minlength``` parameter tells the autocomplete mechanism to kick in when the user has entered at least that number of characters in the textbox.
+## Fixes
+
+- Fixed logic runninmg inside JSON declared forms (worked in JS declared forms)
+
+
+# New in 1.4.76
+
+## Dialog showing & binding
+
+You can now trigger showing a dialog from a button directly, using ```action: "dialog:<name>"```.
+
+Also, a dialog now can behave like any other form control in that its value is the button the user selects, it sends a change event when the user does, and the value can be bound to a model.
+
+In the example below, we use all these features:
 
 ```js
 const schema = {
+  model: {
+      logic: e=>{
+          if(e.changed.property === "button"){
+              // e.changed.newValue 
+          }
+      },
+    instance: {
+      control: {
+        button: null
+      }
+    }
+  },
   pages: [
     {
       fields: [
         {
-          name: "country",
-          caption: "Country",
-          type: "search",
-          placeholder: "France",
-          autocomplete: {
-            items: "https://restcountries.eu/rest/v2/name/%search%",
-            map: "name",
-            minlength: 2
-          }
+          type: "button",
+          name: "show",
+          caption: "Show dialog!",
+          action: "dialog:dlg1"
+        },{
+          name: "dlg1",
+          body: "Test dialog!",
+          caption: "Test Field",
+          type: "dialog",
+          bind: "instance.control.button"
         }
       ]
     }
   ]
 }
 ```
-
-## Fixes
-
-- Fixed logic runninmg inside JSON declared forms (worked in JS declared forms)
-
 

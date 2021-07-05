@@ -48,20 +48,20 @@ class PWA_RESTService {
             }
             return fetch(endpoint, fetchOptions).then(x => {
 
-                if (x.status === 200) {
-                    if (!options.returnStatusOnly)
-                        return x.json();
-                        
+                if (options.returnStatusOnly) {
                     return Promise.resolve({
                         status: x.status,
                         statusText: x.statusText
                     });
                 }
 
+                if (x.status === 200) {
+                    return x.json();
+                }
+
                 throw `HTTP Status ${x.status} - ${x.statusText} (${endpoint})`;
 
             })
-
         })
     }
 

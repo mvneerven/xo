@@ -1,4 +1,4 @@
-# ListView Control
+# Controls: ListView
 
 A versatile listview for grid and tile views.
 

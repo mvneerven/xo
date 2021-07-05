@@ -14,9 +14,8 @@ class ExoFileDialogControl extends ExoDialogControl {
         )
     }
 
-    async render() {
-        const me = this;
-        await super.render();
+    async render(){
+        const me= this;
         const schema = {
             navigation: "none",
             pages: [
@@ -38,12 +37,13 @@ class ExoFileDialogControl extends ExoDialogControl {
             on: {
                 created: e => {
                     me.exo = e.detail.host;
-                }
+                } 
             }
         });
-
+        await super.render();
         return this.container;
     }
+
 }
 
 export default ExoFileDialogControl;

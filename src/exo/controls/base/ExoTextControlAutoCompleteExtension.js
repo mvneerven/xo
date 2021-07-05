@@ -288,8 +288,6 @@ class ExoTextControlAutoCompleteExtension {
                     }
                 }
                 let url = this.formatSearch(this.items, options)
-                console.log("Search url:" + url, options);
-
                 fetch(url).then(x => {
                     if (x.status === 200) {
                         let list = x.json().then(l=>{

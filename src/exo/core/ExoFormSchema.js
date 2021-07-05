@@ -66,9 +66,6 @@ class ExoFormSchema {
         }
 
         if (this.pages.length === 0) {
-
-            console.log("ALL JSON Schemas:", this.jsonSchemas);
-
             let jsc = this.jsonSchemas[defaultModelInstance];
             if(!jsc)
                 return;

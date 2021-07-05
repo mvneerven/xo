@@ -15,7 +15,6 @@ class ExoFormDataBindingResolver {
 
     resolve(changedData) {
         try {
-            //console.log("NO-PROXY")
             this.dataBinding.noProxy = true;
             console.debug("ExoFormDataBindingResolver", "Running logic and resolving datamodel changes");
             this._checkSchemaLogic(changedData);
@@ -24,7 +23,6 @@ class ExoFormDataBindingResolver {
         }
         finally {
             this.dataBinding.noProxy = false;
-            //console.log("YES-PROXY")
         }
     }
 
@@ -139,9 +137,6 @@ class ExoFormDataBindingResolver {
 
             obj.updatedValue = value
         });
-
-       // console.log("bcs: ", this._boundControlState);
-
     }
 }
 
