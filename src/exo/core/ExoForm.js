@@ -226,6 +226,10 @@ class ExoForm {
                     if (Core.isUrl(schemaRef)) {
                         promises.push(loadJsonSchema(schemaRef, instanceName))
                     }
+                    else{
+                        
+                        this._schema.addJSONSchema(instanceName, schemaRef);
+                    }
                 }
             }
 
