@@ -163,7 +163,7 @@ class Core {
                     ar.push(sfy(i, replacer, indent, level));
                 });
 
-                s += ar.join(',');
+                s += ar.join(',\n' + tab(level));
                 level--;
                 s += "\n" + tab(level) + "]";
                 return s;
