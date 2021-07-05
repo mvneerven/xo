@@ -276,53 +276,7 @@
                 }
             }
 
-            &.exf-txt-psx {
-                position: relative;
-
-                &.prefix{
-                    input{
-                        padding-left: 2rem!important;
-                    }
-                }
-
-                &.suffix{
-                    input{
-                        padding-right: 2rem!important;
-                    }
-                }
-
-                .exf-txt-psx-span { 
-                    position: absolute;
-
-                    top: 0.45rem;
-
-                    &.icon {
-                        top: 0.65rem;
-                        left: 0.5rem;
-                    }
-
-                    &.field{
-                        top: -.2rem;
-                    }
-
-                    &.prefix {
-                        left: 0.5rem;
-                    }
-
-                    &.suffix {
-                        right: 0.5rem;
-                    }
-
-                    > .exf-ctl-cnt {
-                        padding: 0;
-                        margin: 0;
-
-                        .exf-btn {
-                            padding: 0.1rem 0.2rem;
-                        }
-                    }
-                }
-            }
+            
         }
     }
 
@@ -384,5 +338,53 @@
 
     .exf-cols-20em-20em-1fr {
         grid-template-columns: 20em 20em 1fr;
+    }
+
+    .exf-txt-psx {
+        position: relative;
+
+        &.prefix{
+            input{
+                padding-left: 2rem!important;
+            }
+        }
+
+        &.suffix{
+            input{
+                padding-right: 2rem!important;
+            }
+        }
+
+        .exf-txt-psx-span { 
+            position: absolute;
+
+            top: 0.45rem;
+
+            &.icon {
+                top: 0.65rem;
+                left: 0.5rem;
+            }
+
+            &.field{
+                top: -.2rem;
+            }
+
+            &.prefix {
+                left: 0.5rem;
+            }
+
+            &.suffix {
+                right: 0.5rem;
+            }
+
+            > .exf-ctl-cnt {
+                padding: 0;
+                margin: 0;
+
+                .exf-btn {
+                    padding: 0.1rem 0.2rem;
+                }
+            }
+        }
     }
 }

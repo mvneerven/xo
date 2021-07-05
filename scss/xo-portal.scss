@@ -356,7 +356,7 @@ html:not([data-pwa-route="/"]) {
 
         &.nsp-xs {
             [data-pwa-area="panel"] {
-                z-index: 500 !important;
+                z-index: 1500 !important;
                 height: 400px;
                 bottom: -365px;
                 font-size: 0.8rem;

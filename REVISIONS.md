@@ -404,7 +404,7 @@ Items in the *items* array in list controls can now have a *disabled* property.
 
 ## ListView Control (type: "listview")
 
-See [ListView Control](./md/exo/controls/listview.md)
+See [ListView Control](./md/exo/controls/listviewcontrol.md)
 
 # New in 1.4.0
 

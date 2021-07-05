@@ -794,49 +794,6 @@ html:not(.pwa-signed-in) .if-signed-out {
   grid-area: 1 / 1 / 2 / 2;
 }
 
-.exf-container .exf-page > .exf-ctl-cnt.exf-txt-psx {
-  position: relative;
-}
-
-.exf-container .exf-page > .exf-ctl-cnt.exf-txt-psx.prefix input {
-  padding-left: 2rem !important;
-}
-
-.exf-container .exf-page > .exf-ctl-cnt.exf-txt-psx.suffix input {
-  padding-right: 2rem !important;
-}
-
-.exf-container .exf-page > .exf-ctl-cnt.exf-txt-psx .exf-txt-psx-span {
-  position: absolute;
-  top: 0.45rem;
-}
-
-.exf-container .exf-page > .exf-ctl-cnt.exf-txt-psx .exf-txt-psx-span.icon {
-  top: 0.65rem;
-  left: 0.5rem;
-}
-
-.exf-container .exf-page > .exf-ctl-cnt.exf-txt-psx .exf-txt-psx-span.field {
-  top: -.2rem;
-}
-
-.exf-container .exf-page > .exf-ctl-cnt.exf-txt-psx .exf-txt-psx-span.prefix {
-  left: 0.5rem;
-}
-
-.exf-container .exf-page > .exf-ctl-cnt.exf-txt-psx .exf-txt-psx-span.suffix {
-  right: 0.5rem;
-}
-
-.exf-container .exf-page > .exf-ctl-cnt.exf-txt-psx .exf-txt-psx-span > .exf-ctl-cnt {
-  padding: 0;
-  margin: 0;
-}
-
-.exf-container .exf-page > .exf-ctl-cnt.exf-txt-psx .exf-txt-psx-span > .exf-ctl-cnt .exf-btn {
-  padding: 0.1rem 0.2rem;
-}
-
 .exf-container .exf-info {
   font-size: 1.1rem;
   background-color: var(--color-shade);
@@ -902,6 +859,49 @@ html:not(.pwa-signed-in) .if-signed-out {
 .exf-container .exf-cols-20em-20em-1fr {
   -ms-grid-columns: 20em 20em 1fr;
       grid-template-columns: 20em 20em 1fr;
+}
+
+.exf-container .exf-txt-psx {
+  position: relative;
+}
+
+.exf-container .exf-txt-psx.prefix input {
+  padding-left: 2rem !important;
+}
+
+.exf-container .exf-txt-psx.suffix input {
+  padding-right: 2rem !important;
+}
+
+.exf-container .exf-txt-psx .exf-txt-psx-span {
+  position: absolute;
+  top: 0.45rem;
+}
+
+.exf-container .exf-txt-psx .exf-txt-psx-span.icon {
+  top: 0.65rem;
+  left: 0.5rem;
+}
+
+.exf-container .exf-txt-psx .exf-txt-psx-span.field {
+  top: -.2rem;
+}
+
+.exf-container .exf-txt-psx .exf-txt-psx-span.prefix {
+  left: 0.5rem;
+}
+
+.exf-container .exf-txt-psx .exf-txt-psx-span.suffix {
+  right: 0.5rem;
+}
+
+.exf-container .exf-txt-psx .exf-txt-psx-span > .exf-ctl-cnt {
+  padding: 0;
+  margin: 0;
+}
+
+.exf-container .exf-txt-psx .exf-txt-psx-span > .exf-ctl-cnt .exf-btn {
+  padding: 0.1rem 0.2rem;
 }
 
 nav.ul-drop {

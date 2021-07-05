@@ -47,6 +47,12 @@ class JSONSchema {
             field.info = props.description;
         }
 
+
+        if(props.enum){
+            field.type = "dropdown";
+            field.items = props.enum
+        }
+
     }
 
     static mapType(field, prop) {
@@ -62,6 +68,8 @@ class JSONSchema {
                 return JSONSchema.applyObjectType(field, prop);
 
         }
+
+        
 
         return { type: "text" }
     }

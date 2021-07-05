@@ -830,7 +830,7 @@ html:not([data-pwa-route="/"]) img.xo-logo {
 }
 
 .nsp-grid.nsp-grid-3rc[data-pwa-route="/studio"].nsp-xs [data-pwa-area="panel"] {
-  z-index: 500 !important;
+  z-index: 1500 !important;
   height: 400px;
   bottom: -365px;
   font-size: 0.8rem;
