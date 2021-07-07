@@ -35,6 +35,7 @@ class ExoFormFactory {
         page: "page", // after moving to other page
         pageRelevancyChange: "pageRelevancyChange", // when a page's relevancy state changes (e.g. moves in/out of scope)
         post: "post", // on form post/submit
+        action: "action", // on actions triggered 
         error: "error" // when any error occurs
     }
 

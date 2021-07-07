@@ -16,7 +16,7 @@ ExoForm comes with a range of standard (html5 form element based) and extended (
 
 | HTML5                         | ExoForm          | 
 | ----------------------------- | ---------------- | 
-| button                        | button           |
+| button                        | [button](./controls/buttoncontrol.md)           |
 | input[type=text]              | [text](./controls/textcontrol.md)             |
 | input[type=email]             | email            |
 | input[type=search]            | search           |
@@ -39,24 +39,24 @@ ExoForm comes with a range of standard (html5 form element based) and extended (
 
 ## Extended Controls
 
-| Name                          | Description                                                          | 
-| ----------------------------- | -------------------------------------------------------------------- | 
-| filedrop                      | Rich file upload control with drag & drop support                    |
-| switch                        | Checkbox replacement for boolean values                              |
-| richtext                      | A CKEditor wysiwyg/html editor wrapper for ExoForm                   |
-| tags                          | A control for adding multiple tags                                   |
-| multiinput                    | Input container for collecting multiple values and display in a grid |
-| creditcard                    | Implementation of multiinput for credit card registration            |
-| name                          | Person name control                                                  |
-| nladdress                     | Implementation of multiinput for Dutch Address input                 |
-| daterange                     | Implementation of multiiput for date ranges                          |
-| embed                         | Control for embedding anything in an IFrame                          |
-| video                         | Control for embedding video                                          |
-| captcha                       | Google ReCaptcha wrapper                                             |
-| dialog                        | A simple dialog (modal or modeless)                                  |
-| info                          | An info panel control                                                |
-| map                           | Leaflet interactive map wrapper                                      |
-| listview                      | [Listview Control](./controls/listviewcontrol.md) for tables/grids, tile views and more               |
+| Name                          | Description                                                                                          | 
+| ----------------------------- | --------------------------------------------------------------------------------------------------   | 
+| filedrop                      | Rich file upload control with drag & drop support                                                    |
+| switch                        | Checkbox replacement for boolean values                                                              |
+| richtext                      | A CKEditor wysiwyg/html editor wrapper for ExoForm                                                   |
+| tags                          | A control for adding multiple tags                                                                   |
+| multiinput                    | Input container for collecting multiple values and display in a grid                                 |
+| creditcard                    | Implementation of multiinput for credit card registration                                            |
+| name                          | Person name control                                                                                  |
+| nladdress                     | Implementation of multiinput for Dutch Address input                                                 |
+| daterange                     | Implementation of multiiput for date ranges                                                          |
+| embed                         | Control for embedding anything in an IFrame                                                          |
+| video                         | Control for embedding video                                                                          |
+| captcha                       | Google ReCaptcha wrapper                                                                             |
+| dialog                        | A simple dialog (modal or modeless)                                                                  |
+| info                          | An info panel control                                                                                |
+| map                           | Leaflet interactive map wrapper                                                                      |
+| listview                      | [Listview Control](./controls/listviewcontrol.md) for tables/grids, tile views and more              |
 
 ---
 

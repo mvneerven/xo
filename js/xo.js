@@ -6,7 +6,7 @@ import DOM from '../src/pwa/DOM';
 import PWA from '../src/pwa/PWA';
 import Core from '../src/pwa/Core';
 import MsIdentity from '../src/pwa/MsIdentity';
-import ExoEntityManager from '../src/exo/databinding/ExoEntityManager';
+import ExoEntityManager from '../src/exo/entity/ExoEntityManager';
 
 /**
  * ExoForm shortcut object

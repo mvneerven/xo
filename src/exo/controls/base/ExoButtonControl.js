@@ -100,7 +100,6 @@ class ExoButtonControl extends ExoElementControl {
       }
     }
     if (me.click) {
-
       let ev = new CustomEvent("click", {
         detail: {
           origEvent: e,
@@ -119,6 +118,9 @@ class ExoButtonControl extends ExoElementControl {
         case "next":
           exo.addins.navigation.next();
           break;
+        case "back":
+          exo.addins.navigation.back();
+          break;
         case "reset":
           exo.addins.navigation.goto(1);
           break;
@@ -126,7 +128,7 @@ class ExoButtonControl extends ExoElementControl {
           exo.addins.navigation.goto(parseInt(actionParts[1]));
           break;
         case "dialog":
-          
+
           let dname = actionParts[1];
           let f = exo.get(dname);
           if (f) {
@@ -144,6 +146,14 @@ class ExoButtonControl extends ExoElementControl {
             parts: actionParts
           })
       }
+
+    }
+
+    else {
+      this.value = this.context.field.defaultValue;
+      var evt = document.createEvent("HTMLEvents");
+      evt.initEvent("change", true, true);
+      this.htmlElement.dispatchEvent(evt);
     }
   }
 
@@ -162,6 +172,7 @@ class ExoButtonControl extends ExoElementControl {
     for (const item of items) {
       listElement.appendChild(await this.getListItem(item));
     }
+
     this.htmlElement.addEventListener("mouseenter", e => {
       const ev = new CustomEvent("beforeDropdown",
         {
@@ -169,9 +180,10 @@ class ExoButtonControl extends ExoElementControl {
           cancelable: true,
           detail: {
             dropdownItems: e.target.querySelectorAll(".exf-btn-dropdown li"),
-            buttonControl: this
+            buttonControl:  this
           }
         });
+      
       this.htmlElement.dispatchEvent(ev);
 
     });

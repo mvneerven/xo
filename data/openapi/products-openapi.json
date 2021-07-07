@@ -1,0 +1,165 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "ProductManagementApi",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/openapi": {
+      "get": {
+        "description": "GetOpenApiDefinition",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/products": {
+      "get": {
+        "description": "GetProducts",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ProductDTO"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "description": "AddProduct",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProductDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductDTO"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "description": "ModifyProduct",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProductDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/products/{id}": {
+      "delete": {
+        "description": "DeleteProduct",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ProductDTO": {
+        "title": "ProductDTO",
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "recordVersion": {
+            "title": "RecordVersion",
+            "type": "integer",
+            "format": "int64"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string",
+            "format": ""
+          },
+          "description": {
+            "title": "Description",
+            "type": "string",
+            "format": ""
+          },
+          "price": {
+            "title": "Price",
+            "required": [
+              "Amount",
+              "Currency"
+            ],
+            "type": "object",
+            "properties": {
+              "amount": {
+                "title": "Amount",
+                "type": "number",
+                "format": "double"
+              },
+              "currency": {
+                "title": "Currency",
+                "type": "string",
+                "format": ""
+              }
+            },
+            "format": "",
+            "nullable": true
+          },
+          "vatPercentage": {
+            "title": "VatPercentage",
+            "type": "number",
+            "format": "double"
+          },
+          "imageUri": {
+            "title": "ImageUri",
+            "type": "string",
+            "format": "",
+            "nullable": true
+          },
+          "isForSale": {
+            "title": "IsForSale",
+            "type": "boolean",
+            "format": ""
+          }
+        }
+      }
+    }
+  }
+}

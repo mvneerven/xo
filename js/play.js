@@ -1,17 +1,30 @@
 const Core = xo.core;
 const DOM = xo.dom;
 
+window.stdFetch = window.fetch;
+window.fetch = async (url, options) => {
+    console.log("FETCH", url.toString());
+
+    options = {
+        ...options || {},
+    }
+    options.headers = options.headers || {};
+    options.headers["tenant-id"] = "4d86005d-a499-46b4-80d1-eb571202027b";
+
+    return window.stdFetch(url, options);
+}
+
 let sharedData = null;
 
-xo.form.bind(e=>{
-    if(e.state ==="ready" && e.instances.data)
-     sharedData = e.instances.data
+xo.form.bind(e => {
+    if (e.state === "ready" && e.instances.data)
+        sharedData = e.instances.data
 }, true);
 
 const area = document.querySelector("[data-pwa-area='main']");
 
 const ent = new xo.form.entity({
-    jsonSchema: "/data/schemas/product-schema.json",
+    source: "/data/openapi/products-openapi.json",
     map: meta => {
         return {
             list: {
@@ -120,18 +133,11 @@ const ent = new xo.form.entity({
                 }
             }
         }
-    },
-    api: {
-        get: query => {
-            return fetch("/data/products.json").then(x => x.json())
-        }
     }
 })
     .on("edit", async e => {
         // e.preventDefault();
         // let frm = await e.detail.host.edit(e.detail.item);
-
-
         //e.returnValue = false;
     })
 

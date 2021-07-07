@@ -412,18 +412,6 @@ See [ListView Control](./md/exo/controls/listviewcontrol.md)
 - week (input[type=week]) wrapper
 - Listview improvements
 
-
-# New in 1.4.2
-
-- beforeDropdown event triggered when hovering buttons with dropdowns 
-  - dropdownItems -> dropdown li collection
-  - buttonControl -> button control instance
-- beforeContextMenu event triggered when hovering contextmenu in listview
-  - dropdownItems -> dropdown li collection
-  - buttonControl -> button control instance
-  - domItem: list item DOM lement the contextmenu is shown for
-  - item: the item in the current dataset the contextmenu is shown for
-
 # New in 1.4.5
 
 ## Model binding proxies
@@ -465,76 +453,9 @@ xo.on("new-form", e => {
 
 # New in 1.4.56
 
-## Button control
+## Button control enhancements
 
-- More consistent behavior
-
-### Action parameter
-
-The action parameter can now be used to trigger 'action' event in host.
-
-```js
-xo.form.run({ pages: [ {
-      fields: [{
-          type: "button",
-          icon: "ti-file",
-          name: "button1",
-          action: "file",                                        
-      }]
-  } ]}, {
-        on: {
-            action: e=>{
-                // e.detail.action = 'file'
-            }
-        }
-    }
-)
-```
-
-This also goes for dropdown items:
-
-```js
-xo.form.run(
-    {
-        pages: [
-            {
-
-                fields: [{
-                    type: "button",
-                    icon: "ti-menu",
-                    name: "dropper",
-                    dropdown: [
-                        {
-                          caption: `Select all`,
-                          icon: "ti-check-box",
-                          tooltip: "Select all",
-                          action: "select"
-                          
-                        },
-                        {
-                          caption: `Deselect all`,
-                          icon: "ti-layout-width-full",
-                          tooltip: "Deselect all",
-                          action: "deselect"
-                        },
-                      ]
-                }]
-            }
-        ]
-    }, {
-        on: {
-            action: e=>{
-                // e.detail.action -> ...
-                // e.detail.isDropDown -> true
-            }
-        }
-    }
-).then(x => {
-
-    area.appendChild(x)
-
-})
-```
+See [Button Control](./md/exo/controls/buttoncontrol.md)
 
 
 ### Dropdown parameters alignment 

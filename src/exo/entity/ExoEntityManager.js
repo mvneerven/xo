@@ -1,7 +1,12 @@
+import xo from '../../../js/xo';
 import Core from '../../pwa/Core';
 import DOM from '../../pwa/DOM';
+import OpenApi from './OpenApi';
 
 class ExoEntityManager {
+
+  //#region State 
+
   _state = -1;
 
   static states = {
@@ -135,9 +140,14 @@ class ExoEntityManager {
     startDelete: "startDelete"
   }
 
+  //#endregion
+
   constructor(options) {
-    if (!options || !options.jsonSchema || !options.api)
+    if (!options)
       throw TypeError("Missing options");
+
+    if (!options.source)
+      throw TypeError("Missing source");
 
     this.events = new Core.Events(this);
     this.options = {
@@ -146,30 +156,8 @@ class ExoEntityManager {
     };
   }
 
-  static generateFromJSONSchema(jsonSchema, jsonSchemaUrl) {
-    const schema = ExoEntityManager.baseFormSchema;
-
-    schema.model.schemas.data = jsonSchemaUrl;
-
-    schema.mappings = schema.mappings || {};
-
-    schema.mappings.skip = [];
-        
-    schema.mappings.pages = {};
-
-    schema.mappings.properties = schema.mappings.properties || {};
-
-    for (var p in jsonSchema.properties) {
-      schema.mappings.properties[p] = {}
-    }
-
-    delete schema.pages;
-
-    return schema;
-  }
-
   async list() {
-    await this.checkLoaded()
+    await this._checkMetaDataInit()
 
     let frm = await xo.form.run(this.forms.list.schema, {
       context: this.options.context,
@@ -196,9 +184,8 @@ class ExoEntityManager {
               this.startEdit({});
             });
         },
-      },
+      }
     });
-
     return frm;
   }
 
@@ -206,9 +193,9 @@ class ExoEntityManager {
     if (!data || typeof (data) !== "object")
       throw TypeError("Must provide data to edit");
 
-    await this.checkLoaded();
+    await this._checkMetaDataInit();
 
-    let schema = this.generateEditSchema(data);
+    let schema = this._generateEditorFormSchema(data);
 
     const editFrm = await xo.form.run(schema, {
       context: this.options.exoContext,
@@ -225,9 +212,9 @@ class ExoEntityManager {
     return editFrm;
   }
 
-  async checkLoaded() {
+  async _checkMetaDataInit() {
     if (this.state < ExoEntityManager.states.initialized) {
-      await this.readJSONSchema();
+      await this.readMetaData();
       try {
         if (typeof (this.options.map) === "function") {
           let mapped = this.options.map(this.options.forms);
@@ -251,7 +238,7 @@ class ExoEntityManager {
     }
   }
 
-  generateEditSchema(data) {
+  _generateEditorFormSchema(data) {
     const schema = {
       ...JSON.parse(JSON.stringify(this.editSchemaBase)),
     }
@@ -560,10 +547,28 @@ class ExoEntityManager {
     }
   }
 
-  async readJSONSchema() {
+  async readMetaData() {
     this.state = ExoEntityManager.states.initializing;
 
-    this.jsonSchema = await xo.form.factory.readJSONSchema(this.options.jsonSchema);
+    const meta = await this.acquireMetaData(this.options.source);
+
+    switch (meta.type) {
+
+      case "openapi":
+        this.openApi = new OpenApi(meta.data);
+        await this.openApi.read();
+        this.jsonSchema = this.openApi.jsonSchema;
+        this.options.api = this.openApi.api;
+        break;
+
+      case "jsonschema":
+        this.jsonSchema = await xo.form.factory.readMetaData(meta.data);
+        break;
+
+      default:
+        throw TypeError("Unknown metadata");
+    }
+
     this.options.forms.edit.schema.model.schemas.data = this.options.jsonSchema; // set same jsonschema in generated editor model
 
     this.options.forms.list.control = {
@@ -572,6 +577,17 @@ class ExoEntityManager {
     }
 
     this.state = ExoEntityManager.states.initialized
+  }
+
+  async acquireMetaData(source) {
+    let data = Core.isUrl(source) ? await fetch(source).then(x => x.json()) : source;
+
+    let type = parseInt(data.openapi) >= 3 ? "openapi" : data.$schema != null ? "jsonschema" : "unknown";
+    
+    return {
+      type: type,
+      data: data
+    }
   }
 
   distilListProperties(schema) {
@@ -594,6 +610,29 @@ class ExoEntityManager {
       return new Intl.NumberFormat(options.country,
         { style: 'currency', currency: options.currencyCode }).format(value);
 
+  }
+
+  
+  static generateFromJSONSchema(jsonSchema, jsonSchemaUrl) {
+    const schema = ExoEntityManager.baseFormSchema;
+
+    schema.model.schemas.data = jsonSchemaUrl;
+
+    schema.mappings = schema.mappings || {};
+
+    schema.mappings.skip = [];
+
+    schema.mappings.pages = {};
+
+    schema.mappings.properties = schema.mappings.properties || {};
+
+    for (var p in jsonSchema.properties) {
+      schema.mappings.properties[p] = {}
+    }
+
+    delete schema.pages;
+
+    return schema;
   }
 }
 

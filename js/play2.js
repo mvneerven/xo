@@ -75,8 +75,25 @@ panel.appendChild(logElm)
 //     }
 // }, true);
 
+const schema = {
+    pages: [
+      {
+        legend: "Page 1",
+        fields: [
+          {
+            name: "btn2",
+            caption: "Test button",
+            type: "button",
+            click: e => {
+                alert("Clicked")
+            }
+          }
+        ]
+      }
+    ]
+  }
 
-xo.form.run({
+  const schema2 = {
     model: {
         instance: {
             data: {
@@ -130,7 +147,9 @@ xo.form.run({
             ]
         }
     ]
-}, {
+}
+
+xo.form.run(schema, {
     id: "my-form",
     DOMChange: "change"
 }).then(x => { area.appendChild(x) });

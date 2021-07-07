@@ -85,11 +85,117 @@ class DocsRoute extends xo.route {
     }
 
     async render(path) {
+        let btn = await xo.form.run({
+            type: "button",
+            icon: "ti-menu",
+            name: "dropper",
+            dropdown: [
+                {
+                    caption: `Copy`,
+                    icon: "ti-files",
+                    tooltip: "Copy to clipboard",
+                    click: e => {
+                        let pre = e.target.closest("PRE");
+                        let code = pre.querySelector("CODE");
+                        navigator.clipboard.writeText(code.innerText);
+                        pwa.UI.notifications.add("Copied to clipboard....")
+                    }
+
+                },
+                {
+                    caption: `Load`,
+                    icon: "ti-pencil",
+                    tooltip: "Load code in Studio",
+                    click: async e => {
+                        let pre = e.target.closest("PRE");
+                        let code = pre.querySelector("CODE");
+
+                        try {
+                            await this.tryLoadCode(code)
+                        }
+                        catch {
+                            pwa.UI.notifications.add("Could not load this as an ExoForm schema", {
+                                type: "error"
+                            })
+                        }
+                    }
+                },
+            ]
+        });
+
+        btn.setAttribute("style", "position: absolute; right: 5px; top: 20px;");
+
         let node = await DocsRoute.cms.get(path);
         let elm = this.mapLinks(DOM.parseHTML(node.html), path);
+
         elm.classList.add("user-select")
         this.area.add(elm);
-        pwa.UI.areas.panel.add(document.getElementById("sources").outerHTML)
+        pwa.UI.areas.panel.add(document.getElementById("sources").outerHTML);
+
+        elm.addEventListener("beforeDropdown", e => {
+            let pre = e.target.closest("PRE");
+            let code = pre.querySelector("CODE").innerText;
+
+            let isRunnable = this.isRunnableSchema(code);
+            e.detail.dropdownItems[1].style.display = isRunnable ? 'initial' : 'none';
+        })
+
+        elm.addEventListener("mousemove", e => {
+            if (e.target.tagName === "PRE") {
+                let codeElm = e.target.firstChild;
+                if (codeElm) {
+                    if (codeElm.classList.contains("language-js") || codeElm.classList.contains("language-json")) {
+                        let pre = e.target;
+                        pre.style.position = "relative";
+                        pre.appendChild(btn);
+                    }
+                }
+            }
+        });
+
+    }
+
+    isRunnableSchema(code) {
+        try {
+            code = code.trim();
+
+            if (!code)
+                return false;
+
+            if (code.startsWith("const schema "))
+                return true;
+
+            let r = JSON.parse(code);
+            if ((Array.isArray(r.pages) && r.pages.length > 0) || (r.model && r.model.instance))
+                return true;
+
+        }
+        catch {
+            return false
+        }
+        return false;
+    }
+
+    async tryLoadCode(code) {
+
+        return new Promise((resolve, reject) => {
+
+            window.xo.form.run(code.innerText, {
+                on: {
+                    schemaLoaded: e => {
+                        var json = e.detail.host.schema.toString("json")
+                        var blob = new Blob([json], { type: "application/json" });
+                        var url = URL.createObjectURL(blob);
+                        document.location.hash = "/studio/" + url;
+
+                    }
+                }
+            }).then(resolve).catch(reject)
+
+        });
+
+
+
     }
 
     mapLinks(elm, path) {

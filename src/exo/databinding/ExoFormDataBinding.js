@@ -58,6 +58,7 @@ class ExoFormDataBinding {
                 }
                 if (f.bind) { // field uses databinding to model -> set databinding value
                     f.name = f.name || ExoFormSchema.getPathFromBind(f.bind);
+                    f.defaultValue = f.value;
                     f.value = (modelSetup ? this.get(f.bind) : f.value) || "";
                     console.debug("ExoFormDatabinding: applying instance." + f.name, f.bind, f.value);
                     data[f.name] = f.value

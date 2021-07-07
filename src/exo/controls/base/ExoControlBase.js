@@ -416,22 +416,10 @@ class ExoControlBase {
     get valid() {
         let numInvalid = 0;
         const rv = el => {
-
-
             if(el.validity){
                 let valid = el.validity.valid;
                 if(!valid) numInvalid++;
             }
-
-            // if (el.reportValidity) {
-            //     try {
-                    
-            //         if (!el.reportValidity()) {
-            //             numInvalid++;
-            //         }
-            //     }
-            //     catch { } 
-            // }
         };
         let elm = this.container || this.htmlElement;
         rv(elm);

@@ -15,7 +15,7 @@
   * [exo/core/ExoFormContext](src-exo-core_ExoFormContext.md) - _Hosts an ExoForm context to create forms with.Created using {ExoFormFactory}.build()_
   * [exo/core/ExoFormFactory](src-exo-core_ExoFormFactory.md) - _Factory class for ExoForm - Used to create an ExoForm context.Provides factory methods. Starting point for using ExoForm._
   * [exo/core/ExoFormSchema](src-exo-core_ExoFormSchema.md) - _Hosts the ExoForm json/js form schema and manages its state_
-  * [exo/databinding/ExoEntityManager](src-exo-databinding_ExoEntityManager.md) - _Module exo/databinding/ExoEntityManager_
+  * [exo/entity/ExoEntityManager](src-exo-entity_ExoEntityManager.md) - _Module exo/entity/ExoEntityManager_
   * [exo/navigation/ExoFormNavigationBase](src-exo-navigation_ExoFormNavigationBase.md) - _Module exo/navigation/ExoFormNavigationBase_
   * [exo/validation/ExoFormDefaultValidation](src-exo-validation_ExoFormDefaultValidation.md) - _Module exo/validation/ExoFormDefaultValidation_
   * [pwa/DOM](src-pwa_DOM.md) - _Document Object Model helper methods_
