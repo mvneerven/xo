@@ -19,6 +19,7 @@ class ExoListViewControl extends ExoDivControl {
       name: "filter",
       placeholder: "Type to filter...",
       listener: "input",
+      caption: "Filter...",
       class: "exf-listview-flt",
       value: ""
     },

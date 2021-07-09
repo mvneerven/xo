@@ -6,10 +6,10 @@
                     "class": "name"
                 },
                 "imageUri": {
-                    "type": "img"
+                    "type": "img"                    
                 },
                 "description": {
-                    "class": "small hide-sm"
+                    "class": "small hide-xs"
                 },
                 "price": {
                     "format": "amount",
@@ -21,18 +21,20 @@
                 "grid": [
                     {
                         "key": "name",
-                        "height": "2rem",
-                        "width": "14rem"
+                        "height": "1rem",
+                        "width": "12rem"
                     },
                     {
                         "key": "description",
                         "autoWidth": true
                     },
                     {
-                        "key": "imageUri"
+                        "key": "imageUri",
+                        "width": "120px"
                     },
                     {
-                        "key": "price"
+                        "key": "price",
+                        "width": "7rem"
                     }
                 ],
                 "tiles": [

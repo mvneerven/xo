@@ -68,6 +68,35 @@ __*return*__ | `undefined` | *The return value of the script, if any*
 
 ---
 
+### `resolveVariables(str, cb, ar) ► `
+
+![modifier: private](images/badges/modifier-private.svg) ![modifier: static](images/badges/modifier-static.svg)
+
+Resolve variables in strings
+
+Parameters | Type | Description
+--- | --- | ---
+__str__ | `*` | *the string to parse*
+__cb__ | `*` | *callback for each var replacement*
+__ar__ | `*` | *array to fill with matches*
+__*return*__ | `undefined` | *the string with the resolved variables*
+
+---
+
+### `acquireState(data, options) ► `
+
+![modifier: private](images/badges/modifier-private.svg) ![modifier: static](images/badges/modifier-static.svg)
+
+Acquire state from multiple possible sources.
+
+Parameters | Type | Description
+--- | --- | ---
+__data__ | `Any` | *input data. Can be either direct data, URL, function or Promise*
+__options__ | `*` | *optional options to pass to Promise, function*
+__*return*__ | `undefined` | *Object or Array*
+
+---
+
 ### `isUrl(txt) ► `
 
 ![modifier: private](images/badges/modifier-private.svg) ![modifier: static](images/badges/modifier-static.svg)
@@ -92,6 +121,19 @@ Parameters | Type | Description
 __obj__ | `Object` | *the object to set a shallow or deep property on*
 __path__ | `String` | *the path to the property to set*
 __value__ | `Any` | *the value to set*
+
+---
+
+### `deepMerge(obj1, obj2)`
+
+![modifier: private](images/badges/modifier-private.svg) ![modifier: static](images/badges/modifier-static.svg)
+
+Does a deep merge of two objects, whereas using the spread operator (...) only does a shallow merge.
+
+Parameters | Type | Description
+--- | --- | ---
+__obj1__ | `Object` | *the object to be merged into*
+__obj2__ | `Object` | *the object to be merged from*
 
 ---
 

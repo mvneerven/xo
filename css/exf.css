@@ -2670,9 +2670,13 @@ html.theme-dark .exf-ctl-cnt.autocomplete .exf-ac-rs .exf-ac-itm.active {
   display: none !important;
 }
 
-.exf-listview[data-view="grid"] .exf-ctl {
+.exf-listview[data-view="grid"] .exf-ctl-cnt:not(.exf-base-text) .exf-ctl {
   -webkit-box-shadow: 2px 2px 6px 0px rgba(0, 0, 0, 0.3);
           box-shadow: 2px 2px 6px 0px rgba(0, 0, 0, 0.3);
+}
+
+.exf-listview[data-view="grid"] .exf-ctl-cnt.exf-base-text {
+  margin-top: 1.7rem;
 }
 
 .exf-listview[data-view="grid"] .exf-listview-list {
@@ -2820,11 +2824,9 @@ html.theme-dark .exf-ctl-cnt.autocomplete .exf-ac-rs .exf-ac-itm.active {
           justify-content: center;
 }
 
-.exf-listview[data-view="grid"] .exf-listview-list > .exf-lv-headers .exf-lv-item__cell:not([data-column="actions"])
-.exf-lv-item__cell__content,
+.exf-listview[data-view="grid"] .exf-listview-list > .exf-lv-headers .exf-lv-item__cell:not([data-column="actions"]) .exf-lv-item__cell__content,
 .exf-listview[data-view="grid"] .exf-listview-list > .exf-lv-headers .exf-lv-headers__header,
-.exf-listview[data-view="grid"] .exf-listview-list > .exf-lv-item .exf-lv-item__cell:not([data-column="actions"])
-.exf-lv-item__cell__content,
+.exf-listview[data-view="grid"] .exf-listview-list > .exf-lv-item .exf-lv-item__cell:not([data-column="actions"]) .exf-lv-item__cell__content,
 .exf-listview[data-view="grid"] .exf-listview-list > .exf-lv-item .exf-lv-headers__header {
   overflow: hidden;
   text-overflow: ellipsis;

@@ -103,6 +103,14 @@ const schema = {
                             image: "/img/json-schema.png",
                             id: "3"
 
+                        },
+
+                        {
+                            name: "<b>Start with an OpenAPI endpoint/schema</b>",
+                            description: "Use an OpenAPI schema to generate a form",
+                            image: "/img/openapi.png",
+                            id: "4"
+
                         }
                     ]
                 }

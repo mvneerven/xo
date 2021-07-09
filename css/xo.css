@@ -3206,11 +3206,6 @@ html.theme-dark .exf-ctl-cnt.autocomplete .exf-ac-rs .exf-ac-itm.active {
   display: none !important;
 }
 
-.exf-listview[data-view="grid"] .exf-ctl {
-  -webkit-box-shadow: 2px 2px 6px 0px rgba(0, 0, 0, 0.3);
-          box-shadow: 2px 2px 6px 0px rgba(0, 0, 0, 0.3);
-}
-
 .exf-listview[data-view="grid"] .exf-listview-list {
   -ms-grid-columns: 1fr;
       grid-template-columns: 1fr;

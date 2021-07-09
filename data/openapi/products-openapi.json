@@ -5,42 +5,14 @@
     "version": "1.0.0"
   },
   "paths": {
-    "/openapi": {
-      "get": {
-        "description": "GetOpenApiDefinition",
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
     "/products": {
-      "get": {
-        "description": "GetProducts",
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/ProductDTO"
-                  }
-                }
-              }
-            }
-          }
-        }
-      },
       "post": {
         "description": "AddProduct",
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/ProductDTO"
+                "$ref": "#/components/schemas/productDTO"
               }
             }
           }
@@ -51,7 +23,25 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ProductDTO"
+                  "$ref": "#/components/schemas/productDTO"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "description": "GetProducts",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/productDTO"
+                  }
                 }
               }
             }
@@ -64,7 +54,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/ProductDTO"
+                "$ref": "#/components/schemas/productDTO"
               }
             }
           }
@@ -75,7 +65,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ProductDTO"
+                  "$ref": "#/components/schemas/productDTO"
                 }
               }
             }
@@ -86,6 +76,24 @@
     "/products/{id}": {
       "delete": {
         "description": "DeleteProduct",
+        "parameters": [
+          {
+            "name": "id",
+            "schema": {
+              "type": "System.Guid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/openapi": {
+      "get": {
+        "description": "GetOpenApiDefinition",
         "responses": {
           "200": {
             "description": "OK"
@@ -96,7 +104,7 @@
   },
   "components": {
     "schemas": {
-      "ProductDTO": {
+      "productDTO": {
         "title": "ProductDTO",
         "properties": {
           "id": {
@@ -123,8 +131,8 @@
           "price": {
             "title": "Price",
             "required": [
-              "Amount",
-              "Currency"
+              "amount",
+              "currency"
             ],
             "type": "object",
             "properties": {
