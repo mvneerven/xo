@@ -26,18 +26,7 @@ class ExoFormDataBindingResolver {
         }
     }
 
-    _resolveVars(str, cb, ar) {
-
-        // https://regex101.com/r/aEsEq7/1 - Match @object.path, @object.path.subpath, @object.path.subpath etc.
-        var result = str.replace(
-            /(?:^|[\s/+*(-])[@]([A-Za-z_]+[A-Za-z_0-9.]*[A-Za-z_]+[A-Za-z_0-9]*)(?=[\s+/*,.?!)]|$)/gm,
-            (match, token) => {
-                ar.push(match);
-                return " " + cb(token);
-            }
-        );
-        return result;
-    }
+   
 
     _replaceVars(node, changedData) {
         let ar = [];
@@ -48,7 +37,7 @@ class ExoFormDataBindingResolver {
                 s = node.parentElement.data.origData;
             }
 
-            s = this._resolveVars(s, e => {
+            s = Core.resolveVariables(s, e => {
                 let value = this.dataBinding.get(e, "");
                 return value;
             }, ar);

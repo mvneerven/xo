@@ -705,3 +705,7 @@ const schema = {
 }
 ```
 
+
+# New in 1.4.78
+
+New actions for [button control](./md/exo/controls/buttoncontrol.md)

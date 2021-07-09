@@ -21,8 +21,13 @@ Of course, every bit of UI that we generate using ExoForm behaves like any other
 
 Using the ```action``` parameter, you can specify a number of standard actions ExoForm can take when the user clicks the form.
 
-- next
-- previous
+- next -> next page
+- back -> previous page
+- goto:```pagenumber``` - goto specified page
+- reset - back to page 1
+- toggle:```controlname``` - toggle visibility of control
+- show:```controlname``` - show control
+- hide:```controlname``` - hide control
 
 ```js
 const schema = {
@@ -61,6 +66,34 @@ const schema = {
   ]
 }
 ```
+
+Show/hide control
+
+```json
+{
+  "pages": [
+    {
+      "fields": [
+          {
+          "name": "btn1",
+          "caption": "Show email",
+          "type": "button",
+          "action": "toggle:eml1"
+        },
+        
+        {
+          "name": "eml1",
+          "caption": "Your email",
+          "type": "email",
+          "visible": false
+        }
+      ]
+    }
+  ]
+}
+```
+
+> NOTE: be careful with hiding pieces of UI, especially in combination with required values.
 
 ### Custom actions
 
@@ -148,32 +181,6 @@ const schema = {
   ]
 }
 ```
-
-
-
-### Action parameter
-
-The action parameter can now be used to trigger 'action' event in host.
-
-```js
-xo.form.run({ pages: [ {
-      fields: [{
-          type: "button",
-          icon: "ti-file",
-          name: "button1",
-          action: "file",                                        
-      }]
-  } ]}, {
-        on: {
-            action: e=>{
-                // e.detail.action = 'file'
-            }
-        }
-    }
-)
-```
-
-
 
 ## Dropdown buttons
 

@@ -146,8 +146,8 @@ class ExoEntityManager {
     if (!options)
       throw TypeError("Missing options");
 
-    if (!options.source)
-      throw TypeError("Missing source");
+    if (!options.dataSchema)
+      throw TypeError("Missing dataSchema");
 
     this.events = new Core.Events(this);
     this.options = {
@@ -197,6 +197,7 @@ class ExoEntityManager {
 
     let schema = this._generateEditorFormSchema(data);
 
+
     const editFrm = await xo.form.run(schema, {
       context: this.options.exoContext,
 
@@ -216,12 +217,13 @@ class ExoEntityManager {
     if (this.state < ExoEntityManager.states.initialized) {
       await this.readMetaData();
       try {
-        if (typeof (this.options.map) === "function") {
-          let mapped = this.options.map(this.options.forms);
-          this.tryReApplyListProperties(mapped) // object struct to array
-          this.applyMappings(this.options.forms, mapped);
-        }
-        this.tryFixMissingMappings();
+
+        let mapped = this.options.uiSchema ? await Core.acquireState(this.options.uiSchema) || {} : {}
+        Core.deepMerge(this.options.forms, mapped);
+
+        this.reApplyListViewProperties(this.options.forms) // object struct to array
+
+        this.tryFixMissingListViewMappings();
       }
       catch (ex) {
         console.error("checkLoaded", ex);
@@ -229,7 +231,7 @@ class ExoEntityManager {
       finally {
         this.state = ExoEntityManager.states.initialized;
 
-        // save default edit schema
+        // store default edit schema
         this.editSchemaBase = {
           ...this.options.forms.edit.schema,
           mappings: this.options.forms.edit.mappings
@@ -248,27 +250,12 @@ class ExoEntityManager {
     return schema;
   }
 
-  applyMappings(obj, mapped) {
-    for (var p in mapped) {
-      if (typeof (mapped[p]) === "object") {
-        if (obj[p]) {
-          this.applyMappings(obj[p], mapped[p])
-        }
-        else {
-          obj[p] = mapped[p];
-        }
-      }
-      else {
-        obj[p] = mapped[p] || obj[p]
-      }
-    }
-  }
-
-  tryFixMissingMappings() {
+  // create mappings for listview if needed
+  tryFixMissingListViewMappings() {
     const l = this.options.forms.list;
 
     if (this.options.forms.list.control.type === "listview") {
-      let fieldName = this.getNameFieldFuzzy();
+      let fieldName = this.getListviewNamePropertyFuzzy();
       this.options.forms.list.control.views.forEach(v => {
         let mappings = l.control.mappings[v];
         if (!mappings) {
@@ -278,7 +265,8 @@ class ExoEntityManager {
     }
   }
 
-  getNameFieldFuzzy() {
+  // simplistic check for obvious properties to use when none are specified
+  getListviewNamePropertyFuzzy() {
     const props = this.jsonSchema.properties;
     for (var p in props) {
       let s = (props[p].title || p).toLowerCase();
@@ -287,10 +275,10 @@ class ExoEntityManager {
       }
     }
 
-    return this.getFirstStringField()
+    return this.getFirstStringProperty()
   }
 
-  getFirstStringField() {
+  getFirstStringProperty() {
     let first = null;
     const props = this.jsonSchema.properties;
     for (var p in props) {
@@ -306,7 +294,7 @@ class ExoEntityManager {
   // if mapped.list.control.properties are returned by map(),
   // it's an object structure with key: {prop1: value1, prop2: value2}
   // while the listview works with an array of properties
-  tryReApplyListProperties(mapped) {
+  reApplyListViewProperties(mapped) {
     let ar = this.options.forms.list.control.properties;
     if (Array.isArray(ar)) {
       let ar1 = [];
@@ -440,9 +428,8 @@ class ExoEntityManager {
     });
 
     var returnValue = this.events.trigger(ev);
-    if (!returnValue) return;
 
-    // If host has not cancelled, show dialog
+    if (!returnValue) return; // If host has cancelled, don't continue standard editing process
 
     this.editDialog = null;
 
@@ -479,15 +466,12 @@ class ExoEntityManager {
 
     if (button === "confirm") {
       const editData = this.editData;
-      //const grid = this.exo.get("grid");
-      //const trigger = editData.id ? "finishEdit" : "finishAdd";
       try {
         if (editData.id) {
           await this.api.put("", editData);
         } else {
           await this.api.post("", editData);
         }
-        // grid._control.events.trigger(trigger, { success: true });
       } catch (err) {
         // grid._control.events.trigger(trigger, { success: false });
       } finally {
@@ -513,6 +497,7 @@ class ExoEntityManager {
       type: "dialog"
     });
     var f = xo.form.factory.getFieldFromElement(r);
+
     f._control.show();
     return f._control;
 
@@ -550,7 +535,13 @@ class ExoEntityManager {
   async readMetaData() {
     this.state = ExoEntityManager.states.initializing;
 
-    const meta = await this.acquireMetaData(this.options.source);
+    let acquire = async () => {
+      return await this.acquireMetaData(this.options.dataSchema);
+    }
+
+    let cache = new Core.SimpleCache(acquire, 1000 * 3600)
+
+    const meta = await cache.get();
 
     switch (meta.type) {
 
@@ -569,7 +560,10 @@ class ExoEntityManager {
         throw TypeError("Unknown metadata");
     }
 
-    this.options.forms.edit.schema.model.schemas.data = this.options.jsonSchema; // set same jsonschema in generated editor model
+    if (!this.jsonSchema || !this.jsonSchema.properties)
+      throw TypeError("JSON Schema not available");
+
+    this.options.forms.edit.schema.model.schemas.data = this.jsonSchema; // set same jsonschema in generated editor model
 
     this.options.forms.list.control = {
       ...this.options.forms.list.control,
@@ -580,10 +574,10 @@ class ExoEntityManager {
   }
 
   async acquireMetaData(source) {
-    let data = Core.isUrl(source) ? await fetch(source).then(x => x.json()) : source;
+    let data = await Core.acquireState(source);//  Core.isUrl(source) ? await fetch(source).then(x => x.json()) : source;
 
     let type = parseInt(data.openapi) >= 3 ? "openapi" : data.$schema != null ? "jsonschema" : "unknown";
-    
+
     return {
       type: type,
       data: data
@@ -601,18 +595,8 @@ class ExoEntityManager {
       });
     });
     return properties;
-  }
+  } 
 
-  formatValue(value, options) {
-    options = options || { type: "currency", country: "nl", currencyCode: "EUR" }
-
-    if (options.type === "currency")
-      return new Intl.NumberFormat(options.country,
-        { style: 'currency', currency: options.currencyCode }).format(value);
-
-  }
-
-  
   static generateFromJSONSchema(jsonSchema, jsonSchemaUrl) {
     const schema = ExoEntityManager.baseFormSchema;
 

@@ -4,13 +4,13 @@ An ExoForm control is a wrapper around DOM objects. Each control eventually rend
 
 ## Standard Control Template
 
-By default, controls render usinmg this template:
+By default, controls render using this template:
 
 ```html
-<div data-id="${obj.id}" class="${obj.class}" data-field-type="${obj.type}">
+<div data-id="@id" class="@class" data-field-type="@type">
     <div class="exf-ctl">
-        <label for="${obj.id}" aria-hidden="true" class="exf-label" title="${obj.caption}">${obj.caption}</label>
-        [MAIN CONTROL ELEMENT]
+        <label for="@id" aria-hidden="true" class="exf-label" title="@caption">@caption</label>
+        @main-element
     </div>
     <div class="exf-fld-details">
         <div class="exf-help-wrapper"></div>

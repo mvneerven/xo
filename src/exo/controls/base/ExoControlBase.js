@@ -150,7 +150,7 @@ class ExoControlBase {
         this.htmlElement.dispatchEvent(evt);
     }
 
-    set visible(value) {
+    set visible(value) {        
         this._visible = value;
         if (this.rendered) {
             var elm = this.container || this.htmlElement;
@@ -317,7 +317,13 @@ class ExoControlBase {
             this.showHelp(this.info)
         }
 
+        
         this._rendered = true;
+        
+        if(!this.visible)
+            this.visible = this.visible; // force 
+        
+        
         return this.container
     }
 

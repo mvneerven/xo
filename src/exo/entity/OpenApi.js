@@ -21,11 +21,15 @@ class OpenApi {
         this._api = {};
         for (var name in ar) {
             let endPoint = ar[name];
-            this._api[name] = options => {
+            this._api[name] = async options => {
                 let url = new URL(endPoint.path, this.options.baseUrl);
-                return fetch(url, options).then(x => x.json())
+                const x = await fetch(url, options);
+                return await x.json();
             }
         }
+
+        console.log("Generated API:", this.api)
+
     }
 
     get schemas() {

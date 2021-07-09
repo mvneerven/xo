@@ -123,7 +123,6 @@ class ExoListViewControl extends ExoDivControl {
 
   set properties(value) {
     this._properties = value;
-
     this.setPrimaryKey();
     if (!this._mappings) {
       this.setDefaultMappings();
@@ -255,7 +254,7 @@ class ExoListViewControl extends ExoDivControl {
   async renderItems(noFetch) {
     try {
       if (!noFetch) {
-        this.tableItems = await this.getData(this.items);
+        this.tableItems = await Core.acquireState(this.items);
       }
 
       // apply current sorting
@@ -470,6 +469,8 @@ class ExoListViewControl extends ExoDivControl {
       } else p.grid = {};
       this.mappedProperties.push(p);
     });
+    
+
   }
 
   getMappingOrder() {
@@ -515,7 +516,7 @@ class ExoListViewControl extends ExoDivControl {
 
     // create single contextmenu and move it to article hovered over
     if (this.contextMenu) {
-      const am = await this.getData(this.contextMenu.items);
+      const am = await Core.acquireState(this.contextMenu.items);
       let btn = await xo.form.run({
         type: "button",
         name: `context-actions`,
@@ -679,7 +680,7 @@ class ExoListViewControl extends ExoDivControl {
 
     const btns = document.createElement("div");
     btns.classList.add("exf-listview-btns", "exf-cnt");
-    const controls = await this.getData(this.controls);
+    const controls = await Core.acquireState(this.controls);
     const filteredControls = controls.filter(
       (c) =>
         !Boolean(
@@ -787,18 +788,20 @@ class ExoListViewControl extends ExoDivControl {
   }
 
   filterListView(value, items) {
-
     const filteredItems = [];
     if (!items) items = this.tableItems;
     items.forEach((item) => {
       let content = "";
+
+
       this.properties.forEach((prop) => {
         const data = prop.dataCallback
           ? prop.dataCallback(prop.key, item[prop.key], item)
           : item[prop.key];
         if (["number", "string"].includes(typeof data)) {
           content += data;
-        }
+        }      
+
       });
       if (content.toLowerCase().includes(value.toLowerCase()) || !value) {
         filteredItems.push(item);
@@ -851,26 +854,26 @@ class ExoListViewControl extends ExoDivControl {
     this._controls = value;
   }
 
-  // updates the array of items to display
-  async getData(data, options) {
-    return new Promise((resolve) => {
-      if (Core.isUrl(data)) {
-        fetch(data).then((x) => {
-          if (x.status === 200) {
-            resolve(x.json());
-            return;
-          }
-          throw new Error(`HTTP error ${x.status} - ${data}`);
-        });
-      } else if (Array.isArray(data)) {
-        resolve(data);
-      } else if (typeof data === "function") {
-        resolve(data(options || {}));
-      } else {
-        return resolve(Promise.resolve(data));
-      }
-    });
-  }
+  // // updates the array of items to display
+  // async getData(data, options) {
+  //   return new Promise((resolve) => {
+  //     if (Core.isUrl(data)) {
+  //       fetch(data).then((x) => {
+  //         if (x.status === 200) {
+  //           resolve(x.json());
+  //           return;
+  //         }
+  //         throw new Error(`HTTP error ${x.status} - ${data}`);
+  //       });
+  //     } else if (Array.isArray(data)) {
+  //       resolve(data);
+  //     } else if (typeof data === "function") {
+  //       resolve(data(options || {}));
+  //     } else {
+  //       return resolve(Promise.resolve(data));
+  //     }
+  //   });
+  // }
 
   // should set the selected items
   set value(data) {
@@ -998,15 +1001,25 @@ class ExoListViewControl extends ExoDivControl {
   getGridDiv(item, prop) {
     let cellData = prop.dataCallback
       ? prop.dataCallback(prop.key, item[prop.key], item)
-      : item[prop.key];
+      : prop.format ? item[prop.key][prop.format] : item[prop.key]; //item[prop.key]; 
+      
     if (this.isElement(cellData)) {
       const el = document.createElement("div");
       el.appendChild(cellData);
       cellData = el.innerHTML;
     }
-    if (prop.type && prop.type === "img") {
-      cellData = `<div class="exf-lv-item__cell__content__img" style="background-image: url(${item[prop.key]
+   
+    switch(prop.type){
+      case "img":
+        cellData = `<div class="exf-lv-item__cell__content__img" style="background-image: url(${item[prop.key]
         })"></div>`;
+        break
+      case "currency":
+        cellData = `${Core.formatValue(cellData, {
+          type: "currency",
+          country: prop.countryCode || window.navigator.userLanguage || window.navigator.language,
+          currencyCode: prop.currency || "EUR"
+        })}`;
     }
 
     const classes = ["exf-lv-item__cell"];

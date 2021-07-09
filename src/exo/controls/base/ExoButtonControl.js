@@ -127,6 +127,19 @@ class ExoButtonControl extends ExoElementControl {
         case "goto":
           exo.addins.navigation.goto(parseInt(actionParts[1]));
           break;
+        case "hide":
+          let fld = exo.get(actionParts[1]);
+          fld._control.container.style.display = 'none';
+          break;
+        case "show":
+          let fld1 = exo.get(actionParts[1]);
+          fld1._control.container.style.display = 'initial';
+          break;
+        case "toggle":
+            let fld2 = exo.get(actionParts[1]);
+            fld2._control.container.style.display = fld2._control.container.style.display === 'none' ? 'initial' : 'none';
+            break;
+            
         case "dialog":
 
           let dname = actionParts[1];
@@ -180,10 +193,10 @@ class ExoButtonControl extends ExoElementControl {
           cancelable: true,
           detail: {
             dropdownItems: e.target.querySelectorAll(".exf-btn-dropdown li"),
-            buttonControl:  this
+            buttonControl: this
           }
         });
-      
+
       this.htmlElement.dispatchEvent(ev);
 
     });

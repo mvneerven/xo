@@ -7,9 +7,13 @@
 Use XO directly from the CDN:
 
 ```html
-<script src="https://xo-js.dev/v1.3/xo.js"></script>
+<script src="https://xo-js.dev/v1.4/xo.js"></script>
+```
+
 or...
-<script src="https://xo-js.dev/v1.3/xo.min.js"></script>
+
+```html
+<script src="https://xo-js.dev/v1.4/xo.min.js"></script>
 ```
 
 ### NPM
@@ -23,52 +27,54 @@ Start by using the [ExoForm Studio](https://www.xo-js.dev/#/studio), or try the 
 
 ## Minimal Form / ExoForm Hello World
 
-In its most simple form, this is what an ExoForm schema looks like:
+In its most simple form, an ExoForm schema has the following structure:
 
-```js 
-let div = await xo.form.run({
-  pages: [
+```json
+{
+  "pages": [
     {
-      legend: "My Form",
-      intro: "My form description",
-      fields: [
+      "fields": [
+
         {
-          name: "text1",
-          caption: "Text",
-          type: "text"
+          "type": "<field type>",
+          "name": "<field name>",
+          "caption": "<field caption>"
         }
+
       ]
     }
   ]
-});
+}
 ```
 
-## Run ExoForm inside your own Frontend Code
+Here's an example of a one-page, one-field form:
+
+```js
+const schema = {
+  pages: [{
+      fields: [{
+          type: "text",
+          name: "txt1",
+          caption: "Enter text"          
+        }]
+    }]
+}
+```
 
 Use ```xo.form.run()``` to run a form schema:
 
 ```js 
-let div = await xo.form.run(schema[, settings]);
+let div = await xo.form.run(schema);
 ```
 
-Where *schema* can be a literal (JSON/JS) or a URL, and *settings* an optional object. See [Getting Started](./getting-started.md)
-
+The ExoForm *schema* can be passed in as a literal (JSON/JS) or a URL:
 
 ```js
 document.body.appendChild(await xo.form.run("/data/forms/mi.js"));
 ```
 
-... but you can also render single controls:
 
-```js
-let div = await xo.form.run({
-  type: "aceeditor",
-  name: "htmlEditor",
-  caption: "Html"
-});
-```
-
-### Accessing extended functionality
+### Usimg the ```options``` parameter to access extended functionality
 
 ```js
 myDiv.appendChild(await xo.form.run("/data/forms/mi.js", {
@@ -84,6 +90,8 @@ myDiv.appendChild(await xo.form.run("/data/forms/mi.js", {
 ```
 
 ### Providing a preexisting *ExoFormContext* object:
+
+See [Custom Controls](./xo-custom-controls.md)
 
 ```js
 xo.form.run("/data/forms/account.json", {

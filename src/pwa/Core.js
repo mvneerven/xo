@@ -1,5 +1,6 @@
 import Events from './Events';
 import MarkDown from './MarkDown';
+import SimpleCache from './SimpleCache';
 
 // Simple Vanilla JS Event System
 class Emitter {
@@ -49,6 +50,14 @@ class Iterator {
  */
 class Core {
 
+    static Iterator = Iterator;
+
+    static Events = Events;
+
+    static MarkDown = MarkDown;
+
+    static SimpleCache = SimpleCache;
+
     static operatorTable = {
         '>': (a, b) => { return a > b; },
         '<': (a, b) => { return a < b; },
@@ -81,12 +90,6 @@ class Core {
         }, 0);
     }
 
-    static Iterator = Iterator;
-
-    static Events = Events;
-
-    static MarkDown = MarkDown;
-
     static addEvents(obj) {
         new Emitter(obj);
     }
@@ -100,7 +103,6 @@ class Core {
         }
         return URL.createObjectURL(new Blob([u8arr], { type: mime }));
     }
-
 
     /**
      * 
@@ -204,6 +206,52 @@ class Core {
     }
 
     /**
+     * Resolve variables in strings
+     * @param {*} str - the string to parse
+     * @param {*} cb - callback for each var replacement
+     * @param {*} ar - array to fill with matches
+     * @returns the string with the resolved variables
+     */
+    static resolveVariables(str, cb, ar) {
+
+        // https://regex101.com/r/aEsEq7/1 - Match @object.path, @object.path.subpath, @object.path.subpath etc.
+        var result = str.replace(
+            /(?:^|[\s/+*(-])[@]([A-Za-z_]+[A-Za-z_0-9.]*[A-Za-z_]+[A-Za-z_0-9]*)(?=[\s+/*,.?!)]|$)/gm,
+            (match, token) => {
+                ar.push(match);
+                return " " + cb(token);
+            }
+        );
+        return result;
+    }
+
+    /**
+     * Acquire state from multiple possible sources.
+     * @param {Any} data - input data. Can be either direct data, URL, function or Promise
+     * @param {*} options - optional options to pass to Promise, function
+     * @returns Object or Array 
+     */
+    static async acquireState(data, options) {
+        return new Promise((resolve) => {
+            if (Core.isUrl(data)) {
+                fetch(data).then((x) => {
+                    if (x.status === 200) {
+                        resolve(x.json());
+                        return;
+                    }
+                    throw new Error(`HTTP error ${x.status} - ${data}`);
+                });
+            } else if (Array.isArray(data) || typeof (data) === "object") {
+                resolve(data);
+            } else if (typeof data === "function") {
+                resolve(data(options || {}));
+            } else {
+                return resolve(Promise.resolve(data));
+            }
+        });
+    }
+
+    /**
      * Checks whether the fiven string is a valid URL.
      * @param {String} txt - the string to evaluate
      * @returns Boolean indeicating whether the string is a URL.
@@ -240,6 +288,31 @@ class Core {
 
             if (i === path.length - 2) {
                 current[path[i + 1]] = value;
+            }
+        }
+    }
+
+    /**
+     * Does a deep merge of two objects, whereas using the spread operator (...) only does a shallow merge.
+     * @param {Object} obj1 - the object to be merged into
+     * @param {Object} obj2 - the object to be merged from
+     */
+    static deepMerge(obj1, obj2) {
+        for (var p in obj2) {
+            if (typeof (obj2[p]) === "object") {
+                if (obj1[p]) {
+                    Core.deepMerge(obj1[p], obj2[p])
+                }
+                else {
+                    obj1[p] = obj2[p];
+                }
+            }
+            else {
+                //obj1[p] = obj2[p] || obj1[p]
+                obj1[p] = {
+                    ...obj1[p],
+                    ...obj2[p]
+                }
             }
         }
     }
@@ -299,6 +372,15 @@ class Core {
         }, 2);
         cache = null; // Enable garbage collection
         return s;
+    }
+
+    static formatValue(value, options) {
+        options = options || { type: "currency", country: "nl", currencyCode: "EUR" }
+
+        if (options.type === "currency")
+            return new Intl.NumberFormat(options.country,
+                { style: 'currency', currency: options.currencyCode }).format(value);
+
     }
 
 

@@ -118,16 +118,21 @@ class StudioRoute extends xo.route {
     }
 
     tryOpenPassedSchemaUrl(path){
-        if(Core.isUrl(path.substr(1))){
-            fetch(path.substr(1)).then(x => x.text()).then(text => {
+        let url = path.substr(1);
+        if(Core.isUrl(url)){
+            fetch(url).then(x => x.text()).then(text => {
+                console.log("Loaded url " + url, "length:", text.length )
                 this.loadSchemaInEditor(text);
                 this.renderer.model.load(text);
                 this.tabStrip.tabs.schema.select();
+                DOM.changeHash("/studio")
+            }).catch(ex=>{
+                debugger
             })
         }
         
         
-        DOM.changeHash("/studio")
+        
     }
 
     // when current schema in editor is rendered
