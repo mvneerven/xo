@@ -1,4 +1,5 @@
 import ExoFormSchema from './ExoFormSchema';
+import Core from '../../pwa/Core';
 
 /* 
  * see https://json-schema.org/understanding-json-schema/reference/type.html 
@@ -12,6 +13,28 @@ class JSONSchema {
     constructor(instanceName, schema) {
         this.instanceName = instanceName;
         this.schema = schema
+        this.expandSchema(this.schema);
+    }
+
+    expandSchema(schema) {
+        let props = {};
+        if (schema && schema.properties) {
+            for (var name in schema.properties) {
+                let obj = schema.properties[name];
+                props[name] = obj;
+
+                if (obj.$ref) {
+                    let ref = obj.$ref.substr(2).replace('/', '.');
+                    props[name] = Core.getObjectValue(schema, ref);
+
+                    if (props[name].$ref) {
+                        expandSchema(props[name])
+                    }
+                }
+            }
+        }
+
+        schema.properties = props;
     }
 
     toString() {
@@ -19,6 +42,7 @@ class JSONSchema {
     }
 
     apply(field) {
+
         let path = ExoFormSchema.getPathFromBind(field.bind);
 
         let props = this.schema.properties[path] // todo deep path
@@ -39,8 +63,9 @@ class JSONSchema {
             }
         }
 
+        
         if (!field.caption) {
-            field.caption = props.title || path;
+            field.caption = props.title || Core.toWords(path);
         }
 
         if (props && props.description) {
@@ -48,7 +73,7 @@ class JSONSchema {
         }
 
 
-        if(props.enum){
+        if (props.enum) {
             field.type = "dropdown";
             field.items = props.enum
         }
@@ -60,29 +85,31 @@ class JSONSchema {
         switch (prop.type) {
 
             case "string": return JSONSchema.applyStringType(field, prop);
-            case "number": return JSONSchema.applyNumericType(field,prop);
+            case "number": return JSONSchema.applyNumericType(field, prop);
             case "integer": return JSONSchema.applyIntegerRestrictions(field, JSONSchema.applyNumericType(field, prop));
             case "boolean": return { type: "checkbox" };
             case "array": return { type: "checkboxlist" };
-            case "object": 
+            case "object":
                 return JSONSchema.applyObjectType(field, prop);
 
         }
 
-        
+
 
         return { type: "text" }
     }
 
-    static applyObjectType(field, props){
+    static applyObjectType(field, props) {
+
         let obj = { type: "multiinput" };
-        
-        if(!field.fields){
+
+        if (!field.fields) {
             obj.fields = {};
-            
-            for(var name in props.properties){
+
+            for (var name in props.properties) {
                 var p = props.properties[name];
                 obj.fields[name] = JSONSchema.mapType(obj, p)
+                obj.fields[name].caption = Core.toWords(obj.fields[name].caption || name)
             }
         }
         return obj;
@@ -130,7 +157,7 @@ class JSONSchema {
             obj.min = props.minimum;
         }
 
-        if(props.multipleOf !== undefined) {
+        if (props.multipleOf !== undefined) {
             obj.step = props.multipleOf;
         }
 

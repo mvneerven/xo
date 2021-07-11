@@ -24,9 +24,10 @@ class PWA_UI {
             this.html.setAttribute("id", this.pwa.id);
         }
 
+        let prefDark = window.matchMedia ? window.matchMedia("(prefers-color-scheme: dark)").matches : false;
         this.pwa.config.UI.user = {
-            prefersDarkScheme: window.matchMedia ? window.matchMedia("(prefers-color-scheme: dark)").matches : false,
-            currentTheme: localStorage.getItem("theme") || "light"
+            prefersDarkScheme: prefDark,
+            currentTheme: localStorage.getItem("theme") || (prefDark ? "dark" : "light")
         }
 
         if (!this.pwa.config.UI.allowUserSelection) {
@@ -71,7 +72,7 @@ class PWA_UI {
         return this._dirty;
     }
 
-    createMenu(){
+    createMenu() {
         return new PWA_UI.Menu(this.pwa.router);
     }
 
@@ -126,7 +127,7 @@ class PWA_UI {
     }
 
     async showDialog(options) {
-        
+
         let r = await xo.form.run({
             ...options || {},
             type: "dialog"

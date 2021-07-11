@@ -133,7 +133,7 @@ class ExoEntityManager {
   }
   
   static generateFromJSONSchema(jsonSchema, jsonSchemaUrl) {
-    const schema = ExoEntityManager.baseEditFormSchema;
+    const schema = ExoEntitySettings.baseEditFormSchema;
 
     schema.model.schemas.data = jsonSchemaUrl;
 

@@ -37,8 +37,6 @@ class PWA {
 
         this.events = new Core.Events(this);
 
-        document.querySelector("html").classList.add("pwa-signin-pending");
-
         this.config = { ...this.defaults, ...(options || {}) };
         this.config.baseUrl = document.location.origin;
 
@@ -60,14 +58,14 @@ class PWA {
         this.asyncInit().then(() => {
             this._UI = new PWA_UI(this);
             this.init();
+            let cl = document.querySelector("html").classList;
+            this.UI.forceTheme = cl.contains("theme-dark") ? "dark" : cl.contains("theme-light") ? "light" : undefined;
+            cl.add("pwa-env-" + this.config.environment);
             this.execute()
         });
     
 
-        let cl = document.querySelector("html").classList;
-        this.forceTheme = cl.contains("theme-dark") ? "dark" : cl.contains("theme-light") ? "light" : undefined;
-
-        cl.add("pwa-env-" + this.config.environment);
+        
     }
 
     _registerWorker(serviceWorker) {

@@ -1,0 +1,105 @@
+{
+    "definitions": {
+      "BarContents": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "buttons": {
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/Button"
+            }
+          }
+        }
+      },
+      "Button": {
+        "type": [
+          "object",
+          "null"
+        ],
+        "properties": {
+          "identifier": {
+            "type": "string"
+          },
+          "caption": {
+            "type": "string"
+          },
+          "clickAction": {
+            "$ref": "#/definitions/ClickAction"
+          },
+          "isCancel": {
+            "type": "boolean"
+          }
+        }
+      },
+      "ClickAction": {
+        "type": "object",
+        "properties": {
+          "usePiwikLogging": {
+            "type": "boolean"
+          },
+          "jamboConfig": {
+            "$ref": "#/definitions/JamboConfig"
+          }
+        }
+      },
+      "JamboConfig": {
+        "type": "object",
+        "properties": {
+          "surveyCode": {
+            "type": "string"
+          },
+          "appendPiwikCookieValue": {
+            "type": "boolean"
+          },
+          "windowOpenOptions": {
+            "type": "string"
+          }
+        }
+      },
+      "PiwikConfig": {
+        "type": "object",
+        "properties": {
+          "enableLogging": {
+            "type": "boolean"
+          },
+          "eventCategory": {
+            "type": "string"
+          },
+          "eventValue": {
+            "type": "string"
+          },
+          "barDisplayEventName": {
+            "type": "string"
+          },
+          "barSkippedEventName": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "type": "object",
+    "properties": {
+      "paramsetId": {
+        "type": "string"
+      },
+      "paramsetVersion": {
+        "type": "string"
+      },
+      "exclusionSequenceNumber": {
+        "type": "integer"
+      },
+      "selectOneIn": {
+        "type": "integer"
+      },
+      "piwikConfig": {
+        "$ref": "#/definitions/PiwikConfig"
+      },
+      "barContents": {
+        "$ref": "#/definitions/BarContents"
+      }
+    }
+  }
+  
