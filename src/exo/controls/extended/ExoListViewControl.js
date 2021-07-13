@@ -445,7 +445,7 @@ class ExoListViewControl extends ExoDivControl {
     const primaryProp = this.properties.find((p) => p.isPrimaryKey);
     if (primaryProp) this.primaryKey = primaryProp.key;
     else if (this.properties.length) {
-      console.warn("No primary key in properties");
+      console.debug("No primary key in properties. Assuming first property");
       this.primaryKey = this.properties[0].key;
     }
   }
@@ -942,8 +942,10 @@ class ExoListViewControl extends ExoDivControl {
     let columnHeaders = "";
     this.mappedProperties.forEach((prop) => {
       const name = prop.name || "";
-      if (!name) console.warn(`No name specified for column "${prop.key}"`);
+      
       if (prop.grid) {
+        if (!name) console.warn(`No name specified for column "${prop.key}"`);
+
         columnHeaders += /*html*/ `<div class="exf-lv-headers__header ${prop.class || ""
           }" data-property="${prop.key}" style="grid-area: ${prop.key
           };">${name}</div>`;

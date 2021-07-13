@@ -11,12 +11,15 @@ class MarkDownCMS {
     _ready = false;
 
     async load(path) {
-        if (path.startsWith("."))
+        if (path.startsWith("./"))
             path = path.substr(1);
 
         this.tree[path] = {
             title: "Home"
         };
+        
+        console.log("Read", path, this.tree[path])
+
         await this.readMd(this.tree[path], path);
         this._ready = true;
         return this.tree;
@@ -27,7 +30,7 @@ class MarkDownCMS {
     }
 
     async readMd(node, path) {
-        if (path.startsWith("."))
+        if (path.startsWith("./"))
             path = path.substr(1);
 
         if (this.index[path])
@@ -50,7 +53,9 @@ class MarkDownCMS {
         let links = elm.querySelectorAll("a[href]");
         for (const a of links) {
             if (a.href.endsWith(".md")) {
-                let link = node.path + new URL(a.href).pathname;
+
+                let link = this.resolveLink(node, a);
+
                 a.setAttribute("href", "#/docs" + link)
                 node.children[link] = {
                     title: a.innerText
@@ -58,6 +63,20 @@ class MarkDownCMS {
                 await this.readMd(node.children[link], link, this.index);
             }
         };
+    }
+
+    resolveLink(node, a){
+        let path = a.getAttribute("href"), link;
+        try{
+            link = new URL(node.path + "/" + path, document.location.origin).pathname;
+            //console.log("#/docs" + link);
+            return link;
+        }
+
+        catch(ex){
+            console.error(link, ex)
+        }
+
     }
 
     addIndex(node, elm) {

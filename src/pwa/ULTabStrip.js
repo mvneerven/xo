@@ -1,4 +1,4 @@
-const DOM = window.xo.dom;
+import DOM from './DOM';
 
 const html = document.querySelector("html");
 
@@ -203,16 +203,16 @@ class ULTabStrip {
 
     setHtmlElementClass(tabId) {
 
-        let prefix = "exb-tab-" + this.name + "-";
+        // let prefix = "exb-tab-" + this.name + "-";
 
-        let tabClass = prefix + tabId;
+        // let tabClass = prefix + tabId;
 
-        html.classList.forEach(c => {
-            if (c.startsWith(prefix)) {
-                html.classList.remove(c)
-            }
-        })
-        html.classList.add(tabClass)
+        // html.classList.forEach(c => {
+        //     if (c.startsWith(prefix)) {
+        //         html.classList.remove(c)
+        //     }
+        // })
+        // html.classList.add(tabClass)
     }
 }
 

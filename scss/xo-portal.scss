@@ -2,7 +2,6 @@
 @import url(/css/xo.css);
 
 @import "exf-wysiwyg";
-@import "ul-tabs";
 @import "pwa";
 @import "xo-brand";
 @import "xo-theme";
@@ -26,7 +25,6 @@
             display: none;
         }
 
-
         article.exf-lv-item {
             .small {
                 font-size: smaller;
@@ -34,10 +32,9 @@
             }
         }
 
-
         .exf-btn {
-            padding: .2rem .4rem;
-            border-radius: .3rem;
+            padding: 0.2rem 0.4rem;
+            border-radius: 0.3rem;
             outline: none;
             background-color: var(--color-button);
             color: var(--color-button-text);
@@ -212,7 +209,7 @@ html:not([data-pwa-route="/"]) {
     [data-pwa-area="panel"] {
         background-color: var(--color-panel-background);
         overflow-y: auto;
-        z-index: 1500
+        z-index: 1500;
     }
 
     [data-pwa-area="menu"] {
@@ -221,15 +218,13 @@ html:not([data-pwa-route="/"]) {
         background-image: url("/img/nv-logo.png");
         background-size: 90%;
         background-repeat: no-repeat;
-        background-position: 20% bottom ;
-
+        background-position: 20% bottom;
     }
 
-    &.nsp-xs{
+    &.nsp-xs {
         [data-pwa-area="menu"] {
             background-image: none;
         }
-    
     }
 
     [data-pwa-area="headerright"] {
@@ -351,8 +346,6 @@ html:not([data-pwa-route="/"]) {
                     }
                 }
             }
-
-            
         }
 
         &.nsp-xs {
@@ -409,8 +402,6 @@ html:not([data-pwa-route="/"]) {
     }
 }
 
-
-
 .nsp-grid.nsp-grid-3rc.nsp-xs {
     body {
         main {
@@ -420,7 +411,6 @@ html:not([data-pwa-route="/"]) {
             [data-pwa-area="menu"] {
                 width: 210px;
                 left: -160px;
-
 
                 &:hover {
                     left: -170px;
@@ -477,13 +467,11 @@ html:not([data-pwa-route="/"]) {
         }
     }
 
-    &:not([data-pwa-route="/studio"]){
+    &:not([data-pwa-route="/studio"]) {
         [data-pwa-area="panel"] {
             padding-left: 55px !important;
         }
     }
-
-    
 }
 
 ul.li-tiles {

@@ -159,7 +159,10 @@ class ExoFormRules {
         if (typeof (type) === "undefined" || type === "auto")
             type = ExoFormRules.matchRuleEngineType(exo);
 
-        return ExoFormRules.types[type];
+        return {
+            name: type,
+            type: ExoFormRules.types[type]
+        }
     }
 
     static matchRuleEngineType(exo) {

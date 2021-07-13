@@ -129,6 +129,9 @@ class DocsRoute extends xo.route {
             elm.classList.add("user-select")
             this.area.add(elm);
         }
+        catch(ex){
+            console.error(path, ex)
+        }
         finally {
             this.area.busy = false;
         }

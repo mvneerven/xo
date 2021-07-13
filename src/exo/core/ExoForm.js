@@ -262,9 +262,15 @@ class ExoForm {
         this.addins = {};
         for (var n in ExoFormFactory.meta) {
             let cmp = ExoFormFactory.meta[n];
-            let tp = cmp.type.getType(this);
-            console.debug("ExoForm:", n, "component used:", tp.name);
-            this.addins[n] = new tp(this)
+
+            let obj = cmp.type.getType(this);
+
+            console.debug("ExoForm addin:", n, "type:", obj.name, "component used:", obj.type.name);
+
+            this.addins[n] = new obj.type(this);
+
+            this.container.classList.add(`exf-${n}-${obj.name}`);
+
         }
     }
 

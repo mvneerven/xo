@@ -8,6 +8,7 @@
 html.theme-light {
     &:root {
         --color-background: white;
+        --color-tab-background: white;
         --color-background-variation: #efefef;
         --color-panel-background: #ddd;
         --color-disabled: #ebebe4;
@@ -58,6 +59,7 @@ html.theme-dark {
         --scrollbar-bg-active: rgba(255, 255, 255, 0.1);
 
         --color-background: #444;
+        --color-tab-background: #444;
         --color-background-variation: #343434;
         --color-panel-background: #333;
         --color-disabled: #333;

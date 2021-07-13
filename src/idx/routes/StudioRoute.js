@@ -1,4 +1,3 @@
-import ULTabStrip from '../modules/ULTabStrip';
 import ExoFormLiveEditor from '../modules/ExoFormLiveEditor';
 import StyleSheetHelper from '../modules/StyleSheetHelper';
 import ExoFormBuilderSidePanel from '../modules/ExoFormBuilderSidePanel';
@@ -97,10 +96,10 @@ class StudioRoute extends xo.route {
 
         this.showFormExplorer()
 
-        if(path){
+        if (path) {
             this.tryOpenPassedSchemaUrl(path)
         }
-        
+
         else if (this.renderer.cache) {
             try {
                 this.renderer.restoreCache();
@@ -116,38 +115,35 @@ class StudioRoute extends xo.route {
 
         new ExoFormBuilderSchema(this).render(this.tabStrip.tabs.start.panel);
 
-        
+
     }
 
-    tryOpenPassedSchemaUrl(path){
+    tryOpenPassedSchemaUrl(path) {
         let url = path.substr(1);
-        if(Core.isUrl(url)){
+        if (Core.isUrl(url)) {
             fetch(url).then(x => x.text()).then(text => {
-                console.log("Loaded url " + url, "length:", text.length )
+                console.log("Loaded url " + url, "length:", text.length)
                 this.loadSchemaInEditor(text);
                 this.renderer.model.load(text);
                 this.tabStrip.tabs.schema.select();
                 DOM.changeHash("/studio")
-            }).catch(ex=>{
+            }).catch(ex => {
                 debugger
             })
         }
-        
-        
-        
     }
 
     // when current schema in editor is rendered
     async rendered(o) {
         let x = o.exo;
 
-        if(this.sidePanel.tabStrip.tabs.css)
+        if (this.sidePanel.tabStrip.tabs.css)
             this.sidePanel.tabStrip.tabs.css.enabled = true;
-        
-        if(this.tabStrip.tabs.js)
+
+        if (this.tabStrip.tabs.js)
             this.tabStrip.tabs.js.enabled = true;
 
-        if(this.tabStrip.tabs.html){
+        if (this.tabStrip.tabs.html) {
             this.htmlEditor.value = DOM.prettyPrintHTML(x.container.outerHTML);
             this.tabStrip.tabs.html.enabled = true;
         }
@@ -190,7 +186,7 @@ class StudioRoute extends xo.route {
         let js;
         try {
             js = this.getJSCode();
-            if(js)
+            if (js)
                 Core.scopeEval(x, js)
         }
         catch (ex) {
@@ -203,7 +199,7 @@ class StudioRoute extends xo.route {
 
     getJSCode() {
         let elm = document.getElementById("js-code");
-        if(!elm)
+        if (!elm)
             return null;
 
         let fld = window.xo.form.factory.getFieldFromElement(elm);
@@ -212,25 +208,25 @@ class StudioRoute extends xo.route {
     }
 
     setupTabStrip() {
-        
+
         let tsOptions = {
             tabs: {
                 start: { caption: "Start", class: "full-height", tooltip: "Select a templates or import DTO to generate an ExoForm Schema with" },
                 schema: { caption: "Schema", class: "full-height", tooltip: "Edit ExoForm Schema" },
                 form: { caption: "Form", class: "full-height", tooltip: "View rendered form" }
-                
+
             },
             class: "full-height"
         }
-        if(localStorage.advancedUi){
+        if (localStorage.advancedUi) {
             tsOptions.tabs = {
                 ...tsOptions.tabs,
                 html: { caption: "HTML", class: "full-height", enabled: false, tooltip: "Show generated form HTML" },
-                js: { caption: "JS", class: "full-height", tooltip: "Add JavaScript to execute" } 
-            } 
+                js: { caption: "JS", class: "full-height", tooltip: "Add JavaScript to execute" }
+            }
         }
 
-        this.tabStrip = new ULTabStrip("exploreTabs", tsOptions);
+        this.tabStrip = new xo.pwa.TabStrip("exploreTabs", tsOptions);
 
         this.tabStrip.on("tabSelected", e => {
 
@@ -443,14 +439,14 @@ class StudioRoute extends xo.route {
 
         this.renderJsTab()
 
-        this.renderHtmlTab() 
+        this.renderHtmlTab()
 
     }
 
-    renderCssTab(){
-        if(!this.sidePanel.tabStrip.tabs.css)
+    renderCssTab() {
+        if (!this.sidePanel.tabStrip.tabs.css)
             return;
-            
+
         this.renderCodeEditor({ mode: "css", value: this.styleSheetHelper.buildCssFromClasses() }).then(e => {
 
             e.querySelector("[data-exf]").data.editor.on("change", ev => {
@@ -460,8 +456,8 @@ class StudioRoute extends xo.route {
         });
     }
 
-    renderHtmlTab(){
-        if(!this.tabStrip.tabs.html)
+    renderHtmlTab() {
+        if (!this.tabStrip.tabs.html)
             return;
 
         this.renderCodeEditor({ mode: "html" }).then(htmlEditor => {
@@ -470,8 +466,8 @@ class StudioRoute extends xo.route {
         })
     }
 
-    renderJsTab(){
-        if(!this.tabStrip.tabs.js)
+    renderJsTab() {
+        if (!this.tabStrip.tabs.js)
             return;
 
         var ar = []
@@ -480,7 +476,7 @@ class StudioRoute extends xo.route {
                 `this.on("${ev}", e => {
     //console.log('>> ExoForm Event: ${ev}", e.detail);
     })`)
-        } 
+        }
 
         const defaultScript = `
     // Add your logic here...

@@ -4,12 +4,10 @@ import ExoFormFactory from '../core/ExoFormFactory';
 class ExoFormStaticNavigation extends ExoFormNavigationBase {
     render() {
         super.render();
-        this.exo.on(ExoFormFactory.events.renderReady, e => {
-            setTimeout(() => {
-                this.form.querySelectorAll(".exf-page").forEach(elm => {
-                    elm.style.display = "block";
-                });
-            }, 50);
+        this.exo.on(ExoFormFactory.events.interactive, e => {
+            this.form.querySelectorAll(".exf-page").forEach(elm => {
+                elm.style.display = "block";
+            });
         })
     }
 }

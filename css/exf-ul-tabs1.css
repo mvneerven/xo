@@ -1,5 +1,8 @@
 .ul-tabs {
+  width: 100%;
+  min-height: 100px;
   position: relative;
+  color: var(--color-text);
 }
 
 .ul-tabs > ul,
@@ -10,7 +13,8 @@
 }
 
 .ul-tabs > ul {
-  overflow-x: auto;
+  overflow-x: scroll;
+  width: 100%;
 }
 
 .ul-tabs > ul > li {
@@ -26,7 +30,7 @@
   margin: 0 2px 0 0;
   padding: 0 18px;
   line-height: 32px;
-  background: var(--color-background-variation);
+  background: var(--color-background-lighter);
   text-align: center;
   border-radius: 5px 5px 0 0;
   cursor: pointer;
@@ -39,8 +43,8 @@
 
 .ul-tabs > ul > li > input[type="radio"]:checked + label {
   z-index: 1;
-  background: var(--color-tab-background, white);
-  border-bottom-color: var(--color-tab-background, white);
+  background: var(--color-background);
+  border-bottom-color: var(--color-background);
   cursor: default;
 }
 
@@ -55,6 +59,9 @@
 
 .ul-tabs > ul > li > input[type="radio"]:checked:not(:disabled) ~ div {
   display: block;
+  height: -webkit-fit-content;
+  height: -moz-fit-content;
+  height: fit-content;
 }
 
 .ul-tabs > ul > li > input[type="radio"]:disabled + label {
@@ -77,40 +84,10 @@
   width: 100%;
   padding: 0px;
   overflow: auto;
-  background: var(--color-tab-background, white);
+  background: var(--color-background);
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
   position: absolute;
   border: solid 1px var(--color-shade, #bfcadb);
 }
-
-.exf-navigation-tabstrip .exf-nav-tabs {
-  margin: 1rem;
-}
-
-.exf-navigation-tabstrip .exf-nav-tabs > ul > li > div .exf-page.exf-ctl-cnt {
-  margin-top: 0 !important;
-  padding-top: 0;
-}
-
-.exf-navigation-tabstrip > .exf-form {
-  position: relative;
-}
-
-.exf-navigation-tabstrip > .exf-form > .exf-nav-cnt {
-  margin: 0;
-  padding: 0;
-  position: absolute;
-  top: 40px;
-  right: 25px;
-}
-
-.exf-navigation-tabstrip > .exf-form > .exf-nav-cnt > .exf-ctl-cnt {
-  margin: 0;
-  padding: 0;
-}
-
-.exf-navigation-tabstrip > .exf-form > .exf-nav-cnt > .exf-ctl-cnt .exf-btn {
-  padding: 0.2rem 0.4rem;
-}
-/*# sourceMappingURL=ul-tabs.css.map */
+/*# sourceMappingURL=exf-ul-tabs1.css.map */

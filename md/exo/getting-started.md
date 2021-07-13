@@ -84,6 +84,9 @@ In this case, we simply use the CDN references for XO (CSS & JS):
 </html>
 ```
 
+*[Test this HTML](/base.html)*
+
+
 ## Installing
 
 As you've seen in the example above, you can run XO directly from the CDN:
@@ -96,7 +99,7 @@ As you've seen in the example above, you can run XO directly from the CDN:
 
 As you've seen, in ```xo.form.run()```, you provide a schema (inline or URL), and an ```options``` object. 
 
-Apart from the ```on``` property, for events, the ```options``` object can have numerous settings for ExoForm runtime. For instance, the [context](../refdocs/refdocs/src-exo-core_ExoFormContext.md) property is used to pass state to the form.
+Apart from the ```on``` property, for events, the ```options``` object can have numerous settings for ExoForm runtime. For instance, the [context](../refdocs/src-exo-core_ExoFormContext.md) property is used to pass state to the form.
 
 See [Custom Controls](./controls/building-controls.md)
 

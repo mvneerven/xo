@@ -38,7 +38,7 @@
   -webkit-user-select: none;
   -ms-user-select: none;
       user-select: none;
-  border: solid 1px var(--color-shade);
+  border: solid 1px var(--color-shade, #bfcadb);
 }
 
 .ul-tabs > ul > li > input[type="radio"]:checked + label {
@@ -59,6 +59,9 @@
 
 .ul-tabs > ul > li > input[type="radio"]:checked:not(:disabled) ~ div {
   display: block;
+  height: -webkit-fit-content;
+  height: -moz-fit-content;
+  height: fit-content;
 }
 
 .ul-tabs > ul > li > input[type="radio"]:disabled + label {
@@ -85,6 +88,6 @@
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
   position: absolute;
-  border: solid 1px var(--color-shade);
+  border: solid 1px var(--color-shade, #bfcadb);
 }
 /*# sourceMappingURL=exf-ul-tabs.css.map */

@@ -3,6 +3,7 @@ import ExoFormNoNavigation from './ExoFormNoNavigation';
 import ExoFormDefaultNavigation from './ExoFormDefaultNavigation';
 import ExoFormWizardNavigation from './ExoFormWizardNavigation';
 import ExoFormSurveyNavigation from './ExoFormSurveyNavigation';
+import ExoFormTabStripNavigation from './ExoFormTabStripNavigation';
 
 class ExoFormNavigation {
     static types = {
@@ -11,7 +12,8 @@ class ExoFormNavigation {
         static: ExoFormStaticNavigation,
         default: ExoFormDefaultNavigation,
         wizard: ExoFormWizardNavigation,
-        survey: ExoFormSurveyNavigation
+        survey: ExoFormSurveyNavigation,
+        tabstrip: ExoFormTabStripNavigation
     }
 
     static getType(exo) {
@@ -19,7 +21,10 @@ class ExoFormNavigation {
         if (typeof (type) === "undefined" || type === "auto")
             type = ExoFormNavigation.matchNavigationType(exo);
 
-        return ExoFormNavigation.types[type];
+        return {
+            name: type,
+            type: ExoFormNavigation.types[type]
+        } 
     }
 
     static matchNavigationType(exo) {

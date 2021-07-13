@@ -6,7 +6,7 @@ class ExoFormTheme {
     }
 
     apply() {
-        this.exo.container.classList.add("exf-theme-none")
+        //this.exo.container.classList.add("exf-theme-none")
 
         this.exo.form.addEventListener("focusin", e => {
             let cnt = e.target.closest(".exf-ctl-cnt");
@@ -72,7 +72,10 @@ class ExoFormThemes {
 
         let theme = ExoFormThemes.types[type];
 
-        return theme || ExoFormTheme;
+        return {
+            name: type,
+            type: theme || ExoFormTheme
+        } 
     }
 
     static matchTheme(exo) {

@@ -3,10 +3,14 @@
 
 <head>
     <title>ExoForm, The Basics</title>
+
+    <!-- @import url(https://xo-js.dev/v1.4/xo.css);-->
     <style>
         @import url(css/xo.css);
         @import url('https://fonts.googleapis.com/css2?family=Exo&display=swap');
-        body, H1 {
+
+        body,
+        H1 {
             font-family: Exo;
         }
     </style>
@@ -18,12 +22,15 @@
         This page illustrates how little is needed to get going with ExoForm...
     </p>
 
+    <!-- <script type="module" src="https://xo-js.dev/v1.4/xo.js"></script> -->
     <script type="module" src="dist/xo.js"></script>
 
     <script type="module">
+        
         const schema = {
+            navigation: "tabstrip",
             pages: [{
-                legend: "My Form",
+                legend: "Details",
                 intro: "Fill in your details",
                 fields: [
                     {
@@ -45,7 +52,13 @@
                         caption: "Message",
                         placeholder: "My message for you...",
                         autogrow: true
-                    },
+                    }
+                ]
+            },
+            {
+                legend: "Extra",
+                intro: "Add some extra stuff",
+                fields: [
                     {
                         type: "dropdown",
                         name: "favpet",

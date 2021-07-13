@@ -1,8 +1,6 @@
 const DOM = window.xo.dom;
 const Core = window.xo.core;
 
-import ULTabStrip from './ULTabStrip.js';
-
 class ExoFormBuilderSidePanel {
 
     constructor(builder) {
@@ -31,7 +29,7 @@ class ExoFormBuilderSidePanel {
         }
 
 
-        this.tabStrip = new ULTabStrip("fieldTabs", tsOptions);
+        this.tabStrip = new xo.pwa.TabStrip("fieldTabs", tsOptions);
 
         this.tabStrip.on("tabSelected", e => {
             switch (e.detail.id) {

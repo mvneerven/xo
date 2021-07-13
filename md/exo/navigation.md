@@ -14,6 +14,7 @@
 - static
 - wizard
 - survey
+- tabstrip
 
 
 # Controls
@@ -149,10 +150,65 @@ model: {
     logic: context => {
         const model = context.model, person = model.instance.person, 
         b = model.bindings, nav = context.exo.addins.navigation;
-        
         b.isFirstPage = nav.currentPage === 1;
-
         b.sendDisabled = nav.;
     }
 }
 ```
+
+## Tabstrip Navigation
+
+```js
+const schema = {
+    navigation: "tabstrip",
+    pages: [{
+        legend: "Details",
+        intro: "Fill in your details",
+        fields: [
+            {
+                type: "name",
+                name: "name",
+                caption: "Enter name",
+                required: true
+            },
+            {
+                type: "email",
+                name: "email",
+                required: true,
+                placeholder: "john@doe.com",
+                caption: "Enter email address"
+            },
+            {
+                type: "multiline",
+                name: "msg",
+                caption: "Message",
+                placeholder: "My message for you...",
+                autogrow: true
+            }
+        ]
+    },
+    {
+        legend: "Extra",
+        intro: "Add some extra stuff",
+        fields: [
+            {
+                type: "dropdown",
+                name: "favpet",
+                caption: "Favorite pet",
+                items: ["Dog", "Cat", "Bunny", "Hamster", "Bird", "Snake", "Pig"]
+            },
+            {
+                type: "tags",
+                name: "tags",
+                caption: "Skills",
+                value: ["C#", "JavaScript", "Azure", "JSON"]
+            }
+
+        ]
+    }]
+}
+```
+
+Result:
+
+![TabStrip Navigation](https://xo-js.dev/assets/img/tabstrip-nav.png)

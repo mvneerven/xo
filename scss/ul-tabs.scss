@@ -1,8 +1,8 @@
 .ul-tabs {
-    width: 100%;
-    min-height: 100px;
+    //width: 100%;
+    //min-height: 100px;
     position: relative;
-    color: var(--color-text);
+    //color: var(--color-text);
 
     > ul,
     > ul > li {
@@ -12,8 +12,8 @@
     }
 
     > ul {
-        overflow-x: scroll;
-        width: 100%;
+        overflow-x: auto;
+        //width: 100%;
         //white-space: nowrap;
 
         > li {
@@ -41,8 +41,8 @@
 
             > input[type="radio"]:checked + label {
                 z-index: 1;
-                background: var(--color-background);
-                border-bottom-color: var(--color-background);
+                background: var(--color-tab-background, white);
+                border-bottom-color: var(--color-tab-background, white);
                 cursor: default;
             }
 
@@ -79,7 +79,7 @@
                 width: 100%;
                 padding: 0px;
                 overflow: auto;
-                background: var(--color-background);
+                background: var(--color-tab-background, white);
                 -moz-box-sizing: border-box;
                 -webkit-box-sizing: border-box;
                 box-sizing: border-box;
@@ -89,12 +89,37 @@
             }
         }
     }
+}
 
-    
+.exf-navigation-tabstrip {
+    .exf-nav-tabs {
+        margin: 1rem;
 
-    
+        > ul > li > div {
+            .exf-page.exf-ctl-cnt {
+                margin-top: 0 !important;
+                padding-top: 0;
+            }
+        }
+    }
 
-    
+    > .exf-form {
+        position: relative;
+        > .exf-nav-cnt {
+            margin: 0;
+            padding: 0;
+            position: absolute;
+            top: 40px;
+            right: 25px;
 
-   
+            > .exf-ctl-cnt {
+                margin: 0;
+                padding: 0;
+
+                .exf-btn {
+                    padding: 0.2rem 0.4rem;
+                }
+            }
+        }
+    }
 }

@@ -709,3 +709,10 @@ const schema = {
 # New in 1.4.78
 
 New actions for [button control](./md/exo/controls/buttoncontrol.md)
+
+# New in 1.4.83
+
+## New navigation type: ```tabstrip```
+
+See [navigation](./md/exo/navigation.md)
+

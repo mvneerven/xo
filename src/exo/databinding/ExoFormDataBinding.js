@@ -88,6 +88,10 @@ class ExoFormDataBinding {
                         master: true // lookup master if nested
                     });
                     if (field && field.bind) {
+                        if(!field._control.valid){
+                            return; // don't update model if the value isn't valid
+                        }
+
                         let value = field._control.value;
                         Core.setObjectValue(this._model, field.bind, value);
                         if (this._mapped) {

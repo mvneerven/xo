@@ -36,6 +36,7 @@ const schema = {
                     break;
                 case "jsonSchemaUrl":
                     url = context.changed.newValue;
+                    console.log("JSON Schema URL", url)
                     fetch(url).then(x => x.json()).then(x => {
                         inst.jsonSchema = x;
                         inst.jsonSchemaText = JSON.stringify(x, null, 2);
@@ -43,6 +44,7 @@ const schema = {
                     break;
                 case "openAPISchemaUrl":
                     url = context.changed.newValue;
+                    console.log("OpenAPI URL", url)
                     fetch(url).then(x => x.json()).then(x => {
                         inst.openAPISchema = x;
                         inst.openAPISchemaText = JSON.stringify(x, null, 2);

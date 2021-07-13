@@ -7,6 +7,7 @@ import PWA_RESTService from './PWA_RESTService';
 import PWA_OmniBox from './PWA_OmniBox';
 import PWA_Settings from './PWA_Settings';
 import PWA_SettingsGroup from './PWA_SettingsGroup';
+import ULTabStrip from './ULTabStrip';
 
 /**
  * Progressive Web App container 
@@ -15,7 +16,7 @@ class PWA {
     static RouteModule = RouteModule;
     static Router = Router;
     static OmniBox = PWA_OmniBox;
-    
+    static TabStrip = ULTabStrip;
 
     defaults = {
         UI: {

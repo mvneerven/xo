@@ -14,7 +14,10 @@ class ExoFormValidation {
             type = ExoFormValidation.matchValidationType(exo);
 
         let tp = ExoFormValidation.types[type];
-        return tp || ExoFormDefaultValidation;
+        return {
+            name: type,
+            type: tp || ExoFormDefaultValidation
+        }
     }
 
     static matchValidationType(exo) {

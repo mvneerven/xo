@@ -65,4 +65,10 @@ html:not(.pwa-signed-in) .if-signed-out {
   background: rgba(0, 0, 0, 0.2);
   border: 3px solid #4ca1af;
 }
+
+.height-content {
+  height: -webkit-fit-content;
+  height: -moz-fit-content;
+  height: fit-content;
+}
 /*# sourceMappingURL=pwa-functional.css.map */
