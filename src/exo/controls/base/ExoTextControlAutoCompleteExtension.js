@@ -1,8 +1,6 @@
 import Core from '../../../pwa/Core'
 
-/**
- * Autocomplete helper for all textbox derived controls.
- */
+// Autocomplete helper for all textbox derived controls.
 class ExoTextControlAutoCompleteExtension {
 
     cssClasses = {

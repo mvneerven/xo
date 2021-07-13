@@ -80,11 +80,8 @@ class DocsRoute extends xo.route {
 
     }
 
-    async asyncInit() {
-        await super.asyncInit();
-    }
-
     async render(path) {
+
         let btn = await xo.form.run({
             type: "button",
             icon: "ti-menu",
@@ -124,12 +121,18 @@ class DocsRoute extends xo.route {
         });
 
         btn.setAttribute("style", "position: absolute; right: 5px; top: 20px;");
+        let elm;
+        this.area.busy = true;
+        try {
+            let node = await DocsRoute.cms.get(path);
+            elm = this.mapLinks(DOM.parseHTML(node.html), path);
+            elm.classList.add("user-select")
+            this.area.add(elm);
+        }
+        finally {
+            this.area.busy = false;
+        }
 
-        let node = await DocsRoute.cms.get(path);
-        let elm = this.mapLinks(DOM.parseHTML(node.html), path);
-
-        elm.classList.add("user-select")
-        this.area.add(elm);
         pwa.UI.areas.panel.add(document.getElementById("sources").outerHTML);
 
         elm.addEventListener("beforeDropdown", e => {

@@ -29,6 +29,7 @@ class ExoInputControl extends ExoElementControl {
         switch (this.context.field.type) {
             case "color":
                 this.container.classList.add("exf-std-lbl");
+                break;
             case "hidden":
                 this.container.classList.add("exf-hidden");
                 break;

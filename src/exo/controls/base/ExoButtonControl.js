@@ -2,9 +2,6 @@ import ExoElementControl from "./ExoElementControl";
 import DOM from "../../../pwa/DOM";
 import Core from "../../../pwa/Core";
 
-/**
- * Renders a button
- */
 class ExoButtonControl extends ExoElementControl {
   constructor(context) {
     super(context);

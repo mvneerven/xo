@@ -1,6 +1,7 @@
 import ExoElementControl from './ExoElementControl';
 import ExoFormFactory from '../../core/ExoFormFactory';
 import DOM from '../../../pwa/DOM';
+import Core from '../../../pwa/Core';
 
 class ExoListControl extends ExoElementControl {
 
@@ -17,17 +18,26 @@ class ExoListControl extends ExoElementControl {
                 name: "view",
                 type: String,
                 description: "Set the view mode (list, tiles)"
+            },
+            {
+                name:"items",
+                type: Object,
+                description: "Items to show as options"
             }
         );
     }
 
     async populateList(containerElm, tpl) {
-        const _ = this;
-        const f = _.context.field;
-        if (f.items && Array.isArray(f.items)) {
+        
+        const f = this.context.field;
+
+        let items = await Core.acquireState(this.items)
+
+
+        if (items && Array.isArray(items)) {
             let index = 0;
-            f.items.forEach(i => {
-                _.addListItem(f, i, tpl, containerElm, index);
+            items.forEach(i => {
+                this.addListItem(f, i, tpl, containerElm, index);
                 index++;
             });
         }
@@ -41,8 +51,8 @@ class ExoListControl extends ExoElementControl {
 
         let item = {
             ...i,
-            name: typeof (i.name) === "string" ? i.name : i,
-            value: (i.value !== undefined) ? i.value : i,
+            name: typeof (i.name) === "string" ? i.name : i.toString(),
+            value: (i.value != undefined) ? i.value : i,
             type: _.optionType,
             inputname: f.name,
             checked: (i.checked || i.selected) ? "checked" : "",

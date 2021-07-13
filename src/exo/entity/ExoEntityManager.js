@@ -97,10 +97,13 @@ class ExoEntityManager {
     const me = this;
     data = data || this._getSelectedItemData() || {};
 
-    await this.entitySettings.init();
-
+    this.editor = await this.createEditor(data);
     this.editing = true;
+    this.editor.show()
+  }
 
+  async createEditor(data){
+    await this.entitySettings.init();
     let ev = new CustomEvent("edit", {
       bubbles: false,
       cancelable: true,
@@ -114,8 +117,7 @@ class ExoEntityManager {
 
     if (!returnValue) return; // If host has cancelled, don't continue standard editing process
 
-    this.editor = new ExoEntityEditor(this, data)
-    this.editor.show()
+    return new ExoEntityEditor(this, data)
   }
 
   _getSelectedItemData() {
@@ -132,27 +134,7 @@ class ExoEntityManager {
     this.events.trigger(value ? "busy" : "ready");
   }
   
-  static generateFromJSONSchema(jsonSchema, jsonSchemaUrl) {
-    const schema = ExoEntitySettings.baseEditFormSchema;
-
-    schema.model.schemas.data = jsonSchemaUrl;
-
-    schema.mappings = schema.mappings || {};
-
-    schema.mappings.skip = [];
-
-    schema.mappings.pages = {};
-
-    schema.mappings.properties = schema.mappings.properties || {};
-
-    for (var p in jsonSchema.properties) {
-      schema.mappings.properties[p] = {}
-    }
-
-    delete schema.pages;
-
-    return schema;
-  }
+  
 }
 
 export default ExoEntityManager;

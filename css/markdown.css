@@ -153,4 +153,20 @@
   border-left: 10px solid #c04e58;
   padding: 0.5rem 1rem;
 }
+
+.md-converted-html p code {
+  color: #D7BA7D;
+}
+
+.md-converted-html h1 {
+  font-size: 1.5rem;
+}
+
+.md-converted-html h2 {
+  font-size: 1.3rem;
+}
+
+.md-converted-html h3 {
+  font-size: 1.15rem;
+}
 /*# sourceMappingURL=markdown.css.map */

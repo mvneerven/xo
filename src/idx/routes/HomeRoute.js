@@ -16,28 +16,46 @@ class HomeRoute extends xo.route {
                     type: "radiobuttonlist",
                     view: "tiles",
                     items: [
+                        { value: "true", name: "On" },
+                        { value: "false", name: "Off" }
+                    ]
+                }
+            },
+            {
+                type: "boolean",
+                name: "advancedUi",
+                title: "Advanced UI",
+                description: "ExoForm Studio advanced mode",
+                ui: {
+                    type: "radiobuttonlist",
+                    view: "tiles",
+                    items: [
                         { value: true, name: "On" },
                         { value: false, name: "Off" }
                     ]
                 }
-            });
+            }
+        );
     }
 
-    constructor(){
+    constructor() {
         super(...arguments);
 
         pwa.settings.add(this.settings)
             .on("read", e => {
                 let data = {
-                    darkmode: pwa.UI.theme === "dark",
-                    pagesize: pwa.UI.pagesize || 8
+                    darkmode: pwa.UI.theme === "dark" ? "true" : "false",
+                    pagesize: pwa.UI.pagesize || 8,
+                    advancedUi: localStorage.advancedUi
                 }
+
                 e.detail.instance.data = data;
             })
             .on("write", e => {
                 let settings = e.detail.instance.data;
-                pwa.UI.theme = settings.darkmode ? "dark" : "light";
+                pwa.UI.theme = settings.darkmode === "true" ? "dark" : "light";
                 pwa.UI.pagesize = settings.pagesize;
+                localStorage.advancedUi = settings.advancedUi
             })
 
     }

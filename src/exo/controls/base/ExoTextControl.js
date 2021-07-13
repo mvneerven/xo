@@ -3,9 +3,7 @@ import DOM from '../../../pwa/DOM';
 import ExoTextControlAutoCompleteExtension from './ExoTextControlAutoCompleteExtension';
 import xo from '../../../../js/xo';
 
-/**
- * Textbox control
- */
+// Textbox control (input[type=text])
 class ExoTextControl extends ExoInputControl {
     constructor(context) {
         super(context);

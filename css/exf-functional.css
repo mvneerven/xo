@@ -259,8 +259,8 @@
 
 .exf-container .exf-info {
   font-size: 1.1rem;
-  background-color: var(--color-shade);
-  background-color: var(--color-shade);
+  background-color: var(--color-shade, #bfcadb);
+  background-color: var(--color-shade, #bfcadb);
   padding: 0em 1em 1em;
   border: 1px solid var(--button-shadow-color);
   position: relative;
@@ -356,6 +356,7 @@
 
 .exf-container .exf-txt-psx .exf-txt-psx-span.suffix {
   right: 0.5rem;
+  left: unset;
 }
 
 .exf-container .exf-txt-psx .exf-txt-psx-span > .exf-ctl-cnt {

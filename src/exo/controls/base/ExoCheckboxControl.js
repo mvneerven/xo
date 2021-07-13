@@ -1,8 +1,5 @@
 import ExoCheckboxListControl from './ExoCheckboxListControl';
 
-/**
- * Renders a single checkbox
- */
 class ExoCheckboxControl extends ExoCheckboxListControl {
 
     text = "";

@@ -52,10 +52,19 @@ class Core {
 
     static Iterator = Iterator;
 
+    /**
+     * Events Class
+     */
     static Events = Events;
 
+    /**
+     * MarkDown wrapper
+     */
     static MarkDown = MarkDown;
 
+    /**
+     * Caching class
+     */
     static SimpleCache = SimpleCache;
 
     static operatorTable = {
@@ -94,7 +103,11 @@ class Core {
         new Emitter(obj);
     }
 
-
+    /**
+     * Converts a data URL to a Blob and returns a Blob URL.
+     * @param {URL} dataurl 
+     * @returns 
+     */
     static dataURLtoBlob(dataurl) {
         var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
             bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
@@ -103,6 +116,26 @@ class Core {
         }
         return URL.createObjectURL(new Blob([u8arr], { type: mime }));
     }
+
+    /**
+     * Converts a Blob into a dataUrl
+     * @param {*} blob 
+     * @returns data URL
+     */
+    static async blobToDataURL(blob) {
+        return new Promise((resolve) => {
+            var a = new FileReader();
+            a.onload = function (e) { resolve(e.target.result) };
+            a.readAsDataURL(blob);
+        })
+    }
+
+    static async jsonToDataUrl(json){
+        let txt = JSON.stringify(json, null, 2);
+        var blob = new Blob([txt], { type: "application/json" });
+        return await Core.blobToDataURL(blob);
+    }
+
 
     /**
      * 

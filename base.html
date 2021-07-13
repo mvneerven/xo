@@ -1,19 +1,11 @@
-# Getting started with ExoForm
-
-## Basic HTML
-
-Let's start by simply showing a complete HTML page that runs an ExoForm schema.
-In this case, we simply use the CDN references for XO (CSS & JS):
-
-```html
 <!DOCTYPE html>
 <html lang="en" class="theme-light">
 
 <head>
     <title>ExoForm, The Basics</title>
     <style>
-        @import url(https://xo-js.dev/v1.4/xo.css);
-        @import url(https://fonts.googleapis.com/css2?family=Exo&display=swap);
+        @import url(css/xo.css);
+        @import url('https://fonts.googleapis.com/css2?family=Exo&display=swap');
         body, H1 {
             font-family: Exo;
         }
@@ -23,10 +15,10 @@ In this case, we simply use the CDN references for XO (CSS & JS):
 <body>
     <h1>ExoForm, The Basics</h1>
     <p>
-        This page illustrates just how little is needed to get going with ExoForm...
+        This page illustrates how little is needed to get going with ExoForm...
     </p>
 
-    <script type="module" src="https://xo-js.dev/v1.4/xo.js"></script>
+    <script type="module" src="dist/xo.js"></script>
 
     <script type="module">
         const schema = {
@@ -82,42 +74,3 @@ In this case, we simply use the CDN references for XO (CSS & JS):
 </body>
 
 </html>
-```
-
-## Installing
-
-As you've seen in the example above, you can run XO directly from the CDN:
-
-> Use ```/xo.js``` for debugging
-
-... or get the latest [NPM package](https://www.npmjs.com/package/@mvneerven/xo-js)
-
-### Providing a preexisting *ExoFormContext* object
-
-As you've seen, in ```xo.form.run()```, you provide a schema (inline or URL), and an ```options``` object. 
-
-Apart from the ```on``` property, for events, the ```options``` object can have numerous settings for ExoForm runtime. For instance, the [context](../refdocs/refdocs/src-exo-core_ExoFormContext.md) property is used to pass state to the form.
-
-See [Custom Controls](./controls/building-controls.md)
-
-```js
-const frm = await xo.form.run(schema, {
-    context: this.exoFormContext, // previously constructed
-    on: {
-        post: e => {
-            alert(JSON.stringify(e.detail.postData, null, 2))
-        }
-    }
-})
-document.body.appendChild(frm);
-```
-
-### ExoForm in Frontend Frameworks (Vue, React, Angular, etc.)
-
-- [CodePen Vue Example](https://codepen.io/isazulay/pen/ExWBgEJ)
-- [Vue & ExoForm integration (GitHub)](https://github.com/inbarazulay1997/xo-examples) by Inbar Azulay
-
-## More reading
-
-- [Understanding ExoForm](./understanding-exoform.md)
-- [ExoForm events](./events.md)

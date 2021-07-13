@@ -12,7 +12,10 @@ const Core = window.xo.core;
 
 class StudioRoute extends xo.route {
 
-    title = "Studio"
+    menuTitle = "Studio"
+
+    title = "ExoForm Studio";
+
     menuIcon = "ti-panel";
 
     async asyncInit() {
@@ -39,7 +42,6 @@ class StudioRoute extends xo.route {
 
             }
         }).on("error", e => {
-
             this.app.UI.notifications.add("Error " + e.detail.error.toString(), { type: "error" })
         }).on("post", e => {
             //let jsonString = JSON.stringify(e.detail.postData, null, 2);
@@ -139,12 +141,16 @@ class StudioRoute extends xo.route {
     async rendered(o) {
         let x = o.exo;
 
-        this.sidePanel.tabStrip.tabs.css.enabled = true;
-        this.tabStrip.tabs.js.enabled = true;
+        if(this.sidePanel.tabStrip.tabs.css)
+            this.sidePanel.tabStrip.tabs.css.enabled = true;
+        
+        if(this.tabStrip.tabs.js)
+            this.tabStrip.tabs.js.enabled = true;
 
-        this.htmlEditor.value = DOM.prettyPrintHTML(x.container.outerHTML);
-        this.tabStrip.tabs.html.enabled = true;
-
+        if(this.tabStrip.tabs.html){
+            this.htmlEditor.value = DOM.prettyPrintHTML(x.container.outerHTML);
+            this.tabStrip.tabs.html.enabled = true;
+        }
         this.tabStrip.tabs.form.replaceWith(x.container);
 
         this.currentForm = x;
@@ -184,7 +190,8 @@ class StudioRoute extends xo.route {
         let js;
         try {
             js = this.getJSCode();
-            Core.scopeEval(x, js)
+            if(js)
+                Core.scopeEval(x, js)
         }
         catch (ex) {
             console.error(ex);
@@ -196,6 +203,9 @@ class StudioRoute extends xo.route {
 
     getJSCode() {
         let elm = document.getElementById("js-code");
+        if(!elm)
+            return null;
+
         let fld = window.xo.form.factory.getFieldFromElement(elm);
         return fld ? fld._control.value : "";
 
@@ -203,16 +213,24 @@ class StudioRoute extends xo.route {
 
     setupTabStrip() {
         
-        this.tabStrip = new ULTabStrip("exploreTabs", {
+        let tsOptions = {
             tabs: {
                 start: { caption: "Start", class: "full-height", tooltip: "Select a templates or import DTO to generate an ExoForm Schema with" },
                 schema: { caption: "Schema", class: "full-height", tooltip: "Edit ExoForm Schema" },
-                form: { caption: "Form", class: "full-height", tooltip: "View rendered form" },
-                html: { caption: "HTML", class: "full-height", enabled: false, tooltip: "Show generated form HTML" },
-                js: { caption: "JS", class: "full-height", tooltip: "Add JavaScript to execute" } 
+                form: { caption: "Form", class: "full-height", tooltip: "View rendered form" }
+                
             },
             class: "full-height"
-        });
+        }
+        if(localStorage.advancedUi){
+            tsOptions.tabs = {
+                ...tsOptions.tabs,
+                html: { caption: "HTML", class: "full-height", enabled: false, tooltip: "Show generated form HTML" },
+                js: { caption: "JS", class: "full-height", tooltip: "Add JavaScript to execute" } 
+            } 
+        }
+
+        this.tabStrip = new ULTabStrip("exploreTabs", tsOptions);
 
         this.tabStrip.on("tabSelected", e => {
 
@@ -430,6 +448,9 @@ class StudioRoute extends xo.route {
     }
 
     renderCssTab(){
+        if(!this.sidePanel.tabStrip.tabs.css)
+            return;
+            
         this.renderCodeEditor({ mode: "css", value: this.styleSheetHelper.buildCssFromClasses() }).then(e => {
 
             e.querySelector("[data-exf]").data.editor.on("change", ev => {
@@ -440,6 +461,9 @@ class StudioRoute extends xo.route {
     }
 
     renderHtmlTab(){
+        if(!this.tabStrip.tabs.html)
+            return;
+
         this.renderCodeEditor({ mode: "html" }).then(htmlEditor => {
             this.tabStrip.tabs.html.replaceWith(htmlEditor);
             this.htmlEditor = xo.form.factory.getFieldFromElement(htmlEditor)._control;
@@ -447,6 +471,9 @@ class StudioRoute extends xo.route {
     }
 
     renderJsTab(){
+        if(!this.tabStrip.tabs.js)
+            return;
+
         var ar = []
         for (var ev in window.xo.form.factory.events) {
             ar.push(

@@ -1,8 +1,5 @@
 import ExoElementControl from './ExoElementControl';
 
-/**
- * Renders a div element
- */
 class ExoDivControl extends ExoElementControl {
 
     html = "";

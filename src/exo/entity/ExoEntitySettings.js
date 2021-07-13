@@ -314,6 +314,7 @@ class ExoEntitySettings {
     }
 
     _generateEditorFormSchema(data) {
+        
         const schema = {
             ...JSON.parse(JSON.stringify(this.editSchemaBase)),
         }

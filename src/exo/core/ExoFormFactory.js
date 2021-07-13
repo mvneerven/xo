@@ -91,7 +91,9 @@ class ExoFormFactory {
             pageTitle: "exf-page-title",
             pageIntroText: "exf-page-intro",
             textBasedControl: "exf-base-text",
-            disabledControl: "exf-disabled"
+            disabledControl: "exf-disabled",
+            focusedControl: "exf-focus",
+            dirtyControl: "exf-dirty"
 
 
         }

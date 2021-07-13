@@ -12,16 +12,26 @@ class ExoFormBuilderSidePanel {
 
         let containerPanel = _.builder.app.UI.areas.panel;
 
-        this.tabStrip = new ULTabStrip("fieldTabs", {
+        let tsOptions = {
             tabs: {
                 settings: { caption: "Form", class: "full-height", enabled: true },
-                addField: { caption: "Add", class: "full-height", enabled: false },
+                addField: { caption: "Add", class: "full-height", enabled: false }
+                
+            },
+            class: "full-height"
+        }
+
+        if(localStorage.advancedUi){
+            tsOptions.tabs = {
+                ...tsOptions.tabs,
                 properties: { caption: "Props", class: "full-height", enabled: false },
                 model: { caption: "Model", class: "full-height", enabled: false },
                 css: { caption: "CSS", class: "full-height", enabled: false }
-            },
-            class: "full-height"
-        });
+            }
+        }
+
+
+        this.tabStrip = new ULTabStrip("fieldTabs", tsOptions);
 
         this.tabStrip.on("tabSelected", e => {
             switch (e.detail.id) {
@@ -59,11 +69,12 @@ class ExoFormBuilderSidePanel {
 
         })
 
-
-        this.builder.renderCodeEditor({ mode: "json", id: "exo-datamodel", value: "" }).then(elm => {
-            this.tabStrip.tabs.model.panel.appendChild(elm);
-            this.tabStrip.tabs.model.enabled = true;
-        })
+        if(this.tabStrip.tabs.model){
+            this.builder.renderCodeEditor({ mode: "json", id: "exo-datamodel", value: "" }).then(elm => {
+                this.tabStrip.tabs.model.panel.appendChild(elm);
+                this.tabStrip.tabs.model.enabled = true;
+            })
+        }
 
         this.getSettings().then(x => {
 

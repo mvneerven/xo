@@ -60,8 +60,8 @@ class ExoForm {
             DOMChange: context.config.defaults.DOMChange || "input"
         }
         this.options = { ...defOptions, ...opts };
-        
-        this.id = this.options.id || Core.guid();          
+
+        this.id = this.options.id || Core.guid();
         this.events = new Core.Events(this);
 
         this.form = document.createElement("form");
@@ -71,7 +71,7 @@ class ExoForm {
 
         xo.events.trigger("new-form", {
             id: this.id,
-            exoForm: this            
+            exoForm: this
         })
     }
 
@@ -160,7 +160,7 @@ class ExoForm {
     async loadSchema(schema) {
 
         this.events.trigger(ExoFormFactory.events.created);
-        
+
 
         return new Promise((resolve, reject) => {
             this._schema = this.context.createSchema();
@@ -184,10 +184,10 @@ class ExoForm {
                 }).on("error", e => {
                     this.events.trigger(ExoFormFactory.events.error, e.detail);
                 });
-                
+
                 this.events.trigger(ExoFormFactory.events.schemaLoaded);
                 this.schema.refreshStats();
-                
+
                 this._createComponents();
 
                 if (this.schema.form) {
@@ -226,8 +226,8 @@ class ExoForm {
                     if (Core.isUrl(schemaRef)) {
                         promises.push(loadJsonSchema(schemaRef, instanceName))
                     }
-                    else{
-                        
+                    else {
+
                         this._schema.addJSONSchema(instanceName, schemaRef);
                     }
                 }
@@ -295,9 +295,9 @@ class ExoForm {
 
                 })
 
-                .catch(ex => {
-                    reject("_renderPages() failed: " + ex.toString());
-                });
+                    .catch(ex => {
+                        reject("_renderPages() failed: " + ex.toString());
+                    });
 
             }
             catch (ex) {
@@ -307,7 +307,7 @@ class ExoForm {
     }
 
     async _finalizeForm() {
-        
+
         await this.addins.navigation.render();
 
         this.addins.progress.render();
@@ -384,7 +384,7 @@ class ExoForm {
                             page.appendChild(f.dummy);
                             _.createControl(f).then(() => {
                                 console.debug("createControl ", f, " on " + cid);
-                                
+
                                 f._control.render().then(rendered => {
 
                                     if (!rendered)
@@ -433,19 +433,19 @@ class ExoForm {
                                 });
                             })
 
-                            .catch(ex => {
-                                reject("Exception in createControl() for control " + ExoFormFactory.fieldToString(f) + ": " + ex.toString())
-                            });
+                                .catch(ex => {
+                                    reject("Exception in createControl() for control " + ExoFormFactory.fieldToString(f) + ": " + ex.toString())
+                                });
                         });
                     }
-                    else{
+                    else {
                         console.warn(`Page ${pageNr} has no fields array`);
                     }
                 })
 
-                .catch(ex => {
-                    reject("Exception in createControl() for page container " + ExoFormFactory.fieldToString(p) + ": " + ex.toString())
-                });
+                    .catch(ex => {
+                        reject("Exception in createControl() for page container " + ExoFormFactory.fieldToString(p) + ": " + ex.toString())
+                    });
             });
         });
     }

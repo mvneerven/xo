@@ -146,7 +146,7 @@ const schema = {
 }
 ```
 
-> Note: you can not test this scenario in ExoForm Studio.
+> Note: you can not test this scenario in ExoForm Studio, since direct event handlers are not supported in the editor.
 
 ### Data Binding
 

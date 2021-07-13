@@ -1,7 +1,7 @@
 import Core from '../../pwa/Core';
 import ExoFormFactory from './ExoFormFactory';
 import JSONSchema from './JSONSchema';
-
+import ExoEntitySettings from '../entity/ExoEntitySettings';
 /**
  * Hosts the ExoForm json/js form schema and manages its state
  */
@@ -67,7 +67,7 @@ class ExoFormSchema {
 
         if (this.pages.length === 0) {
             let jsc = this.jsonSchemas[defaultModelInstance];
-            if(!jsc)
+            if (!jsc)
                 return;
 
             let schemaProps = jsc.schema.properties;
@@ -359,7 +359,7 @@ class ExoFormSchema {
         return "const schema = " + str;
     }
 
-    removeEmptyObject(obj, name){
+    removeEmptyObject(obj, name) {
         if (obj[name]) {
             if (Object.getOwnPropertyNames(obj[name]).length === 0) {
                 delete obj[name]
@@ -424,6 +424,49 @@ class ExoFormSchema {
     get fieldCount() {
         return this._totalFieldCount;
 
+    }
+
+    static async fromJsonSchema(jsonSchema) {
+
+        const read = async (url, data, resolve) => {
+            const schema = ExoEntitySettings.baseEditFormSchema;
+
+            schema.model.schemas.data = url || await Core.jsonToDataUrl(data);
+
+            schema.mappings = schema.mappings || {};
+
+            schema.mappings.skip = [];
+
+            schema.mappings.pages = {};
+
+            schema.mappings.properties = schema.mappings.properties || {};
+
+            for (var p in data.properties) {
+                schema.mappings.properties[p] = {}
+            }
+
+            delete schema.pages;
+            resolve(schema);
+        }
+
+        return new Promise((resolve) => {
+            let url;
+            if (Core.isUrl(jsonSchema)) {
+                url = jsonSchema;
+                fetch(jsonSchema).then(x => x.json()).then(x => {
+                    read(url, x, resolve)
+                })
+            }
+            else {
+                read(null, jsonSchema, resolve)
+            }
+        });
+    }
+
+    static async fromOpenApiSchema(openApiSchema) {
+        let ent = new xo.form.entity({dataSchema: openApiSchema});
+        let editor = await ent.createEditor({});
+        return await ExoFormSchema.fromJsonSchema(editor.schema.model.schemas.data);
     }
 }
 

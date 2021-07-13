@@ -18,6 +18,7 @@ class PWA_Settings {
     }
 
     createGroup(sectionName, settings) {
+        
         let ar = [...arguments];
         ar.shift();
 
@@ -105,8 +106,10 @@ class PWA_Settings {
 
         for (var id in this._sections) {
             let sec = this._sections[id];
+            
             ar.push({
                 legend: sec.title,
+                intro: sec.description,
                 fields: this.generateFields(sec)
             })
         }
@@ -120,6 +123,7 @@ class PWA_Settings {
             let field = {
                 name: i.name,
                 caption: i.title,
+                info: i.description,
                 bind: sec.binding + i.name
             }
             let els = JSONSchema.mapType(field, i);

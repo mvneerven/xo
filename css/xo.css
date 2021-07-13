@@ -191,23 +191,70 @@ html:not(.pwa-signed-in) .if-signed-out {
   }
 }
 
-.pwa-loading:before {
-  pointer-events: none;
-  position: absolute;
-  content: "\e60f";
-  margin: 1vmax;
-  font-family: themify;
-  font-size: 16px;
-  font-size: 80vw;
-  color: #000;
-  opacity: 0.05;
-  z-index: -2;
-  overflow: hidden;
-  text-overflow: clip;
-  -webkit-transition: all 0.2s;
-  transition: all 0.2s;
-  -webkit-animation: loading 2s ease infinite;
-          animation: loading 2s ease infinite;
+@-webkit-keyframes gradientBG {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes gradientBG {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+[data-pwa-area].pwa-loading {
+  background: linear-gradient(132deg, #1e1e1e, #2c2c2c, #4a4a4a);
+  background-size: 400% 400%;
+  -webkit-animation: Gradient 2s ease infinite;
+          animation: Gradient 2s ease infinite;
+}
+
+/* Animate Background*/
+@-webkit-keyframes Gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+@keyframes Gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.theme-light [data-pwa-area].pwa-loading {
+  background: linear-gradient(132deg, #fff, #ededed, #ccc);
+  background-size: 400% 400%;
+  -webkit-animation: Gradient 2s ease infinite;
+          animation: Gradient 2s ease infinite;
+}
+
+.theme-dark [data-pwa-area].pwa-loading:before {
+  color: #fff !important;
 }
 
 .pwa-empty-state {
@@ -318,10 +365,11 @@ html:not(.pwa-signed-in) .if-signed-out {
 }
 
 .pwa-notif progress::-webkit-progress-value {
-  background-color: var(--color-shade);
+  background-color: var(--color-shade, #bfcadb);
 }
 
-.theme-dark .pwa-notif .pwa-cnt, .theme-dark .pwa-notif select > option {
+.theme-dark .pwa-notif .pwa-cnt,
+.theme-dark .pwa-notif select > option {
   background-color: #444;
   color: white;
 }
@@ -796,8 +844,8 @@ html:not(.pwa-signed-in) .if-signed-out {
 
 .exf-container .exf-info {
   font-size: 1.1rem;
-  background-color: var(--color-shade);
-  background-color: var(--color-shade);
+  background-color: var(--color-shade, #bfcadb);
+  background-color: var(--color-shade, #bfcadb);
   padding: 0em 1em 1em;
   border: 1px solid var(--button-shadow-color);
   position: relative;
@@ -893,6 +941,7 @@ html:not(.pwa-signed-in) .if-signed-out {
 
 .exf-container .exf-txt-psx .exf-txt-psx-span.suffix {
   right: 0.5rem;
+  left: unset;
 }
 
 .exf-container .exf-txt-psx .exf-txt-psx-span > .exf-ctl-cnt {
@@ -1235,7 +1284,7 @@ html.theme-light nav.ul-drop ul li > ul {
   -webkit-user-select: none;
   -ms-user-select: none;
       user-select: none;
-  border: solid 1px var(--color-shade);
+  border: solid 1px var(--color-shade, #bfcadb);
 }
 
 .ul-tabs > ul > li > input[type="radio"]:checked + label {
@@ -1282,7 +1331,7 @@ html.theme-light nav.ul-drop ul li > ul {
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
   position: absolute;
-  border: solid 1px var(--color-shade);
+  border: solid 1px var(--color-shade, #bfcadb);
 }
 
 .exf-filedrop label {
@@ -1634,7 +1683,7 @@ html.theme-light nav.ul-drop ul li > ul {
 .exf-dlg .exf-dlg-b {
   padding-top: 10px;
   padding-bottom: 10px;
-  border-bottom: 1px solid var(--color-shade);
+  border-bottom: 1px solid var(--color-shade, #bfcadb);
   margin-bottom: 1em;
   max-height: 500px;
   overflow-y: auto;
@@ -2203,9 +2252,9 @@ html.theme-dark .exf-ctl-cnt.exf-switch input[type="range"] {
 
 .exf-container.exf-theme-fluent .exf-ctl-cnt > .exf-ctl.exf-rng-output output {
   padding: 0.375rem;
-  border: 1px solid var(--color-shade);
+  border: 1px solid var(--color-shade, #ccc);
   border-radius: 1em;
-  background-color: var(--color-background-variation);
+  background-color: var(--color-background-variation, #efefef);
   margin-left: 1em;
   margin-top: -1.7em;
 }
@@ -2242,7 +2291,7 @@ html.theme-dark .exf-ctl-cnt.exf-switch input[type="range"] {
   padding: 1rem 2rem;
   text-align: center;
   background-color: var(--color-button);
-  border: 1px var(--color-shade) solid;
+  border: 1px var(--color-shade, #bfcadb) solid;
   color: var(--color-buttontext);
   display: inline-block;
   outline: none;
@@ -2455,7 +2504,7 @@ html.theme-dark .exf-ctl-cnt.exf-switch input[type="range"] {
 .exf-container.exf-theme-material .exf-ctl-cnt.exf-focus.exf-input > .exf-ctl::before {
   width: 100%;
   background: #c46;
-  background: var(--color-input-shade-focus);
+  background: var(--color-input-shade-focus, #ccc);
   left: 0;
   -webkit-transition: left 0.5s ease, width 0.5s ease;
   transition: left 0.5s ease, width 0.5s ease;
@@ -2463,7 +2512,7 @@ html.theme-dark .exf-ctl-cnt.exf-switch input[type="range"] {
 
 .exf-container.exf-theme-material .exf-ctl-cnt.exf-input > .exf-ctl, .exf-container.exf-theme-material .exf-ctl-cnt[data-field-type="dropdown"] > .exf-ctl {
   border-bottom: 1px solid #666;
-  border-bottom: 1px solid var(--color-input-shade);
+  border-bottom: 1px solid var(--color-input-shade, #ccc);
   padding-bottom: 0;
 }
 
@@ -2656,7 +2705,7 @@ html.theme-dark .exf-ctl-cnt.exf-switch input[type="range"] {
 
 .exf-container.exf-theme-material .exf-btn {
   position: relative;
-  background: var(--color-button);
+  background: var(--color-button, #c46);
   border: 0;
   font-size: 1.1rem;
   color: white;

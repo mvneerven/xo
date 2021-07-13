@@ -9,15 +9,21 @@ const schema = {
             },
             buildForm: {
                 jsonSchemaUrl: "",
-                jsonSchemaRef: "",
+                //jsonSchemaRef: "",
                 jsonSchemaText: "",
                 jsonSchema: null,
+
+                openAPISchemaUrl: "",
+                openAPISchemaRef: "",
+
+                formSchema: "",
+
                 baseForm: null
             }
         },
         logic: context => {
             const inst = context.model.instance.buildForm;
-
+            let url;
             switch (context.changed.property) {
 
                 case "action":
@@ -29,17 +35,29 @@ const schema = {
 
                     break;
                 case "jsonSchemaUrl":
-                    let url = context.changed.newValue;
-                    inst.jsonSchemaRef = xo.core.dataURLtoBlob(url);
-
+                    url = context.changed.newValue;
                     fetch(url).then(x => x.json()).then(x => {
                         inst.jsonSchema = x;
                         inst.jsonSchemaText = JSON.stringify(x, null, 2);
                     })
                     break;
+                case "openAPISchemaUrl":
+                    url = context.changed.newValue;
+                    fetch(url).then(x => x.json()).then(x => {
+                        inst.openAPISchema = x;
+                        inst.openAPISchemaText = JSON.stringify(x, null, 2);
+                    })
+                    break
 
                 case "jsonSchema":
-                    inst.baseForm = xo.form.entity.generateFromJSONSchema(inst.jsonSchema, inst.jsonSchemaUrl);
+                    xo.form.schema.fromJsonSchema(inst.jsonSchemaUrl).then(x => {
+                        inst.baseForm = x;
+                    });
+                    break;
+                case "openAPISchemaText":
+                    xo.form.schema.fromOpenApiSchema(inst.openAPISchema).then(x => {
+                        inst.baseForm = x;
+                    })
                     break;
             }
         }
@@ -104,13 +122,11 @@ const schema = {
                             id: "3"
 
                         },
-
                         {
                             name: "<b>Start with an OpenAPI endpoint/schema</b>",
                             description: "Use an OpenAPI schema to generate a form",
                             image: "/img/openapi.png",
-                            id: "4"
-
+                            id: "5"
                         }
                     ]
                 }
@@ -168,10 +184,11 @@ const schema = {
                     bind: "instance.buildForm.jsonSchemaUrl",
 
                     dialog: {
+                        title: "Upload a JSON Schema",
                         fileTypes: ["application/json"],
                         maxSize: 50000
                     },
-                    dialogTitle: "Upload a JSON Schema"
+
                 }
 
             ]
@@ -187,6 +204,37 @@ const schema = {
                     action: "load:instance.buildForm.baseForm"
                 }
             ]
-        }
+        },
+        {
+            legend: "Connect to OpenAPI Schema",
+            fields: [
+                {
+                    type: "url",
+                    caption: "Enter or select a URL of an OpenAPI Schema",
+                    bind: "instance.buildForm.openAPISchemaUrl",
+
+                    dialog: {
+                        title: "Upload an OpenAPI Schema",
+                        fileTypes: ["application/json"],
+                        maxSize: 50000
+                    },
+
+                }
+
+            ]
+
+        },
+        {
+            legend: "Generate Form",
+            intro: "Translate OpenAPI Schema",
+            fields: [
+                {
+                    type: "button",
+                    name: "code2",
+                    caption: "Generate Form Schema",
+                    action: "load:instance.buildForm.baseForm"
+                }
+            ]
+        },
     ]
 }

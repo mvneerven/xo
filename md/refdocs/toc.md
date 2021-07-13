@@ -3,14 +3,8 @@
 ## Table of contents
 
 * ![category:other](https://img.shields.io/badge/category-other-blue.svg?style=flat-square)
-  * [exo/controls/base/ExoButtonControl](src-exo-controls-base_ExoButtonControl.md) - _Renders a button_
-  * [exo/controls/base/ExoCheckboxControl](src-exo-controls-base_ExoCheckboxControl.md) - _Renders a single checkbox_
-  * [exo/controls/base/ExoCheckboxListControl](src-exo-controls-base_ExoCheckboxListControl.md) - _Renders a checkbox list_
   * [exo/controls/base/ExoControlBase](src-exo-controls-base_ExoControlBase.md) - _Abstract base class for ExoForm controls_
-  * [exo/controls/base/ExoDivControl](src-exo-controls-base_ExoDivControl.md) - _Renders a div element_
-  * [exo/controls/base/ExoDropdownListControl](src-exo-controls-base_ExoDropdownListControl.md) - _Renders a single select / dropdown list_
-  * [exo/controls/base/ExoTextControl](src-exo-controls-base_ExoTextControl.md) - _Textbox control_
-  * [exo/controls/base/ExoTextControlAutoCompleteExtension](src-exo-controls-base_ExoTextControlAutoCompleteExtension.md) - _Autocomplete helper for all textbox derived controls._
+  * [exo/controls/base/ExoTextControlAutoCompleteExtension](src-exo-controls-base_ExoTextControlAutoCompleteExtension.md) - _Module exo/controls/base/ExoTextControlAutoCompleteExtension_
   * [exo/core/ExoForm](src-exo-core_ExoForm.md) - _ExoForm class. Created using ExoFormContext create() method_
   * [exo/core/ExoFormContext](src-exo-core_ExoFormContext.md) - _Hosts an ExoForm context to create forms with.Created using {ExoFormFactory}.build()_
   * [exo/core/ExoFormFactory](src-exo-core_ExoFormFactory.md) - _Factory class for ExoForm - Used to create an ExoForm context.Provides factory methods. Starting point for using ExoForm._

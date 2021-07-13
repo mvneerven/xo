@@ -10,7 +10,7 @@ XO-JS is a compact, developer-friendly, pure JavaScript (ES6) Component Library 
 
 1. [xo.form](./md/exo/index.md)
    - [Getting Started](./md/exo/getting-started.md)
-   - [Controls](./md/exo/controls.md)
+   - [Controls](./md/exo/controls/index.md)
    - [Validation](./md/exo/validation.md)
    - [Navigation](./md/exo/navigation.md)
    - [Model Binding](./md/exo/data-binding.md)
@@ -81,9 +81,8 @@ What does ExoForm bring?
 
 # ExoForm Studio
 
-[The ExoForm Studio](https://www.xo-js.dev/#/explore) is loaded with new functionality to experiment with all the new features.
+[The ExoForm Studio](./md/exo/exoform-studio.md) is loaded with new functionality to experiment with all the new features.
 
-![Portal](https://xo-js.dev/assets/img/portal.png "The new ExoForm Explorer")
 
 # Team
 

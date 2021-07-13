@@ -20,9 +20,31 @@
         "description": "A TypeForm-like survey, with one element at a time shown to the user"
     },
     {
+        "name": "Working with Dialogs",
+        "value": "https://xo-js.dev/assets/forms/templates/dialogs.js",
+        "description": "Show a dialog and use the result value"
+    },
+    {
         "name": "MultiInput Test",
         "value": "https://xo-js.dev/assets/forms/templates/multiinput-test.js",
         "description": "An example of the use of the multiinput control to collect related data"
+    },
+
+    {
+        "name": "MultiInput Test",
+        "value": "https://xo-js.dev/assets/forms/templates/multiinput-test.js",
+        "description": "An example of the use of the multiinput control to collect related data"
+    },
+
+    {
+        "name": "RexEx (pattern) Validation",
+        "value": "https://xo-js.dev/assets/forms/templates/password-validation.js",
+        "description": "An example of the use of the pattern property to specify a Regular Expresson to validate a text (password) input with"
+    },
+    {
+        "name": "Working with Prefix and Suffix",
+        "value": "https://xo-js.dev/assets/forms/templates/prefix-suffix.json",
+        "description": "An example of the use of prefix and suffix in text and text-derived controls (url, search, number, etc.)"
     },
     {
         "name": "ListView Example",

@@ -1,0 +1,36 @@
+{
+    "pages": [
+      {
+        "legend": "My Form",
+        "intro": "My form description",
+        "fields": [
+          {
+            "name": "price",
+            "caption": "Test Field",
+            "type": "number",
+            "step": 0.01,
+            "min": 0,
+            "prefix": "€"
+          },
+          {
+            "name": "user1",
+            "caption": "Username",
+            "type": "text",
+            "placeholder": "johndoe999",
+            "prefix": {
+              "icon": "ti-user"
+            }
+          },
+          {
+            "name": "q1",
+            "caption": "Search",
+            "type": "search",
+            "placeholder": "Search stuff...",
+            "suffix": {
+              "icon": "ti-search"
+            }
+          }
+        ]
+      }
+    ]
+  }

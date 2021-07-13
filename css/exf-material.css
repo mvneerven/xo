@@ -182,7 +182,7 @@
 .exf-container.exf-theme-material .exf-ctl-cnt.exf-focus.exf-input > .exf-ctl::before {
   width: 100%;
   background: #c46;
-  background: var(--color-input-shade-focus);
+  background: var(--color-input-shade-focus, #ccc);
   left: 0;
   -webkit-transition: left 0.5s ease, width 0.5s ease;
   transition: left 0.5s ease, width 0.5s ease;
@@ -190,7 +190,7 @@
 
 .exf-container.exf-theme-material .exf-ctl-cnt.exf-input > .exf-ctl, .exf-container.exf-theme-material .exf-ctl-cnt[data-field-type="dropdown"] > .exf-ctl {
   border-bottom: 1px solid #666;
-  border-bottom: 1px solid var(--color-input-shade);
+  border-bottom: 1px solid var(--color-input-shade, #ccc);
   padding-bottom: 0;
 }
 
@@ -383,7 +383,7 @@
 
 .exf-container.exf-theme-material .exf-btn {
   position: relative;
-  background: var(--color-button);
+  background: var(--color-button, #c46);
   border: 0;
   font-size: 1.1rem;
   color: white;

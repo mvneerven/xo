@@ -4,7 +4,7 @@ import ExoFormFactory from '../../core/ExoFormFactory';
 class ExoMultiInputControl extends ExoBaseControls.controls.div.type {
     columns = ""
 
-    areas = "";
+    _areas = "";
 
     gap = "1rem";
 
@@ -46,6 +46,22 @@ class ExoMultiInputControl extends ExoBaseControls.controls.div.type {
             }
 
         );
+    }
+
+    set areas(value){
+        if(typeof(value) !== "string")
+            throw TypeError("The areas property must be a string");
+
+        if(value){
+            if(value.indexOf('"') === -1 && value.indexOf("'") == -1){
+                value = `'${value}'`;
+            }
+        }
+        this._areas = value;
+    }
+
+    get areas(){
+        return this._areas;
     }
 
     async render() {
@@ -110,8 +126,9 @@ class ExoMultiInputControl extends ExoBaseControls.controls.div.type {
         for (var n in this.fields) {
             var elm = await add(n, this.fields[n])
 
-            if (this.areas)
+            if (this.areas){                
                 elm.setAttribute("style", `grid-area: ${n}`);
+            }
         };
 
         // inform system that this is the master control 

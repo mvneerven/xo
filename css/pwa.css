@@ -190,23 +190,70 @@ html:not(.pwa-signed-in) .if-signed-out {
   }
 }
 
-.pwa-loading:before {
-  pointer-events: none;
-  position: absolute;
-  content: "\e60f";
-  margin: 1vmax;
-  font-family: themify;
-  font-size: 16px;
-  font-size: 80vw;
-  color: #000;
-  opacity: 0.05;
-  z-index: -2;
-  overflow: hidden;
-  text-overflow: clip;
-  -webkit-transition: all 0.2s;
-  transition: all 0.2s;
-  -webkit-animation: loading 2s ease infinite;
-          animation: loading 2s ease infinite;
+@-webkit-keyframes gradientBG {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes gradientBG {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+[data-pwa-area].pwa-loading {
+  background: linear-gradient(132deg, #1e1e1e, #2c2c2c, #4a4a4a);
+  background-size: 400% 400%;
+  -webkit-animation: Gradient 2s ease infinite;
+          animation: Gradient 2s ease infinite;
+}
+
+/* Animate Background*/
+@-webkit-keyframes Gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+@keyframes Gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.theme-light [data-pwa-area].pwa-loading {
+  background: linear-gradient(132deg, #fff, #ededed, #ccc);
+  background-size: 400% 400%;
+  -webkit-animation: Gradient 2s ease infinite;
+          animation: Gradient 2s ease infinite;
+}
+
+.theme-dark [data-pwa-area].pwa-loading:before {
+  color: #fff !important;
 }
 
 .pwa-empty-state {
@@ -320,7 +367,8 @@ html:not(.pwa-signed-in) .if-signed-out {
   background-color: var(--color-shade);
 }
 
-.theme-dark .pwa-notif .pwa-cnt, .theme-dark .pwa-notif select > option {
+.theme-dark .pwa-notif .pwa-cnt,
+.theme-dark .pwa-notif select > option {
   background-color: #444;
   color: white;
 }

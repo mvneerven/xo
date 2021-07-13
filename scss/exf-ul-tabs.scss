@@ -36,7 +36,7 @@
                 -moz-user-select: none;
                 -webkit-user-select: none;
                 user-select: none;
-                border: solid 1px var(--color-shade);
+                border: solid 1px var(--color-shade, #bfcadb);
             }
 
             > input[type="radio"]:checked + label {
@@ -85,7 +85,7 @@
                 box-sizing: border-box;
 
                 position: absolute;
-                border: solid 1px var(--color-shade);
+                border: solid 1px var(--color-shade, #bfcadb);
             }
         }
     }

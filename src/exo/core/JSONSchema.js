@@ -1,5 +1,6 @@
 import ExoFormSchema from './ExoFormSchema';
 import Core from '../../pwa/Core';
+import ExoFormFactory from '../../exo/core/ExoFormFactory';
 
 /* 
  * see https://json-schema.org/understanding-json-schema/reference/type.html 
@@ -8,7 +9,6 @@ import Core from '../../pwa/Core';
  * Basic schema types: 
  *     string, number, integer, object, array, boolean, null
  */
-
 class JSONSchema {
     constructor(instanceName, schema) {
         this.instanceName = instanceName;
@@ -43,39 +43,47 @@ class JSONSchema {
 
     apply(field) {
 
-        let path = ExoFormSchema.getPathFromBind(field.bind);
+        try {
 
-        let props = this.schema.properties[path] // todo deep path
+            let path = ExoFormSchema.getPathFromBind(field.bind);
 
-        if (!field.name) {
-            field.name = path;
-        }
+            let props = this.schema.properties[path] // todo deep path
 
-        if (Array.isArray(this.schema.required) && this.schema.required.includes(path)) {
-            field.required = true
-        }
-
-        if (!field.type) {
-            let els = JSONSchema.mapType(field, props)
-            for (var p in els) {
-
-                field[p] = els[p];
+            if (!field.name) {
+                field.name = path;
             }
+
+            if (Array.isArray(this.schema.required) && this.schema.required.includes(path)) {
+                field.required = true
+            }
+
+            if (!field.type) {
+                let els = JSONSchema.mapType(field, props)
+                for (var p in els) {
+                    field[p] = els[p];
+                }
+            }
+
+
+            if (!field.caption) {
+                field.caption = props ? props.title : null || Core.toWords(path);
+            }
+
+            if (props && props.description) { // https://json-schema.org/draft/2020-12/json-schema-validation.html#rfc.section.9.1
+                field.info = props.description;
+            }
+
+
+            if (props && props.enum) {
+                field.type = "dropdown";
+                field.items = props.enum
+            }
+
         }
 
-        
-        if (!field.caption) {
-            field.caption = props.title || Core.toWords(path);
-        }
+        catch (ex) {
+            console.error(`Error applying JSON Schema for field ${ExoFormFactory.fieldToString(field)}`, ex)
 
-        if (props && props.description) {
-            field.info = props.description;
-        }
-
-
-        if (props.enum) {
-            field.type = "dropdown";
-            field.items = props.enum
         }
 
     }
@@ -93,8 +101,6 @@ class JSONSchema {
                 return JSONSchema.applyObjectType(field, prop);
 
         }
-
-
 
         return { type: "text" }
     }
@@ -171,6 +177,12 @@ class JSONSchema {
 
         return props;
     }
+
+    // static generateStandardMappings(){
+    //     this.schema
+    //     return {};
+    // }
+
 
 }
 

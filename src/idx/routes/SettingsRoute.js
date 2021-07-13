@@ -1,6 +1,8 @@
 class SettingsRoute extends xo.route {
 
-    title = "Settings";
+    menuTitle = "Settings";
+
+    title = "Edit Settings"
 
     menuIcon = "ti-settings";
 

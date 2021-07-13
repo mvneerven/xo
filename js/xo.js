@@ -7,6 +7,7 @@ import PWA from '../src/pwa/PWA';
 import Core from '../src/pwa/Core';
 import MsIdentity from '../src/pwa/MsIdentity';
 import ExoEntityManager from '../src/exo/entity/ExoEntityManager';
+import ExoFormSchema from '../src/exo/core/ExoFormSchema';
 
 /**
  * ExoForm shortcut object
@@ -14,6 +15,7 @@ import ExoEntityManager from '../src/exo/entity/ExoEntityManager';
 class Form {
     get factory() { return ExoFormFactory }
     get entity() { return ExoEntityManager }
+    get schema() { return ExoFormSchema }
     get fields() {
         return {
             base: ExoBaseControls

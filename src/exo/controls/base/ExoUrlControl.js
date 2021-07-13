@@ -7,21 +7,17 @@ class ExoUrlControl extends ExoTextControl {
         this.acceptProperties(
             {
                 name: "dialog",
-                type: Object,
                 description: `Shows a dialog to select a URL with or create a dataUrl from an uploaded file. 
-                Can be true, or an object structure descibing the dialog: {dialogTitle: "My dialog", }`
-            },
-
-            { 
-                name: "fileTypes", 
-                type: String | Array, 
-                description: 'Array of strings - example: ["image/"]' 
-            },
-
-            {
-                name: "dialogTitle",
-                type: String,
-                description: "Title to show in the file upload dialog"
+                Can be true, or an object structure descibing the dialog: {title: "My dialog", fileTypes: ["text/"]}`,
+                type: Object,
+                objectSchema: { // TODO: implement in 
+                    $schema: "http://json-schema.org/draft-04/schema#",
+                    properties: {
+                        title: {type: "string"},
+                        fileTypes: {type: "array"},
+                        maxSize: {type: "number"}
+                    }
+                }
             }
         )
     }
@@ -30,7 +26,7 @@ class ExoUrlControl extends ExoTextControl {
         const me = this;
 
         if (this.dialog) {
-            let title = this.dialogTitle || "Upload or select a file";
+            let title = this.dialog.title || "Upload or select a file";
             this.suffix = {
                 field: {
                     type: "button",
@@ -43,7 +39,7 @@ class ExoUrlControl extends ExoTextControl {
                             type: "filedialog",
                             title: title,
                             fileTypes: this.dialog.fileTypes,
-                            maxSize: this.dialog.maxSize ,
+                            maxSize: this.dialog.maxSize,
                             name: "test",
                             click: async (button, event) => {
                                 if (button === "confirm") {

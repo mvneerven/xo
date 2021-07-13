@@ -16,7 +16,7 @@ class ExoEntityEditor {
         this.editDialog = await this.showDialog({
             modal: false,
             title: this.data.id ? `Edit` : `Add`,
-            body: await this.createEditorForm(),
+            body: await this.getForm(),
             confirmText: "Save",
             cancelText: "Cancel",
 
@@ -38,8 +38,12 @@ class ExoEntityEditor {
         return this.editDialog;
     }
 
-    async createEditorForm() {
-        let schema = this.host.entitySettings._generateEditorFormSchema(this.data);
+    get schema() {
+        return this.host.entitySettings._generateEditorFormSchema(this.data);
+    }
+    
+    async getForm() {
+        let schema = this.schema;
 
         const editFrm = await xo.form.run(schema, {
             context: this.host.options.exoContext,
@@ -57,7 +61,7 @@ class ExoEntityEditor {
     }
 
     async _handleButtonClick(e, button) {
-        
+
 
         if (e && e.target && e.target.tagName !== "BUTTON") {
             e.cancelBubble = true;
@@ -67,7 +71,7 @@ class ExoEntityEditor {
         if (button === "confirm") {
             const editData = this.data;
             try {
-                
+
                 if (editData.id) {
                     await this.host.entitySettings.api.put("", editData);
                 } else {
@@ -75,7 +79,7 @@ class ExoEntityEditor {
                 }
             } catch (err) {
                 // grid._control.events.trigger(trigger, { success: false });
-                
+
                 console.error(err);
 
             } finally {

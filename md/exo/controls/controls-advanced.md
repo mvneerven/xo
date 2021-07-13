@@ -37,5 +37,5 @@ let ctl = f._control;
 
 ---
 
-- [Using and Extending ExoForm in JavaScript](./using-xo-javascript.md)
+- [Using and Extending ExoForm in JavaScript](../using-xo-javascript.md)
   
