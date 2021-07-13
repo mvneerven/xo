@@ -24,6 +24,32 @@ __*return*__ | `String` | *- An identifier known to be relatively unique per dev
 
 ---
 
+### `dataURLtoBlob(dataurl) ► `
+
+![modifier: private](images/badges/modifier-private.svg) ![modifier: static](images/badges/modifier-static.svg)
+
+Converts a data URL to a Blob and returns a Blob URL.
+
+Parameters | Type | Description
+--- | --- | ---
+__dataurl__ | `URL` | **
+__*return*__ | `undefined` | *Blob URL*
+
+---
+
+### `blobToDataURL(blob) ► `
+
+![modifier: private](images/badges/modifier-private.svg) ![modifier: static](images/badges/modifier-static.svg)
+
+Converts a Blob into a dataUrl
+
+Parameters | Type | Description
+--- | --- | ---
+__blob__ | `*` | **
+__*return*__ | `undefined` | *data URL*
+
+---
+
 ### `getObjectValue(obj, path, def) ► `
 
 ![modifier: private](images/badges/modifier-private.svg) ![modifier: static](images/badges/modifier-static.svg)
@@ -204,3 +230,11 @@ __size__ | `Number` | **
 __*return*__ | `undefined` | *String like 20KB, 1.25MB, 6.25GB, etc.*
 
 ---
+
+## Members
+
+Name | Type | Description
+--- | --- | ---
+__Events__ | `undefined` | *Events Class*
+__MarkDown__ | `undefined` | *MarkDown wrapper*
+__SimpleCache__ | `undefined` | *Caching class*

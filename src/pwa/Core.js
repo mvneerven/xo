@@ -106,7 +106,7 @@ class Core {
     /**
      * Converts a data URL to a Blob and returns a Blob URL.
      * @param {URL} dataurl 
-     * @returns 
+     * @returns Blob URL
      */
     static dataURLtoBlob(dataurl) {
         var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
