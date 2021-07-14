@@ -25,7 +25,7 @@
   margin: 10% auto;
   padding: 10px;
   border-radius: 4px;
-  background: var(--color-background-variation);
+  background: var(--color-background-variation, #eee);
   -webkit-box-shadow: 10px 10px 25px -13px rgba(0, 0, 0, 0.75);
   box-shadow: 10px 10px 25px -13px rgba(0, 0, 0, 0.75);
 }
@@ -33,7 +33,7 @@
 .exf-dlg .exf-dlg-b {
   padding-top: 10px;
   padding-bottom: 10px;
-  border-bottom: 1px solid var(--color-shade);
+  border-bottom: 1px solid var(--color-shade, #bfcadb);
   margin-bottom: 1em;
   max-height: 500px;
   overflow-y: auto;

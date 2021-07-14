@@ -42,9 +42,7 @@ class JSONSchema {
     }
 
     apply(field) {
-
         try {
-
             let path = ExoFormSchema.getPathFromBind(field.bind);
 
             let props = this.schema.properties[path] // todo deep path
@@ -64,15 +62,13 @@ class JSONSchema {
                 }
             }
 
-
             if (!field.caption) {
-                field.caption = props ? props.title : null || Core.toWords(path);
+                field.caption = (props ? props.title : null) || Core.toWords(path);
             }
 
             if (props && props.description) { // https://json-schema.org/draft/2020-12/json-schema-validation.html#rfc.section.9.1
                 field.info = props.description;
             }
-
 
             if (props && props.enum) {
                 field.type = "dropdown";
@@ -171,19 +167,17 @@ class JSONSchema {
     }
 
     static applyIntegerRestrictions(field, props) {
-
         props.step = 1;
-
-
         return props;
     }
 
-    // static generateStandardMappings(){
-    //     this.schema
-    //     return {};
-    // }
+    static getTypeName(type) {
+        if (!type || typeof (type) === "string")
+            return type || "string";
 
-
+        if (typeof (type) == "function")
+            return type.name.toLowerCase();
+    }
 }
 
 export default JSONSchema;

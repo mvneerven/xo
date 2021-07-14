@@ -7,7 +7,8 @@
     <!-- @import url(https://xo-js.dev/v1.4/xo.css);-->
     <style>
         @import url(css/xo.css);
-        @import url('https://fonts.googleapis.com/css2?family=Exo&display=swap');
+        @import url(https://fonts.googleapis.com/css2?family=Exo&display=swap);
+        @import url(https://cdn.jsdelivr.net/themify-icons/0.1.2/css/themify-icons.css);
 
         body,
         H1 {
@@ -26,7 +27,7 @@
     <script type="module" src="dist/xo.js"></script>
 
     <script type="module">
-        
+
         const schema = {
             pages: [{
                 legend: "My Form",
@@ -43,7 +44,10 @@
                         name: "email",
                         required: true,
                         placeholder: "john@doe.com",
-                        caption: "Enter email address"
+                        caption: "Enter email address",
+                        prefix: {
+                            icon: "ti-email"
+                        }
                     },
                     {
                         type: "multiline",
@@ -70,6 +74,9 @@
         }
         const frm = await xo.form.run(schema, {
             on: {
+                created: e => {
+                    e.detail.host.liveEditor = new xo.form.factory.LiveEditor(e.detail.host)
+                },
                 post: e => {
                     alert(JSON.stringify(e.detail.postData, null, 2))
                 }

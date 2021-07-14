@@ -1,0 +1,9 @@
+{
+    "version": 3,
+    "mappings": "AAAA,AAAA,cAAc,CAAC;EAEX,gBAAgB,EAAE,mBAAmB,CAAA,UAAU;EAC/C,aAAa,EAAE,MAAM;EACrB,QAAQ,EAAE,QAAQ,CAAA,UAAU;CAS/B;;AAbD,AAMI,cANU,CAMV,WAAW,CAAC;EACR,QAAQ,EAAE,QAAQ,CAAA,UAAU;EAC5B,KAAK,EAAE,IAAI;EACX,GAAG,EAAE,KAAK;EACV,OAAO,EAAE,YAAY;CACxB",
+    "sources": [
+        "../scss/exf-liveeditor.scss"
+    ],
+    "names": [],
+    "file": "exf-liveeditor.css"
+}

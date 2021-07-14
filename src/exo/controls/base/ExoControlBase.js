@@ -1,6 +1,7 @@
 import ExoFormFactory from '../../core/ExoFormFactory';
 import ExoForm from '../../core/ExoForm';
 import DOM from '../../../pwa/DOM';
+import JSONSchema from '../../core/JSONSchema';
 
 /**
  * Abstract base class for ExoForm controls
@@ -30,16 +31,42 @@ class ExoControlBase {
         this.htmlElement = document.createElement('span');
 
         this.acceptProperties(
+            { name: "type", type: String, required: true, description: "Type of the control. Required" },
+            { name: "name", type: String, required: true, description: "Name of the control. Required and must be unique" },
             { name: "visible", type: Boolean, description: "Determines control visibility" },
             { name: "tooltip", type: String, description: "Tooltip to show over the element" },
+            { name: "placeholder", type: String, description: "Placeholder text to show when the field is empty" },
             { name: "disabled", type: Boolean, description: "Determines whether the control can be interacted with by the user" },
             { name: "caption", type: String, description: "Caption/label to display" },
             { name: "useContainer", type: Boolean, description: "Specifies whether the control should render within the standard control container. Default depends on control." },
             { name: "bind", type: String, description: "Specifies a path to bind the control to one of the instances in the model, if any. Syntax: 'instance.[instancename].[propertyname]'" },
-            { name: "info", type: String, description: "Information text to show"},
-            { name: "invalidmessage", type: String, description: "Message text to show when the control doesn't validate"}
-            
+            { name: "info", type: String, description: "Information text to show" },
+            { name: "invalidmessage", type: String, description: "Message text to show when the control doesn't validate" }
+
         );
+    }
+
+    get jsonSchema() {
+
+        const schema = {
+            $schema: "http://json-schema.org/draft-04/schema#",
+            type: "object",
+            properties: {},
+            required: []
+        }
+
+        this.acceptedProperties.forEach(p => {
+            if (p.required) {
+                schema.required.push(p.name)
+            }
+            schema.properties[p.name] = {
+                type: JSONSchema.getTypeName(p.type),
+                description: p.description
+            }
+
+        });
+
+        return schema;
     }
 
     _getContainerTemplate(obj) {
@@ -96,6 +123,10 @@ class ExoControlBase {
         return this._useContainer;
     }
 
+    toString() {
+        return ExoFormFactory.fieldToString(this.context.field);
+    }
+
     appendChild(elm) {
         this.htmlElement.appendChild(elm);
     }
@@ -109,6 +140,50 @@ class ExoControlBase {
      */
     get caption() {
         return this._caption;
+    }
+
+    /**
+     * Gets the current field schema
+     */
+    get schema() {
+
+        let obj = {
+            ...this.context.field
+        }
+        if (obj.id && obj.id.length === 15) {
+            delete obj.id
+        }
+        return JSON.parse(JSON.stringify(obj, (key, value) => {
+            if (key.startsWith("_"))
+                return undefined;
+            return value;
+        }, 2))
+
+    }
+
+    /**
+     * Rerenders the control with the given field schema
+     */
+    set schema(data) {
+        data = typeof (data) === "object" ? data : JSON.parse(data);
+
+        const helper = async () => {
+            let newElm = await this.context.exo.renderSingleControl(data, {
+                context: this.context
+            })
+
+            newElm.classList.add("exf-le-active");
+            let exCntNew = newElm.querySelector("[data-exf]");
+            let ctl = exCntNew.data.field._control;
+            let fld = this.context.field;
+            fld._control = ctl;
+            exCntNew.data = { field: fld }
+
+            DOM.replace(this.container, newElm)
+        }
+
+        helper();
+
     }
 
     /**
@@ -150,7 +225,7 @@ class ExoControlBase {
         this.htmlElement.dispatchEvent(evt);
     }
 
-    set visible(value) {        
+    set visible(value) {
         this._visible = value;
         if (this.rendered) {
             var elm = this.container || this.htmlElement;
@@ -313,17 +388,17 @@ class ExoControlBase {
             this.container.setAttribute("title", this.tooltip);
         }
 
-        if(this.info){
+        if (this.info) {
             this.showHelp(this.info)
         }
 
-        
+
         this._rendered = true;
-        
-        if(!this.visible)
+
+        if (!this.visible)
             this.visible = this.visible; // force 
-        
-        
+
+
         return this.container
     }
 
@@ -350,12 +425,12 @@ class ExoControlBase {
         })
 
         this.htmlElement.addEventListener("input", e => {
-            if(this.htmlElement.validity){
-                if(this.htmlElement.setCustomValidity) this.htmlElement.setCustomValidity('');
-                let valid = this.htmlElement.validity.valid;                
+            if (this.htmlElement.validity) {
+                if (this.htmlElement.setCustomValidity) this.htmlElement.setCustomValidity('');
+                let valid = this.htmlElement.validity.valid;
                 this.checkCustomValidity(valid)
             }
-            
+
         })
 
     }
@@ -422,21 +497,21 @@ class ExoControlBase {
     get valid() {
         let numInvalid = 0;
         const rv = el => {
-            if(el.validity){
+            if (el.validity) {
                 let valid = el.validity.valid;
-                if(!valid) numInvalid++;
+                if (!valid) numInvalid++;
             }
         };
         let elm = this.container || this.htmlElement;
         rv(elm);
 
         elm.querySelectorAll("*").forEach(rv);
-        console.debug("ExoControlBase valid", DOM.elementToString(elm),  numInvalid === 0)
+        console.debug("ExoControlBase valid", DOM.elementToString(elm), numInvalid === 0)
         return numInvalid === 0;
     }
 
-    checkCustomValidity(valid){
-        if(this.invalidmessage){
+    checkCustomValidity(valid) {
+        if (this.invalidmessage) {
             this.htmlElement.setCustomValidity(valid ? '' : this.invalidmessage);
             this.htmlElement.reportValidity();
         }
@@ -467,7 +542,7 @@ class ExoControlBase {
     showHelp(msg, options) {
         options = options || { type: "info" };
         let elmName = "_hlpr_" + options.type;
-        
+
         //console.log(elmName, msg)
 
         if (!msg) {
@@ -483,7 +558,7 @@ class ExoControlBase {
             return;
         }
 
-        
+
 
         if (this[elmName] != null) {
             this[elmName].innerHTML = msg

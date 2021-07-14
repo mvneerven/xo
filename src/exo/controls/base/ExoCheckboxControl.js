@@ -13,7 +13,8 @@ class ExoCheckboxControl extends ExoCheckboxListControl {
             name: "text",
             description: "Text to display on checkbox label"
         });
-        context.field.items = [{ name: this.text || context.field.caption, value: true, checked: context.field.value, tooltip: context.field.tooltip || "" }]
+
+        this.items = [{ name: this.text || context.field.caption, value: true, checked: context.field.value, tooltip: context.field.tooltip || "" }]
     }
 
     async render() {
@@ -29,11 +30,16 @@ class ExoCheckboxControl extends ExoCheckboxListControl {
     }
 
     get value() {
-        return this.container.querySelector(":checked") ? true : false;
+        if (this.rendered)
+            return this.container.querySelector(":checked") ? true : false;
+
+        return super.value;
     }
 
     set value(data) {
-        this.container.querySelector("[name]").checked = data;
+        super.value = data;
+        if (this.rendered)
+            this.container.querySelector("[name]").checked = data;
     }
 }
 

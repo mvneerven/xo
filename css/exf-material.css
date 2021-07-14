@@ -230,10 +230,12 @@
 
 .exf-container.exf-theme-material .exf-ctl-cnt .exf-help:before {
   content: "i";
-  background-color: #666;
+  font-weight: 400;
+  background-color: #ddd;
+  line-height: 1rem;
   display: inline-block;
   padding: 0.2rem 0.5rem;
-  color: white;
+  color: #666;
   border-radius: 1rem;
   margin-right: 0.2rem;
 }

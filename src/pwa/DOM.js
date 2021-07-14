@@ -191,15 +191,16 @@ class DOM {
     }
 
     /**
-     * Locates 
+     * Locates text in page, scrolls to it and highlights it
      * @param {*} text - text to find
-     * @param {*} options - {root: document, selector: '*'}
+     * @param {*} options - {root: document, selector: '*', caseSensitive: false}
      */
     static locateText(text, options) {
         options = {
             selector: "*",
             root: document,
             caseSensitive: false,
+            highlightClass: "highlight",
             ...options || {}
         }
         let first = [...options.root.querySelectorAll(options.selector)]
@@ -208,15 +209,14 @@ class DOM {
 
         if (first) {
             first.c.scrollIntoView(true);
-            first.c.classList.add("highlight");
+            first.c.classList.add(options.highlightClass);
+            const remove = () => {
+                first.c.classList.remove(options.highlightClass);
+            };
             setTimeout(() => {
-                document.addEventListener("mousemove", () => {
-                    first.c.classList.remove("highlight");
-                }, {
-                    once: true
-                })
+                options.root.addEventListener("mousemove", remove, { once: true })
 
-            }, 500);
+            }, 1500);
         }
 
     }
@@ -262,6 +262,19 @@ class DOM {
         }
 
         return node;
+    }
+
+    
+    static async showDialog(options) {
+
+        let r = await xo.form.run({
+            ...options || {},
+            type: "dialog"
+        });
+        var f = xo.form.factory.getFieldFromElement(r);
+        f._control.show();
+        return f._control;
+
     }
 
     static setupGrid() {

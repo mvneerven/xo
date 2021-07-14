@@ -127,19 +127,8 @@ class PWA_UI {
     }
 
     async showDialog(options) {
-
-        let r = await xo.form.run({
-            ...options || {},
-            type: "dialog"
-        });
-        var f = window.xo.form.factory.getFieldFromElement(r);
-        f._control.show();
-        return f._control;
-
+        return DOM.showDialog(options);
     }
-
-
-
 
 }
 

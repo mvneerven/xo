@@ -9,6 +9,7 @@ import ExoFormNavigation from '../navigation/ExoFormNavigation';
 import ExoFormProgress from '../progress/ExoFormProgress';
 import ExoFormRules from '../rules/ExoFormRules'
 import ExoFormContext from './ExoFormContext';
+import ExoLiveEditor from '../design/ExoLiveEditor';
 import Core from '../../pwa/Core';
 
 /**
@@ -63,7 +64,8 @@ class ExoFormFactory {
     }
 
     static Context = ExoFormContext;
-   
+    
+    static LiveEditor = ExoLiveEditor;
 
     static defaults = {
         imports: [],
@@ -383,7 +385,7 @@ class ExoFormFactory {
             let cnt = e.closest(".exf-ctl-cnt");
             if (cnt) {
                 let el = cnt.querySelector("[data-exf]");
-                if (el)
+                if (el && el.data)
                     field = el.data["field"];
             }
         }

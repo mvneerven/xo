@@ -125,44 +125,8 @@
   margin-bottom: 1em;
 }
 
-.exf-container .exf-page > .exf-ctl-cnt.exf-input-group .exf-ctl > div {
-  clear: both;
-  margin: auto;
-  white-space: normal;
-}
-
-.exf-container .exf-page > .exf-ctl-cnt.exf-input-group .exf-ctl > div > label {
-  display: inline-block;
-  width: 30%;
-  overflow: hidden;
-  padding: 5px;
-}
-
-.exf-container .exf-page > .exf-ctl-cnt.exf-input-group .exf-ctl > div > label > input {
-  width: 30px;
-  height: auto;
-}
-
-.exf-container .exf-page > .exf-ctl-cnt.exf-input-group .exf-ctl > div > label > .exf-caption {
-  display: inline-block;
-  height: auto;
-  width: calc(100% - 70px);
-  vertical-align: text-top;
-  padding: 0.2rem 0.4rem 0.2rem 0.1rem;
-  margin-right: 1rem;
-}
-
-.exf-container .exf-page > .exf-ctl-cnt.exf-input-group .exf-ctl > div > label > .exf-caption .exf-caption-description {
-  height: 5em;
-}
-
-.exf-container .exf-page > .exf-ctl-cnt.exf-input-group .exf-ctl > div > label > .exf-caption .exf-caption-description:empty {
-  height: 0;
-}
-
-.exf-container .exf-page > .exf-ctl-cnt.exf-input-group .exf-ctl.block > div > label {
-  display: block;
-  width: auto;
+.exf-container .exf-page > .exf-ctl-cnt.exf-lbl-empty .exf-label {
+  display: none !important;
 }
 
 .exf-container .exf-page > .exf-ctl-cnt.exf-rng-output output {
@@ -222,6 +186,67 @@
 
 .exf-container .exf-page > .exf-ctl-cnt.exf-input-group > .exf-ctl > div .exf-ilc-cnt .exf-caption .exf-caption-description {
   font-size: 0.8rem;
+}
+
+.exf-container .exf-page > .exf-ctl-cnt.exf-input-group .exf-ctl > div {
+  clear: both;
+  margin: auto;
+  white-space: normal;
+}
+
+.exf-container .exf-page > .exf-ctl-cnt.exf-input-group .exf-ctl > div > label {
+  display: inline-block;
+  width: 30%;
+  overflow: hidden;
+  padding: 5px;
+}
+
+.exf-container .exf-page > .exf-ctl-cnt.exf-input-group .exf-ctl > div > label > input {
+  width: 30px;
+  height: auto;
+}
+
+.exf-container .exf-page > .exf-ctl-cnt.exf-input-group .exf-ctl > div > label > .exf-caption {
+  display: inline-block;
+  height: auto;
+  width: calc(100% - 70px);
+  vertical-align: text-top;
+  padding: 0.2rem 0.4rem 0.2rem 0.1rem;
+  margin-right: 1rem;
+}
+
+.exf-container .exf-page > .exf-ctl-cnt.exf-input-group .exf-ctl > div > label > .exf-caption .exf-caption-description {
+  height: 5em;
+}
+
+.exf-container .exf-page > .exf-ctl-cnt.exf-input-group .exf-ctl > div > label > .exf-caption .exf-caption-description:empty {
+  height: 0;
+}
+
+.exf-container .exf-page > .exf-ctl-cnt.exf-input-group .exf-ctl.block > div > label {
+  display: block;
+  width: auto;
+}
+
+.exf-container .exf-page > .exf-ctl-cnt.exf-input-group[data-field-type="checkbox"] {
+  padding: 0 !important;
+  margin: 0 !important;
+  margin-top: -1rem !important;
+}
+
+.exf-container .exf-page > .exf-ctl-cnt.exf-input-group[data-field-type="checkbox"] .exf-ctl {
+  padding: 0;
+  margin: 0;
+}
+
+.exf-container .exf-page > .exf-ctl-cnt.exf-input-group[data-field-type="checkbox"] .exf-ctl > div {
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+.exf-container .exf-page > .exf-ctl-cnt.exf-input-group[data-field-type="checkbox"] .exf-ctl > div .exf-ilc-cnt {
+  padding: 0 !important;
+  margin: 0 !important;
 }
 
 .exf-container .exf-page > .exf-ctl-cnt .exf-ctl.autogrow {
@@ -347,7 +372,7 @@
 }
 
 .exf-container .exf-txt-psx .exf-txt-psx-span.field {
-  top: -.2rem;
+  top: -0.2rem;
 }
 
 .exf-container .exf-txt-psx .exf-txt-psx-span.prefix {

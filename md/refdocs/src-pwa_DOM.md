@@ -37,3 +37,16 @@ __el__ | `Object` | *the DOMM element*
 __*return*__ | `undefined` | *String*
 
 ---
+
+### `locateText(text, options)`
+
+![modifier: private](images/badges/modifier-private.svg) ![modifier: static](images/badges/modifier-static.svg)
+
+Locates text in page, scrolls to it and highlights it
+
+Parameters | Type | Description
+--- | --- | ---
+__text__ | `*` | *text to find*
+__options__ | `*` | *{root: document, selector: &#x27;*&#x27;, caseSensitive: false}*
+
+---

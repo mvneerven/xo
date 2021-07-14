@@ -1,6 +1,12 @@
 # XO-JS
 
+> ## ▷ Docs
+> This documentation is best viewed at [https://www.xo-js.dev](https://www.xo-js.dev/#/docs).
+>
+> A complete playground is included and code examples can directly be run and edited.
+ 
 XO-JS is a compact, developer-friendly, pure JavaScript (ES6) Component Library that helps with [Progressive Web App](./md/pwa/index.md) development and includes a [Declarative Web Forms Engine](./md/exo/index.md)
+
 
 > - 49KB minified and GZipped
 > - No dependencies

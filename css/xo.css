@@ -722,44 +722,8 @@ html:not(.pwa-signed-in) .if-signed-out {
   margin-bottom: 1em;
 }
 
-.exf-container .exf-page > .exf-ctl-cnt.exf-input-group .exf-ctl > div {
-  clear: both;
-  margin: auto;
-  white-space: normal;
-}
-
-.exf-container .exf-page > .exf-ctl-cnt.exf-input-group .exf-ctl > div > label {
-  display: inline-block;
-  width: 30%;
-  overflow: hidden;
-  padding: 5px;
-}
-
-.exf-container .exf-page > .exf-ctl-cnt.exf-input-group .exf-ctl > div > label > input {
-  width: 30px;
-  height: auto;
-}
-
-.exf-container .exf-page > .exf-ctl-cnt.exf-input-group .exf-ctl > div > label > .exf-caption {
-  display: inline-block;
-  height: auto;
-  width: calc(100% - 70px);
-  vertical-align: text-top;
-  padding: 0.2rem 0.4rem 0.2rem 0.1rem;
-  margin-right: 1rem;
-}
-
-.exf-container .exf-page > .exf-ctl-cnt.exf-input-group .exf-ctl > div > label > .exf-caption .exf-caption-description {
-  height: 5em;
-}
-
-.exf-container .exf-page > .exf-ctl-cnt.exf-input-group .exf-ctl > div > label > .exf-caption .exf-caption-description:empty {
-  height: 0;
-}
-
-.exf-container .exf-page > .exf-ctl-cnt.exf-input-group .exf-ctl.block > div > label {
-  display: block;
-  width: auto;
+.exf-container .exf-page > .exf-ctl-cnt.exf-lbl-empty .exf-label {
+  display: none !important;
 }
 
 .exf-container .exf-page > .exf-ctl-cnt.exf-rng-output output {
@@ -819,6 +783,67 @@ html:not(.pwa-signed-in) .if-signed-out {
 
 .exf-container .exf-page > .exf-ctl-cnt.exf-input-group > .exf-ctl > div .exf-ilc-cnt .exf-caption .exf-caption-description {
   font-size: 0.8rem;
+}
+
+.exf-container .exf-page > .exf-ctl-cnt.exf-input-group .exf-ctl > div {
+  clear: both;
+  margin: auto;
+  white-space: normal;
+}
+
+.exf-container .exf-page > .exf-ctl-cnt.exf-input-group .exf-ctl > div > label {
+  display: inline-block;
+  width: 30%;
+  overflow: hidden;
+  padding: 5px;
+}
+
+.exf-container .exf-page > .exf-ctl-cnt.exf-input-group .exf-ctl > div > label > input {
+  width: 30px;
+  height: auto;
+}
+
+.exf-container .exf-page > .exf-ctl-cnt.exf-input-group .exf-ctl > div > label > .exf-caption {
+  display: inline-block;
+  height: auto;
+  width: calc(100% - 70px);
+  vertical-align: text-top;
+  padding: 0.2rem 0.4rem 0.2rem 0.1rem;
+  margin-right: 1rem;
+}
+
+.exf-container .exf-page > .exf-ctl-cnt.exf-input-group .exf-ctl > div > label > .exf-caption .exf-caption-description {
+  height: 5em;
+}
+
+.exf-container .exf-page > .exf-ctl-cnt.exf-input-group .exf-ctl > div > label > .exf-caption .exf-caption-description:empty {
+  height: 0;
+}
+
+.exf-container .exf-page > .exf-ctl-cnt.exf-input-group .exf-ctl.block > div > label {
+  display: block;
+  width: auto;
+}
+
+.exf-container .exf-page > .exf-ctl-cnt.exf-input-group[data-field-type="checkbox"] {
+  padding: 0 !important;
+  margin: 0 !important;
+  margin-top: -1rem !important;
+}
+
+.exf-container .exf-page > .exf-ctl-cnt.exf-input-group[data-field-type="checkbox"] .exf-ctl {
+  padding: 0;
+  margin: 0;
+}
+
+.exf-container .exf-page > .exf-ctl-cnt.exf-input-group[data-field-type="checkbox"] .exf-ctl > div {
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+.exf-container .exf-page > .exf-ctl-cnt.exf-input-group[data-field-type="checkbox"] .exf-ctl > div .exf-ilc-cnt {
+  padding: 0 !important;
+  margin: 0 !important;
 }
 
 .exf-container .exf-page > .exf-ctl-cnt .exf-ctl.autogrow {
@@ -944,7 +969,7 @@ html:not(.pwa-signed-in) .if-signed-out {
 }
 
 .exf-container .exf-txt-psx .exf-txt-psx-span.field {
-  top: -.2rem;
+  top: -0.2rem;
 }
 
 .exf-container .exf-txt-psx .exf-txt-psx-span.prefix {
@@ -1130,9 +1155,9 @@ html.theme-light nav.ul-drop ul li > ul {
   position: absolute;
   top: 100%;
   right: 0;
-  border: 1px solid var(--color-dropdown-border);
+  border: 1px solid var(--color-dropdown-border, #ccc);
   text-align: left;
-  background-color: var(--color-dropdown-bg);
+  background-color: var(--color-dropdown-bg, #eee);
   -webkit-box-shadow: 0 3px 10px -2px rgba(0, 0, 0, 0.1);
           box-shadow: 0 3px 10px -2px rgba(0, 0, 0, 0.1);
   list-style: none;
@@ -1597,7 +1622,7 @@ html.theme-light nav.ul-drop ul li > ul {
   margin: 10% auto;
   padding: 10px;
   border-radius: 4px;
-  background: var(--color-background-variation);
+  background: var(--color-background-variation, #eee);
   -webkit-box-shadow: 10px 10px 25px -13px rgba(0, 0, 0, 0.75);
   box-shadow: 10px 10px 25px -13px rgba(0, 0, 0, 0.75);
 }
@@ -2474,10 +2499,12 @@ html.theme-dark .exf-ctl-cnt.exf-switch input[type="range"] {
 
 .exf-container.exf-theme-material .exf-ctl-cnt .exf-help:before {
   content: "i";
-  background-color: #666;
+  font-weight: 400;
+  background-color: #ddd;
+  line-height: 1rem;
   display: inline-block;
   padding: 0.2rem 0.5rem;
-  color: white;
+  color: #666;
   border-radius: 1rem;
   margin-right: 0.2rem;
 }
@@ -3756,7 +3783,7 @@ html.theme-dark .exf-ctl-cnt.autocomplete .exf-ac-rs .exf-ac-itm.active {
   margin: 0 2px 0 0;
   padding: 0 18px;
   line-height: 32px;
-  background: var(--color-background-variation);
+  background: var(--color-background-variation, #eee);
   text-align: center;
   border-radius: 5px 5px 0 0;
   cursor: pointer;
@@ -3842,5 +3869,18 @@ html.theme-dark .exf-ctl-cnt.autocomplete .exf-ac-rs .exf-ac-itm.active {
 
 .exf-navigation-tabstrip > .exf-form > .exf-nav-cnt > .exf-ctl-cnt .exf-btn {
   padding: 0.2rem 0.4rem;
+}
+
+.exf-le-active {
+  background-color: rgba(0, 0, 0, 0.05) !important;
+  border-radius: 0.4rem;
+  position: relative !important;
+}
+
+.exf-le-active .exf-le-ctx {
+  position: absolute !important;
+  right: 10px;
+  top: -10px;
+  display: inline-block;
 }
 /*# sourceMappingURL=xo.css.map */

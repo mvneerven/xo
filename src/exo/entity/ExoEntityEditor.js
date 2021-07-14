@@ -13,7 +13,7 @@ class ExoEntityEditor {
     }
 
     async show() {
-        this.editDialog = await this.showDialog({
+        this.editDialog = await DOM.showDialog({
             modal: false,
             title: this.data.id ? `Edit` : `Add`,
             body: await this.getForm(),
@@ -87,20 +87,6 @@ class ExoEntityEditor {
             }
         }
     }
-
-    async showDialog(options) {
-
-        let r = await xo.form.run({
-            ...options || {},
-            type: "dialog"
-        });
-        var f = xo.form.factory.getFieldFromElement(r);
-
-        f._control.show();
-        return f._control;
-
-    }
-
 }
 
 export default ExoEntityEditor

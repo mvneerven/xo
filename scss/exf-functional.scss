@@ -131,52 +131,11 @@
                 margin-bottom: 1em;
             }
 
-            &.exf-input-group .exf-ctl {
-                > div {
-                    clear: both;
-                    //text-align: left;
-                    margin: auto;
-                    white-space: normal;
+            
 
-                    > label {
-                        display: inline-block;
-                        width: 30%;
-                        overflow: hidden;
-                        padding: 5px;
-                        //margin-bottom: 1em;
-
-                        > input {
-                            width: 30px;
-                            height: auto;
-                        }
-
-                        > .exf-caption {
-                            display: inline-block;
-                            height: auto;
-                            width: calc(100% - 70px);
-
-                            vertical-align: text-top;
-                            padding: 0.2rem 0.4rem 0.2rem 0.1rem;
-                            margin-right: 1rem;
-
-                            .exf-caption-description {
-                                height: 5em;
-
-                                &:empty {
-                                    height: 0;
-                                }
-                            }
-                        }
-                    }
-                }
-
-                &.block {
-                    > div {
-                        > label {
-                            display: block;
-                            width: auto;
-                        }
-                    }
+            &.exf-lbl-empty {
+                .exf-label {
+                    display: none !important;
                 }
             }
 
@@ -217,6 +176,7 @@
             }
 
             &.exf-input-group {
+
                 margin-top: 1rem;
                 > .exf-ctl > div {
                     padding-top: 1rem;
@@ -238,6 +198,81 @@
                                 font-size: 0.8rem;
                             }
                         }
+                    }
+                }
+
+                .exf-ctl {
+                    > div {
+                        clear: both;
+                        //text-align: left;
+                        margin: auto;
+                        white-space: normal;
+
+                        > label {
+                            display: inline-block;
+                            width: 30%;
+                            overflow: hidden;
+                            padding: 5px;
+                            //margin-bottom: 1em;
+
+                            > input {
+                                width: 30px;
+                                height: auto;
+                            }
+
+                            > .exf-caption {
+                                display: inline-block;
+                                height: auto;
+                                width: calc(100% - 70px);
+
+                                vertical-align: text-top;
+                                padding: 0.2rem 0.4rem 0.2rem 0.1rem;
+                                margin-right: 1rem;
+
+                                .exf-caption-description {
+                                    height: 5em;
+
+                                    &:empty {
+                                        height: 0;
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    &.block {
+                        > div {
+                            > label {
+                                display: block;
+                                width: auto;
+                            }
+                        }
+                    }
+                }
+
+                &[data-field-type="checkbox"] { 
+                    padding: 0!important;
+                    margin: 0!important;
+                    margin-top: -1rem!important;
+
+                    .exf-ctl {
+                        padding: 0;
+                        margin: 0;
+
+                        > div {
+                            padding: 0 !important;
+                            margin: 0 !important;
+
+
+                            .exf-ilc-cnt{
+                                padding: 0 !important;
+                                margin: 0 !important;
+        
+                            }
+                        }
+
+
+                        
                     }
                 }
             }
@@ -275,8 +310,6 @@
                     }
                 }
             }
-
-            
         }
     }
 
@@ -343,19 +376,19 @@
     .exf-txt-psx {
         position: relative;
 
-        &.prefix{
-            input{
-                padding-left: 2rem!important;
+        &.prefix {
+            input {
+                padding-left: 2rem !important;
             }
         }
 
-        &.suffix{
-            input{
-                padding-right: 2rem!important;
+        &.suffix {
+            input {
+                padding-right: 2rem !important;
             }
         }
 
-        .exf-txt-psx-span { 
+        .exf-txt-psx-span {
             position: absolute;
 
             top: 0.45rem;
@@ -365,8 +398,8 @@
                 left: 0.5rem;
             }
 
-            &.field{
-                top: -.2rem;
+            &.field {
+                top: -0.2rem;
             }
 
             &.prefix {

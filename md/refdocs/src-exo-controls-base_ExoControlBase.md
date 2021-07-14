@@ -32,4 +32,6 @@ Name | Type | Description
 __htmlElement__ | `undefined` | *Sets the HTML element*
 __useContainer__ | `undefined` | *Specifies whether ExoForm should use a containing DIV element to render the control.By default for instance, the button and the page control don&#x27;t use a container.*
 __caption__ | `undefined` | *The control&#x27;s caption/label*
+__schema__ | `undefined` | *Gets the current field schema*
+__schema__ | `undefined` | *Rerenders the control with the given field schema*
 __caption__ | `undefined` | *The control&#x27;s caption/label*
