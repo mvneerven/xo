@@ -14,6 +14,8 @@ html.theme-light {
         --color-disabled: #ebebe4;
         --color-readonly: #fcfcfc;
         --color-text: #333;
+        --color-highlighttext: #fff455;
+        --color-highlighttext-bg: #666;
         --color-button: #343434;
         --color-button-primary: #cc2e44;
         --color-button-text: #ffffff;
@@ -67,6 +69,8 @@ html.theme-dark {
         //--scrollbar-bg: #444;
         --color-text: #ddd;
         --color-button: #bbb;
+        --color-highlighttext: #fff455;
+        --color-highlighttext-bg: #666;
         --color-button-primary: #2eb4cc;
         --color-button-text: #ffffff;
         --color-label-active: #efefef;

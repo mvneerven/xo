@@ -37,7 +37,13 @@ class DocsRoute extends xo.route {
                 icon: "ti-help",
                 action: options => {
                     document.location.hash = "/docs" + options.path;
-                    setTimeout(this.locateText(options.text), 1500)
+                    setTimeout(()=>{
+
+                        DOM.locateText(options.text, {
+                            root: document.querySelector(".md-converted-html")
+                        });
+
+                    }, 500)
                 }
             }
 
@@ -70,15 +76,7 @@ class DocsRoute extends xo.route {
         });
     }
 
-    locateText(text) {
-        let first = [...document.querySelectorAll('h1,h2,h3')]
-            .map(e => { return { t: e.innerHTML, c: e } })
-            .find(o => o.t.toLowerCase().includes(text.toLowerCase()));
-
-        if (first)
-            first.c.scrollIntoView(true)
-
-    }
+    
 
     async render(path) {
 
@@ -125,11 +123,11 @@ class DocsRoute extends xo.route {
         this.area.busy = true;
         try {
             let node = await DocsRoute.cms.get(path);
-            elm = this.mapLinks(DOM.parseHTML(node.html), path);
+            elm = DOM.parseHTML(node.html);
             elm.classList.add("user-select")
             this.area.add(elm);
         }
-        catch(ex){
+        catch (ex) {
             console.error(path, ex)
         }
         finally {
@@ -204,36 +202,6 @@ class DocsRoute extends xo.route {
 
     }
 
-    mapLinks(elm, path) {
-        let basePath = this.getBasePath(path);
-
-        elm.querySelectorAll("a[href]").forEach(a => {
-            if (a.href.endsWith(".md")) {
-                if (basePath === ".")
-                    basePath = "";
-
-                let link = basePath + new URL(a.href).pathname;
-                a.setAttribute("href", "#/docs" + link)
-            }
-        });
-
-        for (const i of elm.querySelectorAll("img[src]")) {
-            let u = i.getAttribute("src");
-            if (u.indexOf("//") === -1) {
-                let link = "/md/refdocs/" + u;
-                i.setAttribute("src", link)
-            }
-        };
-
-        return elm;
-    }
-
-    getBasePath(path) {
-        let d = path.split("/");
-        d.length--;
-        let s = d.join("/");
-        return s;
-    }
 
     get area() {
         return pwa.UI.areas.main;

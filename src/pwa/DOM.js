@@ -190,6 +190,37 @@ class DOM {
         el.dispatchEvent(ev);
     }
 
+    /**
+     * Locates 
+     * @param {*} text - text to find
+     * @param {*} options - {root: document, selector: '*'}
+     */
+    static locateText(text, options) {
+        options = {
+            selector: "*",
+            root: document,
+            caseSensitive: false,
+            ...options || {}
+        }
+        let first = [...options.root.querySelectorAll(options.selector)]
+            .map(e => { return { t: e.innerHTML, c: e } })
+            .find(o => options.caseSensitive ? o.t.includes(text) : o.t.toLowerCase().includes(text.toLowerCase()));
+
+        if (first) {
+            first.c.scrollIntoView(true);
+            first.c.classList.add("highlight");
+            setTimeout(() => {
+                document.addEventListener("mousemove", () => {
+                    first.c.classList.remove("highlight");
+                }, {
+                    once: true
+                })
+
+            }, 500);
+        }
+
+    }
+
     static throttleResize(elm, callback) {
         let delay = 100, timeout;
         callback();

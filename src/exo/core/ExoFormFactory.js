@@ -83,7 +83,10 @@ class ExoFormFactory {
             pageContainer: "exf-page",
             elementContainer: "exf-ctl-cnt",
             groupContainer: "exf-input-group",
-            groupElementCaption: "exf-caption",
+            groupElement: "exf-ilc-cnt",
+            caption: "exf-caption",
+            groupCaptionMain: "exf-caption-main",
+            groupCaptionDescription: "exf-caption-description",
             label: "exf-label",
             navigationContainer: "exf-nav-cnt",
             button: "exf-btn",
@@ -93,9 +96,10 @@ class ExoFormFactory {
             textBasedControl: "exf-base-text",
             disabledControl: "exf-disabled",
             focusedControl: "exf-focus",
-            dirtyControl: "exf-dirty"
-
-
+            dirtyControl: "exf-dirty",
+            invalidControl: "exf-invalid",
+            helpWrapper: "exf-help-wrapper",
+            help: "exf-help"
         }
     }
 

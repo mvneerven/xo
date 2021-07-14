@@ -696,6 +696,8 @@ html.theme-light:root {
   --color-disabled: #ebebe4;
   --color-readonly: #fcfcfc;
   --color-text: #333;
+  --color-highlighttext: #fff455;
+  --color-highlighttext-bg: #666;
   --color-button: #343434;
   --color-button-primary: #cc2e44;
   --color-button-text: #ffffff;
@@ -742,6 +744,8 @@ html.theme-dark:root {
   --color-readonly: #333;
   --color-text: #ddd;
   --color-button: #bbb;
+  --color-highlighttext: #fff455;
+  --color-highlighttext-bg: #666;
   --color-button-primary: #2eb4cc;
   --color-button-text: #ffffff;
   --color-label-active: #efefef;
@@ -1156,6 +1160,13 @@ html.theme-dark select > option {
   padding: 1rem;
   overflow: auto;
   white-space: normal;
+}
+
+.highlight {
+  background-color: var(--color-highlighttext-bg);
+  color: var(--color-highlighttext);
+  -webkit-transition: all .3s;
+  transition: all .3s;
 }
 
 img.xo-logo {

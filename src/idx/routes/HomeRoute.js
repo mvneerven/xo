@@ -16,8 +16,8 @@ class HomeRoute extends xo.route {
                     type: "radiobuttonlist",
                     view: "tiles",
                     items: [
-                        { value: "true", name: "On" },
-                        { value: "false", name: "Off" }
+                        { value: "false", name: "Off" },
+                        { value: "true", name: "On" }
                     ]
                 }
             },
@@ -30,8 +30,8 @@ class HomeRoute extends xo.route {
                     type: "radiobuttonlist",
                     view: "tiles",
                     items: [
-                        { value: true, name: "On" },
-                        { value: false, name: "Off" }
+                        { value: false, name: "Off" },
+                        { value: true, name: "On" }
                     ]
                 }
             }

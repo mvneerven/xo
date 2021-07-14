@@ -47,6 +47,20 @@ class MarkDownCMS {
         node.children = {};
         await this.addIndex(node, elm);
         await this.getChildren(node, elm);
+
+        this.correctImageLinks(elm)
+
+        node.html = elm.outerHTML; // update HTML to reflect modified paths
+    }
+
+    correctImageLinks(elm){
+        for (const i of elm.querySelectorAll("img[src]")) {
+            let u = i.getAttribute("src");
+            if (u.indexOf("//") === -1) {
+                let link = "/md/refdocs/" + u;
+                i.setAttribute("src", link)
+            }
+        };
     }
 
     async getChildren(node, elm) {
@@ -67,9 +81,10 @@ class MarkDownCMS {
 
     resolveLink(node, a){
         let path = a.getAttribute("href"), link;
+
         try{
             link = new URL(node.path + "/" + path, document.location.origin).pathname;
-            //console.log("#/docs" + link);
+            
             return link;
         }
 
