@@ -25,7 +25,7 @@ class ExoVideoControl extends ExoEmbedControl {
         super(context);
 
         this.acceptProperties(
-            { name: "code", description: "Code of the video to embed" },
+            { name: "code", description: "Code of the video to embed", demoValue: "oR_e9y-bka0" },
             { name: "width" },
             { name: "height" },
             { name: "autoplay", type: Boolean, description: "Boolean indicating whether the video should immediately start playing" },

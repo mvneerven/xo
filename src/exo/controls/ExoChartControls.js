@@ -11,7 +11,7 @@ class ExoCircularChart extends ExoBaseControls.controls.div.type {
         super(context);
 
         this.acceptProperties(
-            {name: "value", type: Number, description: "Percentual value of the chart (0-100)"},
+            {name: "value", type: Number, description: "Percentual value of the chart (0-100)", demoValue: 87},
             {name: "size"},
             {name: "color"}, 
             {name: "backgroundColor"}, 
@@ -45,7 +45,7 @@ class ExoCircularChart extends ExoBaseControls.controls.div.type {
 
 class ExoChartControls {
     static controls = {
-        circularchart: { type: ExoCircularChart, note: "Simple circular chart (SVG)", demo: { mode: "html" } }
+        circularchart: { type: ExoCircularChart, note: "Simple circular chart (SVG)", demo: { mode: "html", value: "83" } }
 
     }
 }

@@ -16,7 +16,8 @@ class ExoUrlControl extends ExoTextControl {
                         title: {type: "string"},
                         fileTypes: {type: "array"},
                         maxSize: {type: "number"}
-                    }
+                    },
+                    required: []
                 }
             }
         )

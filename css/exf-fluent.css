@@ -221,7 +221,7 @@
   padding: 1rem 2rem;
   text-align: center;
   background-color: var(--color-button);
-  border: 1px var(--color-shade) solid;
+  border: 1px var(--color-shade, #bfcadb) solid;
   color: var(--color-buttontext);
   display: inline-block;
   outline: none;

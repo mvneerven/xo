@@ -1,4 +1,5 @@
 import ExoTextControl from './ExoTextControl';
+import DOM from '../../../pwa/DOM';
 
 class ExoNumberControl extends ExoTextControl { // ExoInputControl
 
@@ -7,7 +8,8 @@ class ExoNumberControl extends ExoTextControl { // ExoInputControl
     constructor(context) {
         super(context);
 
-        this.context.field.type = "number";
+        //this.context.field.type = "number";
+        this.htmlElement = DOM.parseHTML(`<input name="${this.context.field.name}" type="number"/>`);
 
         this.acceptProperties({
             name: "buttons",

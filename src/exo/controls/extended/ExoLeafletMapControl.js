@@ -21,7 +21,8 @@ class ExoLeafletMapControl extends ExoElementControl {
         this.acceptProperties(
             {
                 name: "value",
-                type: Array
+                type: Array,
+                demoValue: [52.85582619118, 5.717743972222222]
 
             },
             {

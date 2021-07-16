@@ -5,7 +5,35 @@
     "version": "1.0.0"
   },
   "paths": {
+    "/openapi": {
+      "get": {
+        "description": "GetOpenApiDefinition",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/products": {
+      "get": {
+        "description": "GetProducts",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/productDTO"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
       "post": {
         "description": "AddProduct",
         "requestBody": {
@@ -24,24 +52,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/productDTO"
-                }
-              }
-            }
-          }
-        }
-      },
-      "get": {
-        "description": "GetProducts",
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/productDTO"
-                  }
                 }
               }
             }
@@ -84,16 +94,6 @@
             }
           }
         ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/openapi": {
-      "get": {
-        "description": "GetOpenApiDefinition",
         "responses": {
           "200": {
             "description": "OK"

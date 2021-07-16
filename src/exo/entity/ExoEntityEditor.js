@@ -49,8 +49,14 @@ class ExoEntityEditor {
             context: this.host.options.exoContext,
 
             on: {
-                schemaLoaded: async (e) => {
+                created: e => {
                     this.editorForm = e.detail.host;
+                    this.host.events.trigger("editorCreated", {
+                        exo: this.editorForm
+                    })
+                },  
+                schemaLoaded: async (e) => {
+                    
                     this.events.trigger("editFormLoaded", {
                         exo: e.detail.host,
                     });

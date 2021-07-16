@@ -11,6 +11,7 @@ import ExoFormRules from '../rules/ExoFormRules'
 import ExoFormContext from './ExoFormContext';
 import ExoLiveEditor from '../design/ExoLiveEditor';
 import Core from '../../pwa/Core';
+import ExoFormSchema from './ExoFormSchema';
 
 /**
  * Factory class for ExoForm - Used to create an ExoForm context.
@@ -64,7 +65,9 @@ class ExoFormFactory {
     }
 
     static Context = ExoFormContext;
-    
+
+    static Schema = ExoFormSchema;
+
     static LiveEditor = ExoLiveEditor;
 
     static defaults = {
@@ -176,7 +179,7 @@ class ExoFormFactory {
      * @param {Object} library 
      * @returns {Array} - Array containing control metadata.
      */
-     static extractControlMeta(library) {
+    static extractControlMeta(library) {
         let ar = [];
         let iter = new Core.Iterator(library, "_key")
 
@@ -211,6 +214,61 @@ class ExoFormFactory {
         return ar;
     }
 
+    /**
+     * Generates an ExoForm schema with all available controls
+     * @returns {Object} - ExoForm schema
+     */
+    static async all() {
+
+        const schema = {
+            model: {
+                instance: {
+                    data: {}
+                }
+            },
+            pages: [
+                {
+                    legend: "All ExoForm controls",
+                    intro: "Below is a list of all available ExoForm controls",
+                    fields: []
+                }
+            ]
+        }
+
+        const context = await xo.form.factory.build();
+
+        Object.keys(context.library).forEach(p => {
+            let props = context.library[p];
+            if (!props.hidden) {
+
+                if (props.demoSchema && Object.keys(props.demoSchema).length) {
+                    props.demo = {
+                        ...props.demo || {},
+                        ...props.demoSchema
+                    }
+
+                    console.log(p.name, props.demo)
+                }
+
+                schema.pages[0].fields.push({
+                    type: "separator"
+                    
+                })
+
+                let name = (p + "1").replace('-','');
+                schema.pages[0].fields.push({
+                    type: p,
+                    name: name,
+                    //bind: `instance.data.${name}`,
+                    caption: Core.toWords(p),
+                    ...props.demo || {}
+                })
+            }
+        });
+
+        return schema;
+
+    }
 
     static lookupBaseType(name, field) {
         let type = field.type;
@@ -257,8 +315,8 @@ class ExoFormFactory {
             if (value.$schema) {
                 return "json-schema";
             }
-            
-            if (value.type && (value.name || !(value.pages) )) {
+
+            if (value.type && (value.name || !(value.pages))) {
                 return "field";
             }
         }
@@ -382,7 +440,7 @@ class ExoFormFactory {
         }
 
         if (!field) {
-            let cnt = e.closest(".exf-ctl-cnt");
+            let cnt = e.closest(".exf-ctl-cnt:not(.exf-page)");
             if (cnt) {
                 let el = cnt.querySelector("[data-exf]");
                 if (el && el.data)

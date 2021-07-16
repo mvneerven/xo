@@ -25,10 +25,10 @@ class ExoSchemaRenderer {
 
         let schema = this.getSchema();
 
-        const x = this.builder.exoContext.createForm();
-        this.events.trigger("created", { exo: x });
+        this.exo = this.builder.exoContext.createForm();
+        this.events.trigger("created", { exo: this.exo });
 
-        x.on(window.xo.form.factory.events.post, e => {
+        this.exo.on(window.xo.form.factory.events.post, e => {
             this.events.trigger("post", e.detail)
         })
 

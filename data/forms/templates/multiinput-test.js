@@ -31,9 +31,11 @@ const schema = {
                         prefix: {
                             type: "text",
                             caption: "Aanhef",
-                            lookup: [
-                                "Dhr.", "Mevr.", "Mej."
-                            ]
+                            autocomplete: {
+                                items: [
+                                    "Dhr.", "Mevr.", "Mej."
+                                ]
+                            }
                         },
                         firstName: {
                             type: "text",

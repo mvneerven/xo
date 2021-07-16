@@ -1,0 +1,28 @@
+{
+    "type": "treeview",
+    "name": "treeview1",
+    "mappings": {
+        "title": "name",
+        "tooltip": "description",
+        "id": "nr"
+    },
+    "items": {
+        "name": "Root item",
+        "children": [
+            {
+                "name": "First Child",
+                "children": [
+                    {
+                        "name": "Deep nesting"
+                    }
+                ]
+            },
+            {
+                "name": "Second child"
+            },
+            {
+                "name": "Third child"
+            }
+        ]
+    }
+}

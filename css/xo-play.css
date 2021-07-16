@@ -6,6 +6,11 @@ body {
   background: #cecece;
 }
 
+#xo-play .exf-dlg-b [data-field-type="image"] img {
+  width: 80px;
+  display: block;
+}
+
 #xo-play [data-field-type="listview"][data-view="tiles"] article.exf-lv-item .name {
   font-weight: 800;
   color: #3c3abd;

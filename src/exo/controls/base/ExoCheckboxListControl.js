@@ -23,9 +23,9 @@ class ExoCheckboxListControl extends ExoInputListControl {
 
             if (this.rendered) {
                 this.container.querySelectorAll("[name]").forEach(i => {
-                    i.checked = this._value.find(j => { // use find instead of direct .includes() call
+                    i.checked = Array.isArray(this._value) ? this._value.find(j => { // use find instead of direct .includes() call
                         return i.value == j; // do loose comparison to account for numeric/string matches
-                    })
+                    }) : false
                 });
             }
         }

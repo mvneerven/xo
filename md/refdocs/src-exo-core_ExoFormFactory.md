@@ -33,6 +33,18 @@ __*return*__ | `Array` | *- Array containing control metadata.*
 
 ---
 
+### `all() ► Object`
+
+![modifier: private](images/badges/modifier-private.svg) ![modifier: static](images/badges/modifier-static.svg)
+
+Generates an ExoForm schema with all available controls
+
+Parameters | Type | Description
+--- | --- | ---
+__*return*__ | `Object` | *- ExoForm schema*
+
+---
+
 ### `determineSchemaType(value) ► String`
 
 ![modifier: private](images/badges/modifier-private.svg) ![modifier: static](images/badges/modifier-static.svg)

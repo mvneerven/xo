@@ -20,6 +20,9 @@ import ExoLeafletMapControl from './ExoLeafletMapControl';
 import ExoListViewControl from './ExoListViewControl';
 import ExoTreeViewControl from './ExoTreeViewControl';
 import ExoFileDialogControl from './ExoFileDialogControl';
+import listviewDemo from '../../../../data/listview-demo.json';
+import treeviewDemo from '../../../../data/treeview-demo.json';
+import multiInputDemo from '../../../../data/multiinput-demo.json'
 
 class ExoExtendedControls {
     static controls = {
@@ -33,8 +36,8 @@ class ExoExtendedControls {
         },
         switch: { type: ExoSwitchControl, bote: "Checkbox replacement for boolean values " },
         richtext: { type: ExoCKRichEditor, note: "A CKEditor wysiwyg/html editor wrapper for ExoForm" },
-        tags: { caption: "Tags control", type: ExoTaggingControl, note: "A control for adding multiple tags", demo: { tags: ["JavaScript", "CSS", "HTML"] } },
-        multiinput: { type: ExoMultiInputControl, note: "Input container for collecting multiple values and display in a grid" },
+        tags: { caption: "Tags control", type: ExoTaggingControl, note: "A control for adding multiple tags", demo: { value: ["JavaScript", "CSS", "HTML"] } },
+        multiinput: { type: ExoMultiInputControl, note: "Input container for collecting multiple values and display in a grid", demo: multiInputDemo },
         creditcard: { caption: "Credit Card", type: ExoCreditCardControl, note: "A credit card control" },
         name: { caption: "Name (first, last) group", type: ExoNameControl, note: "Person name control" },
         nladdress: { caption: "Dutch address", type: ExoNLAddressControl, note: "Nederlands adres" },
@@ -43,28 +46,14 @@ class ExoExtendedControls {
         video: { type: ExoVideoControl, note: "An embedded video from YouTube or Vimeo", demo: { player: "youtube", code: "<your code here>" } },
         dropdownbutton: { hidden: true, type: ExoDropDownButton, note: "A dropdown menu button" },
         captcha: { caption: "A wrapper around the Google ReCaptcha Control, both visible and hidden", type: ExoCaptchaControl, note: "Captcha field", demo: { sitekey: "<your key here>" } },
-        starrating: { type: ExoStarRatingControl, note: "An accessible star rating control", demo: { value: 2.5 } },
-        dialog: { type: ExoDialogControl, caption: "Dialog", note: "A simple dialog (modal or modeless)" },
-        filedialog: { type: ExoFileDialogControl, caption: "File Dialog", note: "A simple file dialog" },
+        starrating: { type: ExoStarRatingControl, hidden: true, note: "An accessible star rating control", demo: { value: 2.5 } },
+        dialog: { type: ExoDialogControl, caption: "Dialog", note: "A simple dialog (modal or modeless)", demo: {demo: true} },
+        filedialog: { type: ExoFileDialogControl, caption: "File Dialog", note: "A simple file dialog", demo: {demo: true} },
         info: { type: ExoInfoControl, note: "An info panel", demo: { title: "Info", icon: "ti-info", body: "Your informational text" } },
        
         map: {type: ExoLeafletMapControl, note: "Leaflet interactive map" },
-        listview: {type: ExoListViewControl, note: "Listview control"},
-        treeview: {type: ExoTreeViewControl, note: "Treeview control", demo: {mappings: { title: "name", tooltip: "description", id: "nr" },
-            items: {
-                name: "Root item",
-                children: [
-                    {
-                        name: "First Child", children: [ { name: "Deep nesting" }]
-                    },
-                    {
-                        name: "Second child"
-                    },
-                    {
-                        name: "Third child"
-                    }
-                ]
-            }}}
+        listview: {type: ExoListViewControl, note: "Listview control", demo: listviewDemo},
+        treeview: {type: ExoTreeViewControl, note: "Treeview control", demo: treeviewDemo}
     }
 }
 

@@ -19,11 +19,5 @@ const ent = new xo.form.entity({
     dataSchema: "https://apim-asf-poc.azure-api.net/productmanagementapi/openapi",
     uiSchema: "/data/openapi/products-ui.json"
 })
-    .on("edit", async e => {
-        //  e.preventDefault();
-        //  let editor = new xo.form.entity.Editor(e.detail.host, e.detail.item)
-        //  let form = await editor.createEditorForm();
-        //  area.appendChild(form)
-    })
 
 area.appendChild(await ent.list())

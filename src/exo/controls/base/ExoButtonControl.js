@@ -12,6 +12,8 @@ class ExoButtonControl extends ExoElementControl {
 
     this.htmlElement = DOM.parseHTML('<button class="exf-btn" />');
 
+    
+
     this.acceptProperties(
       {
         name: "icon",
@@ -75,6 +77,9 @@ class ExoButtonControl extends ExoElementControl {
       const btnClone = this.htmlElement.cloneNode(true);
       this.htmlElement = DOM.parseHTML(`<div class="exf-dropdown-cnt drop-dir-${this.direction || "down"}"></div>`);
       this.htmlElement.appendChild(btnClone);
+      btnClone.addEventListener("click", e=>{
+          e.preventDefault();
+      })
       this.htmlElement.appendChild(await this.renderDropdown(await this.getData(this.dropdown)));
       this.container.textContent = "";
       this.container.appendChild(this.htmlElement);

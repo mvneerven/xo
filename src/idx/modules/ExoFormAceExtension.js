@@ -1,5 +1,6 @@
 const DOM = window.xo.dom;
 const factory = window.xo.form.factory;
+//import ExoFormSchema from '../../exo/core/ExoFormSchema';
 
 class ExoFormAceExtension {
     static extend(context) {
@@ -78,20 +79,17 @@ class ExoFormAceExtension {
             }
 
             convertValue(targetMode) {
-                this.value = this.convert(this.value, targetMode);
+                const xs = xo.form.factory.Schema.read(this.value)
+                this.value = xs.toString(targetMode);
             }
 
-            // convert between javascript and json representation
-            convert(value, targetMode) {
-                let x = this.context.exo.context.createSchema();
-                x.parse(value);
-                return x.toString(targetMode);
-            }
+            
         }
 
         context.library.xo_schema = {
             ...context.library.aceeditor,
             name: "xo_schema",
+            hidden: true,
             type: ExoSchemaEditor
         };
     }

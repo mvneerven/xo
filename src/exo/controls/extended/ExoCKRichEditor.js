@@ -10,11 +10,16 @@ class ExoCKRichEditor extends ExoBaseControls.controls.div.type {
     }
 
     get value() {
-        return this.htmlElement.data.editor.getData();
+        if (this.rendered)
+            this._data = this.htmlElement.data.editor.getData();
+
+        return this._data;
     }
 
     set value(data) {
-        this.htmlElement.data.editor.setData(data);
+        this._data = data;
+        if (this.rendered)
+            this.htmlElement.data.editor.setData(data);
     }
 
     async render() {

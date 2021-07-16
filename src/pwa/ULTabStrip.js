@@ -145,7 +145,7 @@ class ULTabStrip {
         var isTabSet = false;
         for (var tabName in this.tabs) {
             if (!isTabSet) {
-                this.setHtmlElementClass(tabName);
+                //this.setHtmlElementClass(tabName);
                 isTabSet = true;
             }
             ul.appendChild(this.tabs[tabName].render());
@@ -169,7 +169,7 @@ class ULTabStrip {
                     }
                 }
 
-                this.setHtmlElementClass(id);
+               // this.setHtmlElementClass(id);
 
                 this.events["tabSelected"].apply(this, [{
                     target: e.target,
@@ -201,19 +201,16 @@ class ULTabStrip {
         }).observe(ctn);
     }
 
-    setHtmlElementClass(tabId) {
-
-        // let prefix = "exb-tab-" + this.name + "-";
-
-        // let tabClass = prefix + tabId;
-
-        // html.classList.forEach(c => {
-        //     if (c.startsWith(prefix)) {
-        //         html.classList.remove(c)
-        //     }
-        // })
-        // html.classList.add(tabClass)
-    }
+    // setHtmlElementClass(tabId) {
+    //     let prefix = "exb-tab-" + this.name + "-";
+    //     let tabClass = prefix + tabId;
+    //     html.classList.forEach(c => {
+    //         if (c.startsWith(prefix)) {
+    //             html.classList.remove(c)
+    //         }
+    //     })
+    //     html.classList.add(tabClass)
+    // }
 }
 
 export default ULTabStrip;

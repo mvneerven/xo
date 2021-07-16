@@ -19,10 +19,11 @@ class ExoLinkControl extends ExoElementControl {
             {
                 name: "html",
                 type: String
+                
             },
 
             {
-                name: "url",
+                name: "url",                
                 type: String
             }
 
@@ -71,6 +72,8 @@ class ExoLinkControl extends ExoElementControl {
 
     async render() {
         await super.render();
+        if(this.external)
+            this.htmlElement.setAttribute("target", "_blank");
         return this.htmlElement
     }
 }

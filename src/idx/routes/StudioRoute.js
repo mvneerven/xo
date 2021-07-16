@@ -1,4 +1,4 @@
-import ExoFormLiveEditor from '../modules/ExoFormLiveEditor';
+//import ExoFormLiveEditor from '../modules/ExoFormLiveEditor';
 import StyleSheetHelper from '../modules/StyleSheetHelper';
 import ExoFormBuilderSidePanel from '../modules/ExoFormBuilderSidePanel';
 import ExoFormBuilderSchema from '../modules/ExoFormBuilderSchema';
@@ -162,24 +162,52 @@ class StudioRoute extends xo.route {
         })
 
         x.container.setAttribute("id", "xfb");
-        this.liveEditor = new ExoFormLiveEditor(this, x.container);
 
-        this.liveEditor.on("field-props", e => {
 
-            let tab = this.sidePanel.tabStrip.tabs.properties;
-            tab.enabled = true;
-            tab.select();
+        this.addLiveEdit(x)
 
-            if (!this.app.UI.areas.panel.pinned) {
-                this.app.UI.areas.panel.pinned = true;
-            }
-            this.showFieldEditor(tab, e.detail.field)
 
-        }).on("enable", e => {
 
-            //this.refreshForm();
-            //this.tabStrip.tabs.form.select();
+        //this.liveEditor = new ExoFormLiveEditor(this, x.container);
+
+        // this.liveEditor.on("field-props", e => {
+
+        //     let tab = this.sidePanel.tabStrip.tabs.properties;
+        //     tab.enabled = true;
+        //     tab.select();
+
+        //     if (!this.app.UI.areas.panel.pinned) {
+        //         this.app.UI.areas.panel.pinned = true;
+        //     }
+        //     this.showFieldEditor(tab, e.detail.field)
+
+        // }).on("enable", e => {
+
+        //     //this.refreshForm();
+        //     //this.tabStrip.tabs.form.select();
+        // })
+    }
+
+    addLiveEdit(exo) {
+
+        this.liveEditor = new xo.form.factory.LiveEditor(exo).on("schema-change", e => {
+            console.log(e.detail.schema.toString())
+            this.loadSchemaInEditor(e.detail.schema.toString())
         })
+
+        // if (!_.builder.tabStrip.tabs.form.selected) {
+        //     _.builder.refreshForm("form");
+        // }
+
+        // if (_.builder.liveEditor) {
+        //     _.builder.liveEditor.enabled = e.target.value === "1";
+        // }
+        // break;
+
+
+
+        exo.container.parentNode
+
     }
 
     applyJSLogic(x) {
@@ -230,7 +258,7 @@ class StudioRoute extends xo.route {
 
         this.tabStrip.on("tabSelected", e => {
 
-            this.styleSheetHelper.removeCSS();
+            //this.styleSheetHelper.removeCSS();
 
             switch (e.detail.id) {
                 case "form":

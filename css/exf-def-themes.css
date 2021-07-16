@@ -182,9 +182,9 @@
 
 .exf-container.exf-theme-fluent .exf-ctl-cnt > .exf-ctl.exf-rng-output output {
   padding: 0.375rem;
-  border: 1px solid var(--color-shade);
+  border: 1px solid var(--color-shade, #ccc);
   border-radius: 1em;
-  background-color: var(--color-background-variation);
+  background-color: var(--color-background-variation, #efefef);
   margin-left: 1em;
   margin-top: -1.7em;
 }
@@ -221,7 +221,7 @@
   padding: 1rem 2rem;
   text-align: center;
   background-color: var(--color-button);
-  border: 1px var(--color-shade) solid;
+  border: 1px var(--color-shade, #bfcadb) solid;
   color: var(--color-buttontext);
   display: inline-block;
   outline: none;
@@ -434,7 +434,7 @@
 .exf-container.exf-theme-material .exf-ctl-cnt.exf-focus.exf-input > .exf-ctl::before {
   width: 100%;
   background: #c46;
-  background: var(--color-input-shade-focus);
+  background: var(--color-input-shade-focus, #ccc);
   left: 0;
   -webkit-transition: left 0.5s ease, width 0.5s ease;
   transition: left 0.5s ease, width 0.5s ease;
@@ -442,7 +442,7 @@
 
 .exf-container.exf-theme-material .exf-ctl-cnt.exf-input > .exf-ctl, .exf-container.exf-theme-material .exf-ctl-cnt[data-field-type="dropdown"] > .exf-ctl {
   border-bottom: 1px solid #666;
-  border-bottom: 1px solid var(--color-input-shade);
+  border-bottom: 1px solid var(--color-input-shade, #ccc);
   padding-bottom: 0;
 }
 
@@ -482,10 +482,12 @@
 
 .exf-container.exf-theme-material .exf-ctl-cnt .exf-help:before {
   content: "i";
-  background-color: #666;
+  font-weight: 400;
+  background-color: #ddd;
+  line-height: 1rem;
   display: inline-block;
   padding: 0.2rem 0.5rem;
-  color: white;
+  color: #666;
   border-radius: 1rem;
   margin-right: 0.2rem;
 }
@@ -635,7 +637,7 @@
 
 .exf-container.exf-theme-material .exf-btn {
   position: relative;
-  background: var(--color-button);
+  background: var(--color-button, #c46);
   border: 0;
   font-size: 1.1rem;
   color: white;

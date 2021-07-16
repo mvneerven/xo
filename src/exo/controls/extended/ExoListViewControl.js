@@ -64,7 +64,7 @@ class ExoListViewControl extends ExoDivControl {
 
     this.events = new Core.Events(this);
 
-    this.acceptProperties(      
+    this.acceptProperties(
       {
         name: "items",
         type: Object,
@@ -72,7 +72,7 @@ class ExoListViewControl extends ExoDivControl {
           "Object array, url to fetch, callback function, or promise to get the data from",
       },
       { name: "value" },
-      { name: "required", type: Boolean  },
+      { name: "required", type: Boolean },
       {
         name: "view",
         description: "Current view (tiles, grid)",
@@ -470,7 +470,7 @@ class ExoListViewControl extends ExoDivControl {
       } else p.grid = {};
       this.mappedProperties.push(p);
     });
-    
+
 
   }
 
@@ -801,7 +801,7 @@ class ExoListViewControl extends ExoDivControl {
           : item[prop.key];
         if (["number", "string"].includes(typeof data)) {
           content += data;
-        }      
+        }
 
       });
       if (content.toLowerCase().includes(value.toLowerCase()) || !value) {
@@ -886,41 +886,46 @@ class ExoListViewControl extends ExoDivControl {
 
       this._value = data;
 
-      const evData = this.singleSelect ? { item: data } : { items: data };
-      this.events.trigger("change", evData);
+      if (this.rendered) {
 
-      if (this.container) {
-        const ev = new CustomEvent("change", {
-          bubbles: true,
-          cancelable: true,
-          detail: {
-            ...evData
-          },
-        });
-        this.htmlElement.dispatchEvent(ev);
+        const evData = this.singleSelect ? { item: data } : { items: data };
+        this.events.trigger("change", evData);
+
+        if (this.container) {
+          const ev = new CustomEvent("change", {
+            bubbles: true,
+            cancelable: true,
+            detail: {
+              ...evData
+            },
+          });
+          this.htmlElement.dispatchEvent(ev);
+        }
       }
     }
     else {
       return;
     }
 
-    if (this.selectionDependencies.length) {
-      let enable = data.length > 0;
-      this.selectionDependencies.forEach((elm) => {
-        DOM[enable ? "enable" : "disable"](elm);
-      });
-    }
+    if (this.rendered) {
+      if (this.selectionDependencies.length) {
+        let enable = data.length > 0;
+        this.selectionDependencies.forEach((elm) => {
+          DOM[enable ? "enable" : "disable"](elm);
+        });
+      }
 
-    if (this.singleSelect) {
-      this.valid = data != null
-    }
-    else {
-      this.valid =
-        (Array.isArray(data) && data.length >= this.minimum) ||
-        (data && this.minimum <= 1);
-    }
+      if (this.singleSelect) {
+        this.valid = data != null
+      }
+      else {
+        this.valid =
+          (Array.isArray(data) && data.length >= this.minimum) ||
+          (data && this.minimum <= 1);
+      }
 
-    this.renderSelected();
+      this.renderSelected();
+    }
   }
 
   // should return an array of selected ids
@@ -942,7 +947,7 @@ class ExoListViewControl extends ExoDivControl {
     let columnHeaders = "";
     this.mappedProperties.forEach((prop) => {
       const name = prop.name || "";
-      
+
       if (prop.grid) {
         if (!name) console.warn(`No name specified for column "${prop.key}"`);
 
@@ -1005,17 +1010,17 @@ class ExoListViewControl extends ExoDivControl {
     let cellData = prop.dataCallback
       ? prop.dataCallback(prop.key, item[prop.key], item)
       : prop.format ? item[prop.key][prop.format] : item[prop.key]; //item[prop.key]; 
-      
+
     if (this.isElement(cellData)) {
       const el = document.createElement("div");
       el.appendChild(cellData);
       cellData = el.innerHTML;
     }
-   
-    switch(prop.type){
+
+    switch (prop.type) {
       case "img":
         cellData = `<div class="exf-lv-item__cell__content__img" style="background-image: url(${item[prop.key]
-        })"></div>`;
+          })"></div>`;
         break
       case "currency":
         cellData = `${Core.formatValue(cellData, {

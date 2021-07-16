@@ -52,6 +52,8 @@ class ExoFormSchema {
 
         this._schemaData.pages = this._schemaData.pages || [];
 
+        this._origSchema = JSON.parse(JSON.stringify(this._schemaData)) // keep original schema as _schemaData will be modified 
+
         this.refreshStats();
 
     }
@@ -133,6 +135,7 @@ class ExoFormSchema {
                 for (var name in this.mappings.pages) {
                     let page = this.mappings.pages[name];
 
+                    page._name = name;
                     page.fields = page.fields || [];
 
                     if (name === DEFAULT_PAGE_ID) {
@@ -245,6 +248,17 @@ class ExoFormSchema {
             this.applyJsonSchema(f)
         });
 
+    }
+
+    /**
+     * Reads the given schema 
+     * @param {Any} value - the string, JS- or JSON literal to read 
+     * @returns {ExoFormSchema} the parsed schema
+     */
+    static read(value) {
+        let x = new ExoFormSchema()
+        x.parse(value);
+        return x;
     }
 
     applyJsonSchema(field) {
@@ -421,6 +435,54 @@ class ExoFormSchema {
         return matches;
     }
 
+    /**
+     * Updates the schema of a field in the ExoForm Schema in place.
+     * @param {*} name - name of the field to update
+     * @param {*} schema - new field schema
+     */
+    update(control) {
+
+        const name = control.name, schema = control.schema
+
+        if (this._origSchema.mappings) {
+            const props = this._origSchema.mappings.properties;
+
+            Object.keys(props).forEach(p => {
+                const f = props[p];
+                if (p === name) {
+                    for (var n in schema) {
+                        f[n] = schema[n]
+                    }
+                    console.log("Updated mapping property for ", name)
+                }
+            });
+
+        }
+        else {
+
+            this._origSchema.pages.forEach(p => {
+                p.fields.forEach(f => {
+                    if (f.name === name) {
+                        for (var n in schema) {
+                            f[n] = schema[n]
+                        }
+                    }
+                })
+            })
+        }
+        return ExoFormSchema.read(this._origSchema);
+    }
+
+    delete(control) {
+        const name = control.name, schema = control.schema
+        this._origSchema.pages.forEach(p => {
+            p.fields = p.fields.filter(f => {
+                return f.name !== name;
+            })
+        });
+        return ExoFormSchema.read(this._origSchema);
+    }
+
     get fieldCount() {
         return this._totalFieldCount;
 
@@ -464,7 +526,7 @@ class ExoFormSchema {
     }
 
     static async fromOpenApiSchema(openApiSchema) {
-        let ent = new xo.form.entity({dataSchema: openApiSchema});
+        let ent = new xo.form.entity({ dataSchema: openApiSchema });
         let editor = await ent.createEditor({});
         return await ExoFormSchema.fromJsonSchema(editor.schema.model.schemas.data);
     }

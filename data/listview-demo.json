@@ -1,0 +1,95 @@
+{
+    "type": "listview",
+    "name": "lv1",
+    "view": "grid",
+    "pageSize": 2,
+    "views": [
+        "grid",
+        "tiles"
+    ],
+    "mappings": {
+        "tiles": [
+            {
+                "key": "imageUri",
+                "height": "200px"
+            },
+            {
+                "key": "name",
+                "height": "2rem"
+            },
+            {
+                "key": "fileSizeAndType"
+            }
+        ],
+        "grid": [
+            {
+                "key": "name",
+                "width": "8rem",
+                "sort": true,
+                "filterInPlace": true,
+                "searchURL": "http://localhost:4748/#/users/"
+            },
+            {
+                "key": "imageUri",
+                "width": "120px"
+            },
+            {
+                "key": "description",
+                "autoWidth": true,
+                "class": "hide-sm",
+                "sort": true
+            },
+            {
+                "key": "fileSizeAndType"
+            }
+        ]
+    },
+    "properties": [
+        {
+            "name": "Name",
+            "key": "name",
+            "type": "text"
+        },
+        {
+            "name": "Image",
+            "key": "imageUri",
+            "type": "img"
+        },
+        {
+            "name": "Description",
+            "key": "description",
+            "type": "text",
+            "class": "bold-text hide-sm"
+        },
+        {
+            "key": "fileSizeAndType",
+            "caption": "Details"
+        }
+    ],
+    "items": [
+        {
+            "id": "test1",
+            "name": "Test",
+            "imageUri": "https://picsum.photos/400/600?rnd=1",
+            "description": "A test item",
+            "size": 3455677,
+            "type": "image/jpeg"
+        },
+        {
+            "id": "test2",
+            "name": "Lorem ipsum",
+            "imageUri": "https://picsum.photos/400/600?rnd=2",
+            "description": "A longer description",
+            "size": 3455677,
+            "type": "image/gif"
+        },
+        {
+            "id": "test3",
+            "name": "Beauty",
+            "imageUri": "https://picsum.photos/400/600?rnd=3",
+            "description": "... is in the eye of the beholder",
+            "size": 3455677,
+            "type": "image/png"
+        }
+    ]
+}

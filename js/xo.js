@@ -78,7 +78,11 @@ class Form {
         else {
             let cnt = elm.closest(".exf-container");
             if (cnt) {
-                return xo.form.from(cnt.querySelector(".exf-page"));
+                let o = cnt.querySelector(".exf-page");
+                if (o === elm)
+                    return null;
+
+                return xo.form.from(o);
             }
         }
     }

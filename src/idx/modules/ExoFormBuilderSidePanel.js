@@ -107,15 +107,39 @@ class ExoFormBuilderSidePanel {
                 }
                 else {
                     switch (name) {
-                        case "live-edit":
-                            if (!_.builder.tabStrip.tabs.form.selected) {
-                                _.builder.refreshForm("form");
-                            }
+                        // case "live-edit":
+                        //     // if (!_.builder.tabStrip.tabs.form.selected) {
+                        //     //     _.builder.refreshForm("form");
+                        //     // }
 
-                            if (_.builder.liveEditor) {
-                                _.builder.liveEditor.enabled = e.target.value === "1";
-                            }
-                            break;
+                        //     // if (_.builder.liveEditor) {
+                        //     //     _.builder.liveEditor.enabled = e.target.value === "1";
+                        //     // }
+                        //     // break;
+
+                        //     if(e.target.value === "1"){
+                        //         if(!_.builder.liveEditor){
+
+                        //             if(!_.builder.renderer.exo)
+                        //                 throw TypeError("No formm rendered")
+
+                        //             _.builder.liveEditor = new xo.form.factory.LiveEditor(_.builder.renderer.exo).on("schema-change", e=>{
+                        //                 console.log(e.detail.schema.toString())
+                        //                 //_.builder.renderer.schema = e.detail.schema
+
+                        //                 _.builder.loadSchemaInEditor(e.detail.schema.toString())
+
+
+
+                        //             }) 
+                        //         }
+                        //     }
+                        //     else{
+                        //         _.builder.liveEditor.enabled = e.target.value === "1";
+                        //     }
+                        //     break;
+                            
+
                         case "pages":
                             _.builder.renderer.model.pageCount = parseInt(e.target.value);
                             bindMax();
@@ -299,19 +323,19 @@ class ExoFormBuilderSidePanel {
             navigation: "static",
             progress: "auto",
             pages: [
-                {
-                    legend: "Live Editor",
-                    fields: [
-                        {
-                            type: "switch",
-                            name: "live-edit",
-                            id: "live-edit-switch1",
-                            tooltip: "Toggle live editing",
-                            value: false,
-                            caption: "Enable"
-                        }
-                    ]
-                },
+                // {
+                //     legend: "Live Editor",
+                //     fields: [
+                //         {
+                //             type: "switch",
+                //             name: "live-edit",
+                //             id: "live-edit-switch1",
+                //             tooltip: "Toggle live editing",
+                //             value: false,
+                //             caption: "Enable"
+                //         }
+                //     ]
+                // },
                 {
                     legend: "Schema Settings",
                     fields: this.getFields()

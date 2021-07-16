@@ -742,6 +742,8 @@ html.theme-dark:root {
   --color-panel-background: #333;
   --color-disabled: #333;
   --color-readonly: #333;
+  --color-dropdown-bg: #333;
+  --color-dropdown-hover: #444;
   --color-text: #ddd;
   --color-button: #bbb;
   --color-highlighttext: #fff455;

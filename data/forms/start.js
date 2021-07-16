@@ -9,15 +9,10 @@ const schema = {
             },
             buildForm: {
                 jsonSchemaUrl: "",
-                //jsonSchemaRef: "",
                 jsonSchemaText: "",
                 jsonSchema: null,
-
                 openAPISchemaUrl: "",
-                openAPISchemaRef: "",
-
                 formSchema: "",
-
                 baseForm: null
             }
         },
@@ -28,7 +23,20 @@ const schema = {
 
                 case "action":
                     let page = parseInt(context.changed.newValue);
-                    context.exo.addins.navigation.goto(page)
+                    if(page > 0){
+                        context.exo.addins.navigation.goto(page)
+                    }
+                    else{
+                        switch(context.changed.newValue){
+                            case "all":
+                                xo.form.factory.all().then(schema => {
+                                    inst.baseForm = schema;
+                                    context.exo.addins.navigation.goto(7)
+                                });
+                                
+                                break;
+                        }
+                    }
                     break
                 case "template":
                     document.location.hash = "/studio/" + context.changed.newValue;
@@ -116,6 +124,13 @@ const schema = {
                             description: "Load one of the existing templates and take it from there",
                             image: "/img/template.png",
                             id: "2"
+                        },
+                        {
+                            name: "<b>See all ExoForm Controls</b>",
+                            description: "Generate a Schema that uses all available ExoForm controls",
+                            image: "/img/all-controls.png",
+                            id: "all"
+
                         },
                         {
                             name: "<b>Start with a JSON schema</b>",
@@ -238,5 +253,21 @@ const schema = {
                 }
             ]
         },
+
+
+
+        {
+            legend: "Generate Form",
+            intro: "Create schema with all available ExoForm controls",
+            fields: [
+                {
+                    type: "button",
+                    name: "code3",
+                    caption: "Generate Form Schema",
+                    action: "load:instance.buildForm.baseForm"
+                }
+            ]
+        }
+        
     ]
 }

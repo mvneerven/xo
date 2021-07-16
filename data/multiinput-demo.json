@@ -1,0 +1,23 @@
+{
+    "type": "multiinput",
+    "name": "price",
+    "columns": "3rem 7rem",
+    "areas": "'currency price'",
+    "fields": {
+      "currency": {
+        "type": "dropdown",
+        "style": "height: 1.95rem;",
+        "items": [
+          "€",
+          "$",
+          "£"
+        ]
+      },
+      "price": {
+        "type": "number",
+        "step": 0.01,
+        "min": 0,
+        "max": 9999
+      }
+    }
+  }

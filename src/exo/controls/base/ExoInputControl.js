@@ -9,22 +9,18 @@ class ExoInputControl extends ExoElementControl {
 
     constructor(context) {
         super(context);
-        this.htmlElement = document.createElement('input');
-
-        
+        this.htmlElement = document.createElement('input');        
     }
 
     async render() {
         var f = this.context.field;
 
-        if (f.type === "email") {
-            this.createEmailLookup()
-        }
-
         await super.render();
 
-        this.testDataList();
+        if(DOM.inputTypeExists(this.type)) // only set type attribute if valid HTML input type
+            this.htmlElement.setAttribute("type", this.type);
 
+        this.testDataList();
 
         switch (this.context.field.type) {
             case "color":
@@ -38,32 +34,12 @@ class ExoInputControl extends ExoElementControl {
         return this.container
     }
 
-    createEmailLookup() {
-        const _ = this;
+    set type(value){       
+        this._type = value;
+    }
 
-        _.htmlElement.addEventListener("input", e => {
-            //if (e.key !== "Enter") {
-                let data = [];
-
-                ["@gmail.com", "@outlook.com", "@live.nl", "@yahoo.com", "@hotmail.com"].forEach(a => {
-                    data.push(e.target.value.split('@')[0] + a);
-                });
-
-                if (data.length > 1) {
-                    _.createDataList(_.context.field, data);
-                }
-                else {
-                    _.destroyDataList()
-                }
-            //}
-            // else {
-            //     let dl = _.container.querySelector("datalist");
-            //     if (dl) {
-            //         dl.remove();
-            //     }
-            //     e.preventDefault();
-            // }
-        })
+    get type(){
+        return this._type;
     }
 
     destroyDataList() {

@@ -73,6 +73,7 @@
 .ul-tabs > ul > li > div {
   top: 33px;
   bottom: 0;
+  min-height: 200px;
   left: 0;
   width: 100%;
   padding: 0px;
@@ -84,11 +85,15 @@
   border: solid 1px var(--color-shade, #bfcadb);
 }
 
+.ul-tabs > ul > li > div > .exf-cnt.exf-page {
+  margin-top: 1rem !important;
+}
+
 .exf-navigation-tabstrip .exf-nav-tabs {
   margin: 1rem;
 }
 
-.exf-navigation-tabstrip .exf-nav-tabs > ul > li > div .exf-page.exf-ctl-cnt {
+.exf-navigation-tabstrip .exf-nav-tabs > ul > li > div .exf-page.exf-ctl-cnt:not(:first-child) {
   margin-top: 0 !important;
   padding-top: 0;
 }

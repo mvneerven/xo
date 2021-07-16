@@ -50,3 +50,43 @@ __text__ | `*` | *text to find*
 __options__ | `*` | *{root: document, selector: &#x27;*&#x27;, caseSensitive: false}*
 
 ---
+
+### `isPropertyAttr(element, propertyName) ► Boolean`
+
+![modifier: private](images/badges/modifier-private.svg) ![modifier: static](images/badges/modifier-static.svg)
+
+Checks whether the given attribute reflects a native property on the given element
+
+Parameters | Type | Description
+--- | --- | ---
+__element__ | `*` | *the element*
+__propertyName__ | `*` | *the property to test*
+__*return*__ | `Boolean` | *- true if the attribute reflects a native property on the given element*
+
+---
+
+### `showDialog(options) ► Object`
+
+![modifier: private](images/badges/modifier-private.svg) ![modifier: static](images/badges/modifier-static.svg)
+
+Creates and opens a dialog with the given options.
+
+Parameters | Type | Description
+--- | --- | ---
+__options__ | `Object` | **
+__*return*__ | `Object` | *dialog control*
+
+---
+
+### `inputTypeExists(type) ► Boolean`
+
+![modifier: private](images/badges/modifier-private.svg) ![modifier: static](images/badges/modifier-static.svg)
+
+Check whether the given type is a valid HTML input type attribute
+
+Parameters | Type | Description
+--- | --- | ---
+__type__ | `*` | *the type to check*
+__*return*__ | `Boolean` | *true if the given type is a valid HTML input type attribute*
+
+---

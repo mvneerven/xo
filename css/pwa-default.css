@@ -66,6 +66,12 @@ html:not(.pwa-signed-in) .if-signed-out {
   border: 3px solid #4ca1af;
 }
 
+.height-content {
+  height: -webkit-fit-content;
+  height: -moz-fit-content;
+  height: fit-content;
+}
+
 @-webkit-keyframes loading {
   to {
     -webkit-transform: rotate(1turn);
@@ -296,7 +302,7 @@ html:not(.pwa-signed-in) .if-signed-out {
 }
 
 .pwa-notif progress::-webkit-progress-value {
-  background-color: var(--color-shade);
+  background-color: var(--color-shade, #bfcadb);
 }
 
 .theme-dark .pwa-notif .pwa-cnt,

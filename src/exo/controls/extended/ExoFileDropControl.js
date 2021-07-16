@@ -26,7 +26,7 @@ class ExoFileDropControl extends ExoBaseControls.controls.input.type {
     async render() {
 
         //this.field.data = this.field.data || [];
-        
+        this.htmlElement.setAttribute("type", "file")
 
         await super.render();
 

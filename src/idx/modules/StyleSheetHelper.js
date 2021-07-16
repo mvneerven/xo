@@ -1,30 +1,37 @@
 const DOM = window.xo.dom;
 
-class StyleSheetHelper{
+class StyleSheetHelper {
 
-    constructor(builder){
+    constructor(builder) {
         this.builder = builder;
     }
 
     applyCSS() {
         let css = this.parseCSS();
         if (css) {
-            this.cssSheet = document.createElement('style')
-            this.cssSheet.innerHTML = css;
-            document.body.appendChild(this.cssSheet);
+            const ID = 'exf-studio-css';
+            const prevStyleSheet = document.getElementById(ID);
+            if (prevStyleSheet) prevStyleSheet.remove();
+
+            const cssSheet = document.createElement("style");
+            cssSheet.setAttribute("id", ID);
+            cssSheet.innerHTML = css;
+            document.head.appendChild(cssSheet);
         }
     }
 
-    removeCSS() {
-        if (this.cssSheet)
-            this.cssSheet.remove()
-    }
+    // removeCSS() {
+    //     if (this.cssSheet)
+    //         this.cssSheet.remove()
+    // }
 
     parseCSS() {
         try {
             let cssPanel = this.builder.sidePanel.tabStrip.tabs.css.panel;
-            
-            let css = cssPanel.querySelector('[data-type]').data.editor.getValue();
+
+            let css = xo.form.factory.getFieldFromElement(cssPanel.querySelector('[data-field-type="aceeditor"]'))._control.value;
+            //console.log(css)
+
             let rules = DOM.parseCSS(css);
             let ar = [];
             for (var i = 0; i < rules.length; i++) {

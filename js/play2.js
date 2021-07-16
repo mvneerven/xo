@@ -3,151 +3,36 @@ const DOM = xo.dom;
 
 const area = document.querySelector("[data-pwa-area='main']");
 const panel = document.querySelector("[data-pwa-area='panel']");
-const logElm = document.createElement("div");
-logElm.classList.add("log");
-
-let sharedData = xo.form.data("my-form", o => sharedData = o);
-
-
-let btn = document.createElement("button")
-btn.innerText = "Click me";
-//btn.addEventListener("click", e=>{ sharedData.test = "MarcieMarc"})
-
-btn.addEventListener("click", e => {
-
-    //console.log(xo.form.from(document.querySelector("form")))
-
-    sharedData.data.test = "mama"
-
-    return;
-
-    let id = new xo.identity.msal({
-        "mode": "popup",
-        "libUrl": "https://alcdn.msauth.net/browser/2.15.0/js/msal-browser.js",
-        "msal": {
-            "auth": {
-                "clientId": "2dcef537-9d58-47ac-b389-6310b8f94216",
-                "knownAuthorities": [
-                    "https://TwelveBCDevTest.b2clogin.com"
-                ],
-                "authority": "https://TwelveBCDevTest.b2clogin.com/TwelveBCDevTest.onmicrosoft.com/B2C_1_ASF_Dev3/",
-                "redirectUri": "<dynamic>"
-            },
-            "cache": {
-                "cacheLocation": "sessionStorage",
-                "storeAuthStateInCookie": false
-            },
-            "loginRequest": {
-                "prompt": "select_account",
-                "scopes": [
-                    "openid",
-                    "offline_access",
-                    "https://TwelveBCDevTest.onmicrosoft.com/asfbackend/ASFBackend.ReadWrite"
-                ]
-            },
-            "tokenRequest": {
-                "scopes": ["https://TwelveBCDevTest.onmicrosoft.com/asfbackend/ASFBackend.ReadWrite"]
-            }
-        }
-    })
-    id.load().then(x => {
-        x.clientApp.loginPopup().then(x => {
-            console.log(x.account);
-
-            x.getJWT(x.account.username).then(j => {
-                debugger;
-            });
-
-        });
-    })
-
-})
-
-
-panel.appendChild(btn)
-
-panel.appendChild(logElm)
-
-// xo.form.bind(obj=>{
-//     log(obj);
-//     if(obj.state === "ready"){
-//         sharedData = obj.instances.data
-//     }
-// }, true);
 
 const schema = {
-    pages: [
-      {
-        legend: "Page 1",
-        fields: [
-          {
-            name: "btn2",
-            caption: "Test button",
-            type: "button",
-            click: e => {
-                alert("Clicked")
-            }
-          }
-        ]
-      }
-    ]
-  }
-
-  const schema2 = {
-    model: {
-        instance: {
-            data: {
-                selectedNodes: null
-            }
-        }
-    },
+    theme: "fluent",
     pages: [
         {
-            legend: "My Form",
-            intro: "Selected: @instance.data.selectedNodes",
+            legend: "Page 1",
             fields: [
-                {
-                    type: "treeview",
-                    name: "treeview",
-                    bind: "instance.data.selectedNodes",
-                    singleSelect: false,
-                    minimum: 2,
-                    caption: "Treeview",
-                    mappings: {
-                        title: "name",
-                        tooltip: "description",
-                        id: "nr"
-                    },
-                    items: {
-                        nr: 0,
-                        name: "Tree Structure",
-                        children: [
-                            {
-                                nr: 1,
-                                name: "Child with nesting",
-                                children: [
-                                    {
-                                        nr: 2,
-                                        name: "Deep nesting"
-                                    }
-                                ]
-                            },
-                            {
-                                nr: 3,
-                                name: "Second child"
-                            },
-                            {
-                                nr: 4,
-                                name: "Third child"
-                            }
-                        ]
-                    }
 
-                }
             ]
         }
     ]
 }
+
+const context = await xo.form.factory.build();
+Object.keys(context.library).forEach(p => {
+    console.log(p);
+    let props = context.library[p];
+    if (!props.hidden) {
+        schema.pages[0].fields.push({
+            type: p,
+            name: p + "1",
+            caption: Core.toWords(p),
+            ...props.demo || {}
+        })
+    }
+});
+
+//context.lib
+//debugger;
+
 
 xo.form.run(schema, {
     id: "my-form",

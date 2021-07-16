@@ -8,6 +8,17 @@ body {
 
 #xo-play {
 
+
+    .exf-dlg-b {
+        [data-field-type="image"] {
+            
+
+            img {
+                width: 80px;    
+                display: block;
+            }
+        }
+    }
     
     [data-field-type="listview"] {
         &[data-view="tiles"] {

@@ -78,7 +78,7 @@
                 "imageUri": {
                     "page": "prd",
                     "type": "image",
-                    "caption": "Linked Asset"
+                    "caption": "Image"
                 },
                 "price": {
                     "class": "compact",

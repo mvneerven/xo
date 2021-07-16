@@ -1,13 +1,63 @@
-.exf-le-active {
-  background-color: rgba(0, 0, 0, 0.05) !important;
+.exf-le-btn {
+  position: absolute !important;
+  right: 5px !important;
+  z-index: 99;
+  padding: 0.5rem 0.7rem;
+  margin-top: -15px !important;
+}
+
+.exf-le-cnt .exf-page {
+  display: block !important;
+  border: 3px dotted #ccc !important;
+}
+
+.exf-le-cnt .exf-page .exf-ctl-cnt {
+  -webkit-box-shadow: 1px -2px 34px 7px rgba(0, 0, 0, 0);
+          box-shadow: 1px -2px 34px 7px rgba(0, 0, 0, 0);
+}
+
+.exf-le-cnt .ul-tabs > ul > li {
+  display: block;
+}
+
+.exf-le-cnt .ul-tabs > ul > li > input[type="radio"]:not(:checked):not(:disabled) ~ div,
+.exf-le-cnt .ul-tabs > ul > li > input[type="radio"]:checked:not(:disabled) ~ div,
+.exf-le-cnt .ul-tabs > ul > li > input[type="radio"]:checked:disabled ~ div {
+  display: block !important;
+  width: 100%;
+  position: relative !important;
+}
+
+.exf-le-cnt .exf-ctl-cnt.exf-le-active {
+  -webkit-box-shadow: 1px -2px 34px 7px rgba(0, 0, 0, 0.48);
+          box-shadow: 1px -2px 34px 7px rgba(0, 0, 0, 0.48);
+  -webkit-transition: background-color 200ms linear;
+  transition: background-color 200ms linear;
   border-radius: 0.4rem;
   position: relative !important;
 }
 
-.exf-le-active .exf-le-ctx {
+.exf-le-cnt .exf-ctl-cnt.exf-le-active .exf-le-ctx {
   position: absolute !important;
   right: 10px;
   top: -10px;
   display: inline-block;
+}
+
+.exf-le-dlg .exf-page {
+  margin-top: 1rem !important;
+  height: 400px !important;
+}
+
+.exf-le-dlg .exf-page .exf-help-wrapper .exf-help {
+  visibility: hidden;
+}
+
+.exf-le-dlg .exf-page .exf-fld-details:hover .exf-help {
+  visibility: hidden;
+}
+
+.exf-le-dlg .exf-cnt.exf-nav-cnt {
+  display: none;
 }
 /*# sourceMappingURL=exf-liveeditor.css.map */

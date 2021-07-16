@@ -12,8 +12,9 @@ class ExoFormTabStripNavigation extends ExoFormDefaultNavigation {
                 }
 
                 this.exo.schema.pages.forEach(p => {
+                    
                     tsOptions.tabs[`tab${p.index}`] = {
-                        caption: p.legend || "Tab " + p.index,
+                        caption: p.legend || p._name ||  ("Tab " + p.index),
                         class: "height-content"
                     }
                 })

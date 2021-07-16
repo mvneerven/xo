@@ -75,6 +75,7 @@
             > div {
                 top: 33px;
                 bottom: 0;
+                min-height: 200px;
                 left: 0;
                 width: 100%;
                 padding: 0px;
@@ -86,6 +87,10 @@
 
                 position: absolute;
                 border: solid 1px var(--color-shade, #bfcadb);
+
+                > .exf-cnt.exf-page {
+                    margin-top: 1rem!important;
+                }
             }
         }
     }
@@ -96,7 +101,7 @@
         margin: 1rem;
 
         > ul > li > div {
-            .exf-page.exf-ctl-cnt {
+            .exf-page.exf-ctl-cnt:not(:first-child) {
                 margin-top: 0 !important;
                 padding-top: 0;
             }

@@ -13,7 +13,7 @@
 .exf-tags-input > .tag {
   display: inline-block;
   display: inline-block;
-  background-color: rgba(0, 0, 0, 0.05);
+  background-color: rgba(0, 0, 0, 0.15);
   border-radius: 40px;
   padding: 2px 7px;
   margin-right: 5px;

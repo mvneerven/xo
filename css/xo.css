@@ -1157,7 +1157,7 @@ html.theme-light nav.ul-drop ul li > ul {
   right: 0;
   border: 1px solid var(--color-dropdown-border, #ccc);
   text-align: left;
-  background-color: var(--color-dropdown-bg, #eee);
+  background-color: var(--color-dropdown-bg, #ddd);
   -webkit-box-shadow: 0 3px 10px -2px rgba(0, 0, 0, 0.1);
           box-shadow: 0 3px 10px -2px rgba(0, 0, 0, 0.1);
   list-style: none;
@@ -1174,7 +1174,7 @@ html.theme-light nav.ul-drop ul li > ul {
 }
 
 .exf-dropdown-cnt ul.exf-btn-dropdown > li:hover {
-  background-color: var(--color-dropdown-hover);
+  background-color: var(--color-dropdown-hover, #eee);
 }
 
 .exf-dropdown-cnt ul.exf-btn-dropdown > li a {
@@ -1525,7 +1525,7 @@ html.theme-light nav.ul-drop ul li > ul {
 .exf-tags-input > .tag {
   display: inline-block;
   display: inline-block;
-  background-color: rgba(0, 0, 0, 0.05);
+  background-color: rgba(0, 0, 0, 0.15);
   border-radius: 40px;
   padding: 2px 7px;
   margin-right: 5px;
@@ -1632,7 +1632,8 @@ html.theme-light nav.ul-drop ul li > ul {
   padding-bottom: 10px;
   border-bottom: 1px solid var(--color-shade, #bfcadb);
   margin-bottom: 1em;
-  max-height: 500px;
+  min-height: 400px;
+  max-height: 600px;
   overflow-y: auto;
 }
 
@@ -3830,6 +3831,7 @@ html.theme-dark .exf-ctl-cnt.autocomplete .exf-ac-rs .exf-ac-itm.active {
 .ul-tabs > ul > li > div {
   top: 33px;
   bottom: 0;
+  min-height: 200px;
   left: 0;
   width: 100%;
   padding: 0px;
@@ -3841,11 +3843,15 @@ html.theme-dark .exf-ctl-cnt.autocomplete .exf-ac-rs .exf-ac-itm.active {
   border: solid 1px var(--color-shade, #bfcadb);
 }
 
+.ul-tabs > ul > li > div > .exf-cnt.exf-page {
+  margin-top: 1rem !important;
+}
+
 .exf-navigation-tabstrip .exf-nav-tabs {
   margin: 1rem;
 }
 
-.exf-navigation-tabstrip .exf-nav-tabs > ul > li > div .exf-page.exf-ctl-cnt {
+.exf-navigation-tabstrip .exf-nav-tabs > ul > li > div .exf-page.exf-ctl-cnt:not(:first-child) {
   margin-top: 0 !important;
   padding-top: 0;
 }
@@ -3871,16 +3877,66 @@ html.theme-dark .exf-ctl-cnt.autocomplete .exf-ac-rs .exf-ac-itm.active {
   padding: 0.2rem 0.4rem;
 }
 
-.exf-le-active {
-  background-color: rgba(0, 0, 0, 0.05) !important;
+.exf-le-btn {
+  position: absolute !important;
+  right: 5px !important;
+  z-index: 99;
+  padding: 0.5rem 0.7rem;
+  margin-top: -15px !important;
+}
+
+.exf-le-cnt .exf-page {
+  display: block !important;
+  border: 3px dotted #ccc !important;
+}
+
+.exf-le-cnt .exf-page .exf-ctl-cnt {
+  -webkit-box-shadow: 1px -2px 34px 7px rgba(0, 0, 0, 0);
+          box-shadow: 1px -2px 34px 7px rgba(0, 0, 0, 0);
+}
+
+.exf-le-cnt .ul-tabs > ul > li {
+  display: block;
+}
+
+.exf-le-cnt .ul-tabs > ul > li > input[type="radio"]:not(:checked):not(:disabled) ~ div,
+.exf-le-cnt .ul-tabs > ul > li > input[type="radio"]:checked:not(:disabled) ~ div,
+.exf-le-cnt .ul-tabs > ul > li > input[type="radio"]:checked:disabled ~ div {
+  display: block !important;
+  width: 100%;
+  position: relative !important;
+}
+
+.exf-le-cnt .exf-ctl-cnt.exf-le-active {
+  -webkit-box-shadow: 1px -2px 34px 7px rgba(0, 0, 0, 0.48);
+          box-shadow: 1px -2px 34px 7px rgba(0, 0, 0, 0.48);
+  -webkit-transition: background-color 200ms linear;
+  transition: background-color 200ms linear;
   border-radius: 0.4rem;
   position: relative !important;
 }
 
-.exf-le-active .exf-le-ctx {
+.exf-le-cnt .exf-ctl-cnt.exf-le-active .exf-le-ctx {
   position: absolute !important;
   right: 10px;
   top: -10px;
   display: inline-block;
+}
+
+.exf-le-dlg .exf-page {
+  margin-top: 1rem !important;
+  height: 400px !important;
+}
+
+.exf-le-dlg .exf-page .exf-help-wrapper .exf-help {
+  visibility: hidden;
+}
+
+.exf-le-dlg .exf-page .exf-fld-details:hover .exf-help {
+  visibility: hidden;
+}
+
+.exf-le-dlg .exf-cnt.exf-nav-cnt {
+  display: none;
 }
 /*# sourceMappingURL=xo.css.map */

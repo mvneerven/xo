@@ -344,7 +344,10 @@ class ExoForm {
             if (this.container.offsetHeight) {
                 observer = null;
                 console.debug("ExoForm: interactive event");
-                this.events.trigger(ExoFormFactory.events.interactive);
+                if (!this.events.triggeredInteractive) {
+                    this.events.trigger(ExoFormFactory.events.interactive);
+                    this.events.triggeredInteractive = true;
+                }
             }
 
         }, { root: document.documentElement });

@@ -31,43 +31,89 @@ class ExoControlBase {
         this.htmlElement = document.createElement('span');
 
         this.acceptProperties(
-            { name: "type", type: String, required: true, description: "Type of the control. Required" },
-            { name: "name", type: String, required: true, description: "Name of the control. Required and must be unique" },
-            { name: "visible", type: Boolean, description: "Determines control visibility" },
-            { name: "tooltip", type: String, description: "Tooltip to show over the element" },
-            { name: "placeholder", type: String, description: "Placeholder text to show when the field is empty" },
-            { name: "disabled", type: Boolean, description: "Determines whether the control can be interacted with by the user" },
-            { name: "caption", type: String, description: "Caption/label to display" },
-            { name: "useContainer", type: Boolean, description: "Specifies whether the control should render within the standard control container. Default depends on control." },
-            { name: "bind", type: String, description: "Specifies a path to bind the control to one of the instances in the model, if any. Syntax: 'instance.[instancename].[propertyname]'" },
-            { name: "info", type: String, description: "Information text to show" },
-            { name: "invalidmessage", type: String, description: "Message text to show when the control doesn't validate" }
+            { name: "type", type: String, required: true, group: "General", description: "Type of the control. Required" },
+            { name: "name", type: String, required: true, group: "General", description: "Name of the control. Required and must be unique" },
+            { name: "caption", type: String, group: "General", description: "Caption/label to display" },
 
+            { name: "visible", type: Boolean, group: "General", default: true, description: "Determines control visibility" },
+            { name: "disabled", type: Boolean, group: "General", description: "Determines whether the control can be interacted with by the user" },
+            { name: "tooltip", type: String, group: "General", description: "Tooltip to show over the element" },
+            { name: "info", type: String, group: "General", description: "Informational text to show to help the user" },
+            //{ name: "class", type: String, group: "General", description: "Class name(s) to add to container element" },
+            { name: "placeholder", type: String, group: "Data", description: "Placeholder text to show when the field is empty" },
+            { name: "useContainer", type: Boolean, group: "Advanced", default: true, description: "Specifies whether the control should render within the standard control container. Default depends on control." },
+            { name: "bind", type: String, group: "Data", description: "Specifies a path to bind the control to one of the instances in the model, if any. Syntax: 'instance.[instancename].[propertyname]'" },
+            { name: "invalidmessage", type: String, group: "Data", description: "Message text to show when the control doesn't validate" },
+
+            { name: "value", type: String, group: "Data", description: "Value of the control" },
         );
     }
 
+    /**
+     * Gets the control properties as a 
+     */
     get jsonSchema() {
 
-        const schema = {
-            $schema: "http://json-schema.org/draft-04/schema#",
+        const objSchema = {
             type: "object",
             properties: {},
             required: []
+        }
+
+        const schema = {
+            $schema: "http://json-schema.org/draft-04/schema#",
+            ...objSchema
         }
 
         this.acceptedProperties.forEach(p => {
             if (p.required) {
                 schema.required.push(p.name)
             }
+
+            let jsonSchemaType = JSONSchema.getTypeName(p.type);
+
             schema.properties[p.name] = {
-                type: JSONSchema.getTypeName(p.type),
+                type: jsonSchemaType,
                 description: p.description
             }
 
+            if (jsonSchemaType === "object") {
+                if (p.objectSchema && p.objectSchema.properties) {
+                    schema.properties[p.name] = {
+                        ...schema.properties[p.name],
+                        ...p.objectSchema
+                    }
+                }
+            }
         });
 
         return schema;
     }
+
+    get propertyUIMappings() {
+        const mappings = {
+            pages: {},
+            properties: {}
+        }
+
+        this.acceptedProperties.forEach(p => {
+            let group = p.group || "Control"
+
+            mappings.pages[group] = {
+                ...mappings.pages[group] || {}
+            }
+
+            mappings.properties[p.name] = {
+                ...mappings.properties[p.name] || {},
+                page: group,
+                tooltip: p.description
+            }
+
+        });
+
+        return mappings;
+    }
+
 
     _getContainerTemplate(obj) {
 
@@ -153,12 +199,21 @@ class ExoControlBase {
         if (obj.id && obj.id.length === 15) {
             delete obj.id
         }
-        return JSON.parse(JSON.stringify(obj, (key, value) => {
+
+        obj = JSON.parse(JSON.stringify(obj, (key, value) => {
             if (key.startsWith("_"))
                 return undefined;
             return value;
         }, 2))
 
+        this.acceptedProperties.forEach(p => {
+            if (typeof (p.default) !== "undefined") {
+                if (p.default != this[p.name])
+                    obj[p.name] = this[p.name]
+            }
+        })
+
+        return obj;
     }
 
     /**
@@ -172,7 +227,7 @@ class ExoControlBase {
                 context: this.context
             })
 
-            newElm.classList.add("exf-le-active");
+            //newElm.classList.add("exf-le-active");
             let exCntNew = newElm.querySelector("[data-exf]");
             let ctl = exCntNew.data.field._control;
             let fld = this.context.field;
@@ -184,6 +239,7 @@ class ExoControlBase {
 
         helper();
 
+        this.context.field = data;
     }
 
     /**
@@ -273,15 +329,26 @@ class ExoControlBase {
                 }
             }
 
-            let prop = this.acceptedProperties.find(e => {
+            // let prop = this.acceptedProperties.find(e => {
+            //     return e.name === p.name
+            // })
+            let ix = this.acceptedProperties.indexOf(a => {
                 return e.name === p.name
             })
 
-            if (!prop) {
+            if (ix === -1) {
                 this.acceptedProperties.push(p);
                 if (this.context.field[p.name] !== undefined) {
                     this[p.name] = this._processProp(p.name, this.context.field[p.name]);
                 }
+            }
+            else {
+                // merge new (subclassed) accepted properties
+                this.acceptedProperties[ix] = {
+                    ...this.acceptedProperties[ix],
+                    ...p
+                }
+
             }
         });
     }
@@ -355,6 +422,11 @@ class ExoControlBase {
         this.container = DOM.parseHTML(
             this._getContainerTemplate(obj)
         );
+
+        if (this.name && DOM.isPropertyAttr(this.htmlElement, "name"))
+            this.htmlElement.setAttribute("name", this.name);
+
+
         if (!obj.caption || obj.caption.length === 0) {
             this.container.classList.add("exf-lbl-empty");
         }

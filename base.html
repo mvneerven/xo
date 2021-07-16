@@ -23,12 +23,14 @@
         This page illustrates how little is needed to get going with ExoForm...
     </p>
 
+    <section id="form"></section>
+
     <!-- <script type="module" src="https://xo-js.dev/v1.4/xo.js"></script> -->
     <script type="module" src="dist/xo.js"></script>
 
     <script type="module">
-
         const schema = {
+            validation: "inline",
             pages: [{
                 legend: "My Form",
                 intro: "Fill in your details",
@@ -43,12 +45,25 @@
                         type: "email",
                         name: "email",
                         required: true,
+                        autolookup: true,
                         placeholder: "john@doe.com",
                         caption: "Enter email address",
                         prefix: {
                             icon: "ti-email"
                         }
                     },
+                    {
+                        type: "tags",
+                        name: "tags",
+                        caption: "Skills",
+                        value: ["C#", "JavaScript", "Azure", "JSON"]
+                    }
+                    
+                ]
+            },
+            {
+                legend: "Page 2",
+                fields:[
                     {
                         type: "multiline",
                         name: "msg",
@@ -57,17 +72,22 @@
                         autogrow: true
                     },
                     {
+                        type: "url",
+                        name: "url",
+                        caption: "URL",
+                        placeholder: "https://www.yoursite.com",
+                        prefix: {
+                            icon: "ti-link"
+                        }
+
+                    },
+                    {
                         type: "dropdown",
                         name: "favpet",
                         caption: "Favorite pet",
                         items: ["Dog", "Cat", "Bunny", "Hamster", "Bird", "Snake", "Pig"]
-                    },
-                    {
-                        type: "tags",
-                        name: "tags",
-                        caption: "Skills",
-                        value: ["C#", "JavaScript", "Azure", "JSON"]
                     }
+                    
 
                 ]
             }]
@@ -75,14 +95,19 @@
         const frm = await xo.form.run(schema, {
             on: {
                 created: e => {
-                    e.detail.host.liveEditor = new xo.form.factory.LiveEditor(e.detail.host)
+                   window.exo = e.detail.host;
+                   
+                },
+                interactive: e=>{
+                    window.exo.liveEditor = new xo.form.factory.LiveEditor(window.exo).on("schema-change", e => {
+                    })
                 },
                 post: e => {
                     alert(JSON.stringify(e.detail.postData, null, 2))
                 }
             }
         })
-        document.body.appendChild(frm);
+        document.getElementById("form").appendChild(frm);
     </script>
 </body>
 

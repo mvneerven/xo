@@ -1,4 +1,5 @@
 import ExoNumberControl from './ExoNumberControl';
+import DOM from '../../../pwa/DOM';
 
 class ExoRangeControl extends ExoNumberControl {
 
@@ -9,11 +10,14 @@ class ExoRangeControl extends ExoNumberControl {
     constructor(context) {
         super(context);
 
-        this.context.field.type = "range";
+        //this.context.field.type = "range";
+        this.htmlElement = DOM.parseHTML(`<input name="${this.context.field.name}" type="range"/>`);
 
         this.acceptProperties({
             name: "showoutput",
-            type: Boolean
+            type: Boolean,
+            demoValue: true,
+            description: "Shows current value"
         })
     }
 

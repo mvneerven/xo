@@ -11,10 +11,22 @@ class ExoTextControl extends ExoInputControl {
         this.isTextInput = true;
         this.htmlElement = DOM.parseHTML('<input type="text"/>');
 
+        const preSufSchema = { // TODO: implement in 
+            $schema: "http://json-schema.org/draft-04/schema#",
+            properties: {
+                type: {type: "string"},
+                name: {type: "string"},
+                icon: {type: "string"},
+                char: {type: "string", max: 1},
+                font: {type: "string"}
+            }
+        }
+
         this.acceptProperties(
             {
                 name: "prefix",
                 type: Object,
+                objectSchema: preSufSchema,
                 description: `Prefix to display in input (e.g. '$'). 
                 Use object notation to specify icon or font. 
                 - prefix: {char: "◷", font: "Segoe UI"}
@@ -29,6 +41,7 @@ class ExoTextControl extends ExoInputControl {
             {
                 name: "suffix",
                 type: Object,
+                objectSchema: preSufSchema,
                 description: `Suffix to display in input. 
                 Use object notation to specify icon or font. 
                 - prefix: {char: "◷", font: "Segoe UI"}

@@ -1,7 +1,6 @@
 import ExoBaseControls from '../base/ExoBaseControls';
 
 class ExoTaggingControl extends ExoBaseControls.controls.text.type {
-
     max = null;
 
     duplicate = false;
@@ -10,8 +9,6 @@ class ExoTaggingControl extends ExoBaseControls.controls.text.type {
 
     tagClass = 'tag';
 
-    // Initialize elements
-    arr = [];
 
     constructor(context) {
         super(context)
@@ -19,7 +16,7 @@ class ExoTaggingControl extends ExoBaseControls.controls.text.type {
         this.wrapper = document.createElement('div');
         this.input = document.createElement('input');
         this.wrapper.append(this.input);
-        
+
 
         this.acceptProperties(
             {
@@ -35,8 +32,10 @@ class ExoTaggingControl extends ExoBaseControls.controls.text.type {
             {
                 name: "value",
                 description: "Tag names to set (array)",
+                demoValue: ["Good", "Bad", "Ugly"],
                 type: Array
-            })
+            }
+        )
     }
 
     async render() {
@@ -44,85 +43,101 @@ class ExoTaggingControl extends ExoBaseControls.controls.text.type {
         this.wrapper.classList.add(this.wrapperClass);
 
         await super.render();
-        this.htmlElement.parentNode.insertBefore(this.wrapper, this.htmlElement);
+        try {
+            this._rendered = false;
+            this.renderTags();
 
-        this.htmlElement.setAttribute('type', 'hidden');
-        this.htmlElement.addEventListener("change", e => {
-            if (!e.detail) {
-                e.stopImmediatePropagation();
-                e.cancelBubble = true;
-                e.preventDefault();
-                e.stopPropagation();
-                e.returnValue = false;
-            }
+            this.htmlElement.parentNode.insertBefore(this.wrapper, this.htmlElement);
 
-        })
-        
-        this.wrapper.addEventListener('click', function (e) {
-            let inp = me.container.querySelector("input");
-            inp.focus();
-        });
-
-        this.input.addEventListener('keydown', e => {
-            var str = this.input.value.trim();
-            if (!!(~[9, 13, 188].indexOf(e.keyCode))) {
-                e.preventDefault();
-                e.stopPropagation();
-                e.returnValue = false;
-
-                this.input.value = "";
-                if (str !== "") {
-                    this.addTag(str);
+            this.htmlElement.setAttribute('type', 'hidden');
+            this.htmlElement.addEventListener("change", e => {
+                if (!e.detail) {
+                    e.stopImmediatePropagation();
+                    e.cancelBubble = true;
+                    e.preventDefault();
+                    e.stopPropagation();
+                    e.returnValue = false;
                 }
-            }
-            else if (e.key === 'Backspace') {
-                if (this.input.value === "") {
-                    let tags = this.wrapper.querySelectorAll(".tag")
-                    if (tags.length) {
-                        let i = tags.length - 1;
-                        this.deleteTag(tags[i], i);
+
+            })
+
+            this.wrapper.addEventListener('click', function (e) {
+                let inp = me.container.querySelector("input");
+                inp.focus();
+            });
+
+            this.input.addEventListener('keydown', e => {
+                var str = this.input.value.trim();
+                if (!!(~[9, 13, 188].indexOf(e.keyCode))) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    e.returnValue = false;
+
+                    this.input.value = "";
+                    if (str !== "") {
+                        this.addTag(str);
                     }
                 }
-            }
-        });
+                else if (e.key === 'Backspace') {
+                    if (this.input.value === "") {
+                        let tags = this.wrapper.querySelectorAll(".tag")
+                        if (tags.length) {
+                            let i = tags.length - 1;
+                            this.deleteTag(tags[i], i);
+                        }
+                    }
+                }
+            });
 
-        // if (Array.isArray(this.value)) {
-        //     this.value.forEach(t => {
-        //         this.addTag(t);
-        //     })
-        // }
+            this.container.classList.add("exf-std-lbl");
 
-        this.container.classList.add("exf-std-lbl");
+            return this.container;
+        }
+        finally {
+            this._rendered = true
+        }
+    }
 
-        return this.container;
+    renderTags() {
+
+        this.value.forEach(t => {
+
+            // if (this.anyErrors(t)) return;
+
+            this.addTag(t)
+        })
     }
 
     get value() {
-        return this.arr;
+
+        if (!this._value || !Array.isArray(this._value))
+            this._value = []
+
+        return this._value;
     }
 
     set value(data) {
+
         if (!data)
             return;
 
         if (!Array.isArray(data))
             throw TypeError("Data for tags control must be array");
+        
+        this._value = data;
 
         if (this.rendered) {
             this.wrapper.innerHTML = "";
         }
-            
-            data.forEach(t => {
-                this.addTag(t);
-            })
-        //}
     }
 
     // Add Tag
     addTag(tagName) {
-        if (this.anyErrors(tagName)) return;
-
-        this.arr.push(tagName);
+        
+        if (this.rendered) {
+            if (this.anyErrors(tagName)) return;
+            this.value.push(tagName)
+        }
 
         var tag = document.createElement('span');
         tag.className = this.tagClass;
@@ -143,14 +158,17 @@ class ExoTaggingControl extends ExoBaseControls.controls.text.type {
         tag.appendChild(closeIcon);
 
         this.wrapper.insertBefore(tag, this.input);
-        this.triggerChange();
+
+        if (this.rendered)
+            this.triggerChange();
+
         return this;
     }
 
     // Delete Tag
     deleteTag(tag, i) {
         tag.remove();
-        this.arr.splice(i, 1);
+        this.value.splice(i, 1);
         this.triggerChange()
         return this;
     }
@@ -166,11 +184,11 @@ class ExoTaggingControl extends ExoBaseControls.controls.text.type {
 
     // Errors
     anyErrors(string) {
-        if (this.max != null && this.arr.length >= this.max) {
+        if (this.max != null && this.value.length >= this.max) {
             return true;
         }
 
-        if (!this.duplicate && this.arr.indexOf(string) != -1) {
+        if (!this.duplicate && this.value.indexOf(string) != -1) {
             return true;
         }
 
@@ -178,14 +196,14 @@ class ExoTaggingControl extends ExoBaseControls.controls.text.type {
     }
 
 
-    addData(array) {
-        var plugin = this;
+    // addData(array) {
+    //     var plugin = this;
 
-        array.forEach(function (string) {
-            plugin.addTag(string);
-        })
-        return this;
-    }
+    //     array.forEach(function (string) {
+    //         plugin.addTag(string);
+    //     })
+    //     return this;
+    // }
 }
 
 export default ExoTaggingControl;

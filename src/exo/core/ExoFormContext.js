@@ -32,14 +32,14 @@ import ExoFormFactory from './ExoFormFactory';
             let control = name !== "base" ? new field.type(context) : { acceptedProperties: [] };
             field.returns = field.returnValueType ? field.returnValueType.name : "None";
             field.element = control.htmlElement ? control.htmlElement.tagName.toLowerCase() : "none";
-            field.properties = this._getProps(field, field.type, control);
+            this._getProps(field, control);
             field._key = name;
         }
 
         return library;
     }
 
-    _getProps(field, type, control) {
+    _getProps(field, control) {
         let ar = {};
 
         if (field.returnValueType) {
@@ -59,8 +59,13 @@ import ExoFormFactory from './ExoFormFactory';
             description: "Caption text. Normally shown in a label element within the field container"
         }
 
+        let demo = {};
+
         if (control && control.acceptedProperties.length) {
+            
+            
             control.acceptedProperties.forEach(p => {
+                
                 let name = p;
                 if (typeof (p) === "object") {
                     name = p.name
@@ -68,11 +73,17 @@ import ExoFormFactory from './ExoFormFactory';
                 delete p.name;
                 p.type = p.type || String;
                 p.type = p.type.name;
-
                 ar[name] = p;
+
+                if(p.demoValue){
+                    demo[name] = p.demoValue
+                }
             })
         }
-        return ar
+        // return ar
+        field.properties = ar;
+        field.demoSchema = demo;
+
     }
 
     createForm(options) {

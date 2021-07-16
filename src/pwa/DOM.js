@@ -264,7 +264,23 @@ class DOM {
         return node;
     }
 
-    
+    /**
+     * Checks whether the given attribute reflects a native property on the given element
+     * @param {*} element - the element 
+     * @param {*} propertyName - the property to test
+     * @returns {Boolean} - true if the attribute reflects a native property on the given element
+     */
+    static isPropertyAttr(element, propertyName) {
+        const clone = element.cloneNode(false), v = "dummy";
+        clone.setAttribute(propertyName, v);
+        return clone[propertyName] === v;
+    }
+
+    /**
+     * Creates and opens a dialog with the given options.
+     * @param {Object} options 
+     * @returns {Object} dialog control
+     */
     static async showDialog(options) {
 
         let r = await xo.form.run({
@@ -274,7 +290,17 @@ class DOM {
         var f = xo.form.factory.getFieldFromElement(r);
         f._control.show();
         return f._control;
+    }
 
+    /**
+     * Check whether the given type is a valid HTML input type attribute
+     * @param {*} type - the type to check
+     * @returns {Boolean} true if the given type is a valid HTML input type attribute
+     */
+    static inputTypeExists(type) {
+        const ej = document.createElement("input");
+        ej.setAttribute("type", type);
+        return ej.type === type;
     }
 
     static setupGrid() {
