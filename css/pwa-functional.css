@@ -70,5 +70,6 @@ html:not(.pwa-signed-in) .if-signed-out {
   height: -webkit-fit-content;
   height: -moz-fit-content;
   height: fit-content;
+  min-height: 350px;
 }
 /*# sourceMappingURL=pwa-functional.css.map */

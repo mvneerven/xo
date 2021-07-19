@@ -1,10 +1,13 @@
 import ExoFormFactory from '../core/ExoFormFactory';
+import ExoForm from '../core/ExoForm';
 import DOM from '../../pwa/DOM';
 import Core from '../../pwa/Core';
 import xo from '../../../js/xo';
 
 class ExoLiveEditor {
     constructor(exo) {
+        if(!(exo instanceof ExoForm))
+            throw TypeError("No ExoForm passed")
         this.events = new Core.Events(this);
         this.exo = exo;
         this.init()
@@ -34,9 +37,9 @@ class ExoLiveEditor {
                     }
                 },
                 {
-                    caption: `Delete`,
+                    caption: `Remove`,
                     icon: "ti-close",
-                    tooltip: "Delete",
+                    tooltip: "Remove the field",
                     click: e => {
                         this.delete(e)
                     }
@@ -58,6 +61,7 @@ class ExoLiveEditor {
                     icon: "ti-pencil",
                     click: async e => {
                         me.enabled = !me.enabled;
+                        me.btnToggle.classList[me.enabled ? "add": "remove"]("active");
                     }
                 },
             ]
@@ -67,7 +71,7 @@ class ExoLiveEditor {
         this.btnToggle.querySelector("button").classList.remove("exf-btn");
 
         this.exo.container.insertBefore(this.btnToggle, this.exo.form);
-        console.log("Attached live editor to ", this.exo)
+        console.debug("ExoLiveEditor: attached live editor to form ", this.exo.id)
     }
 
     mouseMove(e) {
@@ -79,7 +83,7 @@ class ExoLiveEditor {
             return;
 
         let ctl = this.getControl(e.target);
-        if (ctl) {
+        if (ctl && !(ctl instanceof ExoFormFactory.library.separator.type)) {
 
             if (ctl.context.exo === this.exo) {
                 this.currentElement = ctl.container;
@@ -112,8 +116,6 @@ class ExoLiveEditor {
 
         me.activeElement = e.target.closest(".exf-le-active");
         me.activeControl = me.getControl(me.activeElement);
-
-        console.log(me.activeControl.jsonSchema);
 
         let dlg = await DOM.showDialog({
             class: "exf-le-dlg",

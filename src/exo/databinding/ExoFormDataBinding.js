@@ -193,8 +193,9 @@ class ExoFormDataBinding {
                         value = proxify(instanceName, value, change);
                     }
                     object[name] = value;
-                    if (old !== value)
+                    if (old !== value){
                         change(object, name, old, value);
+                    }
                     return true;
                 }
             });

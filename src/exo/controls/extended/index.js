@@ -46,7 +46,7 @@ class ExoExtendedControls {
         video: { type: ExoVideoControl, note: "An embedded video from YouTube or Vimeo", demo: { player: "youtube", code: "<your code here>" } },
         dropdownbutton: { hidden: true, type: ExoDropDownButton, note: "A dropdown menu button" },
         captcha: { caption: "A wrapper around the Google ReCaptcha Control, both visible and hidden", type: ExoCaptchaControl, note: "Captcha field", demo: { sitekey: "<your key here>" } },
-        starrating: { type: ExoStarRatingControl, hidden: true, note: "An accessible star rating control", demo: { value: 2.5 } },
+        starrating: { type: ExoStarRatingControl, note: "An accessible star rating control", demo: { value: 2.5 } },
         dialog: { type: ExoDialogControl, caption: "Dialog", note: "A simple dialog (modal or modeless)", demo: {demo: true} },
         filedialog: { type: ExoFileDialogControl, caption: "File Dialog", note: "A simple file dialog", demo: {demo: true} },
         info: { type: ExoInfoControl, note: "An info panel", demo: { title: "Info", icon: "ti-info", body: "Your informational text" } },

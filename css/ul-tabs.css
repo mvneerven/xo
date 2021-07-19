@@ -89,6 +89,12 @@
   margin-top: 1rem !important;
 }
 
+.ul-tabs > ul > li > div.height-content {
+  height: -webkit-fit-content;
+  height: -moz-fit-content;
+  height: fit-content;
+}
+
 .exf-navigation-tabstrip .exf-nav-tabs {
   margin: 1rem;
 }

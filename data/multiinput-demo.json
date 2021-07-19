@@ -1,6 +1,7 @@
 {
     "type": "multiinput",
     "name": "price",
+    "tooltip": "This is merely an example of the MultiInput control that shows how to use it. You can use the control to generate any kind of complex control. See documentation for more info.",
     "columns": "3rem 7rem",
     "areas": "'currency price'",
     "fields": {

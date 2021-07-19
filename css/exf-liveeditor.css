@@ -6,6 +6,17 @@
   margin-top: -15px !important;
 }
 
+.exf-le-btn button {
+  outline: none;
+  border: 1px solid #333;
+}
+
+.exf-le-btn.active button {
+  background-color: #e04e18;
+  color: white;
+  border-color: transparent;
+}
+
 .exf-le-cnt .exf-page {
   display: block !important;
   border: 3px dotted #ccc !important;

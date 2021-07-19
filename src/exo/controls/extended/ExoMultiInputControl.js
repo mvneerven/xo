@@ -1,4 +1,4 @@
-import ExoBaseControls from '../base/ExoBaseControls';
+import ExoBaseControls from '../base';
 import ExoFormFactory from '../../core/ExoFormFactory';
 
 class ExoMultiInputControl extends ExoBaseControls.controls.div.type {

@@ -1,5 +1,5 @@
 
-import ExoBaseControls from '../base/ExoBaseControls';
+import ExoBaseControls from '../base';
 
 class ExoEmbedControl extends ExoBaseControls.controls.element.type {
     _width = "";

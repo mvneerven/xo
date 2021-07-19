@@ -12,11 +12,11 @@ class ExoEntityEditor {
         this.events = new Core.Events(this);
     }
 
-    async show() {
+    async show(options) {
         this.editDialog = await DOM.showDialog({
             modal: false,
             title: this.data.id ? `Edit` : `Add`,
-            body: await this.getForm(),
+            body: await this.render(options),
             confirmText: "Save",
             cancelText: "Cancel",
 
@@ -42,7 +42,7 @@ class ExoEntityEditor {
         return this.host.entitySettings._generateEditorFormSchema(this.data);
     }
     
-    async getForm() {
+    async render(options) {
         let schema = this.schema;
 
         const editFrm = await xo.form.run(schema, {
@@ -62,6 +62,7 @@ class ExoEntityEditor {
                     });
                 },
             },
+            ...options || {}
         });
         return editFrm;
     }

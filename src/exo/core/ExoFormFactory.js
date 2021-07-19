@@ -1,7 +1,7 @@
 
-import ExoBaseControls from '../controls/base/ExoBaseControls';
-import ExoExtendedControls from '../controls/extended/ExoExtendedControls';
-import ExoDevControls from '../controls/dev/ExoDevControls';
+import ExoBaseControls from '../controls/base';
+import ExoExtendedControls from '../controls/extended';
+import ExoDevControls from '../controls/dev';
 import ExoChartControls from '../controls/ExoChartControls';
 import ExoFormThemes from '../themes/ExoFormThemes';
 import ExoFormValidation from '../validation/ExoFormValidation';

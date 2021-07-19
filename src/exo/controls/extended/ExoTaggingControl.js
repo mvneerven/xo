@@ -1,4 +1,4 @@
-import ExoBaseControls from '../base/ExoBaseControls';
+import ExoBaseControls from '../base';
 
 class ExoTaggingControl extends ExoBaseControls.controls.text.type {
     max = null;

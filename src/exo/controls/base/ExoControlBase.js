@@ -33,14 +33,14 @@ class ExoControlBase {
         this.acceptProperties(
             { name: "type", type: String, required: true, group: "General", description: "Type of the control. Required" },
             { name: "name", type: String, required: true, group: "General", description: "Name of the control. Required and must be unique" },
-            { name: "caption", type: String, group: "General", description: "Caption/label to display" },
+            { name: "caption", type: String, group: "UI", description: "Caption/label to display" },
 
-            { name: "visible", type: Boolean, group: "General", default: true, description: "Determines control visibility" },
-            { name: "disabled", type: Boolean, group: "General", description: "Determines whether the control can be interacted with by the user" },
-            { name: "tooltip", type: String, group: "General", description: "Tooltip to show over the element" },
-            { name: "info", type: String, group: "General", description: "Informational text to show to help the user" },
+            { name: "hidden", type: Boolean, group: "UI", default: false, description: "Determines control visibility" },
+            { name: "disabled", type: Boolean, group: "UI", description: "Determines whether the control can be interacted with by the user" },
+            { name: "tooltip", type: String, group: "UI", description: "Tooltip to show over the element" },
+            { name: "info", type: String, group: "UI", description: "Informational text to show to help the user" },
             //{ name: "class", type: String, group: "General", description: "Class name(s) to add to container element" },
-            { name: "placeholder", type: String, group: "Data", description: "Placeholder text to show when the field is empty" },
+            { name: "placeholder", type: String, group: "UI", description: "Placeholder text to show when the field is empty" },
             { name: "useContainer", type: Boolean, group: "Advanced", default: true, description: "Specifies whether the control should render within the standard control container. Default depends on control." },
             { name: "bind", type: String, group: "Data", description: "Specifies a path to bind the control to one of the instances in the model, if any. Syntax: 'instance.[instancename].[propertyname]'" },
             { name: "invalidmessage", type: String, group: "Data", description: "Message text to show when the control doesn't validate" },
@@ -50,7 +50,7 @@ class ExoControlBase {
     }
 
     /**
-     * Gets the control properties as a 
+     * Gets the control properties as a JSON schema 
      */
     get jsonSchema() {
 
@@ -84,9 +84,16 @@ class ExoControlBase {
                         ...p.objectSchema
                     }
                 }
+                else {
+                    schema.properties[p.name] = {
+                        ...schema.properties[p.name],
+                        type: "aceeditor",
+                        mode: "json"
+                    }
+                }
             }
         });
-
+        console.log(this, schema);
         return schema;
     }
 
@@ -97,7 +104,8 @@ class ExoControlBase {
         }
 
         this.acceptedProperties.forEach(p => {
-            let group = p.group || "Control"
+
+            let group = p.group || this.getDefaultGroup(p);
 
             mappings.pages[group] = {
                 ...mappings.pages[group] || {}
@@ -109,11 +117,66 @@ class ExoControlBase {
                 tooltip: p.description
             }
 
+            switch (p.name) {
+                case "type":
+                    mappings.properties[p.name] = {
+                        ...mappings.properties[p.name],
+                        disabled: true
+                    }
+                    break;
+                case "bind":
+                    mappings.properties[p.name] = {
+                        ...mappings.properties[p.name] || {},
+                        autocomplete: {
+                            items: e => {
+                                return this.getBindings()
+                            }
+                        }
+                    }
+                    break
+            }
         });
 
         return mappings;
     }
 
+    getBindings() {
+        let ar = [];
+        let m = this.context.exo.dataBinding.model;
+        Object.keys(m.instance).forEach(i => {
+            Object.keys(m.instance[i]).forEach(d => {
+
+                ar.push({
+                    text: `instance.${i}.${d}`
+                })
+            });
+        })
+
+        if (m.schemas) {
+
+            Object.keys(m.schemas).forEach(s => {
+                Object.keys(m.schemas[s].properties).forEach(d => {
+                    const entry = {
+                        text: `instance.${s}.${d}`
+                    };
+
+                    if (ar.indexOf(h => { h.text === entry.text }) === -1) ar.push(entry)
+                })
+            })
+        }
+
+        return ar;
+    }
+
+    getDefaultGroup(property) {
+        switch (property.name) {
+            case "value":
+            case "bind":
+            case "invalidmessage":
+                return "Data";
+        }
+        return "Control";
+    }
 
     _getContainerTemplate(obj) {
 
@@ -293,6 +356,14 @@ class ExoControlBase {
         return this._visible;
     }
 
+    set hidden(value) {
+        this.visible = !value;
+    }
+
+    get hidden() {
+        return !this.visible;
+    }
+
     set disabled(value) {
         this._disabled = value;
 
@@ -329,18 +400,16 @@ class ExoControlBase {
                 }
             }
 
-            // let prop = this.acceptedProperties.find(e => {
-            //     return e.name === p.name
-            // })
             let ix = this.acceptedProperties.indexOf(a => {
                 return e.name === p.name
             })
 
             if (ix === -1) {
                 this.acceptedProperties.push(p);
-                if (this.context.field[p.name] !== undefined) {
-                    this[p.name] = this._processProp(p.name, this.context.field[p.name]);
-                }
+
+                // if (this.context.field[p.name] !== undefined || p.default) {
+                //     this[p.name] = this._processProp(p.name, this.context.field[p.name] || p.default);
+                // }
             }
             else {
                 // merge new (subclassed) accepted properties
@@ -350,6 +419,14 @@ class ExoControlBase {
                 }
 
             }
+
+            if (typeof (this.context.field[p.name]) !== "undefined") {
+                this[p.name] = this._processProp(p.name, this.context.field[p.name]);
+            }
+            else if (typeof (p.default) !== "undefined") {
+                this[p.name] = this._processProp(p.name, p.default);
+            }
+
         });
     }
 

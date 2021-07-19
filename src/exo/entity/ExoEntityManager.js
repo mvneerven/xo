@@ -47,7 +47,7 @@ class ExoEntityManager {
         },
       }
     });
-    return frm; 
+    return frm;
   }
 
   startDelete(ids) {
@@ -102,7 +102,7 @@ class ExoEntityManager {
     this.editor.show()
   }
 
-  async createEditor(data){
+  async createEditor(data) {
     await this.entitySettings.init();
     let ev = new CustomEvent("edit", {
       bubbles: false,
@@ -133,8 +133,8 @@ class ExoEntityManager {
   set busy(value) {
     this.events.trigger(value ? "busy" : "ready");
   }
-  
-  
+
+
 }
 
 export default ExoEntityManager;

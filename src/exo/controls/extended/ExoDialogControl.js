@@ -1,5 +1,5 @@
 
-import ExoBaseControls from '../base/ExoBaseControls';
+import ExoBaseControls from '../base';
 import Core from '../../../pwa/Core';
 import DOM from '../../../pwa/DOM';
 

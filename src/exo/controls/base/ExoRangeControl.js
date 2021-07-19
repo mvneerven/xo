@@ -56,6 +56,10 @@ class ExoRangeControl extends ExoNumberControl {
         if (this.showoutput)
             this._sync()
     }
+
+    get value(){
+        return super.value;
+    }
 }
 
 

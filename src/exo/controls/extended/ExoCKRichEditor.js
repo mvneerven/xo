@@ -1,4 +1,4 @@
-import ExoBaseControls from '../base/ExoBaseControls';
+import ExoBaseControls from '../base';
 import DOM from '../../../pwa/DOM';
 
 class ExoCKRichEditor extends ExoBaseControls.controls.div.type {

@@ -1,4 +1,4 @@
-import ExoBaseControls from '../base/ExoBaseControls';
+import ExoBaseControls from '../base';
 
 class ExoSwitchControl extends ExoBaseControls.controls.range.type {
 

@@ -475,11 +475,35 @@ class ExoFormSchema {
 
     delete(control) {
         const name = control.name, schema = control.schema
-        this._origSchema.pages.forEach(p => {
-            p.fields = p.fields.filter(f => {
-                return f.name !== name;
-            })
-        });
+
+        if (this._origSchema.mappings) {
+            let props = this._origSchema.mappings.properties;
+            let skip = this._origSchema.mappings.skip || [];
+            skip.push(name);
+            this._origSchema.mappings.skip = skip;
+
+            let newMappings = {}
+
+            Object.keys(props).forEach(p => {
+                const f = props[p];
+                if (p === name) {
+                    console.log("Removed mapping of property ", name)
+                }
+                else {
+                    newMappings[p] = props[p];
+                }
+            });
+            this._origSchema.mappings.properties = newMappings
+
+        }
+        else {
+
+            this._origSchema.pages.forEach(p => {
+                p.fields = p.fields.filter(f => {
+                    return f.name !== name;
+                })
+            });
+        }
         return ExoFormSchema.read(this._origSchema);
     }
 

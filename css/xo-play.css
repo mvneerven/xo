@@ -6,6 +6,10 @@ body {
   background: #cecece;
 }
 
+#xo-play .exf-dlg-b .exf-container {
+  min-height: 400px;
+}
+
 #xo-play .exf-dlg-b [data-field-type="image"] img {
   width: 80px;
   display: block;

@@ -240,7 +240,10 @@ class ExoTextControlAutoCompleteExtension {
 
     formatResultItem(i, options, catHandler) {
         let result = i.text;
-        result = result.replace("%search%", options.search);
+        
+        if(options.search){
+            result = result.replace("%search%", options.search);
+        }
 
         result = this.highlight(result, options.search);
 

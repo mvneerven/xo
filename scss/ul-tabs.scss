@@ -91,6 +91,10 @@
                 > .exf-cnt.exf-page {
                     margin-top: 1rem!important;
                 }
+
+                &.height-content{
+                    height: fit-content;
+                }
             }
         }
     }

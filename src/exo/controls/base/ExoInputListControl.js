@@ -4,6 +4,13 @@ import DOM from '../../../pwa/DOM';
 class ExoInputListControl extends ExoListControl {
     constructor(context) {
         super(context);
+
+        this.acceptProperties({
+            name: "items",
+            description: "Array of entries to select from",
+            type: Array
+
+        })
         
         this.htmlElement = DOM.parseHTML(
             

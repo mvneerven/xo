@@ -4,6 +4,20 @@
     z-index: 99;
     padding: 0.5rem 0.7rem;
     margin-top: -15px !important;
+
+    button{
+        outline: none;
+        border: 1px solid #333;
+    }
+
+    &.active{
+        button{
+            background-color: rgb(224, 78, 24);
+            color: white;
+            border-color: transparent;
+
+        }
+    }
 }
 
 .exf-le-cnt {

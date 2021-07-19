@@ -132,6 +132,7 @@ html:not(.pwa-signed-in) .if-signed-out {
   height: -webkit-fit-content;
   height: -moz-fit-content;
   height: fit-content;
+  min-height: 350px;
 }
 
 .non-empty .if-empty {
@@ -206,6 +207,7 @@ html:not(.pwa-signed-in) .if-signed-out {
   height: -webkit-fit-content;
   height: -moz-fit-content;
   height: fit-content;
+  min-height: 350px;
 }
 
 @-webkit-keyframes loading {

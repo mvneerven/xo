@@ -213,7 +213,7 @@ class ExoEntitySettings {
                     break;
 
                 case "jsonschema":
-                    this.jsonSchema = await xo.form.factory.readMetaData(meta.data);
+                    this.jsonSchema = meta.data;// xo.form.factory.readMetaData(meta.data);
                     break;
 
                 default:
