@@ -716,3 +716,8 @@ New actions for [button control](./md/exo/controls/buttoncontrol.md)
 
 See [navigation](./md/exo/navigation.md)
 
+# New in 1.4.88
+
+- New control: ```starrating```
+- Fixed ```range``` control databinding
+

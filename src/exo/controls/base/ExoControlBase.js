@@ -541,12 +541,16 @@ class ExoControlBase {
             this.showHelp(this.info)
         }
 
+        if(this.placeholder){
+            this.htmlElement.setAttribute("placeholder", this.placeholder)
+        }
+
+
 
         this._rendered = true;
 
         if (!this.visible)
             this.visible = this.visible; // force 
-
 
         return this.container
     }
