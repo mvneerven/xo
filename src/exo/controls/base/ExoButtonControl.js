@@ -113,7 +113,7 @@ class ExoButtonControl extends ExoElementControl {
 
     } else if (givenAction) {
 
-      let exo = xo.form.from(e.target.closest("form")); // this.context.exo;
+      let exo = me.context.exo; // xo.form.from(e.target.closest("form")); // this.context.exo;
       let actionParts = givenAction.split(":"); givenAction = actionParts[0];
 
       switch (givenAction) {

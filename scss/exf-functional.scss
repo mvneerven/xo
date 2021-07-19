@@ -421,4 +421,20 @@
             }
         }
     }
+
+    .exf-img-xs {
+        max-width: 500px;
+    }
+    .exf-img-sm {
+        max-width: 800px;
+    }
+    .exf-img-lg {
+        max-width: 1024x;
+    }
+}
+
+.exf-sandbox {
+    border: 0;
+    overflow: visible;
+    
 }

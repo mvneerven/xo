@@ -43,16 +43,22 @@ class ExoFormMaterialTheme extends ExoFormTheme {
         super.apply();
         this.exo.container.classList.add("exf-theme-material");
 
-        this.exo.form.querySelectorAll("[name][placeholder]").forEach(elm => {
-            elm.setAttribute("data-placeholder", elm.getAttribute("placeholder") || "");
+        this.exo.form.querySelectorAll(".exf-ctl-cnt:not(.exf-std-lbl) [name][placeholder]").forEach(elm => {
+            elm.setAttribute("data-mt-placeholder", elm.getAttribute("placeholder") || "");
             elm.removeAttribute("placeholder")
         });
 
         this.exo.form.addEventListener("focusin", e => {
-            e.target.setAttribute("placeholder", e.target.getAttribute("data-placeholder") || "");
+            let mtp = e.target.getAttribute("data-mt-placeholder");
+            if (mtp) {
+                e.target.setAttribute("placeholder", mtp);
+            }
         })
         this.exo.form.addEventListener("focusout", e => {
-            e.target.removeAttribute("placeholder")
+            let mtp = e.target.getAttribute("data-mt-placeholder");
+            if (mtp) {
+                e.target.removeAttribute("placeholder")
+            }
         })
     }
 }
@@ -67,7 +73,7 @@ class ExoFormThemes {
 
     static getType(exo) {
         let type = exo.schema.theme;
-        if (typeof(type) === "undefined" || type === "auto" )
+        if (typeof (type) === "undefined" || type === "auto")
             type = ExoFormThemes.matchTheme(exo);
 
         let theme = ExoFormThemes.types[type];
@@ -75,7 +81,7 @@ class ExoFormThemes {
         return {
             name: type,
             type: theme || ExoFormTheme
-        } 
+        }
     }
 
     static matchTheme(exo) {

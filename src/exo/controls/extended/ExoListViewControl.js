@@ -19,8 +19,8 @@ class ExoListViewControl extends ExoDivControl {
       name: "filter",
       placeholder: "Type to filter...",
       listener: "input",
-      caption: "Filter...",
-      class: "exf-listview-flt",
+      class: "exf-std-lbl exf-listview-flt",
+      caption: "",
       value: ""
     },
     {
@@ -854,27 +854,6 @@ class ExoListViewControl extends ExoDivControl {
   set controls(value) {
     this._controls = value;
   }
-
-  // // updates the array of items to display
-  // async getData(data, options) {
-  //   return new Promise((resolve) => {
-  //     if (Core.isUrl(data)) {
-  //       fetch(data).then((x) => {
-  //         if (x.status === 200) {
-  //           resolve(x.json());
-  //           return;
-  //         }
-  //         throw new Error(`HTTP error ${x.status} - ${data}`);
-  //       });
-  //     } else if (Array.isArray(data)) {
-  //       resolve(data);
-  //     } else if (typeof data === "function") {
-  //       resolve(data(options || {}));
-  //     } else {
-  //       return resolve(Promise.resolve(data));
-  //     }
-  //   });
-  // }
 
   // should set the selected items
   set value(data) {

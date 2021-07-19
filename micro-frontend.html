@@ -9,8 +9,8 @@
     <meta name="color-scheme" content="light">
     <link rel="stylesheet" href="/css/xo.css" />
     <link rel="stylesheet" href="/css/xo-play.css" />
-    
-    
+
+
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/themify-icons/0.1.2/css/themify-icons.css" />
     <link rel="shortcut icon" href="/favicon.ico" />
 
@@ -31,18 +31,55 @@
 
 <body>
     <header data-pwa-area="header"></header>
-    
+
     <main>
         <section data-pwa-area="menu" data-reset="none"></section>
         <section data-pwa-area="main" data-reset="route"></section>
         <section data-pwa-area="panel" data-reset="app"></section>
     </main>
-    
+
     <footer data-pwa-area="footer">&copy; 2021 Marc van Neerven</footer>
 
     <script type="module" src="/dist/xo.js"></script>
 
-    <script type="module" src="/js/play2.js"></script>
+    <script type="module">
+        const Core = xo.core;
+        const DOM = xo.dom;
+
+
+        const schema = {
+            pages: [
+                {
+                    legend: "Contact",
+                    intro: "Contact Details",
+                    fields: [
+                        {
+                            name: "name",
+                            caption: "Your name",
+                            type: "name",
+                        },
+                        
+                        {
+                            name: "message",
+                            caption: "Your message",
+                            type: "multiline",
+                            autogrow: true
+                        }
+                    ]
+                }
+            ]
+        }
+
+        let fr = await xo.form.sandbox(schema, {
+            on: {
+                interactive: e=> {
+                    debugger;
+                }
+            }
+        });
+        document.querySelector("[data-pwa-area='main']").appendChild(fr)
+
+    </script>
 
 </body>
 

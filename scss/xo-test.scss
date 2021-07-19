@@ -79,8 +79,6 @@ body {
     grid-template-rows: 50px 1fr 30px;
 
     color: #333;
-    color: var(--color);
-
     background-color: #efefef;
     margin: 0;
     padding: 0;
@@ -121,7 +119,7 @@ body {
 
         blockquote {
             border-left: 10px solid #c04e58;
-            padding: 0.5rem 1rem;
+            padding: 0.5rem;
         }
     }
 

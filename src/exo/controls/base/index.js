@@ -28,8 +28,9 @@ class ExoBaseControls {
     static controls = {
 
         base: { hidden: true, type: ExoControlBase },
-        element: { type: ExoElementControl, note: "Any raw HTML Element, using the tagName and html properties", demo: { type: "element", tagName: "div", html: `This is <mark>marked</mark> text`, useContainer: false } },
-        image: {type: ExoImageControl, note: "Image element wrapper. Use value for source (src)", demo: {value: "https://source.unsplash.com/random/600x400"}},
+        element: { type: ExoElementControl, note: "Any raw HTML Element, using the tagName and html properties", demo: { type: "element", tagName: "div", html: 
+            /*html*/`<div><h3>Element</h3><p>Lorem ipsum, dolor sit amet...</p></div>`, useContainer: false } },
+        image: {type: ExoImageControl, note: "Image element wrapper. Use value for source (src)", demo: {value: "https://source.unsplash.com/random/600x400", class: "exf-img-sm"}},
         input: { hidden: true, type: ExoInputControl },
         div: { hidden: true, type: ExoDivControl, note: "A standard HTML div container element", demo: { html: `<h3>Title</h3><p>Body text</p>` } },
         form: { hidden: true, type: ExoFormControl },

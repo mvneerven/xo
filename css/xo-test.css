@@ -107,7 +107,6 @@ body {
   -ms-grid-rows: 50px 1fr 30px;
       grid-template-rows: 50px 1fr 30px;
   color: #333;
-  color: var(--color);
   background-color: #efefef;
   margin: 0;
   padding: 0;
@@ -148,7 +147,7 @@ body footer {
 
 #xo-test .md-converted-html blockquote {
   border-left: 10px solid #c04e58;
-  padding: 0.5rem 1rem;
+  padding: 0.5rem;
 }
 
 #xo-test .products-mock > div {

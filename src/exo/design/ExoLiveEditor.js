@@ -245,8 +245,10 @@ class ExoLiveEditor {
             cssSheet.id = `exf-liveedit`;
 
             cssSheet.innerHTML = `@import url(https://cdn.jsdelivr.net/themify-icons/0.1.2/css/themify-icons.css);
-        @import url(https://xo-js.dev/1.4/xo.css)
+           
         `;
+
+        //  @import url(https://xo-js.dev/1.4/xo.css)
 
             document.querySelector("head").appendChild(cssSheet);
         }

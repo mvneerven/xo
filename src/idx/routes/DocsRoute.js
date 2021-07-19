@@ -37,7 +37,7 @@ class DocsRoute extends xo.route {
                 icon: "ti-help",
                 action: options => {
                     document.location.hash = "/docs" + options.path;
-                    setTimeout(()=>{
+                    setTimeout(() => {
 
                         DOM.locateText(options.text, {
                             root: document.querySelector(".md-converted-html")
@@ -76,7 +76,7 @@ class DocsRoute extends xo.route {
         });
     }
 
-    
+
 
     async render(path) {
 
@@ -148,14 +148,22 @@ class DocsRoute extends xo.route {
             if (e.target.tagName === "PRE") {
                 let codeElm = e.target.firstChild;
                 if (codeElm) {
-                    if (codeElm.classList.contains("language-js") || codeElm.classList.contains("language-json")) {
-                        let pre = e.target;
-                        pre.style.position = "relative";
-                        pre.appendChild(btn);
-                    }
+                    //if (codeElm.classList.contains("language-js") || codeElm.classList.contains("language-json")) {
+                    let pre = e.target;
+                    pre.style.position = "relative";
+                    pre.appendChild(btn);
+                    //}
                 }
             }
         });
+
+        elm.addEventListener("mousedown", e => {
+            if (e.target.nodeName === "A" && e.target.href) {
+                if (e.target.getAttribute("href").indexOf("//") > -1) {
+                    e.target.setAttribute("target", "_blank")
+                }
+            }
+        })
 
     }
 

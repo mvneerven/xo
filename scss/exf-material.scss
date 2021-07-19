@@ -68,7 +68,7 @@
             }
 
             &:not(.exf-std-lbl) {
-                > .exf-ctl {
+                 > .exf-ctl {
                     > .exf-label {
                         position: absolute;
                         pointer-events: none;
@@ -147,21 +147,9 @@
                     box-sizing: border-box;
                     background-color: transparent;
 
-                    &::-webkit-input-placeholder {
-                        /* Chrome/Opera/Safari */
+                    ::placeholder {
                         visibility: hidden;
-                    }
-                    &::-moz-placeholder {
-                        /* Firefox 19+ */
-                        visibility: hidden;
-                    }
-                    &:-ms-input-placeholder {
-                        /* IE 10+ */
-                        visibility: hidden;
-                    }
-                    &:-moz-placeholder {
-                        /* Firefox 18- */
-                        visibility: hidden;
+                        color: var(--placeholder-color, #aaa);
                     }
                 }
 
@@ -171,28 +159,15 @@
                 }
             }
 
-            &.exf-focus {
+            &.exf-focus, &.exf-std-lbl {
                 > .exf-ctl {
                     input,
                     textarea {
-                        &::-webkit-input-placeholder {
-                            /* Chrome/Opera/Safari */
+                        &::placeholder {
                             visibility: visible;
+                            opacity: 1;
+                            
                         }
-                        &::-moz-placeholder {
-                            /* Firefox 19+ */
-                            visibility: visible;
-                        }
-                        &:-ms-input-placeholder {
-                            /* IE 10+ */
-                            visibility: visible;
-                        }
-                        &:-moz-placeholder {
-                            /* Firefox 18- */
-                            visibility: visible;
-                        }
-
-                        color: var(--color);
                     }
 
                     > .exf-label {
@@ -227,7 +202,7 @@
                         > .exf-ctl {
                             input,
                             textarea {
-                                color: var(--color);
+                                color: initial;
                             }
 
                             > .exf-label {

@@ -394,6 +394,23 @@
   padding: 0.1rem 0.2rem;
 }
 
+.exf-container .exf-img-xs {
+  max-width: 500px;
+}
+
+.exf-container .exf-img-sm {
+  max-width: 800px;
+}
+
+.exf-container .exf-img-lg {
+  max-width: 1024x;
+}
+
+.exf-sandbox {
+  border: 0;
+  overflow: visible;
+}
+
 nav.ul-drop {
   position: absolute;
   top: 0;
@@ -1771,28 +1788,28 @@ html.theme-dark .exf-ctl-cnt.exf-switch input[type="range"] {
   background-color: transparent;
 }
 
-.exf-container.exf-theme-material .exf-ctl-cnt > .exf-ctl > input::-webkit-input-placeholder,
-.exf-container.exf-theme-material .exf-ctl-cnt > .exf-ctl > textarea::-webkit-input-placeholder {
-  /* Chrome/Opera/Safari */
+.exf-container.exf-theme-material .exf-ctl-cnt > .exf-ctl > input ::-webkit-input-placeholder,
+.exf-container.exf-theme-material .exf-ctl-cnt > .exf-ctl > textarea ::-webkit-input-placeholder {
   visibility: hidden;
+  color: var(--placeholder-color, #aaa);
 }
 
-.exf-container.exf-theme-material .exf-ctl-cnt > .exf-ctl > input::-moz-placeholder,
-.exf-container.exf-theme-material .exf-ctl-cnt > .exf-ctl > textarea::-moz-placeholder {
-  /* Firefox 19+ */
+.exf-container.exf-theme-material .exf-ctl-cnt > .exf-ctl > input :-ms-input-placeholder,
+.exf-container.exf-theme-material .exf-ctl-cnt > .exf-ctl > textarea :-ms-input-placeholder {
   visibility: hidden;
+  color: var(--placeholder-color, #aaa);
 }
 
-.exf-container.exf-theme-material .exf-ctl-cnt > .exf-ctl > input:-ms-input-placeholder,
-.exf-container.exf-theme-material .exf-ctl-cnt > .exf-ctl > textarea:-ms-input-placeholder {
-  /* IE 10+ */
+.exf-container.exf-theme-material .exf-ctl-cnt > .exf-ctl > input ::-ms-input-placeholder,
+.exf-container.exf-theme-material .exf-ctl-cnt > .exf-ctl > textarea ::-ms-input-placeholder {
   visibility: hidden;
+  color: var(--placeholder-color, #aaa);
 }
 
-.exf-container.exf-theme-material .exf-ctl-cnt > .exf-ctl > input:-moz-placeholder,
-.exf-container.exf-theme-material .exf-ctl-cnt > .exf-ctl > textarea:-moz-placeholder {
-  /* Firefox 18- */
+.exf-container.exf-theme-material .exf-ctl-cnt > .exf-ctl > input ::placeholder,
+.exf-container.exf-theme-material .exf-ctl-cnt > .exf-ctl > textarea ::placeholder {
   visibility: hidden;
+  color: var(--placeholder-color, #aaa);
 }
 
 .exf-container.exf-theme-material .exf-ctl-cnt > .exf-ctl input[type="color"] {
@@ -1800,40 +1817,39 @@ html.theme-dark .exf-ctl-cnt.exf-switch input[type="range"] {
   padding: 0;
 }
 
-.exf-container.exf-theme-material .exf-ctl-cnt.exf-focus > .exf-ctl input,
-.exf-container.exf-theme-material .exf-ctl-cnt.exf-focus > .exf-ctl textarea {
-  color: var(--color);
-}
-
 .exf-container.exf-theme-material .exf-ctl-cnt.exf-focus > .exf-ctl input::-webkit-input-placeholder,
-.exf-container.exf-theme-material .exf-ctl-cnt.exf-focus > .exf-ctl textarea::-webkit-input-placeholder {
-  /* Chrome/Opera/Safari */
+.exf-container.exf-theme-material .exf-ctl-cnt.exf-focus > .exf-ctl textarea::-webkit-input-placeholder, .exf-container.exf-theme-material .exf-ctl-cnt.exf-std-lbl > .exf-ctl input::-webkit-input-placeholder,
+.exf-container.exf-theme-material .exf-ctl-cnt.exf-std-lbl > .exf-ctl textarea::-webkit-input-placeholder {
   visibility: visible;
-}
-
-.exf-container.exf-theme-material .exf-ctl-cnt.exf-focus > .exf-ctl input::-moz-placeholder,
-.exf-container.exf-theme-material .exf-ctl-cnt.exf-focus > .exf-ctl textarea::-moz-placeholder {
-  /* Firefox 19+ */
-  visibility: visible;
+  opacity: 1;
 }
 
 .exf-container.exf-theme-material .exf-ctl-cnt.exf-focus > .exf-ctl input:-ms-input-placeholder,
-.exf-container.exf-theme-material .exf-ctl-cnt.exf-focus > .exf-ctl textarea:-ms-input-placeholder {
-  /* IE 10+ */
+.exf-container.exf-theme-material .exf-ctl-cnt.exf-focus > .exf-ctl textarea:-ms-input-placeholder, .exf-container.exf-theme-material .exf-ctl-cnt.exf-std-lbl > .exf-ctl input:-ms-input-placeholder,
+.exf-container.exf-theme-material .exf-ctl-cnt.exf-std-lbl > .exf-ctl textarea:-ms-input-placeholder {
   visibility: visible;
+  opacity: 1;
 }
 
-.exf-container.exf-theme-material .exf-ctl-cnt.exf-focus > .exf-ctl input:-moz-placeholder,
-.exf-container.exf-theme-material .exf-ctl-cnt.exf-focus > .exf-ctl textarea:-moz-placeholder {
-  /* Firefox 18- */
+.exf-container.exf-theme-material .exf-ctl-cnt.exf-focus > .exf-ctl input::-ms-input-placeholder,
+.exf-container.exf-theme-material .exf-ctl-cnt.exf-focus > .exf-ctl textarea::-ms-input-placeholder, .exf-container.exf-theme-material .exf-ctl-cnt.exf-std-lbl > .exf-ctl input::-ms-input-placeholder,
+.exf-container.exf-theme-material .exf-ctl-cnt.exf-std-lbl > .exf-ctl textarea::-ms-input-placeholder {
   visibility: visible;
+  opacity: 1;
 }
 
-.exf-container.exf-theme-material .exf-ctl-cnt.exf-focus > .exf-ctl > .exf-label {
+.exf-container.exf-theme-material .exf-ctl-cnt.exf-focus > .exf-ctl input::placeholder,
+.exf-container.exf-theme-material .exf-ctl-cnt.exf-focus > .exf-ctl textarea::placeholder, .exf-container.exf-theme-material .exf-ctl-cnt.exf-std-lbl > .exf-ctl input::placeholder,
+.exf-container.exf-theme-material .exf-ctl-cnt.exf-std-lbl > .exf-ctl textarea::placeholder {
+  visibility: visible;
+  opacity: 1;
+}
+
+.exf-container.exf-theme-material .exf-ctl-cnt.exf-focus > .exf-ctl > .exf-label, .exf-container.exf-theme-material .exf-ctl-cnt.exf-std-lbl > .exf-ctl > .exf-label {
   color: var(--color-label-active);
 }
 
-.exf-container.exf-theme-material .exf-ctl-cnt.exf-focus.exf-input > .exf-ctl::before {
+.exf-container.exf-theme-material .exf-ctl-cnt.exf-focus.exf-input > .exf-ctl::before, .exf-container.exf-theme-material .exf-ctl-cnt.exf-std-lbl.exf-input > .exf-ctl::before {
   width: 100%;
   background: #c46;
   background: var(--color-input-shade-focus, #ccc);
@@ -1853,7 +1869,7 @@ html.theme-dark .exf-ctl-cnt.exf-switch input[type="range"] {
 .exf-container.exf-theme-material .exf-ctl-cnt.exf-input:not(.exf-std-lbl).exf-focus > .exf-ctl textarea, .exf-container.exf-theme-material .exf-ctl-cnt[data-field-type="dropdown"]:not(.exf-std-lbl).exf-filled > .exf-ctl input,
 .exf-container.exf-theme-material .exf-ctl-cnt[data-field-type="dropdown"]:not(.exf-std-lbl).exf-filled > .exf-ctl textarea, .exf-container.exf-theme-material .exf-ctl-cnt[data-field-type="dropdown"]:not(.exf-std-lbl).exf-focus > .exf-ctl input,
 .exf-container.exf-theme-material .exf-ctl-cnt[data-field-type="dropdown"]:not(.exf-std-lbl).exf-focus > .exf-ctl textarea {
-  color: var(--color);
+  color: initial;
 }
 
 .exf-container.exf-theme-material .exf-ctl-cnt.exf-input:not(.exf-std-lbl).exf-filled > .exf-ctl > .exf-label, .exf-container.exf-theme-material .exf-ctl-cnt.exf-input:not(.exf-std-lbl).exf-focus > .exf-ctl > .exf-label, .exf-container.exf-theme-material .exf-ctl-cnt[data-field-type="dropdown"]:not(.exf-std-lbl).exf-filled > .exf-ctl > .exf-label, .exf-container.exf-theme-material .exf-ctl-cnt[data-field-type="dropdown"]:not(.exf-std-lbl).exf-focus > .exf-ctl > .exf-label {
@@ -2214,26 +2230,6 @@ html.theme-dark .exf-ctl-cnt.exf-switch input[type="range"] {
           box-shadow: 0px 0px;
 }
 
-.exf-container.exf-survey ::-webkit-input-placeholder {
-  /* Chrome/Opera/Safari */
-  color: #ccc;
-}
-
-.exf-container.exf-survey ::-moz-placeholder {
-  /* Firefox 19+ */
-  color: #ccc;
-}
-
-.exf-container.exf-survey :-ms-input-placeholder {
-  /* IE 10+ */
-  color: #ccc;
-}
-
-.exf-container.exf-survey :-moz-placeholder {
-  /* Firefox 18- */
-  color: #ccc;
-}
-
 .exf-ctl-cnt.autocomplete {
   position: relative;
   width: auto;
@@ -2472,47 +2468,11 @@ html.theme-dark .exf-ctl-cnt.autocomplete .exf-ac-rs .exf-ac-itm.active {
           box-shadow: none !important;
 }
 
-.exf-listview .exf-listview-btns .exf-listview-flt .exf-ctl input {
+.exf-listview .exf-listview-btns .exf-listview-flt .exf-ctl input[type=search] {
   width: 8rem !important;
   margin-top: 1rem !important;
   padding: 0.2rem 0.4rem !important;
   line-height: 1.5rem !important;
-}
-
-.exf-listview .exf-listview-btns .exf-listview-flt .exf-ctl input ::-webkit-input-placeholder {
-  opacity: 1 !important;
-}
-
-.exf-listview .exf-listview-btns .exf-listview-flt .exf-ctl input :-ms-input-placeholder {
-  opacity: 1 !important;
-}
-
-.exf-listview .exf-listview-btns .exf-listview-flt .exf-ctl input ::-ms-input-placeholder {
-  opacity: 1 !important;
-}
-
-.exf-listview .exf-listview-btns .exf-listview-flt .exf-ctl input ::placeholder {
-  opacity: 1 !important;
-}
-
-.exf-listview .exf-listview-btns .exf-listview-flt .exf-ctl input::-webkit-input-placeholder {
-  /* Chrome/Opera/Safari */
-  visibility: initial !important;
-}
-
-.exf-listview .exf-listview-btns .exf-listview-flt .exf-ctl input::-moz-placeholder {
-  /* Firefox 19+ */
-  visibility: initial !important;
-}
-
-.exf-listview .exf-listview-btns .exf-listview-flt .exf-ctl input:-ms-input-placeholder {
-  /* IE 10+ */
-  visibility: initial !important;
-}
-
-.exf-listview .exf-listview-btns .exf-listview-flt .exf-ctl input:-moz-placeholder {
-  /* Firefox 18- */
-  visibility: initial !important;
 }
 
 .exf-listview .exf-listview-btns [disabled] {
@@ -2592,10 +2552,6 @@ html.theme-dark .exf-ctl-cnt.autocomplete .exf-ac-rs .exf-ac-itm.active {
 .exf-listview[data-view="grid"] .exf-ctl-cnt:not(.exf-base-text) .exf-ctl {
   -webkit-box-shadow: 2px 2px 6px 0px rgba(0, 0, 0, 0.3);
           box-shadow: 2px 2px 6px 0px rgba(0, 0, 0, 0.3);
-}
-
-.exf-listview[data-view="grid"] .exf-ctl-cnt.exf-base-text {
-  margin-top: 1.7rem;
 }
 
 .exf-listview[data-view="grid"] .exf-listview-list {

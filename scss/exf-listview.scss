@@ -135,10 +135,13 @@
         overflow: hidden !important;
         border: 0 !important;
         box-shadow: none !important;
-        input {
-          ::placeholder {
-            opacity: 1 !important;
-          }
+        input[type=search] {
+          //background-color: var(--color-background, #333);
+          // ::placeholder {
+          //   opacity: 1 !important;
+          //   color: white!important;
+          //   visibility: initial !important;
+          // }
           width: 8rem !important;
           margin-top: 1rem !important;
 
@@ -146,22 +149,22 @@
 
           line-height: 1.5rem !important;
 
-          &::-webkit-input-placeholder {
-            /* Chrome/Opera/Safari */
-            visibility: initial !important;
-          }
-          &::-moz-placeholder {
-            /* Firefox 19+ */
-            visibility: initial !important;
-          }
-          &:-ms-input-placeholder {
-            /* IE 10+ */
-            visibility: initial !important;
-          }
-          &:-moz-placeholder {
-            /* Firefox 18- */
-            visibility: initial !important;
-          }
+          // &::-webkit-input-placeholder {
+          //   /* Chrome/Opera/Safari */
+          //   visibility: initial !important;
+          // }
+          // &::-moz-placeholder {
+          //   /* Firefox 19+ */
+          //   visibility: initial !important;
+          // }
+          // &:-ms-input-placeholder {
+          //   /* IE 10+ */
+          //   visibility: initial !important;
+          // }
+          // &:-moz-placeholder {
+          //   /* Firefox 18- */
+          //   visibility: initial !important;
+          // }
         }
       }
     }
@@ -240,8 +243,8 @@
         }
       }
 
-      &.exf-base-text{
-        margin-top: 1.7rem;
+      &.exf-base-text {
+        //margin-top: 1.7rem;
       }
     }
 

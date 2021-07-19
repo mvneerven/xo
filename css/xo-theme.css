@@ -15,8 +15,9 @@ html.theme-light:root {
   --color-text: #333;
   --color-highlighttext: #fff455;
   --color-highlighttext-bg: #666;
-  --color-button: #343434;
-  --color-button-primary: #cc2e44;
+  --color-button: #31BF65;
+  --color-tile-hover: #ccc;
+  --color-tile-active: var(--color-button, #444);
   --color-button-text: #ffffff;
   --color-label-active: #333;
   --scrollbar-bg: rgba(0, 0, 0, 0.25);
@@ -39,7 +40,6 @@ html.theme-light:root {
   --color-heading: rgb(173, 58, 4);
   --placeholder-color: #ccc;
   --shadow-color: var(--color-primary-lighter);
-  --color-button: var(--color-primary);
   --color-button-text: black;
   --field-box-shadow: #bbb;
   --field-box-shadow-subtle: #ddd;
@@ -86,6 +86,8 @@ html.theme-dark:root {
   --placeholder-color: #777;
   --shadow-color: var(--color-primary-darker);
   --color-button: var(--color-heading);
+  --color-tile-hover: rgba(223, 108, 14, 0.5);
+  --color-tile-active: var(--color-button, rgb(223, 108, 14));
   --color-button-text: white;
   --field-box-shadow: #888;
   --field-box-shadow-subtle: #666;

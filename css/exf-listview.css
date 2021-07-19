@@ -143,47 +143,11 @@
           box-shadow: none !important;
 }
 
-.exf-listview .exf-listview-btns .exf-listview-flt .exf-ctl input {
+.exf-listview .exf-listview-btns .exf-listview-flt .exf-ctl input[type=search] {
   width: 8rem !important;
   margin-top: 1rem !important;
   padding: 0.2rem 0.4rem !important;
   line-height: 1.5rem !important;
-}
-
-.exf-listview .exf-listview-btns .exf-listview-flt .exf-ctl input ::-webkit-input-placeholder {
-  opacity: 1 !important;
-}
-
-.exf-listview .exf-listview-btns .exf-listview-flt .exf-ctl input :-ms-input-placeholder {
-  opacity: 1 !important;
-}
-
-.exf-listview .exf-listview-btns .exf-listview-flt .exf-ctl input ::-ms-input-placeholder {
-  opacity: 1 !important;
-}
-
-.exf-listview .exf-listview-btns .exf-listview-flt .exf-ctl input ::placeholder {
-  opacity: 1 !important;
-}
-
-.exf-listview .exf-listview-btns .exf-listview-flt .exf-ctl input::-webkit-input-placeholder {
-  /* Chrome/Opera/Safari */
-  visibility: initial !important;
-}
-
-.exf-listview .exf-listview-btns .exf-listview-flt .exf-ctl input::-moz-placeholder {
-  /* Firefox 19+ */
-  visibility: initial !important;
-}
-
-.exf-listview .exf-listview-btns .exf-listview-flt .exf-ctl input:-ms-input-placeholder {
-  /* IE 10+ */
-  visibility: initial !important;
-}
-
-.exf-listview .exf-listview-btns .exf-listview-flt .exf-ctl input:-moz-placeholder {
-  /* Firefox 18- */
-  visibility: initial !important;
 }
 
 .exf-listview .exf-listview-btns [disabled] {
@@ -263,10 +227,6 @@
 .exf-listview[data-view="grid"] .exf-ctl-cnt:not(.exf-base-text) .exf-ctl {
   -webkit-box-shadow: 2px 2px 6px 0px rgba(0, 0, 0, 0.3);
           box-shadow: 2px 2px 6px 0px rgba(0, 0, 0, 0.3);
-}
-
-.exf-listview[data-view="grid"] .exf-ctl-cnt.exf-base-text {
-  margin-top: 1.7rem;
 }
 
 .exf-listview[data-view="grid"] .exf-listview-list {

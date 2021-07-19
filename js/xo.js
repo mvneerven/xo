@@ -23,6 +23,8 @@ class Form {
     }
     get run() { return ExoFormFactory.run }
 
+    get sandbox() { return ExoFormFactory.sandbox }
+
     /**
      * Bind all datamodel changes to a function
      * @param {Function} f - the function to call

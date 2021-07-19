@@ -1,8 +1,8 @@
 const schema = {
     model: {
-        logic: e => {
-            if (e.changed.property === "button") {
-                // e.changed.newValue 
+        logic: context => {
+            if (context.changed.property === "button") {
+                // e.changed.newValue
             }
         },
         instance: {
@@ -19,7 +19,8 @@ const schema = {
                     name: "show",
                     caption: "Show dialog! @instance.control.button",
                     action: "dialog:dlg1"
-                }, {
+                },
+                {
                     name: "dlg1",
                     body: "Test dialog!",
                     caption: "Test Field",
