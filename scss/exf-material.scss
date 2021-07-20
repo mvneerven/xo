@@ -47,7 +47,7 @@
 
         .exf-nav-cnt {
             .exf-btn {
-                margin: 0
+                margin: 0;
             }
         }
 
@@ -68,7 +68,7 @@
             }
 
             &:not(.exf-std-lbl) {
-                 > .exf-ctl {
+                > .exf-ctl {
                     > .exf-label {
                         position: absolute;
                         pointer-events: none;
@@ -90,8 +90,6 @@
                 .exf-ctl-group {
                     padding-top: 0;
                 }
-
-                
             }
 
             > .exf-ctl {
@@ -104,8 +102,7 @@
                     left: 50%;
                     bottom: -2px;
                     position: absolute;
-                    background: #aaa;;
-                    background: var(--color-input-shade);
+                    background: var(--color-input-shade, #aaa);
                     transition: left 0.5s ease, width 0.5s ease;
                     z-index: 2;
                 }
@@ -159,14 +156,14 @@
                 }
             }
 
-            &.exf-focus, &.exf-std-lbl {
+            &.exf-focus,
+            &.exf-std-lbl {
                 > .exf-ctl {
                     input,
                     textarea {
                         &::placeholder {
                             visibility: visible;
                             opacity: 1;
-                            
                         }
                     }
 
@@ -174,12 +171,14 @@
                         color: var(--color-label-active);
                     }
                 }
+            }
 
+            &.exf-focus {
                 &.exf-input {
                     > .exf-ctl {
                         &::before {
                             width: 100%;
-                            background: #c46;;
+                            background: #c46;
                             background: var(--color-input-shade-focus, #ccc);
                             left: 0;
                             transition: left 0.5s ease, width 0.5s ease;
@@ -192,7 +191,7 @@
             &[data-field-type="dropdown"] {
                 > .exf-ctl {
                     border-bottom: 1px solid #666;
-                    border-bottom: 1px solid var(--color-input-shade,#ccc);
+                    border-bottom: 1px solid var(--color-input-shade, #ccc);
                     padding-bottom: 0;
                 }
 
@@ -304,7 +303,7 @@
                 > .exf-ctl {
                     > label {
                         position: absolute !important;
-                        top: -.1rem !important;
+                        top: -0.1rem !important;
                         left: 3.5em !important;
                         font-size: 1rem !important;
                     }
@@ -404,16 +403,16 @@
                         flex-wrap: wrap;
                         display: -ms-grid;
                         display: grid;
-                        -ms-grid-columns: (minmax(200px, 1fr))[auto-fill];
+                        -ms-grid-columns: (minmax(200px, 1fr)) [auto-fill];
                         grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
                         grid-auto-rows: minmax(70px, auto);
                         grid-gap: 2em;
 
                         .exf-ilc-cnt {
                             > .exf-caption {
-                                padding: .2rem;
+                                padding: 0.2rem;
                                 width: auto;
-                                
+
                                 > .exf-caption-description {
                                     display: none;
                                 }
@@ -485,7 +484,7 @@
                 outline: none;
             }
 
-            &:disabled{
+            &:disabled {
                 background-color: var(--color-button-disabled);
             }
         }
