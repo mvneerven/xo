@@ -60,7 +60,6 @@ class ExoInputControl extends ExoElementControl {
             }
             else {
                 let query = (q) => {
-                    // TODO: query REST 
                     let url = f.lookup.replace(".json", "_" + q + ".json");
                     url = new URL(url, _.context.baseUrl);
 
