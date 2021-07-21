@@ -70,7 +70,7 @@ class JSONSchema {
                 field.info = props.description;
             }
 
-            if (props && props.enum) {
+            if (props && props.enum && !field.items) {
                 field.type = "dropdown";
                 field.items = props.enum
             }
