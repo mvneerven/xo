@@ -5,6 +5,8 @@
 Let's start by simply showing a complete HTML page that runs an ExoForm schema.
 In this case, we simply use the CDN references for XO (CSS & JS):
 
+*[Test this HTML](/base.html)*
+
 ```html
 <!DOCTYPE html>
 <html lang="en" class="theme-light">
@@ -84,7 +86,7 @@ In this case, we simply use the CDN references for XO (CSS & JS):
 </html>
 ```
 
-*[Test this HTML](/base.html)*
+
 
 
 ## Installing

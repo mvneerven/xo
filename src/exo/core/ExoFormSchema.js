@@ -2,6 +2,7 @@ import Core from '../../pwa/Core';
 import ExoFormFactory from './ExoFormFactory';
 import JSONSchema from './JSONSchema';
 import ExoEntitySettings from '../entity/ExoEntitySettings';
+import ExoControlBase from '../controls/base/ExoControlBase';
 /**
  * Hosts the ExoForm json/js form schema and manages its state
  */
@@ -52,7 +53,7 @@ class ExoFormSchema {
 
         this._schemaData.pages = this._schemaData.pages || [];
 
-        this._origSchema = JSON.parse(JSON.stringify(this._schemaData)) // keep original schema as _schemaData will be modified 
+        this._origSchema = JSON.parse(Core.stringifyJSONWithCircularRefs(this._schemaData)) // keep original schema as _schemaData will be modified 
 
         this.refreshStats();
 
@@ -220,6 +221,23 @@ class ExoFormSchema {
 
     get theme() {
         return this._schemaData.theme;
+    }
+
+    get summary() {
+        let type = this._jsonSchemas ? "meta-driven" : "explicit";
+
+        return `Type: ${type},
+Model: ${this.summarizeModel()}
+Navigation: ${this.navigation || "auto"}
+Validation: ${this.validation || "auto"}
+Pages: ${this.pages.length}        
+        `;
+    }
+
+    summarizeModel() {
+        let m = this.model;
+        let l = m && m.instance ? Object.keys(m.instance).length : 0;
+        return l ? `${l} instance${l === 1 ? '' : 's'}` : 'no'
     }
 
     /**
@@ -409,6 +427,7 @@ class ExoFormSchema {
                 if (matcher(p, { type: "page", pageIndex: pageIndex })) {
                     if (Array.isArray(p.fields)) {
                         p.fields.forEach(f => {
+                            f._index = fieldIndex;
                             f._page = {
                                 index: pageIndex
                             }
@@ -453,7 +472,6 @@ class ExoFormSchema {
                     for (var n in schema) {
                         f[n] = schema[n]
                     }
-                    console.log("Updated mapping property for ", name)
                 }
             });
 
@@ -473,6 +491,77 @@ class ExoFormSchema {
         return ExoFormSchema.read(this._origSchema);
     }
 
+    /**
+     * Moves field to new position and returns the modified form schema
+     * @param {ExoControlBase} ctl - control to move to new position
+     * @param {ExoControlBase} beforeCtl - control to insert the control before - null to append at end
+     * @returns {ExoFormSchema} - modified schema
+     */
+    insertBefore(ctl, beforeCtl) {
+        console.log(`Move ${ctl} to before ${beforeCtl}`);
+
+        if (this._origSchema.mappings) {
+            const props = this._origSchema.mappings.properties;
+            const newProps = {};
+
+            let keep = {
+                name: ctl.context.field.name,
+                props: props[ctl.context.field.name]
+            }
+
+            for (var p in props) {
+                if (beforeCtl && p === beforeCtl.context.field.name) {
+                    newProps[keep.name] = { ...keep.props };
+                    keep = null;
+                }
+                if (!keep || keep.name != p)
+                    newProps[p] = { ...props[p] };
+            };
+
+            if (keep !== null) {
+                newProps[keep.name] = { ...keep.props };
+            }
+            this._origSchema.mappings.properties = newProps;
+        }
+        else {
+            let pages = [], names = {};
+            let keep = {
+                name: ctl.context.field.name,
+                props: ctl.schema
+            }
+
+            const add = (pg, props) => {
+                if (!names[props.name]) {
+                    pg.fields.push(props);
+                    names[props.name] = 1;
+                }
+            }
+
+            this._origSchema.pages.forEach(p => {
+                let pg = { ...p };
+                pg.fields = [];
+
+                p.fields.forEach(f => {
+                    if (beforeCtl && f.name === beforeCtl.context.field.name) {
+                        add(pg, keep.props);
+                        keep = null;
+                    }
+                    if (!keep || keep.name !== f.name) {
+                        add(pg, f)
+                    }
+                })
+                pages.push(pg)
+            })
+
+            if (keep) {
+                pages[pages.length - 1].fields.push(keep.props)
+            }
+            this._origSchema.pages = pages;
+        }
+
+        return ExoFormSchema.read(this._origSchema);
+    }
+
     delete(control) {
         const name = control.name, schema = control.schema
 
@@ -486,10 +575,7 @@ class ExoFormSchema {
 
             Object.keys(props).forEach(p => {
                 const f = props[p];
-                if (p === name) {
-                    console.log("Removed mapping of property ", name)
-                }
-                else {
+                if (p !== name) {
                     newMappings[p] = props[p];
                 }
             });

@@ -43,23 +43,23 @@ class ExoFormMaterialTheme extends ExoFormTheme {
         super.apply();
         this.exo.container.classList.add("exf-theme-material");
 
-        this.exo.form.querySelectorAll(".exf-ctl-cnt:not(.exf-std-lbl) [name][placeholder]").forEach(elm => {
-            elm.setAttribute("data-mt-placeholder", elm.getAttribute("placeholder") || "");
-            elm.removeAttribute("placeholder")
-        });
+        // this.exo.form.querySelectorAll(".exf-ctl-cnt:not(.exf-std-lbl) > .exf-ctl > [name][placeholder]").forEach(elm => {
+        //     elm.setAttribute("data-mt-placeholder", elm.getAttribute("placeholder") || "");
+        //     elm.removeAttribute("placeholder")
+        // });
 
-        this.exo.form.addEventListener("focusin", e => {
-            let mtp = e.target.getAttribute("data-mt-placeholder");
-            if (mtp) {
-                e.target.setAttribute("placeholder", mtp);
-            }
-        })
-        this.exo.form.addEventListener("focusout", e => {
-            let mtp = e.target.getAttribute("data-mt-placeholder");
-            if (mtp) {
-                e.target.removeAttribute("placeholder")
-            }
-        })
+        // this.exo.form.addEventListener("focusin", e => {
+        //     let mtp = e.target.getAttribute("data-mt-placeholder");
+        //     if (mtp) {
+        //         e.target.setAttribute("placeholder", mtp);
+        //     }
+        // })
+        // this.exo.form.addEventListener("focusout", e => {
+        //     let mtp = e.target.getAttribute("data-mt-placeholder");
+        //     if (mtp) {
+        //         e.target.removeAttribute("placeholder")
+        //     }
+        // })
     }
 }
 

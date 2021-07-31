@@ -20,18 +20,10 @@ class StyleSheetHelper {
         }
     }
 
-    // removeCSS() {
-    //     if (this.cssSheet)
-    //         this.cssSheet.remove()
-    // }
-
     parseCSS() {
         try {
             let cssPanel = this.builder.sidePanel.tabStrip.tabs.css.panel;
-
             let css = xo.form.factory.getFieldFromElement(cssPanel.querySelector('[data-field-type="aceeditor"]'))._control.value;
-            //console.log(css)
-
             let rules = DOM.parseCSS(css);
             let ar = [];
             for (var i = 0; i < rules.length; i++) {

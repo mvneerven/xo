@@ -1,0 +1,76 @@
+// #xfb.exf-container {
+//     &.exf-wysiwyg {
+//         > .exf-form  {
+
+//             > .exf-wrapper{
+                
+//                 counter-reset: section; /* Set a counter named 'section', and its initial value is 0. */
+
+//                 > .exf-page {
+
+//                     > .exf-ctl-cnt, > .exf-ctl-group {
+//                         position: relative;
+//                         padding: 30px;
+//                         border: 3px solid transparent;
+            
+//                         &.exb-active {
+//                             border-color: rgba(0, 0, 0, 0.1);
+//                             background-color: rgba(0, 0, 0, 0.03);
+//                         }
+            
+//                         *:not(.exf-ctl-cnt) {
+//                             pointer-events: none;
+//                         }
+            
+//                         &::before {
+//                             display: inline-block;
+//                             background-color: #f44;
+//                             color: white;
+//                             border-radius: 12px;
+//                             padding: 2px 5px;
+//                             position: absolute;
+//                             right: 5px;
+//                             top: 0px;
+//                             font-size: 10px;
+//                             opacity: 0.5;
+//                             counter-increment: section;
+//                             content: counter(section);
+//                         }
+            
+//                         &:hover {
+//                             background-color: rgba(0, 0, 0, 0.02);
+            
+//                             cursor: move; /* fallback if grab cursor is unsupported */
+//                             cursor: grab;
+//                             cursor: -moz-grab;
+//                             cursor: -webkit-grab;
+//                         }
+//                     }
+                    
+//                 }
+//             }
+
+            
+//         }
+
+
+
+        
+
+//         .exf-page {
+//             display: block;
+//         }
+
+//         .drag-sort-in-process {
+//             .exf-ctl-cnt {
+//                 transition: all 0.2s;
+//             }
+
+//             .exf-ctl-cnt.drag-sort-active {
+//                 cursor: move;
+//                 box-shadow: 0 3px 10px -2px rgba(0, 0, 0, 0.3);
+//                 transition: all 0.2s;
+//             }
+//         }
+//     }
+// }

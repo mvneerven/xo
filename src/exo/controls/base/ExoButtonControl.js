@@ -1,6 +1,6 @@
 import ExoElementControl from "./ExoElementControl";
 import DOM from "../../../pwa/DOM";
-import Core from "../../../pwa/Core";
+import ExoFormFactory from "../../core/ExoFormFactory";
 
 class ExoButtonControl extends ExoElementControl {
   constructor(context) {
@@ -11,8 +11,6 @@ class ExoButtonControl extends ExoElementControl {
     this.iconHtml = "";
 
     this.htmlElement = DOM.parseHTML('<button class="exf-btn" />');
-
-    
 
     this.acceptProperties(
       {
@@ -35,19 +33,25 @@ class ExoButtonControl extends ExoElementControl {
       {
         name: "dropdown",
         type: Object | Array,
-        description: "A list of items that shows on hover",
+        description: "A list of items that shows on hover, or an object with an items array and optionally 'direction' and 'dropEvent' properties",
       },
 
-      {
-        name: "direction",
-        type: "string",
-        description: "Optional direction form dropdown. Options: 'down' (default), 'left'"
-      },
+      // {
+      //   name: "direction",
+      //   type: "string",
+      //   description: "Optional direction form dropdown. Options: 'down' (default), 'left'"
+      // },
 
       {
         name: "class",
         type: String,
         description: "Class(es) to add on button element",
+      },
+
+      {
+        name: "outerClass",
+        type: String,
+        description: "Class(es) to add on container element",
       }
     );
   }
@@ -58,14 +62,14 @@ class ExoButtonControl extends ExoElementControl {
 
     if (this.icon) {
       this.htmlElement.appendChild(
-        DOM.parseHTML('<span class="' + this.icon + '"></span>')
+        DOM.parseHTML(/*html*/`<span class="${this.icon}"></span>`)
       );
       this.htmlElement.appendChild(document.createTextNode(" "));
     }
 
     if (this.caption) {
       this.htmlElement.appendChild(
-        DOM.parseHTML(`<span class="exf-caption">${this.caption}</span>`)
+        DOM.parseHTML(/*html*/`<span class="exf-caption">${this.caption}</span>`)
       );
     } else {
       this.htmlElement.classList.add("exf-btn-compact");
@@ -74,19 +78,14 @@ class ExoButtonControl extends ExoElementControl {
     this.htmlElement.addEventListener("click", this.handleClick.bind(this));
 
     if (this.dropdown) {
-      const btnClone = this.htmlElement.cloneNode(true);
-      this.htmlElement = DOM.parseHTML(`<div class="exf-dropdown-cnt drop-dir-${this.direction || "down"}"></div>`);
-      this.htmlElement.appendChild(btnClone);
-      btnClone.addEventListener("click", e=>{
-          e.preventDefault();
-      })
-      this.htmlElement.appendChild(await this.renderDropdown(await this.getData(this.dropdown)));
-      this.container.textContent = "";
-      this.container.appendChild(this.htmlElement);
+      this.dropdownExtension = await ExoFormFactory.createDropDown(this);
     }
 
     this.container.classList.add("exf-btn-cnt");
-    //this.htmlElement.classList.add("exf-btn");
+
+    if (this._outerClass)
+      this.outerClass = this._outerClass;
+
     return this.container;
   }
 
@@ -138,10 +137,10 @@ class ExoButtonControl extends ExoElementControl {
           fld1._control.container.style.display = 'initial';
           break;
         case "toggle":
-            let fld2 = exo.get(actionParts[1]);
-            fld2._control.container.style.display = fld2._control.container.style.display === 'none' ? 'initial' : 'none';
-            break;
-            
+          let fld2 = exo.get(actionParts[1]);
+          fld2._control.container.style.display = fld2._control.container.style.display === 'none' ? 'initial' : 'none';
+          break;
+
         case "dialog":
 
           let dname = actionParts[1];
@@ -181,96 +180,14 @@ class ExoButtonControl extends ExoElementControl {
     return _class;
   }
 
-  async renderDropdown(items) {
-
-    const listElement = DOM.parseHTML(`<ul class="exf-btn-dropdown ${this.direction || "left"}" />`);
-    for (const item of items) {
-      listElement.appendChild(await this.getListItem(item));
-    }
-
-    this.htmlElement.addEventListener("mouseenter", e => {
-      const ev = new CustomEvent("beforeDropdown",
-        {
-          bubbles: true,
-          cancelable: true,
-          detail: {
-            dropdownItems: e.target.querySelectorAll(".exf-btn-dropdown li"),
-            buttonControl: this
-          }
-        });
-
-      this.htmlElement.dispatchEvent(ev);
-
-    });
-    return listElement;
-
+  set outerClass(value) {
+    this._outerClass = value;
+    if (this.rendered)
+      this.container.classList.add(...this._outerClass.split(" "));
   }
 
-  async getListItem(item) {
-    let template = document.createElement("li");
-    let icon = `<span class="${item.icon}"></span>`;
-
-    if (typeof (item.click) === "function") {
-      item.type = "click";
-    }
-    item.type = item.action ? "action" : item.type || "action";
-    let caption = item.caption || item.name || "";
-    let cls = item.class || "";
-
-    switch (item.type) {
-
-      case "click":
-        template = DOM.parseHTML(
-          `<li class="${cls}" title="${item.tooltip || ""}"><a>${icon} ${caption}</a></li>`,
-        );
-        template.addEventListener("click", item.click)
-        break;
-
-      case "action":
-        template = DOM.parseHTML(
-          `<li class="${cls}" data-action="${item.action}" title="${item.tooltip || ""}"><a>${icon} ${caption}</a></li>`,
-        );
-        template.addEventListener("click", this.handleClick.bind(this))
-        break;
-
-      case "event":
-        template = DOM.parseHTML(
-          `<li class="${cls}" data-action="${item.title}" title="${item.tooltip || ""}"><a>${icon} ${caption}</a></li>`,
-        );
-        break;
-      case "field":
-        template = DOM.parseHTML(
-          `<li class="${cls}" title="${item.tooltip}}"><a>${icon} ${caption}</a></li>`,
-        );
-        template.querySelector("a").appendChild(await xo.form.run(item.field));
-        break;
-      default:
-        template = DOM.parseHTML(
-          `<li class="${cls}" title="${item.tooltip}"><a href="${item.url}">${icon} ${caption}</a></li>`,
-        );
-        break;
-    }
-    return template;
-  }
-
-  async getData(data, options) {
-    return new Promise((resolve) => {
-      if (Core.isUrl(data)) {
-        fetch(data).then((x) => {
-          if (x.status === 200) {
-            resolve(x.json());
-            return;
-          }
-          throw new Error(`HTTP error ${x.status} - ${data}`);
-        });
-      } else if (Array.isArray(data)) {
-        resolve(data);
-      } else if (typeof data === "function") {
-        resolve(data(options || {}));
-      } else {
-        return resolve(Promise.resolve(data));
-      }
-    });
+  get outerClass() {
+    return _outerClass;
   }
 
   set icon(value) {

@@ -411,6 +411,37 @@
   overflow: visible;
 }
 
+[data-field-type="image"] img {
+  min-height: 50px;
+}
+
+[data-field-type="image"] img:before {
+  content: " ";
+  display: block;
+  position: absolute;
+  top: -10px;
+  left: 0;
+  height: calc(100% + 10px);
+  width: 100%;
+  background-color: #e6e6e6;
+  border: 2px dotted #c8c8c8;
+  border-radius: 5px;
+}
+
+[data-field-type="image"] img:after {
+  content: "\e633";
+  display: block;
+  font-size: 16px;
+  font-style: normal;
+  font-family: themify;
+  color: #646464;
+  position: absolute;
+  top: 5px;
+  left: 0;
+  width: 100%;
+  text-align: center;
+}
+
 nav.ul-drop {
   position: absolute;
   top: 0;
@@ -599,13 +630,12 @@ html.theme-light nav.ul-drop ul li > ul {
 }
 
 .exf-dropdown-cnt ul.exf-btn-dropdown > li a {
-  display: block;
+  display: inline-block;
   padding: 0.5rem 0.75rem;
   color: var(--color-dropdown-text);
   font-size: 0.9em;
   letter-spacing: 1px;
   text-decoration: none;
-  text-transform: uppercase;
 }
 
 .exf-dropdown-cnt ul.exf-btn-dropdown.right {
@@ -1787,27 +1817,27 @@ html.theme-dark .exf-ctl-cnt.exf-switch input[type="range"] {
   background-color: transparent;
 }
 
-.exf-container.exf-theme-material .exf-ctl-cnt > .exf-ctl > input ::-webkit-input-placeholder,
-.exf-container.exf-theme-material .exf-ctl-cnt > .exf-ctl > textarea ::-webkit-input-placeholder {
-  visibility: hidden;
+.exf-container.exf-theme-material .exf-ctl-cnt > .exf-ctl > input::-webkit-input-placeholder,
+.exf-container.exf-theme-material .exf-ctl-cnt > .exf-ctl > textarea::-webkit-input-placeholder {
+  opacity: 0;
   color: var(--placeholder-color, #aaa);
 }
 
-.exf-container.exf-theme-material .exf-ctl-cnt > .exf-ctl > input :-ms-input-placeholder,
-.exf-container.exf-theme-material .exf-ctl-cnt > .exf-ctl > textarea :-ms-input-placeholder {
-  visibility: hidden;
+.exf-container.exf-theme-material .exf-ctl-cnt > .exf-ctl > input:-ms-input-placeholder,
+.exf-container.exf-theme-material .exf-ctl-cnt > .exf-ctl > textarea:-ms-input-placeholder {
+  opacity: 0;
   color: var(--placeholder-color, #aaa);
 }
 
-.exf-container.exf-theme-material .exf-ctl-cnt > .exf-ctl > input ::-ms-input-placeholder,
-.exf-container.exf-theme-material .exf-ctl-cnt > .exf-ctl > textarea ::-ms-input-placeholder {
-  visibility: hidden;
+.exf-container.exf-theme-material .exf-ctl-cnt > .exf-ctl > input::-ms-input-placeholder,
+.exf-container.exf-theme-material .exf-ctl-cnt > .exf-ctl > textarea::-ms-input-placeholder {
+  opacity: 0;
   color: var(--placeholder-color, #aaa);
 }
 
-.exf-container.exf-theme-material .exf-ctl-cnt > .exf-ctl > input ::placeholder,
-.exf-container.exf-theme-material .exf-ctl-cnt > .exf-ctl > textarea ::placeholder {
-  visibility: hidden;
+.exf-container.exf-theme-material .exf-ctl-cnt > .exf-ctl > input::placeholder,
+.exf-container.exf-theme-material .exf-ctl-cnt > .exf-ctl > textarea::placeholder {
+  opacity: 0;
   color: var(--placeholder-color, #aaa);
 }
 
@@ -1819,28 +1849,24 @@ html.theme-dark .exf-ctl-cnt.exf-switch input[type="range"] {
 .exf-container.exf-theme-material .exf-ctl-cnt.exf-focus > .exf-ctl input::-webkit-input-placeholder,
 .exf-container.exf-theme-material .exf-ctl-cnt.exf-focus > .exf-ctl textarea::-webkit-input-placeholder, .exf-container.exf-theme-material .exf-ctl-cnt.exf-std-lbl > .exf-ctl input::-webkit-input-placeholder,
 .exf-container.exf-theme-material .exf-ctl-cnt.exf-std-lbl > .exf-ctl textarea::-webkit-input-placeholder {
-  visibility: visible;
   opacity: 1;
 }
 
 .exf-container.exf-theme-material .exf-ctl-cnt.exf-focus > .exf-ctl input:-ms-input-placeholder,
 .exf-container.exf-theme-material .exf-ctl-cnt.exf-focus > .exf-ctl textarea:-ms-input-placeholder, .exf-container.exf-theme-material .exf-ctl-cnt.exf-std-lbl > .exf-ctl input:-ms-input-placeholder,
 .exf-container.exf-theme-material .exf-ctl-cnt.exf-std-lbl > .exf-ctl textarea:-ms-input-placeholder {
-  visibility: visible;
   opacity: 1;
 }
 
 .exf-container.exf-theme-material .exf-ctl-cnt.exf-focus > .exf-ctl input::-ms-input-placeholder,
 .exf-container.exf-theme-material .exf-ctl-cnt.exf-focus > .exf-ctl textarea::-ms-input-placeholder, .exf-container.exf-theme-material .exf-ctl-cnt.exf-std-lbl > .exf-ctl input::-ms-input-placeholder,
 .exf-container.exf-theme-material .exf-ctl-cnt.exf-std-lbl > .exf-ctl textarea::-ms-input-placeholder {
-  visibility: visible;
   opacity: 1;
 }
 
 .exf-container.exf-theme-material .exf-ctl-cnt.exf-focus > .exf-ctl input::placeholder,
 .exf-container.exf-theme-material .exf-ctl-cnt.exf-focus > .exf-ctl textarea::placeholder, .exf-container.exf-theme-material .exf-ctl-cnt.exf-std-lbl > .exf-ctl input::placeholder,
 .exf-container.exf-theme-material .exf-ctl-cnt.exf-std-lbl > .exf-ctl textarea::placeholder {
-  visibility: visible;
   opacity: 1;
 }
 
@@ -2467,7 +2493,7 @@ html.theme-dark .exf-ctl-cnt.autocomplete .exf-ac-rs .exf-ac-itm.active {
           box-shadow: none !important;
 }
 
-.exf-listview .exf-listview-btns .exf-listview-flt .exf-ctl input[type=search] {
+.exf-listview .exf-listview-btns .exf-listview-flt .exf-ctl input[type="search"] {
   width: 8rem !important;
   margin-top: 1rem !important;
   padding: 0.2rem 0.4rem !important;
@@ -3261,12 +3287,33 @@ html.theme-dark .exf-ctl-cnt.autocomplete .exf-ac-rs .exf-ac-itm.active {
 
 .exf-le-cnt .exf-page {
   display: block !important;
-  border: 3px dotted #ccc !important;
+  border: 3px dotted #ddd !important;
 }
 
-.exf-le-cnt .exf-page .exf-ctl-cnt {
-  -webkit-box-shadow: 1px -2px 34px 7px rgba(0, 0, 0, 0);
-          box-shadow: 1px -2px 34px 7px rgba(0, 0, 0, 0);
+.exf-le-cnt .exf-page .exf-le-cnt {
+  min-height: 3rem;
+  position: relative;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  padding: .5rem;
+  border-radius: .5rem;
+  border: 3px dotted #999;
+}
+
+.exf-le-cnt .exf-page .exf-le-cnt:hover {
+  border-color: #e04e18;
+}
+
+.exf-le-cnt .exf-page .exf-le-cnt:hover .exf-le-fd {
+  display: initial;
+}
+
+.exf-le-cnt .exf-page .exf-le-fd {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  display: none;
+  margin: 0;
 }
 
 .exf-le-cnt .ul-tabs > ul > li {
@@ -3279,22 +3326,6 @@ html.theme-dark .exf-ctl-cnt.autocomplete .exf-ac-rs .exf-ac-itm.active {
   display: block !important;
   width: 100%;
   position: relative !important;
-}
-
-.exf-le-cnt .exf-ctl-cnt.exf-le-active {
-  -webkit-box-shadow: 1px -2px 34px 7px rgba(0, 0, 0, 0.48);
-          box-shadow: 1px -2px 34px 7px rgba(0, 0, 0, 0.48);
-  -webkit-transition: background-color 200ms linear;
-  transition: background-color 200ms linear;
-  border-radius: 0.4rem;
-  position: relative !important;
-}
-
-.exf-le-cnt .exf-ctl-cnt.exf-le-active .exf-le-ctx {
-  position: absolute !important;
-  right: 10px;
-  top: -10px;
-  display: inline-block;
 }
 
 .exf-le-dlg .exf-page {

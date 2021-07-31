@@ -409,4 +409,35 @@
   border: 0;
   overflow: visible;
 }
+
+[data-field-type="image"] img {
+  min-height: 50px;
+}
+
+[data-field-type="image"] img:before {
+  content: " ";
+  display: block;
+  position: absolute;
+  top: -10px;
+  left: 0;
+  height: calc(100% + 10px);
+  width: 100%;
+  background-color: #e6e6e6;
+  border: 2px dotted #c8c8c8;
+  border-radius: 5px;
+}
+
+[data-field-type="image"] img:after {
+  content: "\e633";
+  display: block;
+  font-size: 16px;
+  font-style: normal;
+  font-family: themify;
+  color: #646464;
+  position: absolute;
+  top: 5px;
+  left: 0;
+  width: 100%;
+  text-align: center;
+}
 /*# sourceMappingURL=exf-functional.css.map */

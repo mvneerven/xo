@@ -12,6 +12,7 @@ import ExoFormContext from './ExoFormContext';
 import ExoLiveEditor from '../design/ExoLiveEditor';
 import Core from '../../pwa/Core';
 import ExoFormSchema from './ExoFormSchema';
+import ExoDropdownExtension from '../controls/base/ExoDropdownExtension';
 
 /**
  * Factory class for ExoForm - Used to create an ExoForm context.
@@ -246,8 +247,6 @@ class ExoFormFactory {
                         ...props.demo || {},
                         ...props.demoSchema
                     }
-
-                    console.log(p.name, props.demo)
                 }
 
                 schema.pages[0].fields.push({
@@ -451,13 +450,21 @@ class ExoFormFactory {
         return field;
     }
 
+    static async createDropDown(control){
+        const dex = new ExoDropdownExtension(control);
+        await dex.init();
+        return dex;
+    }
+
     static fieldToString(f) {
         if (f) {
             let type = f.type || "unknown type";
             if (f.isPage)
-                return "Page " + f.index + " (" + type + ")";
+                return `Page ${f.index} (${type})`;
+            else if (f.bind)
+                return `Field '${f.bind}' (${type})`;
             else if (f.name || (f.id && f.elm))
-                return "Field '" + (f.name || f.id) + "' (" + type + ")";
+                return `Field '${f.name || f.id}' (${type})`;
 
         }
 

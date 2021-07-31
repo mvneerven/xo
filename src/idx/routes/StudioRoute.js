@@ -162,52 +162,15 @@ class StudioRoute extends xo.route {
         })
 
         x.container.setAttribute("id", "xfb");
-
-
         this.addLiveEdit(x)
-
-
-
-        //this.liveEditor = new ExoFormLiveEditor(this, x.container);
-
-        // this.liveEditor.on("field-props", e => {
-
-        //     let tab = this.sidePanel.tabStrip.tabs.properties;
-        //     tab.enabled = true;
-        //     tab.select();
-
-        //     if (!this.app.UI.areas.panel.pinned) {
-        //         this.app.UI.areas.panel.pinned = true;
-        //     }
-        //     this.showFieldEditor(tab, e.detail.field)
-
-        // }).on("enable", e => {
-
-        //     //this.refreshForm();
-        //     //this.tabStrip.tabs.form.select();
-        // })
     }
 
     addLiveEdit(exo) {
-
         this.liveEditor = new xo.form.factory.LiveEditor(exo).on("schema-change", e => {
-            console.log(e.detail.schema.toString())
+            //console.log(e.detail.schema.toString())
             this.loadSchemaInEditor(e.detail.schema.toString())
         })
-
-        // if (!_.builder.tabStrip.tabs.form.selected) {
-        //     _.builder.refreshForm("form");
-        // }
-
-        // if (_.builder.liveEditor) {
-        //     _.builder.liveEditor.enabled = e.target.value === "1";
-        // }
-        // break;
-
-
-
         exo.container.parentNode
-
     }
 
     applyJSLogic(x) {

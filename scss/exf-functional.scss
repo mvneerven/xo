@@ -131,8 +131,6 @@
                 margin-bottom: 1em;
             }
 
-            
-
             &.exf-lbl-empty {
                 .exf-label {
                     display: none !important;
@@ -176,7 +174,6 @@
             }
 
             &.exf-input-group {
-
                 margin-top: 1rem;
                 > .exf-ctl > div {
                     padding-top: 1rem;
@@ -250,10 +247,10 @@
                     }
                 }
 
-                &[data-field-type="checkbox"] { 
-                    padding: 0!important;
-                    margin: 0!important;
-                    margin-top: -1rem!important;
+                &[data-field-type="checkbox"] {
+                    padding: 0 !important;
+                    margin: 0 !important;
+                    margin-top: -1rem !important;
 
                     .exf-ctl {
                         padding: 0;
@@ -263,16 +260,11 @@
                             padding: 0 !important;
                             margin: 0 !important;
 
-
-                            .exf-ilc-cnt{
+                            .exf-ilc-cnt {
                                 padding: 0 !important;
                                 margin: 0 !important;
-        
                             }
                         }
-
-
-                        
                     }
                 }
             }
@@ -436,5 +428,39 @@
 .exf-sandbox {
     border: 0;
     overflow: visible;
-    
+}
+
+[data-field-type="image"] {
+    img {
+        min-height: 50px;
+    }
+
+    img:before {
+        content: " ";
+        display: block;
+
+        position: absolute;
+        top: -10px;
+        left: 0;
+        height: calc(100% + 10px);
+        width: 100%;
+        background-color: rgb(230, 230, 230);
+        border: 2px dotted rgb(200, 200, 200);
+        border-radius: 5px;
+    }
+
+    img:after {
+        content: "\e633";
+        display: block;
+        font-size: 16px;
+        font-style: normal;
+        font-family: themify;
+        color: rgb(100, 100, 100);
+
+        position: absolute;
+        top: 5px;
+        left: 0;
+        width: 100%;
+        text-align: center;
+    }
 }

@@ -274,6 +274,11 @@ class ExoForm {
         }
     }
 
+    toString(){
+
+        return `${this.schema.summary}`;
+    }
+
     /**
      * Render ExoForm schema into a form
      * Returns a Promise

@@ -52,6 +52,20 @@ __schema__ | `*` | *new field schema*
 
 ---
 
+### `insertBefore(ctl, beforeCtl) ► ExoFormSchema`
+
+![modifier: private](images/badges/modifier-private.svg)
+
+Moves field to new position and returns the modified form schema
+
+Parameters | Type | Description
+--- | --- | ---
+__ctl__ | [ExoControlBase](src-exo-controls-base_ExoControlBase.md) | *control to move to new position*
+__beforeCtl__ | [ExoControlBase](src-exo-controls-base_ExoControlBase.md) | *control to insert the control before - null to append at end*
+__*return*__ | [ExoFormSchema](src-exo-core_ExoFormSchema.md) | *- modified schema*
+
+---
+
 ## Members
 
 Name | Type | Description

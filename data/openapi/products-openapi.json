@@ -114,7 +114,6 @@
             "nullable": true
           },
           "recordVersion": {
-            "title": "RecordVersion",
             "type": "integer",
             "format": "int64"
           },
@@ -151,18 +150,17 @@
             "nullable": true
           },
           "vatPercentage": {
-            "title": "VatPercentage",
+            "title": "Vat Percentage",
             "type": "number",
             "format": "double"
           },
           "imageUri": {
-            "title": "ImageUri",
+            "title": "Image Url",
             "type": "string",
             "format": "",
             "nullable": true
           },
-          "isForSale": {
-            "title": "IsForSale",
+          "isForSale": {            
             "type": "boolean",
             "format": ""
           }

@@ -32,13 +32,13 @@
         background-color: var(--color-dropdown-hover, #eee);
       }
       a {
-        display: block;
+        display: inline-block;
         padding: 0.5rem 0.75rem;
         color: var(--color-dropdown-text);
         font-size: 0.9em;
         letter-spacing: 1px;
         text-decoration: none;
-        text-transform: uppercase;
+        //text-transform: uppercase;
       }
     }
 

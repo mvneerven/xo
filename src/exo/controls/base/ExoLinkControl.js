@@ -1,4 +1,5 @@
 import ExoElementControl from './ExoElementControl';
+import ExoFormFactory from '../../core/ExoFormFactory';
 
 class ExoLinkControl extends ExoElementControl {
 
@@ -19,12 +20,17 @@ class ExoLinkControl extends ExoElementControl {
             {
                 name: "html",
                 type: String
-                
+
             },
 
             {
-                name: "url",                
+                name: "url",
                 type: String
+            },
+
+            {
+                name: "dropdown",
+                type: Array
             }
 
 
@@ -72,8 +78,15 @@ class ExoLinkControl extends ExoElementControl {
 
     async render() {
         await super.render();
-        if(this.external)
+        if (this.external)
             this.htmlElement.setAttribute("target", "_blank");
+
+        if (this.dropdown) {
+            this.dropdownExtension = await ExoFormFactory.createDropDown(this);
+            this.dropdownExtension.on("click", e=>{
+                debugger;
+            })
+        }
         return this.htmlElement
     }
 }

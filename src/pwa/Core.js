@@ -130,7 +130,7 @@ class Core {
         })
     }
 
-    static async jsonToDataUrl(json){
+    static async jsonToDataUrl(json) {
         let txt = JSON.stringify(json, null, 2);
         var blob = new Blob([txt], { type: "application/json" });
         return await Core.blobToDataURL(blob);
@@ -265,21 +265,32 @@ class Core {
      * @returns Object or Array 
      */
     static async acquireState(data, options) {
+        options = options || {
+            process: (data, feched) => {
+                return data;
+            }
+        }
+
         return new Promise((resolve) => {
+            const process = async (data) => {
+                data = await options.process(data, options);
+                resolve(data)
+            }
+
             if (Core.isUrl(data)) {
                 fetch(data).then((x) => {
                     if (x.status === 200) {
-                        resolve(x.json());
+                        process(x.json(), true);
                         return;
                     }
                     throw new Error(`HTTP error ${x.status} - ${data}`);
                 });
             } else if (Array.isArray(data) || typeof (data) === "object") {
-                resolve(data);
+                process(data);
             } else if (typeof data === "function") {
-                resolve(data(options || {}));
+                process(data(options || {}));
             } else {
-                return resolve(Promise.resolve(data));
+                return process(Promise.resolve(data));
             }
         });
     }

@@ -5,17 +5,16 @@
     padding: 0.5rem 0.7rem;
     margin-top: -15px !important;
 
-    button{
+    button {
         outline: none;
         border: 1px solid #333;
     }
 
-    &.active{
-        button{
+    &.active {
+        button {
             background-color: rgb(224, 78, 24);
             color: white;
             border-color: transparent;
-
         }
     }
 }
@@ -23,12 +22,41 @@
 .exf-le-cnt {
     .exf-page {
         display: block !important;
-        border: 3px dotted #ccc !important;
+        border: 3px dotted #ddd !important;
 
-        .exf-ctl-cnt {
-            //border: 1px dotted transparent!important;    
-            box-shadow: 1px -2px 34px 7px rgba(0,0,0,0);
+        .exf-le-cnt {
+            min-height: 3rem;
+            position: relative;
+            margin-top: 1rem;
+            margin-bottom: 1rem;
+            padding: .5rem;
+            border-radius: .5rem;
+
+            border: 3px dotted #999;
+
+            &:hover{
+                border-color:rgb(224, 78, 24);
+
+                .exf-le-fd {
+                    //text-decoration: underline;
+                    //cursor: pointer;
+                    display: initial;
+                }
+            }
         }
+
+        .exf-le-fd {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            display: none;
+            margin: 0;
+            // color: #999;
+            // font-size: smaller;
+            // font-style: italic;
+        }
+
+        
     }
 
     .ul-tabs {
@@ -47,20 +75,24 @@
         }
     }
 
+    .exf-le-active {
+        
+        // .exf-le-fd {
+        //     text-decoration: underline;
+        //     cursor: pointer;
+        // }
 
+        // box-shadow: 1px -2px 34px 7px rgba(0, 0, 0, 0.48);
+        // transition: background-color 200ms linear;
+        // border-radius: 0.4rem;
+        // position: relative !important;
 
-    .exf-ctl-cnt.exf-le-active {
-        box-shadow: 1px -2px 34px 7px rgba(0,0,0,0.48);
-        transition: background-color 200ms linear;
-        border-radius: 0.4rem;
-        position: relative !important;
-
-        .exf-le-ctx {
-            position: absolute !important;
-            right: 10px;
-            top: -10px;
-            display: inline-block;
-        }
+        // .exf-le-ctx {
+        //     position: absolute !important;
+        //     right: 10px;
+        //     top: -10px;
+        //     display: inline-block;
+        // }
     }
 }
 
@@ -70,12 +102,11 @@
 
         height: 400px !important;
 
-        .exf-help-wrapper{
+        .exf-help-wrapper {
             .exf-help {
                 visibility: hidden;
             }
         }
-        
 
         .exf-fld-details:hover {
             .exf-help {

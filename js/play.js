@@ -20,11 +20,15 @@ const ent = new xo.form.entity({
     uiSchema: "/data/openapi/products-ui.json"
 })
 
+//area.appendChild(await ent.list());
+
+
 const editor = await ent.createEditor({})
 area.appendChild(await editor.render({
     on: {
         interactive: e => {
             const led = new xo.form.factory.LiveEditor(e.detail.host).on("schema-change", e => {
+                //console.log(e.detail.schema.toString())
             })
         }
     }

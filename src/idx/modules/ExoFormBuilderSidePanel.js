@@ -107,39 +107,6 @@ class ExoFormBuilderSidePanel {
                 }
                 else {
                     switch (name) {
-                        // case "live-edit":
-                        //     // if (!_.builder.tabStrip.tabs.form.selected) {
-                        //     //     _.builder.refreshForm("form");
-                        //     // }
-
-                        //     // if (_.builder.liveEditor) {
-                        //     //     _.builder.liveEditor.enabled = e.target.value === "1";
-                        //     // }
-                        //     // break;
-
-                        //     if(e.target.value === "1"){
-                        //         if(!_.builder.liveEditor){
-
-                        //             if(!_.builder.renderer.exo)
-                        //                 throw TypeError("No formm rendered")
-
-                        //             _.builder.liveEditor = new xo.form.factory.LiveEditor(_.builder.renderer.exo).on("schema-change", e=>{
-                        //                 console.log(e.detail.schema.toString())
-                        //                 //_.builder.renderer.schema = e.detail.schema
-
-                        //                 _.builder.loadSchemaInEditor(e.detail.schema.toString())
-
-
-
-                        //             }) 
-                        //         }
-                        //     }
-                        //     else{
-                        //         _.builder.liveEditor.enabled = e.target.value === "1";
-                        //     }
-                        //     break;
-                            
-
                         case "pages":
                             _.builder.renderer.model.pageCount = parseInt(e.target.value);
                             bindMax();
@@ -156,12 +123,9 @@ class ExoFormBuilderSidePanel {
 
             x.container.id = "exo-settings";
         })
-
-        // this.addDarkModeSwitch();
     }
 
-    // update fields in form settings panel 
-    // according to model
+    // update fields in form settings panel according to model
     mapSettingsToModel() {
         let model = this.builder.renderer.model;
 

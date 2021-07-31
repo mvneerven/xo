@@ -319,8 +319,7 @@
   left: 50%;
   bottom: -2px;
   position: absolute;
-  background: #aaa;
-  background: var(--color-input-shade);
+  background: var(--color-input-shade, #aaa);
   -webkit-transition: left 0.5s ease, width 0.5s ease;
   transition: left 0.5s ease, width 0.5s ease;
   z-index: 2;
@@ -369,27 +368,27 @@
   background-color: transparent;
 }
 
-.exf-container.exf-theme-material .exf-ctl-cnt > .exf-ctl > input ::-webkit-input-placeholder,
-.exf-container.exf-theme-material .exf-ctl-cnt > .exf-ctl > textarea ::-webkit-input-placeholder {
-  visibility: hidden;
+.exf-container.exf-theme-material .exf-ctl-cnt > .exf-ctl > input::-webkit-input-placeholder,
+.exf-container.exf-theme-material .exf-ctl-cnt > .exf-ctl > textarea::-webkit-input-placeholder {
+  opacity: 0;
   color: var(--placeholder-color, #aaa);
 }
 
-.exf-container.exf-theme-material .exf-ctl-cnt > .exf-ctl > input :-ms-input-placeholder,
-.exf-container.exf-theme-material .exf-ctl-cnt > .exf-ctl > textarea :-ms-input-placeholder {
-  visibility: hidden;
+.exf-container.exf-theme-material .exf-ctl-cnt > .exf-ctl > input:-ms-input-placeholder,
+.exf-container.exf-theme-material .exf-ctl-cnt > .exf-ctl > textarea:-ms-input-placeholder {
+  opacity: 0;
   color: var(--placeholder-color, #aaa);
 }
 
-.exf-container.exf-theme-material .exf-ctl-cnt > .exf-ctl > input ::-ms-input-placeholder,
-.exf-container.exf-theme-material .exf-ctl-cnt > .exf-ctl > textarea ::-ms-input-placeholder {
-  visibility: hidden;
+.exf-container.exf-theme-material .exf-ctl-cnt > .exf-ctl > input::-ms-input-placeholder,
+.exf-container.exf-theme-material .exf-ctl-cnt > .exf-ctl > textarea::-ms-input-placeholder {
+  opacity: 0;
   color: var(--placeholder-color, #aaa);
 }
 
-.exf-container.exf-theme-material .exf-ctl-cnt > .exf-ctl > input ::placeholder,
-.exf-container.exf-theme-material .exf-ctl-cnt > .exf-ctl > textarea ::placeholder {
-  visibility: hidden;
+.exf-container.exf-theme-material .exf-ctl-cnt > .exf-ctl > input::placeholder,
+.exf-container.exf-theme-material .exf-ctl-cnt > .exf-ctl > textarea::placeholder {
+  opacity: 0;
   color: var(--placeholder-color, #aaa);
 }
 
@@ -401,28 +400,24 @@
 .exf-container.exf-theme-material .exf-ctl-cnt.exf-focus > .exf-ctl input::-webkit-input-placeholder,
 .exf-container.exf-theme-material .exf-ctl-cnt.exf-focus > .exf-ctl textarea::-webkit-input-placeholder, .exf-container.exf-theme-material .exf-ctl-cnt.exf-std-lbl > .exf-ctl input::-webkit-input-placeholder,
 .exf-container.exf-theme-material .exf-ctl-cnt.exf-std-lbl > .exf-ctl textarea::-webkit-input-placeholder {
-  visibility: visible;
   opacity: 1;
 }
 
 .exf-container.exf-theme-material .exf-ctl-cnt.exf-focus > .exf-ctl input:-ms-input-placeholder,
 .exf-container.exf-theme-material .exf-ctl-cnt.exf-focus > .exf-ctl textarea:-ms-input-placeholder, .exf-container.exf-theme-material .exf-ctl-cnt.exf-std-lbl > .exf-ctl input:-ms-input-placeholder,
 .exf-container.exf-theme-material .exf-ctl-cnt.exf-std-lbl > .exf-ctl textarea:-ms-input-placeholder {
-  visibility: visible;
   opacity: 1;
 }
 
 .exf-container.exf-theme-material .exf-ctl-cnt.exf-focus > .exf-ctl input::-ms-input-placeholder,
 .exf-container.exf-theme-material .exf-ctl-cnt.exf-focus > .exf-ctl textarea::-ms-input-placeholder, .exf-container.exf-theme-material .exf-ctl-cnt.exf-std-lbl > .exf-ctl input::-ms-input-placeholder,
 .exf-container.exf-theme-material .exf-ctl-cnt.exf-std-lbl > .exf-ctl textarea::-ms-input-placeholder {
-  visibility: visible;
   opacity: 1;
 }
 
 .exf-container.exf-theme-material .exf-ctl-cnt.exf-focus > .exf-ctl input::placeholder,
 .exf-container.exf-theme-material .exf-ctl-cnt.exf-focus > .exf-ctl textarea::placeholder, .exf-container.exf-theme-material .exf-ctl-cnt.exf-std-lbl > .exf-ctl input::placeholder,
 .exf-container.exf-theme-material .exf-ctl-cnt.exf-std-lbl > .exf-ctl textarea::placeholder {
-  visibility: visible;
   opacity: 1;
 }
 
@@ -430,7 +425,7 @@
   color: var(--color-label-active);
 }
 
-.exf-container.exf-theme-material .exf-ctl-cnt.exf-focus.exf-input > .exf-ctl::before, .exf-container.exf-theme-material .exf-ctl-cnt.exf-std-lbl.exf-input > .exf-ctl::before {
+.exf-container.exf-theme-material .exf-ctl-cnt.exf-focus.exf-input > .exf-ctl::before {
   width: 100%;
   background: #c46;
   background: var(--color-input-shade-focus, #ccc);
@@ -527,7 +522,7 @@
 
 .exf-container.exf-theme-material .exf-ctl-cnt.exf-switch > .exf-ctl > label {
   position: absolute !important;
-  top: -.1rem !important;
+  top: -0.1rem !important;
   left: 3.5em !important;
   font-size: 1rem !important;
 }
@@ -622,7 +617,7 @@
 }
 
 .exf-container.exf-theme-material .exf-input-group.tiles.small > .exf-ctl > div .exf-ilc-cnt > .exf-caption {
-  padding: .2rem;
+  padding: 0.2rem;
   width: auto;
 }
 

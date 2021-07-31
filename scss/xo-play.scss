@@ -7,34 +7,29 @@ body {
 }
 
 #xo-play {
-
-
     .exf-dlg-b {
-
-        .exf-container{
+        .exf-container {
             min-height: 400px;
         }
 
         [data-field-type="image"] {
-            
-
             img {
-                width: 80px;    
+                width: 80px;
                 display: block;
             }
         }
     }
-    
+
     [data-field-type="listview"] {
         &[data-view="tiles"] {
             article.exf-lv-item {
                 .name {
                     font-weight: 800;
-                    color: rgb(60, 58, 189)
+                    color: rgb(60, 58, 189);
                 }
                 .small {
                     font-size: smaller;
-                    color:rgba(0, 0, 0, 0.5)
+                    color: rgba(0, 0, 0, 0.5);
                 }
             }
         }
@@ -43,12 +38,11 @@ body {
     .exf-dlg-c {
         background-color: #ddd;
     }
-    
+
     .exf-listview-btns.exf-cnt {
-        
     }
 
-    .exf-container{
+    .exf-container {
         background-color: white;
         border-radius: 2rem;
         margin: 2rem;

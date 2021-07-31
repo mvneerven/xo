@@ -17,9 +17,6 @@ class MarkDownCMS {
         this.tree[path] = {
             title: "Home"
         };
-        
-        console.log("Read", path, this.tree[path])
-
         await this.readMd(this.tree[path], path);
         this._ready = true;
         return this.tree;

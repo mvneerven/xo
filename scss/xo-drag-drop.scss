@@ -1,0 +1,47 @@
+.xo-drag-cnt {
+    
+    margin: 0 0 1em 0;
+    //padding: 1em;
+    border: 2px solid transparent;
+
+    &:hover {
+        border: 2px solid #222;
+    }
+}
+
+[draggable="true"] {
+    cursor: grab;
+    display: block;
+    min-height: 3em;
+    border: 1px solid #ccc;
+    margin-bottom: 1em;
+    line-height: 3em;
+    padding: 0 2em;
+
+    &:last-of-type {
+        margin-bottom: 0;
+    }
+
+    &.xo-dragging {
+        //box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+        background-color: rgba(255,0,0,.3);
+    }
+
+    // &:before {
+    //     content: "≔";
+    //     position: relative;
+    //     left: -0.5em;
+    //     font-size: 2em;
+    //     cursor: move;
+    // }
+
+    &:hover {
+        background-color: rgba(221, 145, 14, 0.339);
+        cursor: drag;
+    }
+
+    &.js-active {
+        border: 1px dashed #444;
+        background-color: #09f;
+    }
+}

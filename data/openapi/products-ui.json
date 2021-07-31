@@ -67,9 +67,13 @@
                 }
             },
             "properties": {
-                "name": {},
+                "name": {
+                    "placeholder": "Product name..."
+                },
                 "description": {
                     "type": "multiline",
+                    "rows": "1",
+                    "placeholder": "Your product description...",
                     "autogrow": true
                 },
                 "id": {
@@ -86,6 +90,7 @@
                     "fields": {
                         "amount": {
                             "type": "number",
+                            "placeholder": "9.90",
                             "prefix": "€",
                             "step": 0.01,
                             "required": true
@@ -113,6 +118,7 @@
                     ]
                 },
                 "isForSale": {
+                    "caption": "For Sale",
                     "page": "prc",
                     "type": "switch"
                 }

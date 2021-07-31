@@ -721,3 +721,13 @@ See [navigation](./md/exo/navigation.md)
 - New control: ```starrating```
 - Fixed ```range``` control databinding
 
+# New in 1.4.92
+
+## LiveEdit in ExoForm Studio
+
+You can now edit forms in place in ExoForm Studio:
+
+![Portal](https://xo-js.dev/assets/img/live-editor.png "Toggling to JSON schema")
+
+The Live Edit feature supports drag & drop sorting, deleting fields and editing fields using property sheets. This feature leverages the fact that each control now exposes its own XO schema as a property and exposes metadata in the form of JSON Schema, which the property sheet uses to automatically generate an editing form - in ExoForm!
+

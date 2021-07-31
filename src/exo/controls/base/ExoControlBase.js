@@ -93,7 +93,6 @@ class ExoControlBase {
                 }
             }
         });
-        console.log(this, schema);
         return schema;
     }
 
@@ -259,7 +258,7 @@ class ExoControlBase {
         let obj = {
             ...this.context.field
         }
-        if (obj.id && obj.id.length === 15) {
+        if (obj.id && obj.id.length === 15 && obj.id.startsWith("exf")) {
             delete obj.id
         }
 
@@ -280,9 +279,9 @@ class ExoControlBase {
     }
 
     /**
-     * Rerenders the control with the given field schema
+     * Rerenders the control with the given field schema and returns a reference to the updated control.
      */
-    set schema(data) {
+    async updateSchema(data) {
         data = typeof (data) === "object" ? data : JSON.parse(data);
 
         const helper = async () => {
@@ -298,11 +297,13 @@ class ExoControlBase {
             exCntNew.data = { field: fld }
 
             DOM.replace(this.container, newElm)
+            return ctl;
         }
 
-        helper();
+        const newControl = await helper();
 
         this.context.field = data;
+        return newControl;
     }
 
     /**
@@ -695,8 +696,6 @@ class ExoControlBase {
     showHelp(msg, options) {
         options = options || { type: "info" };
         let elmName = "_hlpr_" + options.type;
-
-        //console.log(elmName, msg)
 
         if (!msg) {
             if (this[elmName] != null) {

@@ -144,8 +144,9 @@
                     box-sizing: border-box;
                     background-color: transparent;
 
-                    ::placeholder {
-                        visibility: hidden;
+                    &::placeholder {
+                        //visibility: hidden;
+                        opacity: 0;
                         color: var(--placeholder-color, #aaa);
                     }
                 }
@@ -162,7 +163,7 @@
                     input,
                     textarea {
                         &::placeholder {
-                            visibility: visible;
+                            //visibility: visible;
                             opacity: 1;
                         }
                     }

@@ -1,98 +1,12 @@
 import Core from './Core';
-
-class DragDropSorter {
-    constructor(masterContainer, selector, childSelector) {
-        this.events = new Core.Events(this);
-
-        this.masterContainer = masterContainer;
-        this.selector = selector;
-        this.childSelector = childSelector;
-
-        this.dragSortContainers = masterContainer.querySelectorAll(selector);
-
-        console.debug("DragDropSorter: dragSortContainers selected for dragdrop sorting: " + this.dragSortContainers.length, ", selector: ", selector);
-        this.enableDragList(masterContainer, childSelector);
-    }
-
-    enableDragList(container, childSelector) {
-        let elements = container.querySelectorAll(childSelector);
-        console.debug("DragDropSorter: elements selected for dragdrop sorting: " + elements.length, ", childSelector: ", childSelector);
-        elements.forEach(item => {
-            this.enableDragItem(item)
-        });
-    }
-
-    enableDragItem(item) {
-        item.setAttribute('draggable', true)
-        item.ondrag = e => {
-            this.handleDrag(e);
-        }
-        item.ondragend = e => {
-            this.handleDrop(e);
-        }
-    }
-
-    handleDrag(event) {
-        const selectedItem = event.target,
-            list = selectedItem.closest(this.selector),
-            x = event.clientX,
-            y = event.clientY;
-
-        selectedItem.classList.add('drag-sort-active');
-
-        let sortContainer = selectedItem.closest(this.selector);
-
-        if (sortContainer) {
-            sortContainer.classList.add("drag-sort-in-process")
-            console.debug("drag starts: " + selectedItem.class, ", container:", sortContainer.class);
-        }
-
-        let swapItem = document.elementFromPoint(x, y) === null ? selectedItem : document.elementFromPoint(x, y);
-
-        if (list === swapItem.parentNode) {
-            swapItem = swapItem !== selectedItem.nextSibling ? swapItem : swapItem.nextSibling;
-            list.insertBefore(selectedItem, swapItem);
-        }
-    }
-
-    handleDrop(event) {
-        event.target.classList.remove('drag-sort-active');
-        console.debug("DragDropSorter: drag stopped: " + event.target.class)
-        let sortContainer = event.target.closest(this.selector);
-
-        if (sortContainer) {
-            console.debug("DragDropSorter: Sort container: " + sortContainer.class);
-            sortContainer.classList.remove("drag-sort-in-process");
-        }
-        else {
-            //TODO
-        }
-
-        this.events.trigger("sort", {
-            order: this.getOrder()
-        })
-    }
-
-    getOrder() {
-        return []
-    }
-
-    destroy() {
-        this.masterContainer.querySelectorAll("[draggable]").forEach(d => {
-            d.draggable = false;
-            d.ondrag = null;
-            d.ondragend = null;
-        })
-    }
-
-}
+import DOM_DragDropSorter from './DOM_DragDropSorter';
 
 /**
  * Document Object Model helper methods
  */
 class DOM {
 
-    static DragDropSorter = DragDropSorter;
+    static DragDropSorter = DOM_DragDropSorter;
 
     // static constructor
     static _staticConstructor = (function () {
@@ -440,6 +354,14 @@ class DOM {
         return newElm;
     }
 
+    static wrap(el) {
+        const div = document.createElement('div');
+        const parent = el.parentElement;        
+        parent.insertBefore(div, el);
+        div.appendChild(el);
+        return div;
+    }
+    
     static unwrap(el) {
         var parent = el.parentNode;
         while (el.firstChild) parent.insertBefore(el.firstChild, el);
