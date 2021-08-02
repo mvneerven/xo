@@ -49,7 +49,7 @@ class ExoTaggingControl extends ExoBaseControls.controls.text.type {
 
             this.htmlElement.parentNode.insertBefore(this.wrapper, this.htmlElement);
 
-            this.htmlElement.setAttribute('type', 'hidden');
+            this.htmlElement.setAttribute('type', 'hidden');1
             this.htmlElement.addEventListener("change", e => {
                 if (!e.detail) {
                     e.stopImmediatePropagation();
@@ -123,17 +123,17 @@ class ExoTaggingControl extends ExoBaseControls.controls.text.type {
 
         if (!Array.isArray(data))
             throw TypeError("Data for tags control must be array");
-        
+
         this._value = data;
 
         if (this.rendered) {
-            this.wrapper.innerHTML = "";
+           // this.wrapper.innerHTML = "";
+           // this.renderTags()
         }
     }
 
     // Add Tag
     addTag(tagName) {
-        
         if (this.rendered) {
             if (this.anyErrors(tagName)) return;
             this.value.push(tagName)

@@ -98,7 +98,7 @@ class ExoFormSchema {
     tryMappings(defaultModelInstance) {
         let mapped = [];
 
-        const DEFAULT_PAGE_ID = "_defaultPage";
+        const DEFAULT_PAGE_ID = undefined// "_defaultPage";
 
         if (typeof (this.mappings) === "object") {
 

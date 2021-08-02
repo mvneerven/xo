@@ -15,40 +15,6 @@ class ExoLiveEditor {
 
     async init() {
         const me = this;
-        // this.btnField = await xo.form.run({
-        //     type: "button",
-        //     icon: "ti-pencil",
-        //     name: "dropper",
-        //     dropdown: [
-        //         {
-        //             caption: `Edit`,
-        //             icon: "ti-pencil",
-        //             tooltip: "Edit field",
-        //             click: async e => {
-        //                 this.startEdit(e, false)
-        //             }
-        //         },
-        //         {
-        //             caption: `Edit (raw)`,
-        //             icon: "ti-settings",
-        //             tooltip: "Edit field schema",
-        //             click: async e => {
-        //                 this.startEdit(e, true)
-        //             }
-        //         },
-        //         {
-        //             caption: `Remove`,
-        //             icon: "ti-close",
-        //             tooltip: "Remove the field",
-        //             click: e => {
-        //                 this.delete(e)
-        //             }
-        //         }
-        //     ]
-        // });
-        // this.btnField.classList.add("exf-le-ctx");
-
-        //this.exo.form.addEventListener("mousemove", this.mouseMove.bind(this))
         this.exo.form.addEventListener("click", this.click.bind(this))
 
         this.renderStyleSheet();
@@ -177,28 +143,7 @@ class ExoLiveEditor {
             this.startEdit(e)
         }
     }
-
-    // mouseMove(e) {
-
-    //     if (!this.enabled)
-    //         return;
-
-    //     if (this.isLiveEditButton(e.target))
-    //         return;
-
-    //     let ctl = this.getControl(e.target);
-    //     if (ctl && !(ctl instanceof ExoFormFactory.library.separator.type)) {
-
-    //         if (ctl.context.exo === this.exo) {
-    //             this.currentElement = ctl.container;
-    //             this.btnField.style.display = "initial"
-    //         }
-    //     }
-    //     else {
-    //         this.currentElement = null
-    //     }
-    // }
-
+    
     isLiveEditButton(elm) {
         return elm.closest(".exf-le-ctx")
     }
@@ -245,7 +190,7 @@ class ExoLiveEditor {
                         me.activeControl = await me.activeControl.updateSchema(JSON.stringify(m.instance.data)) // update control in place
                     }
 
-                    me.addLiveEditToControl(me.activeControl)
+                    //me.addLiveEditToControl(me.activeControl) 
 
                     this.updateFormSchema();
                 }

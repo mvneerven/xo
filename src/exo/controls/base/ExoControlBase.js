@@ -274,7 +274,6 @@ class ExoControlBase {
                     obj[p.name] = this[p.name]
             }
         })
-
         return obj;
     }
 
