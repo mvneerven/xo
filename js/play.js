@@ -15,21 +15,27 @@ window.fetch = async (url, options) => {
 
 const area = document.querySelector("[data-pwa-area='main']");
 
+/*
+  dataSchema1: "https://apim-asf-poc.azure-api.net/productmanagementapi/openapi",
+    uiSchema1: "/data/openapi/products-ui.json"
+ */
+
 const ent = new xo.form.entity({
-    dataSchema: "https://apim-asf-poc.azure-api.net/productmanagementapi/openapi",
-    uiSchema: "/data/openapi/products-ui.json"
+    dataSchema: "https://apim-asf-poc.azure-api.net/authorizationservice/openapi",
+    uiSchema: null   
+    
 })
 
-//area.appendChild(await ent.list());
+area.appendChild(await ent.list());
 
 
-const editor = await ent.createEditor({})
-area.appendChild(await editor.render({
-    on: {
-        interactive: e => {
-            const led = new xo.form.factory.LiveEditor(e.detail.host).on("schema-change", e => {
-                //console.log(e.detail.schema.toString())
-            })
-        }
-    }
-}))
+// const editor = await ent.createEditor({})
+// area.appendChild(await editor.render({
+//     on: {
+//         interactive: e => {
+//             const led = new xo.form.factory.LiveEditor(e.detail.host).on("schema-change", e => {
+//                 //console.log(e.detail.schema.toString())
+//             })
+//         }
+//     }
+// }))

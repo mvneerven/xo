@@ -8,11 +8,15 @@ const SortingTypes = {
   DESC: "desc",
 };
 
+const MODES = ["dynamic", "static"];
+
 class ExoListViewControl extends ExoDivControl {
   _views = ["tiles", "grid"];
   _valid = true;
   selectionDependencies = [];
   _properties = [];
+
+  _mode = MODES[0];
   _controls = [
     {
       type: "search",
@@ -106,6 +110,11 @@ class ExoListViewControl extends ExoDivControl {
         type: Object,
       },
       {
+        name: "mode",
+        type: String,
+        description: "Sets the listview mode. Modes: dynamic (default), static"
+      },
+      {
         name: "minimum",
         type: Number,
         description: "Minimum number of selected items",
@@ -141,6 +150,17 @@ class ExoListViewControl extends ExoDivControl {
 
   get views() {
     return this._views;
+  }
+
+  get mode() {
+    return this._mode
+  }
+
+  set mode(value) {
+    if (MODES.includes(value))
+      this._mode = value;
+    else
+      throw TypeError("Invalid mode")
   }
 
   setDefaultMappings() {
@@ -193,6 +213,7 @@ class ExoListViewControl extends ExoDivControl {
     this.view =
       this.view && this.views.includes(this.view) ? this.view : this.views[0]; // set initial view - can be toggled using button bar
     this.container.setAttribute("data-view", this.view);
+    this.container.classList.add(this.mode);
 
     if (this.required) {
       const validityInput = DOM.parseHTML(
@@ -399,21 +420,24 @@ class ExoListViewControl extends ExoDivControl {
     }
 
     this.listDiv = this.createListDiv();
-    this.listDiv.addEventListener("click", (e) => {
 
-      e.stopPropagation();
-      e.returnValue = false;
+    if (this.mode === MODES[0]) {
+      this.listDiv.addEventListener("click", (e) => {
 
-      let art = e.target.closest("[data-id]")
-      if (art) {
-        let id = art.getAttribute("data-id");
+        e.stopPropagation();
+        e.returnValue = false;
 
-        let i = this.currentItems.find(i => {
-          return i[this.primaryKey] === id
-        })
-        this.selectItems(i);
-      }
-    });
+        let art = e.target.closest("[data-id]")
+        if (art) {
+          let id = art.getAttribute("data-id");
+
+          let i = this.currentItems.find(i => {
+            return i[this.primaryKey] === id
+          })
+          this.selectItems(i);
+        }
+      });
+    }
 
     this.listDiv.appendChild(DOM.parseHTML(this.getHeaders()));
 
@@ -585,21 +609,25 @@ class ExoListViewControl extends ExoDivControl {
 
       this.listDiv.appendChild(btn);
       btn.style.display = "none";
-      this.listDiv.addEventListener("mousemove", (e) => {
-        let art = e.target.closest("article");
-        if (art && this.hoveredArt === art) return;
 
-        if (art) {
-          this.hoveredArt = art;
-          art.style.position = "relative";
-          btn.style.position = "absolute";
-          btn.style.right = "5px";
-          btn.style.top = "-10px";
-          btn.style.display = "block";
 
-          art.appendChild(btn);
-        }
-      });
+      if (this.mode === MODES[0]) {
+        this.listDiv.addEventListener("mousemove", (e) => {
+          let art = e.target.closest("article");
+          if (art && this.hoveredArt === art) return;
+
+          if (art) {
+            this.hoveredArt = art;
+            art.style.position = "relative";
+            btn.style.position = "absolute";
+            btn.style.right = "5px";
+            btn.style.top = "-10px";
+            btn.style.display = "block";
+
+            art.appendChild(btn);
+          }
+        });
+      }
     }
 
     this.events.trigger("ready");
@@ -677,6 +705,9 @@ class ExoListViewControl extends ExoDivControl {
 
   // add button bar
   async addControls() {
+    if(this.mode === MODES[1])
+      return;
+
     this.selectionDependencies = []; // keep list of elements that depend on list selection
 
     const btns = document.createElement("div");

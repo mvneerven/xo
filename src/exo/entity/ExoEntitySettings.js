@@ -62,7 +62,7 @@ class ExoEntitySettings {
                     name: "grid",
                     type: "listview",
                     pageSize: 8,
-                    views: ["grid", "tiles"],
+                    views: ["grid", "tiles"],      
                     items: this._getDataAsync.bind(this),
                     mappings: {},
                     contextMenu: {
@@ -154,7 +154,6 @@ class ExoEntitySettings {
     get forms() {
         return {
             list: {
-
                 schema: {
                     model: {
                         instance: {
@@ -178,11 +177,7 @@ class ExoEntitySettings {
                     ],
                 }
             },
-
-            edit: {
-
-
-            }
+            edit: {}
         }
     }
 
@@ -225,10 +220,13 @@ class ExoEntitySettings {
 
             this.options.forms.edit.schema.model.schemas.data = this.jsonSchema; // set same jsonschema in generated editor model
 
+            
             this.options.forms.list.control = {
                 ...this.options.forms.list.control,
                 properties: this.distilListProperties(this.jsonSchema),
             }
+
+
 
             this.state = ExoEntitySettings.states.initialized
 

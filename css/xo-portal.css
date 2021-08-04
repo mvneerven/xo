@@ -4101,6 +4101,12 @@ html.theme-dark .exf-ctl-cnt.autocomplete .exf-ac-rs .exf-ac-itm.active {
   padding: 4px 8px;
 }
 
+.exf-listview.static .exf-listview-list .exf-lv-item:hover {
+  border-color: transparent;
+  -webkit-transform: none;
+          transform: none;
+}
+
 @-webkit-keyframes borealisBar {
   0% {
     left: 0%;

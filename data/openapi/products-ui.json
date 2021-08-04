@@ -1,6 +1,7 @@
 {
     "list": {
         "control": {
+            
             "properties": {
                 "name": {
                     "class": "name"

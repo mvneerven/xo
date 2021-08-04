@@ -67,6 +67,12 @@
         "description": "A form that shows how to use model binding"
     },
     {
+        "name": "Tags (explicit & databinding)",
+        "value": "https://xo-js.dev/assets/forms/templates/direct-vs-databinding.js",
+        "description": "Using the tags control with explicit values and with databinding"
+    },
+    
+    {
         "name": "Advanced: custom control states",
         "value": "https://xo-js.dev/assets/forms/templates/custom-nav-state.js",
         "description": "A complete example of Model Data Binding combined with JS logic and custom navigation controls bound to state in the model."

@@ -493,6 +493,17 @@
       }
     }
   }
+
+  &.static {
+    .exf-listview-list {
+      .exf-lv-item {
+        &:hover {
+          border-color: transparent;
+          transform: none;
+        }
+      }
+    }
+  }
 }
 
 @keyframes borealisBar {
