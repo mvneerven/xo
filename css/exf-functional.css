@@ -228,6 +228,12 @@
   width: auto;
 }
 
+.exf-container .exf-page > .exf-ctl-cnt.exf-input-group .exf-ctl.list > div > label {
+  display: inline-block;
+  width: auto;
+  min-width: 5rem;
+}
+
 .exf-container .exf-page > .exf-ctl-cnt.exf-input-group[data-field-type="checkbox"] {
   padding: 0 !important;
   margin: 0 !important;

@@ -64,7 +64,8 @@ class ExoTextControl extends ExoInputControl {
                 - autocomplete: {
                     items: "https://restcountries.eu/rest/v2/name/%search%",
                     map: "name",
-                    minlength: 2
+                    minlength: 2,
+                    max: 5
                   }`
             });
     }

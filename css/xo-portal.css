@@ -1375,6 +1375,12 @@ html:not(.pwa-signed-in) .if-signed-out {
   width: auto;
 }
 
+.exf-container .exf-page > .exf-ctl-cnt.exf-input-group .exf-ctl.list > div > label {
+  display: inline-block;
+  width: auto;
+  min-width: 5rem;
+}
+
 .exf-container .exf-page > .exf-ctl-cnt.exf-input-group[data-field-type="checkbox"] {
   padding: 0 !important;
   margin: 0 !important;
@@ -3403,9 +3409,7 @@ html.theme-dark .exf-ctl-cnt.exf-switch input[type="range"] {
 
 .exf-ctl-cnt.autocomplete {
   position: relative;
-  width: auto;
   margin: auto;
-  display: inline-block;
 }
 
 .exf-ctl-cnt.autocomplete .exf-ac-rs {
@@ -3493,6 +3497,11 @@ html.theme-dark .exf-ctl-cnt.autocomplete .exf-ac-rs .exf-ac-itm.selected {
 
 html.theme-dark .exf-ctl-cnt.autocomplete .exf-ac-rs .exf-ac-itm.active {
   background-color: rgba(255, 0, 0, 0.65);
+}
+
+.pwa-omnibox .exf-ctl-cnt.autocomplete {
+  width: auto;
+  display: inline-block;
 }
 
 .nsp-xs .exf-lv-headers,

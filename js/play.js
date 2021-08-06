@@ -21,7 +21,8 @@ const area = document.querySelector("[data-pwa-area='main']");
  */
 
 const ent = new xo.form.entity({
-    dataSchema: "https://apim-asf-poc.azure-api.net/authorizationservice/openapi",
+    dataSchema1: "https://apim-asf-poc.azure-api.net/authorizationservice/openapi",
+    dataSchema: "/data/openapi/assets-openapi.json",
     uiSchema: null   
     
 })

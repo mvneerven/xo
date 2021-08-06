@@ -1,0 +1,271 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "TestOpenApiDocument",
+    "version": "1.2.3"
+  },
+  "paths": {
+    "/openapi": {
+      "get": {
+        "description": "Description for GetOpenApiDefinition",
+        "operationId": "GetOpenApiDefinition",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/sastoken": {
+      "get": {
+        "description": "Description for GetSasToken",
+        "operationId": "GetSasToken",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "links": {
+              "ListAssetsLink": {
+                "operationId": "ListAssets",
+                "parameters": {
+                  "sasToken": "$response.body"
+                }
+              },
+              "DownloadAssetLink": {
+                "operationId": "DownloadAsset",
+                "parameters": {
+                  "sasToken": "$response.body"
+                }
+              },
+              "UploadAssetLink": {
+                "operationId": "UploadAsset",
+                "parameters": {
+                  "sasToken": "$response.body"
+                }
+              },
+              "DeleteAssetLink": {
+                "operationId": "DeleteAsset",
+                "parameters": {
+                  "sasToken": "$response.body"
+                }
+              }
+            }
+          }
+        },
+        "servers": [
+          {
+            "url": "https://stasfassetsdev.blob.core.windows.net/",
+            "description": "AzBlobStorageApi"
+          }
+        ]
+      }
+    },
+    "/{tenantid}?{sastoken}&restype=container&comp=list": {
+      "get": {
+        "description": "Description for ListAssets",
+        "operationId": "ListAssets",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "in": "path",
+            "description": "must be in lowercase",
+            "required": true,
+            "schema": {
+              "title": "tenantId",
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "sasToken",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "title": "sasToken",
+              "type": "string",
+              "format": ""
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "servers": [
+          {
+            "url": "https://stasfassetsdev.blob.core.windows.net/",
+            "description": "AzBlobStorageApi"
+          }
+        ]
+      }
+    },
+    "/{tenantid}/{filename}?{sastoken}": {
+      "get": {
+        "description": "Description for DownloadAsset",
+        "operationId": "DownloadAsset",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "in": "path",
+            "description": "must be in lowercase",
+            "required": true,
+            "schema": {
+              "title": "tenantId",
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "filename",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "title": "filename",
+              "type": "string",
+              "format": ""
+            }
+          },
+          {
+            "name": "sasToken",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "title": "sasToken",
+              "type": "string",
+              "format": ""
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "servers": [
+          {
+            "url": "https://stasfassetsdev.blob.core.windows.net/",
+            "description": "AzBlobStorageApi"
+          }
+        ]
+      },
+      "put": {
+        "description": "Description for UploadAsset",
+        "operationId": "UploadAsset",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "in": "path",
+            "description": "must be in lowercase",
+            "required": true,
+            "schema": {
+              "title": "tenantId",
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "filename",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "title": "filename",
+              "type": "string",
+              "format": ""
+            }
+          },
+          {
+            "name": "sasToken",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "title": "sasToken",
+              "type": "string",
+              "format": ""
+            }
+          },
+          {
+            "name": "x-ms-blob-type",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "default": "BlockBlob"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": { }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "servers": [
+          {
+            "url": "https://stasfassetsdev.blob.core.windows.net/",
+            "description": "AzBlobStorageApi"
+          }
+        ]
+      },
+      "delete": {
+        "description": "Description for DeleteAsset",
+        "operationId": "DeleteAsset",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "in": "path",
+            "description": "must be in lowercase",
+            "required": true,
+            "schema": {
+              "title": "tenantId",
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "filename",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "title": "filename",
+              "type": "string",
+              "format": ""
+            }
+          },
+          {
+            "name": "sasToken",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "title": "sasToken",
+              "type": "string",
+              "format": ""
+            }
+          }
+        ],
+        "requestBody": {
+          "content": { }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "servers": [
+          {
+            "url": "https://stasfassetsdev.blob.core.windows.net/",
+            "description": "AzBlobStorageApi"
+          }
+        ]
+      }
+    }
+  },
+  "components": { }
+}

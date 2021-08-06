@@ -240,8 +240,8 @@ class ExoTextControlAutoCompleteExtension {
 
     formatResultItem(i, options, catHandler) {
         let result = i.text;
-        
-        if(options.search){
+
+        if (options.search) {
             result = result.replace("%search%", options.search);
         }
 
@@ -276,14 +276,21 @@ class ExoTextControlAutoCompleteExtension {
                 return list;
             }
             return list.map(i => {
-                return {text: i[prop] }
+                return { text: i[prop] }
             })
+        }
+
+        const max = list => {
+            if (this.settings.max && this.settings.max > 0) {
+                list.length = this.settings.max;
+            }
+            return list;
         }
 
         return new Promise(resolve => {
             if (Core.isUrl(this.items)) {
-                if(this.settings.minlength > 0){
-                    if(!options.search || options.search.length < this.settings.minlength){
+                if (this.settings.minlength > 0) {
+                    if (!options.search || options.search.length < this.settings.minlength) {
                         resolve([])
                         return;
                     }
@@ -291,8 +298,13 @@ class ExoTextControlAutoCompleteExtension {
                 let url = this.formatSearch(this.items, options)
                 fetch(url).then(x => {
                     if (x.status === 200) {
-                        let list = x.json().then(l=>{
-                            resolve(map(l))
+                        x.json().then(items => {
+                            //resolve(map(l))
+                            items = map(items);
+
+                            resolve(max(items.filter(i => {
+                                return this.isMatch(options, i)
+                            })))
                         });
                         return;
                     }
@@ -306,9 +318,9 @@ class ExoTextControlAutoCompleteExtension {
                     }
                     return i;
                 })
-                resolve(map(this.items.filter(i => {
+                resolve(max(map(this.items.filter(i => {
                     return this.isMatch(options, i)
-                })));
+                }))));
             }
             else if (typeof (this.items) === "function") {
                 resolve(map(this.items(options)));

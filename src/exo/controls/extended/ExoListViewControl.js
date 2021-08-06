@@ -12,7 +12,7 @@ const MODES = ["dynamic", "static"];
 
 class ExoListViewControl extends ExoDivControl {
   _views = ["tiles", "grid"];
-  _valid = true;
+  _valid = false;
   selectionDependencies = [];
   _properties = [];
 
@@ -705,7 +705,7 @@ class ExoListViewControl extends ExoDivControl {
 
   // add button bar
   async addControls() {
-    if(this.mode === MODES[1])
+    if (this.mode === MODES[1])
       return;
 
     this.selectionDependencies = []; // keep list of elements that depend on list selection
@@ -925,14 +925,14 @@ class ExoListViewControl extends ExoDivControl {
         });
       }
 
-      if (this.singleSelect) {
-        this.valid = data != null
-      }
-      else {
-        this.valid =
-          (Array.isArray(data) && data.length >= this.minimum) ||
-          (data && this.minimum <= 1);
-      }
+      // if (this.singleSelect) {
+      //   this.valid = data != null
+      // }
+      // else {
+      //   this.valid =
+      //     (Array.isArray(data) && data.length >= this.minimum) ||
+      //     (data && this.minimum <= 1);
+      // }
 
       this.renderSelected();
     }
@@ -1164,16 +1164,27 @@ class ExoListViewControl extends ExoDivControl {
   }
 
   get validationMessage() {
+    if (this.singleSelect) {
+      return `This field is required`;
+    }
+
     this.minimum = this.minimum || 1;
     return `Select at least ${this.minimum} item(s)`;
   }
 
-  set valid(valid) {
-    this._valid = this.required ? valid : true;
-  }
+  // set valid(valid) {
+  //   this._valid = this.required ? valid : true;
+  // }
 
   get valid() {
-    return this._valid;
+
+    if (this.singleSelect) {
+      return this.value != null && this.value != "" 
+    }
+
+    return (Array.isArray(this.value) && this.value.length >= this.minimum) ||
+      (this.value && this.minimum <= 1);
+    
   }
 }
 

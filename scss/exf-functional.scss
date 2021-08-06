@@ -245,6 +245,16 @@
                             }
                         }
                     }
+
+                    &.list {
+                        > div {
+                            > label {
+                                display: inline-block;
+                                width: auto;
+                                min-width: 5rem;
+                            }
+                        }
+                    }
                 }
 
                 &[data-field-type="checkbox"] {

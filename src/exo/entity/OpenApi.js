@@ -42,6 +42,7 @@ class OpenApi {
 
     _getSchemas() {
         let ar = [];
+        
         if (this._data.components && this._data.components.schemas) {
             for (var s in this._data.components.schemas) {
                 ar.push({
@@ -50,6 +51,8 @@ class OpenApi {
                 })
             }
         }
+        if(ar.length === 0)
+            throw TypeError("OpenApi schema contains no DTOs")
         return ar;
     }
 

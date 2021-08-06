@@ -1,8 +1,6 @@
 .exf-ctl-cnt.autocomplete {
   position: relative;
-  width: auto;
   margin: auto;
-  display: inline-block;
 }
 
 .exf-ctl-cnt.autocomplete .exf-ac-rs {
@@ -90,5 +88,10 @@ html.theme-dark .exf-ctl-cnt.autocomplete .exf-ac-rs .exf-ac-itm.selected {
 
 html.theme-dark .exf-ctl-cnt.autocomplete .exf-ac-rs .exf-ac-itm.active {
   background-color: rgba(255, 0, 0, 0.65);
+}
+
+.pwa-omnibox .exf-ctl-cnt.autocomplete {
+  width: auto;
+  display: inline-block;
 }
 /*# sourceMappingURL=exf-auto-complete.css.map */

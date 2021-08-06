@@ -1,8 +1,8 @@
 .exf-ctl-cnt.autocomplete {
     position: relative;
-    width: auto;
+    //width: auto;
     margin: auto;
-    display: inline-block;
+    //display: inline-block;
 
     .exf-ac-rs {
         font-size: 0.9rem;
@@ -91,5 +91,12 @@ html.theme-dark {
                 }
             }
         }
+    }
+}
+
+.pwa-omnibox {
+    .exf-ctl-cnt.autocomplete {
+        width: auto;
+        display: inline-block;
     }
 }
