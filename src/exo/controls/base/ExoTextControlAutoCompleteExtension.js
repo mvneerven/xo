@@ -171,6 +171,10 @@ class ExoTextControlAutoCompleteExtension {
 
     keyDownHandler(e) {
         switch (e.keyCode) {
+            case 13:
+                e.stopPropagation();
+                e.preventDefault();
+                break;
             case 40:
             case 38:
                 e.preventDefault();
@@ -189,6 +193,8 @@ class ExoTextControlAutoCompleteExtension {
                 this.hide();
                 break;
             case 13:
+                e.stopPropagation();
+                e.preventDefault();
                 this.selectResult()
                 break;
             default:

@@ -19,23 +19,27 @@ class ExoFormDataBinding {
     constructor(exo, instance) {
         this.exo = exo;
         this.events = new Core.Events(this);
-        this._init(exo, instance);
-        this._resolver = new ExoFormDataBindingResolver(this);
+        
+        this._init(exo, instance).then(()=>{
+            this._resolver = new ExoFormDataBindingResolver(this);
 
-        exo.on(ExoFormFactory.events.renderStart, e => { // run logic for initial state of controls
-            this.resolver._checkSchemaLogic();
-        })
-
-        exo.on(ExoFormFactory.events.renderReady, e => {
-            exo.on(ExoFormFactory.events.dataModelChange, e => {
-                this.resolver.resolve();
-            }).on(ExoFormFactory.events.page, e => { // on navigate, resolve again (e.g. for navigation control state)
+            exo.on(ExoFormFactory.events.renderStart, e => { // run logic for initial state of controls
+                this.resolver._checkSchemaLogic();
+            })
+    
+            exo.on(ExoFormFactory.events.renderReady, e => {
+                exo.on(ExoFormFactory.events.dataModelChange, e => {
+                    this.resolver.resolve();
+                }).on(ExoFormFactory.events.page, e => { // on navigate, resolve again (e.g. for navigation control state)
+                    this.resolver.resolve();
+                })
                 this.resolver.resolve();
             })
-            this.resolver.resolve();
-        })
+    
+            this._ready();
+        });
 
-        this._ready();
+        
     }
 
     get resolver() {
@@ -123,30 +127,40 @@ class ExoFormDataBinding {
         return returnValue;
     }
 
-    _init(exo, instance) {
+    async _init(exo, instance) {
+        
+        return new Promise(resolve => {
 
-        if (instance) {
-            this._mapped = instance;
-            this._model.instance = instance;
-            this._origin = ExoFormDataBinding.origins.bind;
-        }
-        else if (exo.schema.model) {
-
-            this._origin = ExoFormDataBinding.origins.schema;
-            this._model = {
-                ...exo.schema.model
-            };
-
-            for (var n in this._model.instance) {
-                let ins = this._model.instance[n];
-                this._model.instance[n] = this.proxy(n, ins); // Proxy to monitor changes
+            const f = async () => {
+                if (instance) { //TODO deprecate
+                    this._mapped = instance;
+                    this._model.instance = instance;
+                    this._origin = ExoFormDataBinding.origins.bind;
+                }
+                else if (exo.schema.model) {
+                    this._origin = ExoFormDataBinding.origins.schema;
+                    this._model = {
+                        ...exo.schema.model
+                    };
+        
+                    for (var n in this._model.instance) {
+                        let ins = this._model.instance[n];
+        
+                        if(Core.isUrl(ins)) {
+                            ins = await Core.acquireState(ins);
+                        } 
+        
+                        this._model.instance[n] = this.proxy(n, ins); // Proxy to monitor changes
+                    }
+        
+                    this._model.bindings = this._model.bindings || {}
+                }
+                else {
+                    this._origin = ExoFormDataBinding.origins.none; 
+                }
             }
-
-            this._model.bindings = this._model.bindings || {}
-        }
-        else {
-            this._origin = ExoFormDataBinding.origins.none;
-        }
+            f().then(resolve())
+        });
     }
 
     toString() {
@@ -181,14 +195,14 @@ class ExoFormDataBinding {
             }
             const pxy = new Proxy(object, {
                 get: function (object, name) {
-                    if (name == '__proxy__') {
+                    if (name === '__proxy__') {
                         return true;
                     }
                     return object[name];
                 },
                 set: function (object, name, value) {
                     var old = object[name];
-                    if (value && typeof value == 'object') {
+                    if (value && typeof value === 'object') {
                         // new object need to be proxified as well
                         value = proxify(instanceName, value, change);
                     }
@@ -201,7 +215,7 @@ class ExoFormDataBinding {
             });
             for (var prop in object) {
                 if (object.hasOwnProperty(prop) && object[prop] &&
-                    typeof object[prop] == 'object') {
+                    typeof object[prop] === 'object') {
                     // proxify all child objects
                     object[prop] = proxify(instanceName, object[prop], change);
                 }
@@ -269,6 +283,18 @@ class ExoFormDataBinding {
                         propertyName: name,
                         originalBoundValue: returnValue
                     });
+                }
+            }
+        }
+        else if(typeof(value) === 'object' ){
+            
+            for(var p in value){
+                if(typeof(value[p]) == "string" && value[p].indexOf("@") >=0 ) {
+                    debugger;
+                }
+                returnValue[p] = this._processFieldProperty(control, p, returnValue[p])
+                if(value[p] !== returnValue[p]){
+                    debugger;
                 }
             }
         }

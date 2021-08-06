@@ -641,7 +641,13 @@ class ExoControlBase {
         // resolve bound state 
         let db = this.context.exo.dataBinding;
         if (db) {
-            return db._processFieldProperty(this, name, value);
+            try{               
+                let result = db._processFieldProperty(this, name, value);
+                return result;
+            }
+            catch(ex){
+                throw TypeError(`ExoControlBase: error processing databinding in ${this.name}.${name}: ${ex.toString()}`)
+            }
         }
         return value;
     }

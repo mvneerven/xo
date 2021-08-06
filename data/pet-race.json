@@ -1,0 +1,2210 @@
+{
+    "dog": [
+        {
+            "id": "1",
+            "name": "Abessijn"
+        },
+        {
+            "id": "2",
+            "name": "Afghaanse Windhond"
+        },
+        {
+            "id": "370",
+            "name": "Aïdi"
+        },
+        {
+            "id": "3",
+            "name": "Airedale Terrier"
+        },
+        {
+            "id": "28",
+            "name": "Akbash"
+        },
+        {
+            "id": "4",
+            "name": "Akita (Inu)"
+        },
+        {
+            "id": "356",
+            "name": "Alano espanol"
+        },
+        {
+            "id": "5",
+            "name": "Alaska Malamute"
+        },
+        {
+            "id": "371",
+            "name": "Alpenländische Dachsbracke"
+        },
+        {
+            "id": "338",
+            "name": "American Bully"
+        },
+        {
+            "id": "372",
+            "name": "American Foxhound"
+        },
+        {
+            "id": "331",
+            "name": "American hairless terrier"
+        },
+        {
+            "id": "8",
+            "name": "American Staffordshire Terrier"
+        },
+        {
+            "id": "6",
+            "name": "Amerikaanse Bulldog"
+        },
+        {
+            "id": "373",
+            "name": "Amerikaanse Cocker Spaniel"
+        },
+        {
+            "id": "355",
+            "name": "Amerikaanse Eskimohond"
+        },
+        {
+            "id": "215",
+            "name": "Amerikaanse Pitbull Terrier"
+        },
+        {
+            "id": "374",
+            "name": "Amerikaanse Water Spaniel"
+        },
+        {
+            "id": "10",
+            "name": "Anatolische Herdershond (Akbash, Kangal)"
+        },
+        {
+            "id": "12",
+            "name": "Appenzeller Sennenhond"
+        },
+        {
+            "id": "13",
+            "name": "Argentijnse Dog (Dogo Argentino)"
+        },
+        {
+            "id": "375",
+            "name": "Ariégois"
+        },
+        {
+            "id": "14",
+            "name": "Australian Cattle Dog"
+        },
+        {
+            "id": "15",
+            "name": "Australian Kelpie"
+        },
+        {
+            "id": "473",
+            "name": "Australian Labradoodle Medium"
+        },
+        {
+            "id": "472",
+            "name": "Australian Labradoodle Miniatuur"
+        },
+        {
+            "id": "474",
+            "name": "Australian Labradoodle Standaard"
+        },
+        {
+            "id": "16",
+            "name": "Australian Shepherd"
+        },
+        {
+            "id": "253",
+            "name": "Australian Silky Terrier"
+        },
+        {
+            "id": "376",
+            "name": "Australian Stumpy Tail Cattle Dog"
+        },
+        {
+            "id": "17",
+            "name": "Australian Terrier"
+        },
+        {
+            "id": "23",
+            "name": "Barbet"
+        },
+        {
+            "id": "24",
+            "name": "Barsoi"
+        },
+        {
+            "id": "25",
+            "name": "Basenji"
+        },
+        {
+            "id": "22",
+            "name": "Basset Artésien Normand"
+        },
+        {
+            "id": "20",
+            "name": "Basset Bleu de Gascogne"
+        },
+        {
+            "id": "19",
+            "name": "Basset Fauve de Bretagne"
+        },
+        {
+            "id": "26",
+            "name": "Basset Griffon Vendeen"
+        },
+        {
+            "id": "21",
+            "name": "Basset Hound"
+        },
+        {
+            "id": "318",
+            "name": "Bayerischer Gebirgsschweisshund"
+        },
+        {
+            "id": "29",
+            "name": "Beagle"
+        },
+        {
+            "id": "377",
+            "name": "Beagle Harrier"
+        },
+        {
+            "id": "31",
+            "name": "Bearded Collie"
+        },
+        {
+            "id": "30",
+            "name": "Beauceron"
+        },
+        {
+            "id": "32",
+            "name": "Bedlington Terrier"
+        },
+        {
+            "id": "33",
+            "name": "Belgische Herder"
+        },
+        {
+            "id": "123",
+            "name": "Belgische Herdershond, Groenendaeler"
+        },
+        {
+            "id": "164",
+            "name": "Belgische Herdershond, Laekense"
+        },
+        {
+            "id": "186",
+            "name": "Belgische Herdershond, Mechelse"
+        },
+        {
+            "id": "265",
+            "name": "Belgische Herdershond, Tervuerense"
+        },
+        {
+            "id": "27",
+            "name": "Berghond van de Maremmen (en de Abruzzen)"
+        },
+        {
+            "id": "323",
+            "name": "Berner Laufhund"
+        },
+        {
+            "id": "35",
+            "name": "Berner Sennenhond"
+        },
+        {
+            "id": "475",
+            "name": "Bernerdoodle"
+        },
+        {
+            "id": "36",
+            "name": "Bichon Frisé"
+        },
+        {
+            "id": "379",
+            "name": "Billy"
+        },
+        {
+            "id": "380",
+            "name": "Black and Tan Coonhound"
+        },
+        {
+            "id": "37",
+            "name": "Bloedhond (Sint-hubertushond)"
+        },
+        {
+            "id": "39",
+            "name": "Bobtail"
+        },
+        {
+            "id": "38",
+            "name": "Boerboel"
+        },
+        {
+            "id": "116",
+            "name": "Boerenfox"
+        },
+        {
+            "id": "42",
+            "name": "Bolognezer"
+        },
+        {
+            "id": "352",
+            "name": "Bolonka Zwetna"
+        },
+        {
+            "id": "43",
+            "name": "Boomer"
+        },
+        {
+            "id": "44",
+            "name": "Bordeaux Dog"
+        },
+        {
+            "id": "40",
+            "name": "Border Collie"
+        },
+        {
+            "id": "45",
+            "name": "Border Terrier"
+        },
+        {
+            "id": "381",
+            "name": "Bosanski Ostrodlaki Gonic Barak"
+        },
+        {
+            "id": "46",
+            "name": "Boston Terrier"
+        },
+        {
+            "id": "47",
+            "name": "Bouvier"
+        },
+        {
+            "id": "382",
+            "name": "Bouvier des Ardennes"
+        },
+        {
+            "id": "383",
+            "name": "Bouvier des Flandres"
+        },
+        {
+            "id": "48",
+            "name": "Boxer"
+        },
+        {
+            "id": "53",
+            "name": "Bracco Italiano"
+        },
+        {
+            "id": "384",
+            "name": "Braque de l'Ariège"
+        },
+        {
+            "id": "357",
+            "name": "Braque Français"
+        },
+        {
+            "id": "385",
+            "name": "Braque Saint Germain"
+        },
+        {
+            "id": "386",
+            "name": "Braziliaanse Terrier"
+        },
+        {
+            "id": "52",
+            "name": "Briard"
+        },
+        {
+            "id": "347",
+            "name": "Briquet Griffon Vendéen"
+        },
+        {
+            "id": "55",
+            "name": "Bull Terrier"
+        },
+        {
+            "id": "54",
+            "name": "Bullmastiff"
+        },
+        {
+            "id": "60",
+            "name": "Cairn Terrier"
+        },
+        {
+            "id": "58",
+            "name": "Cane Corso"
+        },
+        {
+            "id": "59",
+            "name": "Cão da Serra da Estrela"
+        },
+        {
+            "id": "56",
+            "name": "Cão da Serra de Aires (Portugese Herdershond)"
+        },
+        {
+            "id": "221",
+            "name": "Cão de Agua Português (Portugeese Waterhond)"
+        },
+        {
+            "id": "387",
+            "name": "Cão de Castro Laboreiro"
+        },
+        {
+            "id": "388",
+            "name": "Cão de Gado Transmontano"
+        },
+        {
+            "id": "389",
+            "name": "Cão Fila de São Miguel"
+        },
+        {
+            "id": "61",
+            "name": "Cavalier King Charles Spaniël"
+        },
+        {
+            "id": "476",
+            "name": "Cavapoo"
+        },
+        {
+            "id": "62",
+            "name": "Cesky Fousek"
+        },
+        {
+            "id": "63",
+            "name": "Cesky Terrier"
+        },
+        {
+            "id": "334",
+            "name": "Chart Polski"
+        },
+        {
+            "id": "67",
+            "name": "Chesapeake Bay Retriever"
+        },
+        {
+            "id": "391",
+            "name": "Chien d'Artois"
+        },
+        {
+            "id": "407",
+            "name": "Chien Français"
+        },
+        {
+            "id": "65",
+            "name": "Chihuahua"
+        },
+        {
+            "id": "66",
+            "name": "Chinese Naakthond"
+        },
+        {
+            "id": "320",
+            "name": "Chinese Powder Puff"
+        },
+        {
+            "id": "329",
+            "name": "Chodsky Pes"
+        },
+        {
+            "id": "64",
+            "name": "Chow Chow"
+        },
+        {
+            "id": "392",
+            "name": "Cimarrón Uruguayo"
+        },
+        {
+            "id": "393",
+            "name": "Ciobanesc Romanesc"
+        },
+        {
+            "id": "69",
+            "name": "Clumber Spaniel"
+        },
+        {
+            "id": "477",
+            "name": "Cockapoo"
+        },
+        {
+            "id": "70",
+            "name": "Cocker Spaniel"
+        },
+        {
+            "id": "483",
+            "name": "Continental Bulldog"
+        },
+        {
+            "id": "369",
+            "name": "Coonhound"
+        },
+        {
+            "id": "71",
+            "name": "Coton de Tuléar"
+        },
+        {
+            "id": "394",
+            "name": "Crnogorski Planinski Gonic"
+        },
+        {
+            "id": "72",
+            "name": "Curly Coated Retriever"
+        },
+        {
+            "id": "73",
+            "name": "Dalmatische Hond (Dalmatiër)"
+        },
+        {
+            "id": "361",
+            "name": "Dashond (Teckel standaard)"
+        },
+        {
+            "id": "395",
+            "name": "Deens-Zweedse Boerderijhond"
+        },
+        {
+            "id": "75",
+            "name": "Deense Dog"
+        },
+        {
+            "id": "76",
+            "name": "Deerhound"
+        },
+        {
+            "id": "77",
+            "name": "Dobermann"
+        },
+        {
+            "id": "172",
+            "name": "Dogo Canaria (Perro de Presa Canario)"
+        },
+        {
+            "id": "78",
+            "name": "Drentsche Patrijshond"
+        },
+        {
+            "id": "396",
+            "name": "Drever"
+        },
+        {
+            "id": "79",
+            "name": "Duitse Brak"
+        },
+        {
+            "id": "80",
+            "name": "Duitse Dog"
+        },
+        {
+            "id": "397",
+            "name": "Duitse Dwergpinscher"
+        },
+        {
+            "id": "81",
+            "name": "Duitse Herdershond"
+        },
+        {
+            "id": "83",
+            "name": "Duitse Jachthond"
+        },
+        {
+            "id": "358",
+            "name": "Duitse Jachtterrier"
+        },
+        {
+            "id": "84",
+            "name": "Duitse Pinscher"
+        },
+        {
+            "id": "82",
+            "name": "Duitse Staande Hond"
+        },
+        {
+            "id": "398",
+            "name": "Duitse Wachtelhond"
+        },
+        {
+            "id": "399",
+            "name": "Dunker"
+        },
+        {
+            "id": "362",
+            "name": "Dwergdashond (Dwergteckel)"
+        },
+        {
+            "id": "85",
+            "name": "Dwergkeeshond (Pomeranian)"
+        },
+        {
+            "id": "86",
+            "name": "Dwergpinscher"
+        },
+        {
+            "id": "364",
+            "name": "Dwergpoedel"
+        },
+        {
+            "id": "88",
+            "name": "Dwergschnauzer"
+        },
+        {
+            "id": "400",
+            "name": "Eesti Hagijas"
+        },
+        {
+            "id": "89",
+            "name": "Engelse Bulldog"
+        },
+        {
+            "id": "401",
+            "name": "Engelse Cocker Spaniel"
+        },
+        {
+            "id": "90",
+            "name": "Engelse Setter"
+        },
+        {
+            "id": "92",
+            "name": "Engelse Springer Spaniel"
+        },
+        {
+            "id": "402",
+            "name": "Engelse Toy Terrier"
+        },
+        {
+            "id": "403",
+            "name": "English Foxhound"
+        },
+        {
+            "id": "93",
+            "name": "Entlebucher Sennenhond"
+        },
+        {
+            "id": "98",
+            "name": "Epagneul Bleu de Picardie"
+        },
+        {
+            "id": "94",
+            "name": "Epagneul Breton"
+        },
+        {
+            "id": "404",
+            "name": "Epagneul de Pont-Audemer"
+        },
+        {
+            "id": "309",
+            "name": "Epagneul de Saint Usuge"
+        },
+        {
+            "id": "95",
+            "name": "Epagneul Français"
+        },
+        {
+            "id": "97",
+            "name": "Epagneul Nain Continental - Papillon Vlinderhondje"
+        },
+        {
+            "id": "321",
+            "name": "Epagneul Nain Continental, Papillon (Vlinderhondje)"
+        },
+        {
+            "id": "96",
+            "name": "Epagneul Papillon"
+        },
+        {
+            "id": "405",
+            "name": "Erdélyi Kopo"
+        },
+        {
+            "id": "99",
+            "name": "Eurasier"
+        },
+        {
+            "id": "103",
+            "name": "Field Spaniel"
+        },
+        {
+            "id": "100",
+            "name": "Fila Brasileiro"
+        },
+        {
+            "id": "406",
+            "name": "Finse Brak"
+        },
+        {
+            "id": "101",
+            "name": "Finse Lappenhond"
+        },
+        {
+            "id": "104",
+            "name": "Flatcoated Retriever"
+        },
+        {
+            "id": "105",
+            "name": "Foxterrier"
+        },
+        {
+            "id": "106",
+            "name": "Franse Bulldog"
+        },
+        {
+            "id": "108",
+            "name": "Galgo Español"
+        },
+        {
+            "id": "408",
+            "name": "Gammel Dansk Hønsehund"
+        },
+        {
+            "id": "112",
+            "name": "Golden Retriever"
+        },
+        {
+            "id": "469",
+            "name": "Goldendoodle Large Standard"
+        },
+        {
+            "id": "298",
+            "name": "Goldendoodle Small Standard"
+        },
+        {
+            "id": "468",
+            "name": "Goldendoodle Standaard"
+        },
+        {
+            "id": "409",
+            "name": "Gonczy Polski"
+        },
+        {
+            "id": "113",
+            "name": "Gordon Setter"
+        },
+        {
+            "id": "297",
+            "name": "Gos D'atura Catala"
+        },
+        {
+            "id": "111",
+            "name": "Gos d'Atura Català (Catalaanse herdershond)"
+        },
+        {
+            "id": "410",
+            "name": "Grand Anglo-Français"
+        },
+        {
+            "id": "125",
+            "name": "Grand Basset Griffon Vendéen"
+        },
+        {
+            "id": "411",
+            "name": "Grand Bleu de Gascogne"
+        },
+        {
+            "id": "412",
+            "name": "Grand Gascon Saintongeois"
+        },
+        {
+            "id": "413",
+            "name": "Grand Griffon vendéen"
+        },
+        {
+            "id": "118",
+            "name": "Greyhound"
+        },
+        {
+            "id": "114",
+            "name": "Griffon Belge"
+        },
+        {
+            "id": "344",
+            "name": "Griffon Blue de Gascogne"
+        },
+        {
+            "id": "115",
+            "name": "Griffon Bruxellois"
+        },
+        {
+            "id": "414",
+            "name": "Griffon Fauve de Bretagne"
+        },
+        {
+            "id": "153",
+            "name": "Griffon Korthals"
+        },
+        {
+            "id": "415",
+            "name": "Griffon Nivernais"
+        },
+        {
+            "id": "121",
+            "name": "Grote Keeshond"
+        },
+        {
+            "id": "122",
+            "name": "Grote Münsterlander"
+        },
+        {
+            "id": "366",
+            "name": "Grote Poedel"
+        },
+        {
+            "id": "126",
+            "name": "Grote Zwitserse Sennenhond"
+        },
+        {
+            "id": "416",
+            "name": "Haldenstøvare"
+        },
+        {
+            "id": "417",
+            "name": "Hamiltonstövare"
+        },
+        {
+            "id": "418",
+            "name": "Hannover'scher Schweisshund"
+        },
+        {
+            "id": "419",
+            "name": "Harrier"
+        },
+        {
+            "id": "127",
+            "name": "Havanezer"
+        },
+        {
+            "id": "300",
+            "name": "Hazewind"
+        },
+        {
+            "id": "128",
+            "name": "Heidewachtel (Kleine Münsterlander)"
+        },
+        {
+            "id": "420",
+            "name": "Hellinikos Ichnilatis"
+        },
+        {
+            "id": "421",
+            "name": "Hokkaido"
+        },
+        {
+            "id": "129",
+            "name": "Hollandse Herdershond"
+        },
+        {
+            "id": "131",
+            "name": "Hollandse Smoushond"
+        },
+        {
+            "id": "132",
+            "name": "Hovawart"
+        },
+        {
+            "id": "422",
+            "name": "Hrvatski Ovcar (Kroatische Herdershond)"
+        },
+        {
+            "id": "423",
+            "name": "Hygenhund"
+        },
+        {
+            "id": "134",
+            "name": "Ierse Setter"
+        },
+        {
+            "id": "130",
+            "name": "Ierse Terrier"
+        },
+        {
+            "id": "135",
+            "name": "Ierse Water Spaniel"
+        },
+        {
+            "id": "136",
+            "name": "Ierse Wolfshond"
+        },
+        {
+            "id": "137",
+            "name": "IJslandse Hond"
+        },
+        {
+            "id": "325",
+            "name": "Indian Dog"
+        },
+        {
+            "id": "110",
+            "name": "Irish Glen of Imaal Terrier"
+        },
+        {
+            "id": "139",
+            "name": "Irish Soft Coated Wheaten Terrier"
+        },
+        {
+            "id": "424",
+            "name": "Istarski Gonic"
+        },
+        {
+            "id": "140",
+            "name": "Italiaans Windhondje"
+        },
+        {
+            "id": "141",
+            "name": "Jack Russell Terriër"
+        },
+        {
+            "id": "144",
+            "name": "Japanse Spaniel"
+        },
+        {
+            "id": "143",
+            "name": "Japanse Spits"
+        },
+        {
+            "id": "426",
+            "name": "Japanse Terrier"
+        },
+        {
+            "id": "145",
+            "name": "Jura Laufhund"
+        },
+        {
+            "id": "428",
+            "name": "Kai"
+        },
+        {
+            "id": "363",
+            "name": "Kaninchen Dashond (Kaninchen Teckel)"
+        },
+        {
+            "id": "146",
+            "name": "Karelische Berenhond"
+        },
+        {
+            "id": "147",
+            "name": "Kaukasische Herder"
+        },
+        {
+            "id": "293",
+            "name": "Kelpie"
+        },
+        {
+            "id": "149",
+            "name": "Kerry Blue Terrier"
+        },
+        {
+            "id": "429",
+            "name": "King Charles Spaniël"
+        },
+        {
+            "id": "430",
+            "name": "Kintamani Bali Dog"
+        },
+        {
+            "id": "431",
+            "name": "Kishu"
+        },
+        {
+            "id": "150",
+            "name": "Kleine Keeshond"
+        },
+        {
+            "id": "151",
+            "name": "Kleine Munsterlander"
+        },
+        {
+            "id": "155",
+            "name": "Komondor"
+        },
+        {
+            "id": "432",
+            "name": "Korea Jindo Dog"
+        },
+        {
+            "id": "162",
+            "name": "Kromfohrländer"
+        },
+        {
+            "id": "470",
+            "name": "Labradoodle Medium"
+        },
+        {
+            "id": "133",
+            "name": "Labradoodle Miniatuur"
+        },
+        {
+            "id": "471",
+            "name": "Labradoodle Standaard"
+        },
+        {
+            "id": "167",
+            "name": "Labrador Retriever"
+        },
+        {
+            "id": "168",
+            "name": "Lagotto Romagnolo"
+        },
+        {
+            "id": "165",
+            "name": "Lakeland Terrier"
+        },
+        {
+            "id": "348",
+            "name": "Lancashire Heeler"
+        },
+        {
+            "id": "166",
+            "name": "Landseer ECT"
+        },
+        {
+            "id": "311",
+            "name": "Lapinporokoira (Laplandse Herdershond)"
+        },
+        {
+            "id": "174",
+            "name": "Leonberger"
+        },
+        {
+            "id": "175",
+            "name": "Lhasa Apso"
+        },
+        {
+            "id": "480",
+            "name": "Magyar Agár (Hongaarse windhond)"
+        },
+        {
+            "id": "179",
+            "name": "Maltezer"
+        },
+        {
+            "id": "478",
+            "name": "Maltipoo"
+        },
+        {
+            "id": "181",
+            "name": "Manchester Terrier"
+        },
+        {
+            "id": "182",
+            "name": "Markiesje"
+        },
+        {
+            "id": "183",
+            "name": "Mastiff"
+        },
+        {
+            "id": "185",
+            "name": "Mastin del Pirineo"
+        },
+        {
+            "id": "178",
+            "name": "Mastin Español"
+        },
+        {
+            "id": "184",
+            "name": "Mastino"
+        },
+        {
+            "id": "180",
+            "name": "Mastino Napoletano"
+        },
+        {
+            "id": "189",
+            "name": "Middenslag Keeshond"
+        },
+        {
+            "id": "365",
+            "name": "Middenslag Poedel"
+        },
+        {
+            "id": "191",
+            "name": "Middenslag Schnauzer"
+        },
+        {
+            "id": "188",
+            "name": "Miniatuur Bull Terrier"
+        },
+        {
+            "id": "192",
+            "name": "Mopshond"
+        },
+        {
+            "id": "328",
+            "name": "Mudi (Hongaarse Herdershond)"
+        },
+        {
+            "id": "156",
+            "name": "Nederlandse Kooikerhondje"
+        },
+        {
+            "id": "240",
+            "name": "Nederlandse Schapendoes"
+        },
+        {
+            "id": "193",
+            "name": "Newfoundlander"
+        },
+        {
+            "id": "316",
+            "name": "Nizinny"
+        },
+        {
+            "id": "194",
+            "name": "Noorse Buhund"
+        },
+        {
+            "id": "195",
+            "name": "Noorse Elandhond"
+        },
+        {
+            "id": "198",
+            "name": "Norfolk Terrier"
+        },
+        {
+            "id": "199",
+            "name": "Norwich Terrier"
+        },
+        {
+            "id": "197",
+            "name": "Nova Scotia Duck Tolling Retriever"
+        },
+        {
+            "id": "435",
+            "name": "Ogar Polski"
+        },
+        {
+            "id": "201",
+            "name": "Old English Bulldog"
+        },
+        {
+            "id": "203",
+            "name": "Old English sheepdog (Bobtail)"
+        },
+        {
+            "id": "341",
+            "name": "Old Victorian bulldog"
+        },
+        {
+            "id": "204",
+            "name": "Onbekend"
+        },
+        {
+            "id": "205",
+            "name": "Oostenrijkse Pinscher"
+        },
+        {
+            "id": "436",
+            "name": "Oostsiberische Laika"
+        },
+        {
+            "id": "206",
+            "name": "Otterhound"
+        },
+        {
+            "id": "200",
+            "name": "Oud Duitse Herdershond"
+        },
+        {
+            "id": "148",
+            "name": "Ovcharka"
+        },
+        {
+            "id": "232",
+            "name": "Papillon (Vlinderhondje)"
+        },
+        {
+            "id": "207",
+            "name": "Parson Russell Terrier"
+        },
+        {
+            "id": "208",
+            "name": "Patterdale terrier"
+        },
+        {
+            "id": "212",
+            "name": "Pekingees"
+        },
+        {
+            "id": "437",
+            "name": "Perdigueiro de Burgos"
+        },
+        {
+            "id": "438",
+            "name": "Perdigueiro Português"
+        },
+        {
+            "id": "210",
+            "name": "Perro de Agua Español (Spaanse Waterhond)"
+        },
+        {
+            "id": "439",
+            "name": "Perro de Pastor Mallorquin"
+        },
+        {
+            "id": "440",
+            "name": "Perro Dogo Mallorquín"
+        },
+        {
+            "id": "345",
+            "name": "Peruaanse Naakthond"
+        },
+        {
+            "id": "441",
+            "name": "Petit Basset griffon vendéen"
+        },
+        {
+            "id": "211",
+            "name": "Petit Bleu de Gascogne"
+        },
+        {
+            "id": "209",
+            "name": "Petit Brabançon"
+        },
+        {
+            "id": "173",
+            "name": "Petit Chien Lion (Leeuwhondje)"
+        },
+        {
+            "id": "442",
+            "name": "Petit Gascon Saintongeois"
+        },
+        {
+            "id": "213",
+            "name": "Pharaohond"
+        },
+        {
+            "id": "214",
+            "name": "Picardische Herdershond"
+        },
+        {
+            "id": "351",
+            "name": "Podenco"
+        },
+        {
+            "id": "343",
+            "name": "Podenco Andaluz"
+        },
+        {
+            "id": "350",
+            "name": "Podenco Canario"
+        },
+        {
+            "id": "217",
+            "name": "Podenco Ibicenco"
+        },
+        {
+            "id": "335",
+            "name": "Podenco Maneto"
+        },
+        {
+            "id": "302",
+            "name": "Podengo Português"
+        },
+        {
+            "id": "443",
+            "name": "Poedelpointer"
+        },
+        {
+            "id": "218",
+            "name": "Pointer"
+        },
+        {
+            "id": "444",
+            "name": "Poitevin"
+        },
+        {
+            "id": "219",
+            "name": "Polski Owczarek Nizinny"
+        },
+        {
+            "id": "312",
+            "name": "Pomeranian"
+        },
+        {
+            "id": "479",
+            "name": "Pomsky"
+        },
+        {
+            "id": "445",
+            "name": "Posavski Gonic"
+        },
+        {
+            "id": "303",
+            "name": "Prazsky Krysarik"
+        },
+        {
+            "id": "223",
+            "name": "Pronkrug"
+        },
+        {
+            "id": "308",
+            "name": "Puggle"
+        },
+        {
+            "id": "224",
+            "name": "Puli"
+        },
+        {
+            "id": "225",
+            "name": "Pumi"
+        },
+        {
+            "id": "226",
+            "name": "Pyreneese Berghond"
+        },
+        {
+            "id": "227",
+            "name": "Pyreneese Herdershond"
+        },
+        {
+            "id": "446",
+            "name": "Pyreneese Herdershond à poil long"
+        },
+        {
+            "id": "447",
+            "name": "Rafeiro do Alentejo"
+        },
+        {
+            "id": "481",
+            "name": "Rafeiro do Alentejo"
+        },
+        {
+            "id": "448",
+            "name": "Rastreador Brasileiro"
+        },
+        {
+            "id": "349",
+            "name": "Rat Terrier"
+        },
+        {
+            "id": "324",
+            "name": "Renascence Bulldog"
+        },
+        {
+            "id": "229",
+            "name": "Rhodesian Ridgeback"
+        },
+        {
+            "id": "230",
+            "name": "Riesenschnauzer"
+        },
+        {
+            "id": "233",
+            "name": "Rottweiler"
+        },
+        {
+            "id": "315",
+            "name": "Russian Toy"
+        },
+        {
+            "id": "449",
+            "name": "Russisch-Europese Laika"
+        },
+        {
+            "id": "337",
+            "name": "Russische Terrier"
+        },
+        {
+            "id": "239",
+            "name": "Saarlooswolfhond"
+        },
+        {
+            "id": "450",
+            "name": "Sabueso Español"
+        },
+        {
+            "id": "236",
+            "name": "Saluki"
+        },
+        {
+            "id": "237",
+            "name": "Samojeed"
+        },
+        {
+            "id": "238",
+            "name": "Sarplaninac"
+        },
+        {
+            "id": "451",
+            "name": "Schillerstövare"
+        },
+        {
+            "id": "242",
+            "name": "Schipperke"
+        },
+        {
+            "id": "243",
+            "name": "Schnauzer"
+        },
+        {
+            "id": "296",
+            "name": "Schotse Collie"
+        },
+        {
+            "id": "244",
+            "name": "Schotse Terrier"
+        },
+        {
+            "id": "452",
+            "name": "Schweizer Laufhund"
+        },
+        {
+            "id": "453",
+            "name": "Schweizer Niederlaufhund"
+        },
+        {
+            "id": "454",
+            "name": "Segugio Italiano"
+        },
+        {
+            "id": "455",
+            "name": "Segugio Maremmano"
+        },
+        {
+            "id": "248",
+            "name": "Shar-Pei"
+        },
+        {
+            "id": "246",
+            "name": "Sheltie"
+        },
+        {
+            "id": "249",
+            "name": "Shetland Sheepdog (Sheltie)"
+        },
+        {
+            "id": "247",
+            "name": "Shiba (Inu)"
+        },
+        {
+            "id": "250",
+            "name": "Shih Tzu"
+        },
+        {
+            "id": "346",
+            "name": "Shiloh Shepherd"
+        },
+        {
+            "id": "252",
+            "name": "Siberian Husky"
+        },
+        {
+            "id": "251",
+            "name": "Sint Bernard"
+        },
+        {
+            "id": "317",
+            "name": "Slovenský Cuvac"
+        },
+        {
+            "id": "333",
+            "name": "Slovenský Hrubosrstý Stavac"
+        },
+        {
+            "id": "456",
+            "name": "Slovenský Kopov"
+        },
+        {
+            "id": "457",
+            "name": "Smålandsstövare"
+        },
+        {
+            "id": "301",
+            "name": "Soft Coated Wheaten TerriÃ«r"
+        },
+        {
+            "id": "310",
+            "name": "Spaanse waterhond (Perro de agua Espanol)"
+        },
+        {
+            "id": "258",
+            "name": "Spinone Italiano"
+        },
+        {
+            "id": "259",
+            "name": "Springer Spaniel"
+        },
+        {
+            "id": "458",
+            "name": "Srpski Gonic"
+        },
+        {
+            "id": "459",
+            "name": "Srpski Trobojni Gonic"
+        },
+        {
+            "id": "107",
+            "name": "Stabijhoun (Friese Stabij)"
+        },
+        {
+            "id": "261",
+            "name": "Staffordshire Bull Terrier (Engelse Stafford)"
+        },
+        {
+            "id": "460",
+            "name": "Steirische ruwharige Brak"
+        },
+        {
+            "id": "461",
+            "name": "Taiwan Dog"
+        },
+        {
+            "id": "263",
+            "name": "Tatrahond"
+        },
+        {
+            "id": "462",
+            "name": "Thai Bangkaew Dog"
+        },
+        {
+            "id": "268",
+            "name": "Tibetaanse Mastiff"
+        },
+        {
+            "id": "269",
+            "name": "Tibetaanse Spaniel"
+        },
+        {
+            "id": "267",
+            "name": "Tibetaanse Terrier"
+        },
+        {
+            "id": "463",
+            "name": "Tiroler Brak"
+        },
+        {
+            "id": "304",
+            "name": "Tornjak"
+        },
+        {
+            "id": "270",
+            "name": "Tosa (Inu)"
+        },
+        {
+            "id": "464",
+            "name": "Toypoedel"
+        },
+        {
+            "id": "313",
+            "name": "Tsjechoslowaakse Wolfhond"
+        },
+        {
+            "id": "273",
+            "name": "Västgötaspets"
+        },
+        {
+            "id": "274",
+            "name": "Vizsla"
+        },
+        {
+            "id": "465",
+            "name": "Volpino Italiano"
+        },
+        {
+            "id": "276",
+            "name": "Weimaraner"
+        },
+        {
+            "id": "275",
+            "name": "Welsh Corgi Cardigan"
+        },
+        {
+            "id": "279",
+            "name": "Welsh Corgi Pembroke"
+        },
+        {
+            "id": "280",
+            "name": "Welsh Springer Spaniel"
+        },
+        {
+            "id": "278",
+            "name": "Welsh Terrier"
+        },
+        {
+            "id": "281",
+            "name": "West Highland White Terrier"
+        },
+        {
+            "id": "466",
+            "name": "Westfaalse Dasbrak"
+        },
+        {
+            "id": "319",
+            "name": "Westfalen Terrier"
+        },
+        {
+            "id": "282",
+            "name": "Wetterhoun"
+        },
+        {
+            "id": "283",
+            "name": "Whippet"
+        },
+        {
+            "id": "285",
+            "name": "White Swiss Shepard Dog"
+        },
+        {
+            "id": "339",
+            "name": "Windhond"
+        },
+        {
+            "id": "284",
+            "name": "Wolfskeeshond"
+        },
+        {
+            "id": "482",
+            "name": "Wolfskeeshond"
+        },
+        {
+            "id": "467",
+            "name": "Yakutskaya Laika"
+        },
+        {
+            "id": "287",
+            "name": "Yorkshire Terrier"
+        },
+        {
+            "id": "289",
+            "name": "Zwart Russische Terriër"
+        },
+        {
+            "id": "307",
+            "name": "Zwitserse Sennenhond"
+        },
+        {
+            "id": "138",
+            "name": "Zwitserse Witte Herdershond"
+        }
+    ],
+    "cat": [
+        {
+            "id": "1",
+            "name": "Abessijn"
+        },
+        {
+            "id": "3",
+            "name": "American Bobtail"
+        },
+        {
+            "id": "4",
+            "name": "American Curl"
+        },
+        {
+            "id": "7",
+            "name": "American Shorthair"
+        },
+        {
+            "id": "9",
+            "name": "American Wirehair"
+        },
+        {
+            "id": "11",
+            "name": "Asian"
+        },
+        {
+            "id": "12",
+            "name": "Balinees"
+        },
+        {
+            "id": "13",
+            "name": "Bengaal"
+        },
+        {
+            "id": "15",
+            "name": "Blauwe rus"
+        },
+        {
+            "id": "16",
+            "name": "Bombay"
+        },
+        {
+            "id": "18",
+            "name": "Brits Korthaar"
+        },
+        {
+            "id": "17",
+            "name": "Brits Langhaar"
+        },
+        {
+            "id": "20",
+            "name": "Burmees"
+        },
+        {
+            "id": "19",
+            "name": "Burmilla"
+        },
+        {
+            "id": "21",
+            "name": "California Spangled"
+        },
+        {
+            "id": "22",
+            "name": "Chartreux"
+        },
+        {
+            "id": "89",
+            "name": "Cheetoh"
+        },
+        {
+            "id": "23",
+            "name": "Chinchilla"
+        },
+        {
+            "id": "24",
+            "name": "Cornish Rex"
+        },
+        {
+            "id": "25",
+            "name": "Cymric"
+        },
+        {
+            "id": "73",
+            "name": "Cypers"
+        },
+        {
+            "id": "26",
+            "name": "Devon Rex"
+        },
+        {
+            "id": "27",
+            "name": "Egyptische Mau"
+        },
+        {
+            "id": "28",
+            "name": "Europees Korthaar"
+        },
+        {
+            "id": "80",
+            "name": "Europees Langhaar"
+        },
+        {
+            "id": "29",
+            "name": "Exotic"
+        },
+        {
+            "id": "30",
+            "name": "Foreign White"
+        },
+        {
+            "id": "31",
+            "name": "German rex"
+        },
+        {
+            "id": "32",
+            "name": "Havanna Brown"
+        },
+        {
+            "id": "33",
+            "name": "Heilige birmaan"
+        },
+        {
+            "id": "34",
+            "name": "Highland Fold"
+        },
+        {
+            "id": "86",
+            "name": "Highland Straight"
+        },
+        {
+            "id": "35",
+            "name": "Japanse Bobtail"
+        },
+        {
+            "id": "38",
+            "name": "Karthuizer"
+        },
+        {
+            "id": "39",
+            "name": "Korat"
+        },
+        {
+            "id": "40",
+            "name": "Kurilen Stompstaartkat"
+        },
+        {
+            "id": "62",
+            "name": "Langharige Siamees"
+        },
+        {
+            "id": "74",
+            "name": "LaPerm"
+        },
+        {
+            "id": "41",
+            "name": "Maine Coon"
+        },
+        {
+            "id": "43",
+            "name": "Mandarin"
+        },
+        {
+            "id": "42",
+            "name": "Manx, halflangharige"
+        },
+        {
+            "id": "88",
+            "name": "Mekong Bobtail"
+        },
+        {
+            "id": "46",
+            "name": "Munchkin"
+        },
+        {
+            "id": "87",
+            "name": "Nebelung"
+        },
+        {
+            "id": "82",
+            "name": "Neva Masquerade"
+        },
+        {
+            "id": "47",
+            "name": "Noorse Boskat"
+        },
+        {
+            "id": "48",
+            "name": "Ocicat"
+        },
+        {
+            "id": "49",
+            "name": "Onbekend"
+        },
+        {
+            "id": "51",
+            "name": "Oosterse Korthaar"
+        },
+        {
+            "id": "50",
+            "name": "Oosterse Langhaar"
+        },
+        {
+            "id": "52",
+            "name": "Perzische kat"
+        },
+        {
+            "id": "83",
+            "name": "Peterbald"
+        },
+        {
+            "id": "79",
+            "name": "Pixie-Bob"
+        },
+        {
+            "id": "54",
+            "name": "Ragdoll"
+        },
+        {
+            "id": "76",
+            "name": "Russisch Blauw"
+        },
+        {
+            "id": "81",
+            "name": "Savannah"
+        },
+        {
+            "id": "57",
+            "name": "Schotse Vouwoorkat"
+        },
+        {
+            "id": "59",
+            "name": "Scottish Fold"
+        },
+        {
+            "id": "84",
+            "name": "Scottish Straight"
+        },
+        {
+            "id": "58",
+            "name": "Selkirk Rex"
+        },
+        {
+            "id": "60",
+            "name": "Siamees"
+        },
+        {
+            "id": "75",
+            "name": "Siberische (bos)kat"
+        },
+        {
+            "id": "61",
+            "name": "Siberische Kat"
+        },
+        {
+            "id": "65",
+            "name": "Snowshoe"
+        },
+        {
+            "id": "67",
+            "name": "Somali"
+        },
+        {
+            "id": "68",
+            "name": "Sphynx"
+        },
+        {
+            "id": "78",
+            "name": "Thai Cat"
+        },
+        {
+            "id": "69",
+            "name": "Tibetaan"
+        },
+        {
+            "id": "70",
+            "name": "Tonkanees"
+        },
+        {
+            "id": "85",
+            "name": "Toyger"
+        },
+        {
+            "id": "71",
+            "name": "Turkse Angora"
+        },
+        {
+            "id": "72",
+            "name": "Turkse Van"
+        }
+    ],
+    "parrot": [
+        {
+            "id": "1",
+            "name": "Agapornis"
+        },
+        {
+            "id": "12",
+            "name": "Blauw Gele Ara"
+        },
+        {
+            "id": "13",
+            "name": "Blauwvoorhoofd Amazone"
+        },
+        {
+            "id": "2",
+            "name": "Bont Boertje"
+        },
+        {
+            "id": "3",
+            "name": "Edel Papegaai"
+        },
+        {
+            "id": "42",
+            "name": "Geelvleugelara"
+        },
+        {
+            "id": "4",
+            "name": "Geelvoorhoofd Amazone"
+        },
+        {
+            "id": "5",
+            "name": "Grasparkiet"
+        },
+        {
+            "id": "6",
+            "name": "Grijze Roodstaart"
+        },
+        {
+            "id": "14",
+            "name": "Groenvleugel Ara"
+        },
+        {
+            "id": "17",
+            "name": "Groenwang Pyrrhura"
+        },
+        {
+            "id": "7",
+            "name": "Halsband Parkiet"
+        },
+        {
+            "id": "15",
+            "name": "Harlekijn Ara"
+        },
+        {
+            "id": "39",
+            "name": "Hyacint Ara"
+        },
+        {
+            "id": "16",
+            "name": "Kaketoe"
+        },
+        {
+            "id": "20",
+            "name": "Onbekend"
+        },
+        {
+            "id": "36",
+            "name": "Oranjevleugelamazone"
+        },
+        {
+            "id": "8",
+            "name": "Rosekaketoe"
+        },
+        {
+            "id": "9",
+            "name": "Rosella"
+        },
+        {
+            "id": "11",
+            "name": "Senegal Papegaai"
+        },
+        {
+            "id": "40",
+            "name": "Soldatenara"
+        },
+        {
+            "id": "10",
+            "name": "Valkparkiet"
+        },
+        {
+            "id": "38",
+            "name": "Wijnborstamazone"
+        },
+        {
+            "id": "41",
+            "name": "Zonparkiet"
+        }
+    ],
+    "rabbit": [
+        {
+            "id": "1",
+            "name": "Alaska"
+        },
+        {
+            "id": "2",
+            "name": "Angora"
+        },
+        {
+            "id": "57",
+            "name": "Baardkonijn"
+        },
+        {
+            "id": "3",
+            "name": "Beige"
+        },
+        {
+            "id": "4",
+            "name": "Belgische haas"
+        },
+        {
+            "id": "5",
+            "name": "Californian"
+        },
+        {
+            "id": "6",
+            "name": "Deilenaar"
+        },
+        {
+            "id": "7",
+            "name": "Donkergrannen"
+        },
+        {
+            "id": "8",
+            "name": "Duitse hangoor"
+        },
+        {
+            "id": "58",
+            "name": "Duitse Reus"
+        },
+        {
+            "id": "56",
+            "name": "Dwerg Hangoor"
+        },
+        {
+            "id": "59",
+            "name": "Dwergkonijn"
+        },
+        {
+            "id": "9",
+            "name": "Eksterkonijn"
+        },
+        {
+            "id": "10",
+            "name": "Engelse Hangoor"
+        },
+        {
+            "id": "11",
+            "name": "Franse hangoor"
+        },
+        {
+            "id": "12",
+            "name": "Gele van Bourgondië"
+        },
+        {
+            "id": "13",
+            "name": "Gouwenaar"
+        },
+        {
+            "id": "14",
+            "name": "Groot chinchilla"
+        },
+        {
+            "id": "15",
+            "name": "Groot zilver"
+        },
+        {
+            "id": "16",
+            "name": "Haasdwerg"
+        },
+        {
+            "id": "17",
+            "name": "Havana"
+        },
+        {
+            "id": "18",
+            "name": "Hollander"
+        },
+        {
+            "id": "19",
+            "name": "Hulstlander"
+        },
+        {
+            "id": "20",
+            "name": "Japanner"
+        },
+        {
+            "id": "21",
+            "name": "Klein chinchilla"
+        },
+        {
+            "id": "22",
+            "name": "Klein lotharinger"
+        },
+        {
+            "id": "23",
+            "name": "Klein Zilver"
+        },
+        {
+            "id": "24",
+            "name": "Kleurdwerg"
+        },
+        {
+            "id": "25",
+            "name": "Leeuwenkop"
+        },
+        {
+            "id": "26",
+            "name": "Lotharinger"
+        },
+        {
+            "id": "27",
+            "name": "Luchs"
+        },
+        {
+            "id": "28",
+            "name": "Marburger Feh"
+        },
+        {
+            "id": "29",
+            "name": "Marter"
+        },
+        {
+            "id": "30",
+            "name": "Meissner Hangoor"
+        },
+        {
+            "id": "60",
+            "name": "Mini lop"
+        },
+        {
+            "id": "31",
+            "name": "Nederlandse hangoor dwerg"
+        },
+        {
+            "id": "32",
+            "name": "Nieuw Zeelander"
+        },
+        {
+            "id": "55",
+            "name": "Onbekend"
+        },
+        {
+            "id": "33",
+            "name": "Papillon"
+        },
+        {
+            "id": "34",
+            "name": "Parelfeh"
+        },
+        {
+            "id": "35",
+            "name": "Peking Widder"
+        },
+        {
+            "id": "36",
+            "name": "Pool blauwoog"
+        },
+        {
+            "id": "37",
+            "name": "Pool roodoog"
+        },
+        {
+            "id": "38",
+            "name": "Rex"
+        },
+        {
+            "id": "39",
+            "name": "Rijnlander"
+        },
+        {
+            "id": "40",
+            "name": "Rode Nieuw Zeelander"
+        },
+        {
+            "id": "41",
+            "name": "Rus"
+        },
+        {
+            "id": "42",
+            "name": "Sallander"
+        },
+        {
+            "id": "43",
+            "name": "Satijn"
+        },
+        {
+            "id": "44",
+            "name": "Tan"
+        },
+        {
+            "id": "45",
+            "name": "Teddy Dwerg"
+        },
+        {
+            "id": "46",
+            "name": "Teddy Widder"
+        },
+        {
+            "id": "47",
+            "name": "Thrianta"
+        },
+        {
+            "id": "48",
+            "name": "Thüringer"
+        },
+        {
+            "id": "49",
+            "name": "Van beveren"
+        },
+        {
+            "id": "50",
+            "name": "Vlaamse reus"
+        },
+        {
+            "id": "51",
+            "name": "Voskonijn"
+        },
+        {
+            "id": "52",
+            "name": "Wener"
+        },
+        {
+            "id": "53",
+            "name": "Witte van Hottot"
+        },
+        {
+            "id": "54",
+            "name": "Zilvervos"
+        }
+    ]
+}
