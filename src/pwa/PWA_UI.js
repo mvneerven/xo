@@ -34,9 +34,7 @@ class PWA_UI {
             this.html.classList.add("no-user-select");
         }
 
-        if ('ontouchstart' in window) {
-            this.html.classList.add('pwa-touch');
-        }
+        
 
         if (this.forceTheme) {
             this.theme = this.forceTheme;

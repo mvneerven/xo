@@ -72,7 +72,8 @@
         }
     }
 
-    &.nsp-xs {
+    &.nsp-xs,
+    &.nsp-xxs {
         nav.main-menu {
             ul {
                 li {
@@ -228,7 +229,8 @@ html:not([data-pwa-route="/"]) {
         background-position: 20% bottom;
     }
 
-    &.nsp-xs {
+    &.nsp-xs,
+    &.nsp-xxs {
         [data-pwa-area="menu"] {
             background-image: none;
         }
@@ -301,7 +303,7 @@ html:not([data-pwa-route="/"]) {
             }
         }
 
-        &:not(.nsp-xs) {
+        &:not(.nsp-xs):not(.nsp-xxs) {
             main {
                 overflow: hidden;
                 height: 100%;
@@ -355,7 +357,8 @@ html:not([data-pwa-route="/"]) {
             }
         }
 
-        &.nsp-xs {
+        &.nsp-xs,
+        &.nsp-xxs {
             [data-pwa-area="panel"] {
                 z-index: 1500 !important;
                 height: 400px;
@@ -409,55 +412,32 @@ html:not([data-pwa-route="/"]) {
     }
 }
 
-.nsp-grid.nsp-grid-3rc.nsp-xs {
-    body {
-        main {
-            [data-pwa-area="main"] {
-                margin-left: 55px;
-            }
-            [data-pwa-area="menu"] {
-                width: 210px;
-                left: -160px;
-
-                &:hover {
-                    left: -170px;
-
-                    &:not(.clicked) {
-                        left: 0px;
-                        transition: all 0.5s;
-                    }
+.nsp-grid.nsp-grid-3rc {
+    &.nsp-xs,
+    &.nsp-xxs {
+        body {
+            main {
+                [data-pwa-area="main"] {
+                    margin-left: 55px;
                 }
+                [data-pwa-area="menu"] {
+                    width: 210px;
+                    left: -160px;
 
-                &.clicked {
-                    left: -170px;
-                    transition: all 0.1s;
-                }
+                    &:hover {
+                        left: -170px;
 
-                nav.main-menu {
-                    a {
-                        text-align: right;
-                        display: block;
-                        padding-right: 10px;
-
-                        .name {
-                            display: none;
+                        &:not(.clicked) {
+                            left: 0px;
+                            transition: all 0.5s;
                         }
                     }
-                }
 
-                &:hover:not(.clicked) {
-                    nav.main-menu {
-                        a {
-                            text-align: left;
-
-                            .name {
-                                display: inline-block;
-                            }
-                        }
+                    &.clicked {
+                        left: -170px;
+                        transition: all 0.1s;
                     }
-                }
 
-                &.clicked {
                     nav.main-menu {
                         a {
                             text-align: right;
@@ -469,14 +449,40 @@ html:not([data-pwa-route="/"]) {
                             }
                         }
                     }
+
+                    &:hover:not(.clicked) {
+                        nav.main-menu {
+                            a {
+                                text-align: left;
+
+                                .name {
+                                    display: inline-block;
+                                }
+                            }
+                        }
+                    }
+
+                    &.clicked {
+                        nav.main-menu {
+                            a {
+                                text-align: right;
+                                display: block;
+                                padding-right: 10px;
+
+                                .name {
+                                    display: none;
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }
-    }
 
-    &:not([data-pwa-route="/studio"]) {
-        [data-pwa-area="panel"] {
-            padding-left: 55px !important;
+        &:not([data-pwa-route="/studio"]) {
+            [data-pwa-area="panel"] {
+                padding-left: 55px !important;
+            }
         }
     }
 }

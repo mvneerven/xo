@@ -2421,6 +2421,7 @@ html.theme-dark .exf-ctl-cnt.autocomplete .exf-ac-rs .exf-ac-itm.active {
       grid-template-areas: var(--lv-grid-template-xl-areas);
 }
 
+.nsp-xxs .exf-lv-paging,
 .nsp-xs .exf-lv-paging,
 .nsp-sm .exf-lv-paging {
   -webkit-box-pack: center !important;
@@ -2428,6 +2429,7 @@ html.theme-dark .exf-ctl-cnt.autocomplete .exf-ac-rs .exf-ac-itm.active {
           justify-content: center !important;
 }
 
+.nsp-xxs .exf-lv-paging .exf-text,
 .nsp-xs .exf-lv-paging .exf-text,
 .nsp-sm .exf-lv-paging .exf-text {
   display: none;

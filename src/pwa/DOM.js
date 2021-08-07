@@ -221,9 +221,9 @@ class DOM {
         const html = document.querySelector("HTML");
         const setC = (width, height) => {
             const prefix = "nsp-",
-                sizes = { "xs": 768, "sm": 992, "md": 1200, "lg": 1440, "xl": 1920, "uw": 2300 };
+                sizes = { "xxs": 640, "xs": 768, "sm": 992, "md": 1200, "lg": 1440, "xl": 1920, "uw": 2300 };
 
-            var cls = prefix + "xs";
+            var cls = prefix + "xxs";
             for (var i in sizes) {
                 html.classList.remove(prefix + i);
                 if (width > sizes[i])
@@ -233,6 +233,9 @@ class DOM {
             html.classList.remove("nsp-portrait");
             html.classList.remove("nsp-landscape");
             html.classList.add(width > height ? "nsp-landscape" : "nsp-portrait");
+
+            const touch = 'ontouchstart' in window;
+            html.classList[touch ? "add" : "remove"]('pwa-touch');
 
             html.classList.add(cls);
         }
@@ -356,12 +359,12 @@ class DOM {
 
     static wrap(el) {
         const div = document.createElement('div');
-        const parent = el.parentElement;        
+        const parent = el.parentElement;
         parent.insertBefore(div, el);
         div.appendChild(el);
         return div;
     }
-    
+
     static unwrap(el) {
         var parent = el.parentNode;
         while (el.firstChild) parent.insertBefore(el.firstChild, el);

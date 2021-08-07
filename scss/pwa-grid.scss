@@ -23,7 +23,7 @@
             grid-template-rows: minmax(4vh, 40px) 1fr 30px;           
         }
 
-        &.nsp-xs {
+        &.nsp-xs, &.nsp-xxs {
             body {
                 grid-template-rows: minmax(3vh, 40px) 1fr 0px;
 

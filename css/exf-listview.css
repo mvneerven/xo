@@ -62,6 +62,7 @@
       grid-template-areas: var(--lv-grid-template-xl-areas);
 }
 
+.nsp-xxs .exf-lv-paging,
 .nsp-xs .exf-lv-paging,
 .nsp-sm .exf-lv-paging {
   -webkit-box-pack: center !important;
@@ -69,6 +70,7 @@
           justify-content: center !important;
 }
 
+.nsp-xxs .exf-lv-paging .exf-text,
 .nsp-xs .exf-lv-paging .exf-text,
 .nsp-sm .exf-lv-paging .exf-text {
   display: none;
