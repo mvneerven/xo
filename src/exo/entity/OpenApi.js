@@ -41,8 +41,7 @@ class OpenApi {
     }
 
     _getSchemas() {
-        let ar = [];
-        
+        let ar = [];        
         if (this._data.components && this._data.components.schemas) {
             for (var s in this._data.components.schemas) {
                 ar.push({
@@ -84,7 +83,7 @@ class OpenApi {
                 }
             }
         }
-
+        console.log("EndPoints", ar);
         return ar;
     }
 }

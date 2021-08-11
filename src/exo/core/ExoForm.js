@@ -175,29 +175,33 @@ class ExoForm {
                 this.events.trigger(ExoFormFactory.events.schemaLoading);
 
                 this._dataBinding = new ExoFormDataBinding(this, this._mappedInstance);
-                this.dataBinding.on("change", e => {
-                    e.detail.state = "change";
-                    this.events.trigger(ExoFormFactory.events.dataModelChange, e.detail)
-                }).on("ready", e => {
-                    e.detail.state = "ready";
-                    this.events.trigger(ExoFormFactory.events.dataModelChange, e.detail)
-                }).on("error", e => {
-                    this.events.trigger(ExoFormFactory.events.error, e.detail);
-                });
+                this._dataBinding.prepare().then(()=>{
 
-                this.events.trigger(ExoFormFactory.events.schemaLoaded);
-                this.schema.refreshStats();
-
-                this._createComponents();
-
-                if (this.schema.form) {
-                    let formClasses = this.schema.form.class ? this.schema.form.class.split(' ') : ["standard"];
-                    formClasses.forEach(c => {
-                        this.form.classList.add(c);
-                    })
-                }
-
-                resolve();
+                    this.dataBinding.on("change", e => {
+                        e.detail.state = "change";
+                        this.events.trigger(ExoFormFactory.events.dataModelChange, e.detail)
+                    }).on("ready", e => {
+                        e.detail.state = "ready";
+                        this.events.trigger(ExoFormFactory.events.dataModelChange, e.detail)
+                    }).on("error", e => {
+                        this.events.trigger(ExoFormFactory.events.error, e.detail);
+                    });
+    
+                    this.events.trigger(ExoFormFactory.events.schemaLoaded);
+                    this.schema.refreshStats();
+    
+                    this._createComponents();
+    
+                    if (this.schema.form) {
+                        let formClasses = this.schema.form.class ? this.schema.form.class.split(' ') : ["standard"];
+                        formClasses.forEach(c => {
+                            this.form.classList.add(c);
+                        })
+                    }
+    
+                    resolve();
+                })
+                
             })
             this.schema.refreshStats();
         });

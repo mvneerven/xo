@@ -2,6 +2,7 @@ import 'regenerator-runtime/runtime'; // included for babel build
 import ExoFormFactory from '../src/exo/core/ExoFormFactory';
 import RouteModule from '../src/pwa/RouteModule';
 import ExoBaseControls from '../src/exo/controls/base';
+import ExoExtendedControls from '../src/exo/controls/extended';
 import DOM from '../src/pwa/DOM';
 import PWA from '../src/pwa/PWA';
 import Core from '../src/pwa/Core';
@@ -18,7 +19,8 @@ class Form {
     get schema() { return ExoFormSchema }
     get fields() {
         return {
-            base: ExoBaseControls
+            base: ExoBaseControls,
+            extended: ExoExtendedControls
         }
     }
     get run() { return ExoFormFactory.run }

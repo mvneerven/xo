@@ -1,10 +1,89 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "title": "TestOpenApiDocument",
-    "version": "1.2.3"
+    "title": "AssetManagementApi",
+    "version": "1.0.0"
   },
   "paths": {
+    "/assets/{assetpathandname}": {
+      "delete": {
+        "description": "Description for DeleteAsset",
+        "operationId": "DeleteAsset",
+        "parameters": [
+          {
+            "name": "assetPathAndName",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "title": "assetPathAndName",
+              "type": "string",
+              "format": ""
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {}
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/assets": {
+      "get": {
+        "description": "Description for GetAssetTree",
+        "operationId": "GetAssetTree",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/treeNode"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/assets/{assetpathandname}/dependents": {
+      "get": {
+        "description": "Description for GetDependentEntities",
+        "operationId": "GetDependentEntities",
+        "parameters": [
+          {
+            "name": "assetPathAndName",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "title": "assetPathAndName",
+              "type": "string",
+              "format": ""
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/dependentEntityDTO"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/openapi": {
       "get": {
         "description": "Description for GetOpenApiDefinition",
@@ -50,13 +129,7 @@
               }
             }
           }
-        },
-        "servers": [
-          {
-            "url": "https://stasfassetsdev.blob.core.windows.net/",
-            "description": "AzBlobStorageApi"
-          }
-        ]
+        }
       }
     },
     "/{tenantid}?{sastoken}&restype=container&comp=list": {
@@ -67,7 +140,7 @@
           {
             "name": "tenantId",
             "in": "path",
-            "description": "must be in lowercase",
+            "description": "",
             "required": true,
             "schema": {
               "title": "tenantId",
@@ -94,8 +167,7 @@
         },
         "servers": [
           {
-            "url": "https://stasfassetsdev.blob.core.windows.net/",
-            "description": "AzBlobStorageApi"
+            "url": "https://stasfassetsdev.blob.core.windows.net"
           }
         ]
       }
@@ -108,7 +180,7 @@
           {
             "name": "tenantId",
             "in": "path",
-            "description": "must be in lowercase",
+            "description": "",
             "required": true,
             "schema": {
               "title": "tenantId",
@@ -146,8 +218,7 @@
         },
         "servers": [
           {
-            "url": "https://stasfassetsdev.blob.core.windows.net/",
-            "description": "AzBlobStorageApi"
+            "url": "https://stasfassetsdev.blob.core.windows.net"
           }
         ]
       },
@@ -158,7 +229,7 @@
           {
             "name": "tenantId",
             "in": "path",
-            "description": "must be in lowercase",
+            "description": "",
             "required": true,
             "schema": {
               "title": "tenantId",
@@ -198,7 +269,7 @@
           }
         ],
         "requestBody": {
-          "content": { }
+          "content": {}
         },
         "responses": {
           "200": {
@@ -207,8 +278,7 @@
         },
         "servers": [
           {
-            "url": "https://stasfassetsdev.blob.core.windows.net/",
-            "description": "AzBlobStorageApi"
+            "url": "https://stasfassetsdev.blob.core.windows.net"
           }
         ]
       },
@@ -219,7 +289,7 @@
           {
             "name": "tenantId",
             "in": "path",
-            "description": "must be in lowercase",
+            "description": "",
             "required": true,
             "schema": {
               "title": "tenantId",
@@ -251,7 +321,7 @@
           }
         ],
         "requestBody": {
-          "content": { }
+          "content": {}
         },
         "responses": {
           "200": {
@@ -260,12 +330,83 @@
         },
         "servers": [
           {
-            "url": "https://stasfassetsdev.blob.core.windows.net/",
-            "description": "AzBlobStorageApi"
+            "url": "https://stasfassetsdev.blob.core.windows.net"
           }
         ]
       }
     }
   },
-  "components": { }
+  "components": {
+    "schemas": {
+      "treeNode": {
+        "title": "TreeNode",
+        "properties": {
+          "name": {
+            "title": "Name",
+            "type": "string",
+            "format": ""
+          },
+          "contentType": {
+            "title": "ContentType",
+            "type": "string",
+            "format": "",
+            "nullable": true
+          },
+          "contentLength": {
+            "title": "ContentLength",
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          },
+          "isFolder": {
+            "title": "IsFolder",
+            "type": "boolean",
+            "format": ""
+          }
+        }
+      },
+      "dependentEntityDTO": {
+        "title": "DependentEntityDTO",
+        "properties": {
+          "entityId": {
+            "title": "EntityId",
+            "type": "string",
+            "format": "uuid"
+          },
+          "entityType": {
+            "title": "EntityType",
+            "type": "string",
+            "format": ""
+          },
+          "propertyNames": {
+            "title": "PropertyNames",
+            "required": [
+              "capacity",
+              "count",
+              "item"
+            ],
+            "type": "object",
+            "properties": {
+              "capacity": {
+                "title": "Capacity",
+                "type": "integer",
+                "format": "int32"
+              },
+              "count": {
+                "title": "Count",
+                "type": "integer",
+                "format": "int32"
+              },
+              "item": {
+                "title": "Item",
+                "type": "string",
+                "format": ""
+              }
+            },
+            "format": ""
+          }
+        }
+      }
+    }
+  }
 }

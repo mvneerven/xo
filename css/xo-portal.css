@@ -4570,7 +4570,7 @@ html.theme-light:root {
   --color-text: #333;
   --color-highlighttext: #fff455;
   --color-highlighttext-bg: #666;
-  --color-button: #31BF65;
+  --color-button: #31bf65;
   --color-tile-hover: #ccc;
   --color-tile-active: var(--color-button, #444);
   --color-button-text: #ffffff;
@@ -4653,7 +4653,7 @@ html.theme-dark:root {
 }
 
 header {
-  background-color: #ccc;
+  background-color: rgba(255, 255, 255, 0.5);
 }
 
 body {

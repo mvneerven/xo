@@ -18,28 +18,30 @@ class ExoFormDataBinding {
 
     constructor(exo, instance) {
         this.exo = exo;
+        this.instance = instance;
         this.events = new Core.Events(this);
-        
-        this._init(exo, instance).then(()=>{
+    }
+
+    async prepare(){
+        this._init(this.exo, this.instance).then(() => {
+
             this._resolver = new ExoFormDataBindingResolver(this);
 
-            exo.on(ExoFormFactory.events.renderStart, e => { // run logic for initial state of controls
+            this.exo.on(ExoFormFactory.events.renderStart, e => { // run logic for initial state of controls
                 this.resolver._checkSchemaLogic();
             })
-    
-            exo.on(ExoFormFactory.events.renderReady, e => {
-                exo.on(ExoFormFactory.events.dataModelChange, e => {
+
+            this.exo.on(ExoFormFactory.events.renderReady, e => {
+                this.exo.on(ExoFormFactory.events.dataModelChange, e => {
                     this.resolver.resolve();
                 }).on(ExoFormFactory.events.page, e => { // on navigate, resolve again (e.g. for navigation control state)
                     this.resolver.resolve();
                 })
                 this.resolver.resolve();
             })
-    
+
             this._ready();
         });
-
-        
     }
 
     get resolver() {
@@ -80,10 +82,10 @@ class ExoFormDataBinding {
             this.events.trigger("ready", { model: this._model });
         })
             .on(ExoFormFactory.events.interactive, () => {
-                let eventName = this.exo.options.DOMChange || "input" ;
+                let eventName = this.exo.options.DOMChange || "input";
 
                 const handle = e => {
-                    if(this.noProxy){
+                    if (this.noProxy) {
                         console.debug("ExoFormDataBinding", "DOMChange event SKIPPED BECAUSE NO-PROXY")
                         return
                     }
@@ -92,7 +94,7 @@ class ExoFormDataBinding {
                         master: true // lookup master if nested
                     });
                     if (field && field.bind) {
-                        if(!field._control.valid){
+                        if (!field._control.valid) {
                             return; // don't update model if the value isn't valid
                         }
 
@@ -105,8 +107,8 @@ class ExoFormDataBinding {
                 }
 
                 exo.form.addEventListener("change", handle);
-                
-                if(eventName === "input")
+
+                if (eventName === "input")
                     exo.form.addEventListener(eventName, handle)
             })
     }
@@ -128,39 +130,32 @@ class ExoFormDataBinding {
     }
 
     async _init(exo, instance) {
-        
-        return new Promise(resolve => {
+        if (instance) { //TODO deprecate
+            this._mapped = instance;
+            this._model.instance = instance;
+            this._origin = ExoFormDataBinding.origins.bind;
+        }
+        else if (exo.schema.model) {
+            this._origin = ExoFormDataBinding.origins.schema;
+            this._model = {
+                ...exo.schema.model
+            };
 
-            const f = async () => {
-                if (instance) { //TODO deprecate
-                    this._mapped = instance;
-                    this._model.instance = instance;
-                    this._origin = ExoFormDataBinding.origins.bind;
+            for (var n in this._model.instance) {
+                let ins = this._model.instance[n];
+
+                if (Core.isUrl(ins)) {
+                    ins = await Core.acquireState(ins);
                 }
-                else if (exo.schema.model) {
-                    this._origin = ExoFormDataBinding.origins.schema;
-                    this._model = {
-                        ...exo.schema.model
-                    };
-        
-                    for (var n in this._model.instance) {
-                        let ins = this._model.instance[n];
-        
-                        if(Core.isUrl(ins)) {
-                            ins = await Core.acquireState(ins);
-                        } 
-        
-                        this._model.instance[n] = this.proxy(n, ins); // Proxy to monitor changes
-                    }
-        
-                    this._model.bindings = this._model.bindings || {}
-                }
-                else {
-                    this._origin = ExoFormDataBinding.origins.none; 
-                }
+
+                this._model.instance[n] = this.proxy(n, ins); // Proxy to monitor changes
             }
-            f().then(resolve())
-        });
+
+            this._model.bindings = this._model.bindings || {}
+        }
+        else {
+            this._origin = ExoFormDataBinding.origins.none;
+        }
     }
 
     toString() {
@@ -207,7 +202,7 @@ class ExoFormDataBinding {
                         value = proxify(instanceName, value, change);
                     }
                     object[name] = value;
-                    if (old !== value){
+                    if (old !== value) {
                         change(object, name, old, value);
                     }
                     return true;
@@ -243,14 +238,14 @@ class ExoFormDataBinding {
                     changed: property,
                     value: newValue,
                     changeData: change
-                
+
                 });
                 me.resolver.resolve(change);
             }
         });
     }
 
-    verboseLog(change){
+    verboseLog(change) {
         let s = `Instance ${change.instanceName} modified: property ${change.property} changed from ${change.oldValue} to ${change.newValue}.`
         return s;
     }
@@ -286,14 +281,14 @@ class ExoFormDataBinding {
                 }
             }
         }
-        else if(typeof(value) === 'object' ){
-            
-            for(var p in value){
-                if(typeof(value[p]) == "string" && value[p].indexOf("@") >=0 ) {
+        else if (typeof (value) === 'object') {
+
+            for (var p in value) {
+                if (typeof (value[p]) == "string" && value[p].indexOf("@") >= 0) {
                     debugger;
                 }
                 returnValue[p] = this._processFieldProperty(control, p, returnValue[p])
-                if(value[p] !== returnValue[p]){
+                if (value[p] !== returnValue[p]) {
                     debugger;
                 }
             }

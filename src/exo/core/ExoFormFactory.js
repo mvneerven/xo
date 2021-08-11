@@ -559,17 +559,18 @@ class ExoFormFactory {
     //     fr.classList.add("exf-sandbox")
     //     fr.setAttribute("scrolling", "no");
     //     fr.setAttribute("frameborder", "0")
+    //     fr.setAttribute("title", "Embedded form")
     //     fr.addEventListener('load', function () {
     //         let b = fr.contentDocument.body;
     //         let w = fr.contentWindow;
     //         fr.style.height = (b.scrollHeight + 40) + 'px';
     //         fr.style.width = (b.scrollWidth + 40) + 'px';
 
-    //         w.addEventListener('message', e => {
-    //             options.on(e.data.type, {
-    //                 ...e.data.data
-    //             })
-    //         })
+    //         // w.addEventListener('message', e => {
+    //         //     options.on(e.data.type, {
+    //         //         ...e.data.data
+    //         //     })
+    //         // })
     //     });
         
     //     return fr

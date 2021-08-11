@@ -16,23 +16,23 @@
     <script type="module">
         const urlParams = new URLSearchParams(window.location.search);
 
-        const opts = {
-            on: {}
-        }
+         const opts = {
+             on: {}
+         }
 
-        Object.keys(xo.form.factory.events).forEach(k => {
-            opts.on[k] = e => {
+        // Object.keys(xo.form.factory.events).forEach(k => {
+        //     opts.on[k] = e => {
                 
-                console.log("Passing event ", k)
-                window.postMessage({
-                    type: k,
-                    data: {
-                        ...e.detail
-                    }
-                }, "*")
+        //         console.log("Passing event ", k)
+        //         window.postMessage({
+        //             type: k,
+        //             data: {
+        //                 ...e.detail
+        //             }
+        //         }, "*")
 
-            };
-        })
+        //     };
+        // })
 
 
         const frm = await xo.form.run(urlParams.get('b'), opts)
