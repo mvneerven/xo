@@ -434,6 +434,12 @@ class ExoListViewControl extends ExoDivControl {
           let i = this.currentItems.find(i => {
             return i[this.primaryKey] === id
           })
+
+          if (this.singleSelect && i.id === this.value) {
+            if(!e.ctrlKey)
+              return;
+          }
+
           this.selectItems(i);
         }
       });
@@ -1179,12 +1185,12 @@ class ExoListViewControl extends ExoDivControl {
   get valid() {
 
     if (this.singleSelect) {
-      return this.value != null && this.value != "" 
+      return this.value != null && this.value != ""
     }
 
     return (Array.isArray(this.value) && this.value.length >= this.minimum) ||
       (this.value && this.minimum <= 1);
-    
+
   }
 }
 
