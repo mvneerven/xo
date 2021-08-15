@@ -731,3 +731,8 @@ You can now edit forms in place in ExoForm Studio:
 
 The Live Edit feature supports drag & drop sorting, deleting fields and editing fields using property sheets. This feature leverages the fact that each control now exposes its own XO schema as a property and exposes metadata in the form of JSON Schema, which the property sheet uses to automatically generate an editing form - in ExoForm!
 
+# New in 1.4.100
+
+- You can now link a model instance via a URL instead of declaring it inline
+- Listview control now has a static mode, in which it just renders the data but adds no interactivity 
+- Clicking on a selected item in a singleSelect Listview doesn't deselect the item (unless CTRL is pressed)
