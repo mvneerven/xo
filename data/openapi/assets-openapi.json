@@ -1,412 +1,426 @@
 {
-  "openapi": "3.0.1",
-  "info": {
-    "title": "AssetManagementApi",
-    "version": "1.0.0"
-  },
-  "paths": {
-    "/assets/{assetpathandname}": {
-      "delete": {
-        "description": "Description for DeleteAsset",
-        "operationId": "DeleteAsset",
-        "parameters": [
-          {
-            "name": "assetPathAndName",
-            "in": "path",
-            "description": "",
-            "required": true,
-            "schema": {
-              "title": "assetPathAndName",
-              "type": "string",
-              "format": ""
+    "openapi": "3.0.1",
+    "info": {
+      "title": "AssetManagementApi",
+      "version": "1.0.0"
+    },
+    "paths": {
+      "/assets/{assetpathandname}": {
+        "delete": {
+          "description": "Delete an asset in both the BlobStorage and in the domain that tracks references to that asset.",
+          "operationId": "DeleteAsset",
+          "parameters": [
+            {
+              "name": "assetPathAndName",
+              "in": "path",
+              "description": "Note: forward slashes in the path are to be URLEncoded to '%2F', e.g. mysubfolder%2Fmysubsubfolder%2Fmyimage.png",
+              "required": true,
+              "schema": {
+                "title": "assetPathAndName",
+                "type": "string",
+                "format": ""
+              }
+            }
+          ],
+          "requestBody": {
+            "content": { }
+          },
+          "responses": {
+            "200": {
+              "description": "OK"
             }
           }
-        ],
-        "requestBody": {
-          "content": {}
-        },
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
         }
-      }
-    },
-    "/assets": {
-      "get": {
-        "description": "Description for GetAssetTree",
-        "operationId": "GetAssetTree",
-        "responses": {
-          "200": {
-            "description": "OK",
+      },
+      "/assets": {
+        "post": {
+          "description": "Returns the contents of 1 folder within the container. ",
+          "operationId": "GetAssetFolder",
+          "requestBody": {
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/treeNode"
+                  "$ref": "#/components/schemas/fetchSpecificationDTO"
                 }
               }
             }
-          }
-        }
-      }
-    },
-    "/assets/{assetpathandname}/dependents": {
-      "get": {
-        "description": "Description for GetDependentEntities",
-        "operationId": "GetDependentEntities",
-        "parameters": [
-          {
-            "name": "assetPathAndName",
-            "in": "path",
-            "description": "",
-            "required": true,
-            "schema": {
-              "title": "assetPathAndName",
-              "type": "string",
-              "format": ""
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/dependentEntityDTO"
+          },
+          "responses": {
+            "200": {
+              "description": "OK",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/pagedResultDTO"
                   }
                 }
               }
             }
           }
         }
-      }
-    },
-    "/openapi": {
-      "get": {
-        "description": "Description for GetOpenApiDefinition",
-        "operationId": "GetOpenApiDefinition",
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/sastoken": {
-      "get": {
-        "description": "Description for GetSasToken",
-        "operationId": "GetSasToken",
-        "responses": {
-          "200": {
-            "description": "OK",
-            "links": {
-              "ListAssetsLink": {
-                "operationId": "ListAssets",
-                "parameters": {
-                  "sasToken": "$response.body"
-                }
-              },
-              "DownloadAssetLink": {
-                "operationId": "DownloadAsset",
-                "parameters": {
-                  "sasToken": "$response.body"
-                }
-              },
-              "UploadAssetLink": {
-                "operationId": "UploadAsset",
-                "parameters": {
-                  "sasToken": "$response.body"
-                }
-              },
-              "DeleteAssetLink": {
-                "operationId": "DeleteAsset",
-                "parameters": {
-                  "sasToken": "$response.body"
+      },
+      "/assets/{assetpathandname}/dependents": {
+        "get": {
+          "description": "Get entities that are dependent on the specified asset.",
+          "operationId": "GetDependentEntities",
+          "parameters": [
+            {
+              "name": "assetPathAndName",
+              "in": "path",
+              "description": "Note: forward slashes in the path are to be URLEncoded to '%2F', e.g. mysubfolder%2Fmysubsubfolder%2Fmyimage.png",
+              "required": true,
+              "schema": {
+                "title": "assetPathAndName",
+                "type": "string",
+                "format": ""
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "OK",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/dependentEntityDTO"
+                    }
+                  }
                 }
               }
             }
           }
         }
-      }
-    },
-    "/{tenantid}?{sastoken}&restype=container&comp=list": {
-      "get": {
-        "description": "Description for ListAssets",
-        "operationId": "ListAssets",
-        "parameters": [
-          {
-            "name": "tenantId",
-            "in": "path",
-            "description": "",
-            "required": true,
-            "schema": {
-              "title": "tenantId",
-              "type": "string",
-              "format": "uuid"
-            }
-          },
-          {
-            "name": "sasToken",
-            "in": "path",
-            "description": "",
-            "required": true,
-            "schema": {
-              "title": "sasToken",
-              "type": "string",
-              "format": ""
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        },
-        "servers": [
-          {
-            "url": "https://stasfassetsdev.blob.core.windows.net"
-          }
-        ]
-      }
-    },
-    "/{tenantid}/{filename}?{sastoken}": {
-      "get": {
-        "description": "Description for DownloadAsset",
-        "operationId": "DownloadAsset",
-        "parameters": [
-          {
-            "name": "tenantId",
-            "in": "path",
-            "description": "",
-            "required": true,
-            "schema": {
-              "title": "tenantId",
-              "type": "string",
-              "format": "uuid"
-            }
-          },
-          {
-            "name": "filename",
-            "in": "path",
-            "description": "",
-            "required": true,
-            "schema": {
-              "title": "filename",
-              "type": "string",
-              "format": ""
-            }
-          },
-          {
-            "name": "sasToken",
-            "in": "path",
-            "description": "",
-            "required": true,
-            "schema": {
-              "title": "sasToken",
-              "type": "string",
-              "format": ""
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        },
-        "servers": [
-          {
-            "url": "https://stasfassetsdev.blob.core.windows.net"
-          }
-        ]
       },
-      "put": {
-        "description": "Description for UploadAsset",
-        "operationId": "UploadAsset",
-        "parameters": [
-          {
-            "name": "tenantId",
-            "in": "path",
-            "description": "",
-            "required": true,
-            "schema": {
-              "title": "tenantId",
-              "type": "string",
-              "format": "uuid"
+      "/openapi": {
+        "get": {
+          "description": "The service contract in OpenApi format",
+          "operationId": "GetOpenApiDefinition",
+          "responses": {
+            "200": {
+              "description": "OK"
             }
-          },
-          {
-            "name": "filename",
-            "in": "path",
-            "description": "",
-            "required": true,
-            "schema": {
-              "title": "filename",
-              "type": "string",
-              "format": ""
-            }
-          },
-          {
-            "name": "sasToken",
-            "in": "path",
-            "description": "",
-            "required": true,
-            "schema": {
-              "title": "sasToken",
-              "type": "string",
-              "format": ""
-            }
-          },
-          {
-            "name": "x-ms-blob-type",
-            "in": "header",
-            "required": true,
-            "schema": {
-              "default": "BlockBlob"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {}
-        },
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        },
-        "servers": [
-          {
-            "url": "https://stasfassetsdev.blob.core.windows.net"
-          }
-        ]
-      },
-      "delete": {
-        "description": "Description for DeleteAsset",
-        "operationId": "DeleteAsset",
-        "parameters": [
-          {
-            "name": "tenantId",
-            "in": "path",
-            "description": "",
-            "required": true,
-            "schema": {
-              "title": "tenantId",
-              "type": "string",
-              "format": "uuid"
-            }
-          },
-          {
-            "name": "filename",
-            "in": "path",
-            "description": "",
-            "required": true,
-            "schema": {
-              "title": "filename",
-              "type": "string",
-              "format": ""
-            }
-          },
-          {
-            "name": "sasToken",
-            "in": "path",
-            "description": "",
-            "required": true,
-            "schema": {
-              "title": "sasToken",
-              "type": "string",
-              "format": ""
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {}
-        },
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        },
-        "servers": [
-          {
-            "url": "https://stasfassetsdev.blob.core.windows.net"
-          }
-        ]
-      }
-    }
-  },
-  "components": {
-    "schemas": {
-      "treeNode": {
-        "title": "TreeNode",
-        "properties": {
-          "name": {
-            "title": "Name",
-            "type": "string",
-            "format": ""
-          },
-          "contentType": {
-            "title": "ContentType",
-            "type": "string",
-            "format": "",
-            "nullable": true
-          },
-          "contentLength": {
-            "title": "ContentLength",
-            "type": "integer",
-            "format": "int64",
-            "nullable": true
-          },
-          "isFolder": {
-            "title": "IsFolder",
-            "type": "boolean",
-            "format": ""
           }
         }
       },
-      "dependentEntityDTO": {
-        "title": "DependentEntityDTO",
-        "properties": {
-          "entityId": {
-            "title": "EntityId",
-            "type": "string",
-            "format": "uuid"
+      "/sastoken": {
+        "get": {
+          "description": "Returns a SAS Token that grants access to the blobstorage container.",
+          "operationId": "GetSasToken",
+          "responses": {
+            "200": {
+              "description": "OK",
+              "links": {
+                "ListAssetsLink": {
+                  "operationId": "ListAssets",
+                  "parameters": {
+                    "sasToken": "$response.body"
+                  }
+                },
+                "DownloadAssetLink": {
+                  "operationId": "DownloadAsset",
+                  "parameters": {
+                    "sasToken": "$response.body"
+                  }
+                },
+                "UploadAssetLink": {
+                  "operationId": "UploadAsset",
+                  "parameters": {
+                    "sasToken": "$response.body"
+                  }
+                },
+                "DeleteAssetLink": {
+                  "operationId": "DeleteAsset",
+                  "parameters": {
+                    "sasToken": "$response.body"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/{tenantid}?{sastoken}&restype=container&comp=list": {
+        "get": {
+          "description": "ListAssets",
+          "operationId": "ListAssets",
+          "parameters": [
+            {
+              "name": "tenantId",
+              "in": "path",
+              "description": "tenantId",
+              "required": true,
+              "schema": {
+                "title": "tenantId",
+                "type": "string",
+                "format": "uuid"
+              }
+            },
+            {
+              "name": "sasToken",
+              "in": "path",
+              "description": "sasToken",
+              "required": true,
+              "schema": {
+                "title": "sasToken",
+                "type": "string",
+                "format": ""
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "OK"
+            }
           },
-          "entityType": {
-            "title": "EntityType",
-            "type": "string",
-            "format": ""
-          },
-          "propertyNames": {
-            "title": "PropertyNames",
-            "required": [
-              "capacity",
-              "count",
-              "item"
-            ],
-            "type": "object",
-            "properties": {
-              "capacity": {
-                "title": "Capacity",
-                "type": "integer",
-                "format": "int32"
-              },
-              "count": {
-                "title": "Count",
-                "type": "integer",
-                "format": "int32"
-              },
-              "item": {
-                "title": "Item",
+          "servers": [
+            {
+              "url": "https://stasfassetsdev.blob.core.windows.net"
+            }
+          ]
+        }
+      },
+      "/{tenantid}/{filename}?{sastoken}": {
+        "get": {
+          "description": "DownloadAsset",
+          "operationId": "DownloadAsset",
+          "parameters": [
+            {
+              "name": "tenantId",
+              "in": "path",
+              "description": "tenantId",
+              "required": true,
+              "schema": {
+                "title": "tenantId",
+                "type": "string",
+                "format": "uuid"
+              }
+            },
+            {
+              "name": "filename",
+              "in": "path",
+              "description": "filename",
+              "required": true,
+              "schema": {
+                "title": "filename",
                 "type": "string",
                 "format": ""
               }
             },
-            "format": ""
-          }
+            {
+              "name": "sasToken",
+              "in": "path",
+              "description": "sasToken",
+              "required": true,
+              "schema": {
+                "title": "sasToken",
+                "type": "string",
+                "format": ""
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "OK"
+            }
+          },
+          "servers": [
+            {
+              "url": "https://stasfassetsdev.blob.core.windows.net"
+            }
+          ]
+        },
+        "put": {
+          "description": "UploadAsset",
+          "operationId": "UploadAsset",
+          "parameters": [
+            {
+              "name": "tenantId",
+              "in": "path",
+              "description": "tenantId",
+              "required": true,
+              "schema": {
+                "title": "tenantId",
+                "type": "string",
+                "format": "uuid"
+              }
+            },
+            {
+              "name": "filename",
+              "in": "path",
+              "description": "filename",
+              "required": true,
+              "schema": {
+                "title": "filename",
+                "type": "string",
+                "format": ""
+              }
+            },
+            {
+              "name": "sasToken",
+              "in": "path",
+              "description": "sasToken",
+              "required": true,
+              "schema": {
+                "title": "sasToken",
+                "type": "string",
+                "format": ""
+              }
+            },
+            {
+              "name": "x-ms-blob-type",
+              "in": "header",
+              "required": true,
+              "schema": {
+                "default": "BlockBlob"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": { }
+          },
+          "responses": {
+            "200": {
+              "description": "OK"
+            }
+          },
+          "servers": [
+            {
+              "url": "https://stasfassetsdev.blob.core.windows.net"
+            }
+          ]
+        },
+        "delete": {
+          "description": "Delete an asset in both the BlobStorage and in the domain that tracks references to that asset.",
+          "operationId": "DeleteAsset",
+          "parameters": [
+            {
+              "name": "tenantId",
+              "in": "path",
+              "description": "tenantId",
+              "required": true,
+              "schema": {
+                "title": "tenantId",
+                "type": "string",
+                "format": "uuid"
+              }
+            },
+            {
+              "name": "filename",
+              "in": "path",
+              "description": "filename",
+              "required": true,
+              "schema": {
+                "title": "filename",
+                "type": "string",
+                "format": ""
+              }
+            },
+            {
+              "name": "sasToken",
+              "in": "path",
+              "description": "sasToken",
+              "required": true,
+              "schema": {
+                "title": "sasToken",
+                "type": "string",
+                "format": ""
+              }
+            }
+          ],
+          "requestBody": {
+            "content": { }
+          },
+          "responses": {
+            "200": {
+              "description": "OK"
+            }
+          },
+          "servers": [
+            {
+              "url": "https://stasfassetsdev.blob.core.windows.net"
+            }
+          ]
+        }
+      }
+    },
+    "components": {
+      "schemas": {
+        "fetchSpecificationDTO": {
+          "title": "FetchSpecificationDTO",
+          "properties": {
+            "folderPath": {
+              "title": "FolderPath",
+              "type": "string",
+              "description": "The path of the folder to request data from. Use ~ for rootpath. For subpaths use a syntax like: ~/mypath/mysubpath",
+              "format": ""
+            },
+            "targetPageReference": {
+              "title": "TargetPageReference",
+              "type": "string",
+              "description": "Specifies the page to target (works in conjunction with )             - For the FIRST page  : provide null.             - For the SECOND page : provide the ASF.Backend.Shared.AzStorageAccess.PagedResult.NextPageReference as returned by the FIRST page call             - For the THIRD page  : provide the ASF.Backend.Shared.AzStorageAccess.PagedResult.NextPageReference as returned by the SECOND page call             And so on...",
+              "format": "",
+              "nullable": true
+            },
+            "take": {
+              "title": "Take",
+              "type": "integer",
+              "description": "The amount or records to return (works in conjunction with )",
+              "format": "int32"
+            }
+          },
+          "description": "Specifies what data to fetch from an Asset storage folder."
+        },
+        "pagedResultDTO": {
+          "title": "PagedResultDTO",
+          "properties": {
+            "currentPageResults": {
+              "title": "CurrentPageResults",
+              "type": "array",
+              "items": {
+                "type": "object"
+              },
+              "description": "The results of the current page, .",
+              "format": ""
+            },
+            "nextPageReference": {
+              "title": "NextPageReference",
+              "type": "string",
+              "description": "A reference to the next page. If null, then there is no more data to retrieve. If not null, then provide this value with the call for retrieval of the next page.",
+              "format": "",
+              "nullable": true
+            }
+          },
+          "description": "Contains fetched blob metadata for the current page, and a reference for fetching the next page."
+        },
+        "dependentEntityDTO": {
+          "title": "DependentEntityDTO",
+          "properties": {
+            "entityType": {
+              "title": "EntityType",
+              "type": "string",
+              "description": "The typename of the entity",
+              "format": ""
+            },
+            "entityId": {
+              "title": "EntityId",
+              "type": "string",
+              "description": "The Id of the entity",
+              "format": "uuid"
+            },
+            "dependentPropertyNames": {
+              "title": "DependentPropertyNames",
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "The names of the properties (1..n) that contain the reference to an Asset (like: \"ThumbnailImage\", \"IntroVideo\").",
+              "format": ""
+            }
+          },
+          "description": "Represents one domainentity (like product, user, etc) that is dependent on (aka: refers to) an Asset (like an image). A dependent entity can have 1..n properties (see array DependentPropertyNames) that refer to the asset."
         }
       }
     }
   }
-}
