@@ -1037,8 +1037,7 @@ class ExoListViewControl extends ExoDivControl {
 
     switch (prop.type) {
       case "img":
-        cellData = `<div class="exf-lv-item__cell__content__img" style="background-image: url(${item[prop.key]
-          })"></div>`;
+        cellData = `<div class="exf-lv-item__cell__content__img" style="background-image: url(${cellData})"></div>`;
         break
       case "currency":
         cellData = `${Core.formatValue(cellData, {
