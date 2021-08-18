@@ -15,7 +15,7 @@ class OpenApi {
         const me = this;
         this._data = Core.isUrl(this._raw) ? await fetch(this._raw).then(x => x.json()) : this._raw
         this._schemas = this._getSchemas();
-        this.jsonSchemaId = this.schemas[0].id;
+        this.jsonSchemaId = this.options.schemaId || this.schemas[0].id;
         this.jsonSchema = this.schemas[0].schema;
         let ar = this._determineEndpoints();
         this._api = {};

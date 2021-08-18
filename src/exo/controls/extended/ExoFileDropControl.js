@@ -19,14 +19,18 @@ class ExoFileDropControl extends ExoBaseControls.controls.input.type {
             { name: "height", type: Number, description: "Height of drop area" }
         )
 
-        if(Array.isArray(this.field.data))
+        if (Array.isArray(this.field.data))
             this._value = this.field.data;
     }
 
     async render() {
 
-        //this.field.data = this.field.data || [];
+        
         this.htmlElement.setAttribute("type", "file")
+
+        if (this.max > 1) {
+            this.htmlElement.setAttribute("multiple", "multiple")
+        }
 
         await super.render();
 
@@ -75,8 +79,8 @@ class ExoFileDropControl extends ExoBaseControls.controls.input.type {
         )
         return this.container;
     }
-    
-    stopLoading(){
+
+    stopLoading() {
         setTimeout(() => {
             this.container.classList.remove("loading");
         }, 500);
@@ -90,15 +94,15 @@ class ExoFileDropControl extends ExoBaseControls.controls.input.type {
         // TODO 
 
         //debugger;
-       // this._value = data;
+        // this._value = data;
     }
 
     _change() {
-        
+
         var evt = document.createEvent("HTMLEvents");
         evt.initEvent("change", true, true);
-        evt.detail = { 
-            field: "filedrop", 
+        evt.detail = {
+            field: "filedrop",
             data: this.value
         };
         this.htmlElement.dispatchEvent(evt);
@@ -111,15 +115,15 @@ class ExoFileDropControl extends ExoBaseControls.controls.input.type {
     }
 
     clear() {
-        
+
         this._value = [];
-        
-        if(this.rendered)
+
+        if (this.rendered)
             this.container.querySelector(".clearable").innerHTML = "";
 
 
-        
-        
+
+
     }
 
     bindEvents(cb) {
@@ -133,6 +137,7 @@ class ExoFileDropControl extends ExoBaseControls.controls.input.type {
 
 
             reader.onload = function () {
+
                 let returnValue = {
                     error: "",
                     fileName: data.file.name,
