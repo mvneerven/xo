@@ -110,7 +110,10 @@ class ExoTextControlAutoCompleteExtension {
                 this.clear();
             }, 100);
 
-
+            
+            var evt = document.createEvent("HTMLEvents");
+            evt.initEvent("change", true, true);
+            this.control.htmlElement.dispatchEvent(evt);
         }
     }
 
