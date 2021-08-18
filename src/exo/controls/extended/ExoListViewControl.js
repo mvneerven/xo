@@ -357,7 +357,7 @@ class ExoListViewControl extends ExoDivControl {
 
       buttons.forEach((button) => {
         const btn = DOM.parseHTML(
-          `<button class="exf-btn">${button.template}</button>`
+          `<button type="button" class="exf-btn">${button.template}</button>`
         );
         btn.addEventListener("click", (e) => {
           e.stopPropagation();
@@ -436,7 +436,7 @@ class ExoListViewControl extends ExoDivControl {
           })
 
           if (this.singleSelect && i.id === this.value) {
-            if(!e.ctrlKey)
+            if (!e.ctrlKey)
               return;
           }
 
@@ -743,6 +743,8 @@ class ExoListViewControl extends ExoDivControl {
             id = act.getAttribute("data-action");
           }
 
+          ev.preventDefault();
+          
           ev.stopPropagation();
 
 
@@ -1170,12 +1172,14 @@ class ExoListViewControl extends ExoDivControl {
   }
 
   get validationMessage() {
-    if (this.singleSelect) {
-      return `This field is required`;
-    }
+    if (!this.valid) {
+      if (this.singleSelect) {
+        return `This field is required`;
+      }
 
-    this.minimum = this.minimum || 1;
-    return `Select at least ${this.minimum} item(s)`;
+      this.minimum = this.minimum || 1;
+      return `Select at least ${this.minimum} item(s)`;
+    }
   }
 
   // set valid(valid) {
