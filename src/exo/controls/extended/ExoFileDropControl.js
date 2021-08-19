@@ -25,7 +25,7 @@ class ExoFileDropControl extends ExoBaseControls.controls.input.type {
 
     async render() {
 
-        
+
         this.htmlElement.setAttribute("type", "file")
 
         if (this.max > 1) {
@@ -98,7 +98,7 @@ class ExoFileDropControl extends ExoBaseControls.controls.input.type {
     }
 
     _change() {
-
+        console.debug("ExoFileDropControl", "Firing change event");
         var evt = document.createEvent("HTMLEvents");
         evt.initEvent("change", true, true);
         evt.detail = {
@@ -106,24 +106,14 @@ class ExoFileDropControl extends ExoBaseControls.controls.input.type {
             data: this.value
         };
         this.htmlElement.dispatchEvent(evt);
-
-        // DOM.trigger(this.htmlElement, "change", {
-        //     data: this.value
-        // })
-
         this.stopLoading()
     }
 
     clear() {
-
         this._value = [];
 
         if (this.rendered)
             this.container.querySelector(".clearable").innerHTML = "";
-
-
-
-
     }
 
     bindEvents(cb) {
@@ -131,11 +121,7 @@ class ExoFileDropControl extends ExoBaseControls.controls.input.type {
         const loadFile = (data) => {
             var file = data.file;
             this.showHelp();
-
             var reader = new FileReader();
-
-
-
             reader.onload = function () {
 
                 let returnValue = {
@@ -175,9 +161,9 @@ class ExoFileDropControl extends ExoBaseControls.controls.input.type {
 
                 if (!returnValue.error) {
                     me._value.push(returnValue);
-                    me._change();
                 }
 
+                data.ready(returnValue);
                 cb(returnValue);
             };
             try {
@@ -199,9 +185,27 @@ class ExoFileDropControl extends ExoBaseControls.controls.input.type {
                 e.returnValue = false;
 
                 dropArea.classList.remove("drag-over");
+
+                me.fileCount = Object.keys(e.target.files).length
+                me.processCount = 0;
+                const r = e => {
+                    console.debug("ExoFileDropControl",`File ${me.processCount} of ${me.fileCount} processed`);
+                    me.processCount++;
+
+                    if (me.processCount === me.fileCount) {
+                        try {
+                            me._change();
+                        }
+                        finally {
+                            delete me.fileCount;
+                            delete me.processCount
+                        }
+                    }
+                }
                 for (var i in e.target.files) {
                     loadFile({
-                        file: e.target.files[i]
+                        file: e.target.files[i],
+                        ready: r
                     })
                 }
 
