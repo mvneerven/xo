@@ -10,7 +10,7 @@ class ExoButtonControl extends ExoElementControl {
 
     this.iconHtml = "";
 
-    this.htmlElement = DOM.parseHTML('<button class="exf-btn" />');
+    this.htmlElement = DOM.parseHTML('<button type="button" class="exf-btn" />');
 
     this.acceptProperties(
       {
@@ -90,6 +90,9 @@ class ExoButtonControl extends ExoElementControl {
   }
 
   handleClick(e) {
+    //e.stopPropagation();
+    e.preventDefault();
+
     const me = this;
     let givenAction = this.action, isDropDown = false;
 
@@ -164,10 +167,12 @@ class ExoButtonControl extends ExoElementControl {
     }
 
     else {
-      this.value = this.context.field.defaultValue;
-      var evt = document.createEvent("HTMLEvents");
-      evt.initEvent("change", true, true);
-      this.htmlElement.dispatchEvent(evt);
+      if(this.context.field.defaultValue && this.value !== this.context.field.defaultValue){
+        this.value = this.context.field.defaultValue;
+        var evt = document.createEvent("HTMLEvents");
+        evt.initEvent("change", true, true);
+        this.htmlElement.dispatchEvent(evt);
+      }
     }
   }
 

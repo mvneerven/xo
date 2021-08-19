@@ -285,11 +285,11 @@ class ExoFormDataBinding {
 
             for (var p in value) {
                 if (typeof (value[p]) == "string" && value[p].indexOf("@") >= 0) {
-                    debugger;
+                   // debugger;
                 }
                 returnValue[p] = this._processFieldProperty(control, p, returnValue[p])
                 if (value[p] !== returnValue[p]) {
-                    debugger;
+                   // debugger;
                 }
             }
         }

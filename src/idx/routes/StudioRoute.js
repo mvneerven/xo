@@ -128,7 +128,7 @@ class StudioRoute extends xo.route {
                 this.tabStrip.tabs.schema.select();
                 DOM.changeHash("/studio")
             }).catch(ex => {
-                debugger
+                console.error(ex)
             })
         }
     }

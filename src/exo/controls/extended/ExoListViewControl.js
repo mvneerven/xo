@@ -219,7 +219,7 @@ class ExoListViewControl extends ExoDivControl {
       const validityInput = DOM.parseHTML(
         '<input id="validityInput" required>'
       );
-      validityInput.setCustomValidity(this.validationMessage);
+      //validityInput.setCustomValidity(this.validationMessage);
       this.container.appendChild(validityInput);
     }
 
@@ -1172,11 +1172,12 @@ class ExoListViewControl extends ExoDivControl {
 
   get validationMessage() {
     if (!this.valid) {
+
       if (this.singleSelect) {
         return `This field is required`;
       }
 
-      this.minimum = this.minimum || 1;
+      
       return `Select at least ${this.minimum} item(s)`;
     }
   }
@@ -1186,14 +1187,18 @@ class ExoListViewControl extends ExoDivControl {
   // }
 
   get valid() {
-
+    if(!this.required){
+      return true;
+    }
+    
     if (this.singleSelect) {
       return this.value != null && this.value != ""
     }
 
+    this.minimum = this.minimum || 1;
+
     return (Array.isArray(this.value) && this.value.length >= this.minimum) ||
       (this.value && this.minimum <= 1);
-
   }
 }
 
