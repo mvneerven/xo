@@ -5088,6 +5088,10 @@ html:not([data-pwa-route="/"]) img.xo-logo {
   border-color: rgba(220, 0, 0, 0.8);
 }
 
+.theme-dark .exf-container .exf-ctl-cnt .exf-help-info {
+  color: rgba(255, 255, 255, 0.5);
+}
+
 .hidden {
   display: none;
 }

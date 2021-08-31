@@ -25,7 +25,7 @@ class HomeRoute extends xo.route {
                 type: "boolean",
                 name: "advancedUi",
                 title: "Advanced UI",
-                description: "ExoForm Studio advanced mode",
+                description: "Switching on Advanced UI gives experienced ExoForm developers access to advanced features like datamodel state change monitoring, live CSS changes and JS hooks",
                 ui: {
                     type: "radiobuttonlist",
                     view: "tiles",

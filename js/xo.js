@@ -9,6 +9,7 @@ import Core from '../src/pwa/Core';
 import MsIdentity from '../src/pwa/MsIdentity';
 import ExoEntityManager from '../src/exo/entity/ExoEntityManager';
 import ExoFormSchema from '../src/exo/core/ExoFormSchema';
+import { version } from '../package.json';
 
 /**
  * ExoForm shortcut object
@@ -135,7 +136,7 @@ class XO {
     get pwa() { return PWA }
     get route() { return RouteModule }
     get form() { return this._form }
-
+    get version() { return version }
     identity = {
         msal: MsIdentity
     }

@@ -1,124 +1,32 @@
 <!DOCTYPE html>
-<html lang="en" class="theme-light">
-
+<html lang="en">
 <head>
-    <title>ExoForm, The Basics</title>
-
-    <!-- @import url(https://xo-js.dev/v1.4/xo.css);-->
-    <style>
-        @import url(css/xo.css);
-        @import url(https://fonts.googleapis.com/css2?family=Exo&display=swap);
-        @import url(https://cdn.jsdelivr.net/themify-icons/0.1.2/css/themify-icons.css);
-
-        body,
-        H1 {
-            font-family: Exo;
-        }
-    </style>
+    <title>Starting with ExoForm</title>
+    <style>@import url(https://xo-js.dev/v1.4/xo.css);</style>
 </head>
-
 <body>
-    <h1>ExoForm, The Basics</h1>
-    <p>
-        This page illustrates how little is needed to get going with ExoForm...
-    </p>
-
+    <h1>Starting with ExoForm</h1>
     <section id="form"></section>
-
-    <!-- <script type="module" src="https://xo-js.dev/v1.4/xo.js"></script> -->
-    <script type="module" src="dist/xo.js"></script>
-
+    <script type="module" src="https://xo-js.dev/v1.4/xo.js"></script>
     <script type="module">
         const schema = {
-            validation: "inline",
-            model: {
-                instance: {
-                    data: {
-                        name: {
-                            first: "Jan",
-                            last: "Pieterse"
-                        }
-                    }
-                }
-            },
             pages: [{
-                legend: "My Form",
-                intro: "Fill in your details",
                 fields: [
                     {
                         type: "name",
                         name: "name",
-                        caption: "Enter name",
-                        required: true
-                    },
-                    {
-                        type: "email",
-                        name: "email",
-                        required: true,
-                        autolookup: true,
-                        placeholder: "john@doe.com",
-                        caption: "Enter email address",
-                        prefix: {
-                            icon: "ti-email"
-                        }
-                    },
-                    {
-                        type: "tags",
-                        name: "tags",
-                        caption: "Skills",
-                        value: ["C#", "JavaScript", "Azure", "JSON"]
+                        caption: "Enter your name"
                     }
-                    
-                ]
-            },
-            {
-                legend: "Page 2",
-                fields:[
-                    {
-                        type: "multiline",
-                        name: "msg",
-                        caption: "Message",
-                        placeholder: "My message for you...",
-                        autogrow: true
-                    },
-                    {
-                        type: "url",
-                        name: "url",
-                        caption: "URL",
-                        placeholder: "https://www.yoursite.com",
-                        prefix: {
-                            icon: "ti-link"
-                        }
-
-                    },
-                    {
-                        type: "dropdown",
-                        name: "favpet",
-                        caption: "Favorite pet",
-                        items: ["Dog", "Cat", "Bunny", "Hamster", "Bird", "Snake", "Pig"]
-                    }
-                    
-
                 ]
             }]
         }
-        const frm = await xo.form.run(schema, {
+        document.getElementById("form").appendChild(await xo.form.run(schema, {
             on: {
-                created: e => {
-                   window.exo = e.detail.host;
-                   
-                },
-                interactive: e=>{
-                    window.exo.liveEditor = new xo.form.factory.LiveEditor(window.exo).on("schema-change", e => {
-                    })
-                },
                 post: e => {
                     alert(JSON.stringify(e.detail.postData, null, 2))
                 }
             }
-        })
-        document.getElementById("form").appendChild(frm);
+        }));
     </script>
 </body>
-
 </html>

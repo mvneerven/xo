@@ -6,6 +6,7 @@ import ExoSchemaRenderer from '../modules/ExoSchemaRenderer';
 import ExoFormBuilderWorkspace from '../modules/ExoFormBuilderWorkspace';
 import ExoFormAceExtension from '../modules/ExoFormAceExtension';
 
+
 const DOM = window.xo.dom;
 const Core = window.xo.core;
 
@@ -144,7 +145,8 @@ class StudioRoute extends xo.route {
             this.tabStrip.tabs.js.enabled = true;
 
         if (this.tabStrip.tabs.html) {
-            this.htmlEditor.value = DOM.prettyPrintHTML(x.container.outerHTML);
+            this.htmlEditor.value = `<!-- rendered by ExoForm ${xo.version} -->
+` + DOM.prettyPrintHTML(x.container.outerHTML);
             this.tabStrip.tabs.html.enabled = true;
         }
         this.tabStrip.tabs.form.replaceWith(x.container);
@@ -204,7 +206,7 @@ class StudioRoute extends xo.route {
             tabs: {
                 start: { caption: "Start", class: "full-height", tooltip: "Select a templates or import DTO to generate an ExoForm Schema with" },
                 schema: { caption: "Schema", class: "full-height", tooltip: "Edit ExoForm Schema" },
-                form: { caption: "Form", class: "full-height", tooltip: "View rendered form" }
+                form: { caption: "View", class: "full-height", tooltip: "View rendered form" }
 
             },
             class: "full-height"

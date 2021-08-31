@@ -9,85 +9,38 @@ In this case, we simply use the CDN references for XO (CSS & JS):
 
 ```html
 <!DOCTYPE html>
-<html lang="en" class="theme-light">
-
+<html lang="en">
 <head>
-    <title>ExoForm, The Basics</title>
-    <style>
-        @import url(https://xo-js.dev/v1.4/xo.css);
-        @import url(https://fonts.googleapis.com/css2?family=Exo&display=swap);
-        body, H1 {
-            font-family: Exo;
-        }
-    </style>
+    <title>Starting with ExoForm</title>
+    <style>@import url(https://xo-js.dev/v1.4/xo.css);</style>
 </head>
-
 <body>
-    <h1>ExoForm, The Basics</h1>
-    <p>
-        This page illustrates just how little is needed to get going with ExoForm...
-    </p>
-
+    <h1>Starting with ExoForm</h1>
+    <section id="form"></section>
     <script type="module" src="https://xo-js.dev/v1.4/xo.js"></script>
-
     <script type="module">
         const schema = {
             pages: [{
-                legend: "My Form",
-                intro: "Fill in your details",
                 fields: [
                     {
                         type: "name",
                         name: "name",
-                        caption: "Enter name",
-                        required: true
-                    },
-                    {
-                        type: "email",
-                        name: "email",
-                        required: true,
-                        placeholder: "john@doe.com",
-                        caption: "Enter email address"
-                    },
-                    {
-                        type: "multiline",
-                        name: "msg",
-                        caption: "Message",
-                        placeholder: "My message for you...",
-                        autogrow: true
-                    },
-                    {
-                        type: "dropdown",
-                        name: "favpet",
-                        caption: "Favorite pet",
-                        items: ["Dog", "Cat", "Bunny", "Hamster", "Bird", "Snake", "Pig"]
-                    },
-                    {
-                        type: "tags",
-                        name: "tags",
-                        caption: "Skills",
-                        value: ["C#", "JavaScript", "Azure", "JSON"]
+                        caption: "Enter your name"
                     }
-
                 ]
             }]
         }
-        const frm = await xo.form.run(schema, {
+        document.getElementById("form").appendChild(await xo.form.run(schema, {
             on: {
                 post: e => {
                     alert(JSON.stringify(e.detail.postData, null, 2))
                 }
             }
-        })
-        document.body.appendChild(frm);
+        }));
     </script>
 </body>
-
 </html>
 ```
-
-
-
 
 ## Installing
 
