@@ -22,6 +22,7 @@ import ExoUrlControl from './ExoUrlControl';
 import ExoEmailControl from './ExoEmailControl';
 import ExoSeparatorControl from './ExoSeparatorControl';
 import ExoFileUploadControl from './ExoFileUploadControl';
+import ExoDateControl from './ExoDateControl';
 
 class ExoBaseControls { 
 
@@ -45,7 +46,7 @@ class ExoBaseControls {
         color: { base: "input", note: "A control to select a color", demo: { value: "#cc4433" } },
         checkbox: { type: ExoCheckboxControl, note: "A checkbox wrapper. Returns a boolean", demo: { checked: true } },
         email: { type: ExoEmailControl, note: "A text input that validates email addresses", demo: { required: true, autolookup: true } },
-        date: { base: "input", note: "A date input wrapper" },
+        date: { type: ExoDateControl, note: "A date input wrapper" },
         month: { base: "input", note: "A month selector input wrapper" },
         "datetime-local": { base: "input", note: "A date input that is used to input local date/time" },
         search: { base: "text", note: "A search text input with a clear button" },
