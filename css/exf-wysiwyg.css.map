@@ -1,9 +1,0 @@
-{
-    "version": 3,
-    "mappings": "",
-    "sources": [
-        "../scss/exf-wysiwyg.scss"
-    ],
-    "names": [],
-    "file": "exf-wysiwyg.css"
-}
