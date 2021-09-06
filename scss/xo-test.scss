@@ -146,7 +146,8 @@ body {
         &.exf-theme-material {
             margin-top: 2rem;
 
-            #xo-test .exf-wrapper fieldset {
+            .exf-wrapper > fieldset {
+                height: 70vh;
                 overflow-y: auto;
             }
 

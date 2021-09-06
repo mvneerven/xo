@@ -14,6 +14,7 @@ import Core from '../../pwa/Core';
 import ExoFormSchema from './ExoFormSchema';
 import ExoDropdownExtension from '../controls/base/ExoDropdownExtension';
 
+
 /**
  * Factory class for ExoForm - Used to create an ExoForm context.
  * Provides factory methods. Starting point for using ExoForm. 
@@ -69,7 +70,7 @@ class ExoFormFactory {
 
     static Schema = ExoFormSchema;
 
-    static LiveEditor = ExoLiveEditor;
+    static LiveEditor = ExoLiveEditor;   
 
     static defaults = {
         imports: [],
@@ -545,6 +546,7 @@ class ExoFormFactory {
         }
     }
 
+    
     // /**
     //  * Runs the given schema in a sandbox
     //  * @param {*} schema 

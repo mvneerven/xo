@@ -4,3 +4,8 @@ dist
 .vscode
 out
 img/Thumbs.db
+test.html
+play.html
+js/test*.js
+js/play.js
+test.html

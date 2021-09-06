@@ -9,7 +9,12 @@ class ExoInputListControl extends ExoListControl {
             name: "items",
             description: "Array of entries to select from",
             type: Array
-
+        },
+        {
+            name: "columns",
+            type: Number,
+            description: "Defines the number of columns to display the items in (default: 1)",
+            defaultValue: 1
         })
         
         this.htmlElement = DOM.parseHTML(
@@ -33,6 +38,10 @@ class ExoInputListControl extends ExoListControl {
 
         await super.render();
         this.container.classList.add("exf-input-group", "exf-std-lbl");
+        
+        if(this._columns)
+            this.htmlElement.style = `column-count: ${this.columns}; column-gap: 40px;`
+
         return this.container;
     }
 
@@ -60,6 +69,17 @@ class ExoInputListControl extends ExoListControl {
         let inp = this.htmlElement.querySelector("[name]");
         if (inp)
             inp.value = data;
+    }
+
+    set columns(value){
+        if(isNaN(value) || value < 1 || value > 20)
+            throw TypeError("Columns must be integer between 1 and 20");
+
+        this._columns = value
+    }
+
+    get columns(){
+        return this._columns;
     }
 
     // Used to get localized standard validation message 

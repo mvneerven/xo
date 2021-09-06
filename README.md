@@ -3,13 +3,13 @@
 > ## ▷ Docs
 > This documentation is best viewed at [https://www.xo-js.dev](https://www.xo-js.dev/#/docs).
 >
-> A complete playground is included and code examples can directly be run and edited.
+> A complete playground (Studio) is included and code examples can directly be run and edited.
  
 XO-JS is a compact, developer-friendly, pure JavaScript (ES6) Component Library that helps with [Progressive Web App](./md/pwa/index.md) development and includes a [Declarative Web Forms Engine](./md/exo/index.md)
 
 
-> - 49KB minified and GZipped
-> - No dependencies
+> - < 70KB minified and Brotli-compressed
+> - No external dependencies
 > - Vue, React, Angular, Vanilla JS supported
 
 # Modules
@@ -66,18 +66,18 @@ What does ExoForm bring?
 
 * ExoForm gives developers complete freedom: simply include it in your development stack, and bypass, subclass, add anything you want. 
 * No bulky dependencies. HTML5, CSS3, ECMAScript. That's it. They're powerful enough ;-) 
-* Use it in any environment, Vue, React, Angular, or plain vanilla JavaScript. 
-* Create and include your own control libraries. 
+* Use it in any environment, [Vue](https://codepen.io/mvneerven/pen/GRWbvqp), React, Angular, or plain vanilla JavaScript. 
+* [Create and include your own ExoForm control libraries](./md/exo/controls/building-controls.md). 
 * Customize anything: styling, validation, navigation, progress indication, etc. 
 * Get typed JSON post data 
-* All HTML5 controls included, plus a large number of custom controls
+* [All HTML5 controls](./md/exo/controls/index.md) included, plus a large number of custom controls
 * Ace Code Editor, CkEditor wysiwyg editor (richt text) 
 * Examples of adding your own controls at codepen.io. For example, use the [Monaco Editor](https://codepen.io/mvneerven/pen/NWdYybz).
-* Autocompletion (using standard HTML5 DataLists, fixed lists, or dynamic API searches)
-* Standard HTML5 & Inline validation (or roll your own)
-* Wizards & other multi-page forms, Surveys, 
+* [Autocompletion](./md/exo/controls/textcontrol.md) extension on text controls
+* Standard HTML5 & Inline [validation](./md/exo/controls/../validation.md) (or roll your own)
+* Wizards & other multi-page forms, Surveys, Tabstrip-type forms, etc. (see [Navigation](./md/exo/navigation.md))
 * Completely overridable rendering & theming
-* A visual [ExoForm Explorer](https://www.xo-js.dev/#/explore) and Test Environment
+* A visual [ExoForm Studio](https://www.xo-js.dev/#/studio) and Test Environment
   * Code Editor with JSON/JS support
   * Wysiwyg designer (in development) 
   * Jest test environment 

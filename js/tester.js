@@ -1,7 +1,62 @@
 const Core = xo.core;
 const DOM = xo.dom;
 
-let sharedData = xo.form.data("my-form", "data", o => sharedData = o);
+class ISVCanvas{
+    static async createForm(){
+        const isvcanvas = await xo.core.acquireState("/data/isvcanvas.json"),
+        schema = { pages: [] }
+
+        Object.keys(isvcanvas.groups).forEach(g => {
+            const page = {fields: []}, group = isvcanvas.groups[g];
+            Object.keys(group.questions).forEach(q => {
+                const question = group.questions[q], 
+                field = ISVCanvas.createField(q, question);
+                page.fields.push(field);
+            });
+            page.legend = group.name;
+            schema.pages.push(page);
+        })
+
+        return schema;
+    }
+
+    static createField(key, question) {
+        const options = {
+            type: "text",
+            caption: question.text,
+            name: key
+        }
+
+        switch (question.type) {
+            case "single":
+                options.type = "radiobuttonlist"
+                break;
+            case "multiple":
+                options.type = "checkboxlist"
+                break;
+            default:
+                options.type = question.type || "text"
+        }
+
+        if (question.answers) {
+            const items = [];
+            Object.keys(question.answers).forEach(a => {
+                items.push({
+                    value: a,
+                    name: question.answers[a].text
+                })
+            })
+            options.items = items;
+        }
+
+        if(options.caption.substr(options.caption.length-1,1) === "*"){
+            options.required = true;
+            options.caption = options.caption.substr(0,options.caption.length-1);
+        }
+
+        return options
+    }
+}
 
 class HomeRoute extends xo.route {
 
@@ -12,361 +67,16 @@ class HomeRoute extends xo.route {
     async render(path) {
         const me = this;
         await this.renderForm(path);
-        
-        this.addNonExoButtons()
-    }
-
-    addNonExoButtons() {
-        let btn = document.createElement('button');
-        btn.innerText = "Flinstone?";
-        btn.addEventListener("click", e => {
-            sharedData.name.first = "Fred";
-            sharedData.name.last = "Flintstone";
-        })
-        this.area.add(btn);
-
-
-        let btn2 = document.createElement('button');
-        btn2.innerText = "Home?";
-        btn2.addEventListener("click", e => {
-            sharedData.coords = [52.85582619118, 5.717743972222222];
-            sharedData.zoom = 17
-        })
-        this.area.add(btn2);
-
-
-        let btn3 = document.createElement('button');
-        btn3.innerText = "Pins?";
-        btn3.addEventListener("click", e => {
-
-            sharedData.coords = [52.25582619118, 5.117743972222222];
-            sharedData.markers.push({
-                position: [52.25582619118, 5.117743972222222],
-                text: "yeah right"
-            }),
-            sharedData.zoom = 7
-        })
-        this.area.add(btn3);
     }
 
     async renderForm(path) {
+        const schema = await ISVCanvas.createForm();
 
-        const schema2 = {
-            navigation: "auto",
-            progress: "none",
-            model: {
-                instance: {
-                    init: {
-                        action: null
-                    },
-                    buildForm: {
-                        jsonSchemaUrl: "",
-                        jsonSchema: ""
-                    }
-                },
-                logic: context => {
-                    if (context.changed.property === "action") {
-                        let page = parseInt(context.changed.newValue);
-                        context.exo.addins.navigation.goto(page)
-                    }
-
-                    if (context.changed.property === "jsonSchemaUrl") {
-                        const inst = context.model.instance.buildForm;
-                        let url = context.changed.newValue;
-                        fetch(url).then(x => x.text()).then(x => {
-                            inst.jsonSchema = x;
-                        })
-                    }
-                }
-            },
-
-            pages: [
-                {
-                    legend: "Build a form",
-                    intro: "Building an ExoForm schema",
-                    fields: [
-                        {
-                            id: "action",
-                            bind: "instance.init.action",
-                            name: "action",
-                            type: "listview",
-                            style: "max-height: 300px",
-                            singleSelect: true,
-                            views: "tiles",
-                            caption: "Select how you want to get started",
-                            properties: [
-                                {
-                                    key: "id"
-                                },
-                                {
-                                    key: "name"
-                                },
-                                {
-                                    key: "description",
-                                    class: "details"
-                                },
-                                {
-                                    key: "image",
-                                    type: "img"
-
-                                }
-                            ],
-                            mappings: {
-                                tiles: [
-                                    {
-                                        key: "name",
-                                        height: "2rem"
-                                    }, {
-                                        key: "description",
-                                        height: "4rem"
-                                    }, {
-                                        key: "image",
-                                        height: "80px"
-                                    }
-                                ]
-                            },
-                            items: [
-                                {
-                                    name: "<b>Start with a template</b>",
-                                    description: "Load one of the existing templates and take it from there",
-                                    image: "/img/template.png",
-                                    id: "2"
-                                },
-                                {
-                                    name: "<b>Start with a data schema/DTO</b>",
-                                    description: "Generate a Form schema from your data definition (JSON)",
-                                    image: "/img/json-schema.png",
-                                    id: "3"
-
-                                }
-                            ]
-                        }
-                    ]
-                }, {
-                    legend: "Template",
-                    intro: "Select a template to start with",
-                    fields: [
-                        {
-                            id: "template",
-                            name: "template",
-                            type: "listview",
-                            views: "tiles",
-                            style: "max-height: 300px",
-                            singleSelect: true,
-                            caption: "ExoForm Template",
-                            properties: [
-                                {
-                                    key: "value",
-                                    isPrimaryKey: true
-                                },
-                                {
-                                    key: "name"
-                                },
-                                {
-                                    key: "description",
-                                    class: "details"
-                                }
-
-                            ],
-                            mappings: {
-                                tiles: [
-                                    {
-                                        key: "name",
-                                        height: "2rem"
-                                    }, {
-                                        key: "description",
-                                        height: "4rem"
-                                    }
-                                ]
-                            },
-                            items: "/data/forms/templates.json"
-                        }, {
-                            name: "selectTemplate",
-                            type: "button",
-                            click: "selectTemplate",
-                            caption: "Start with this template",
-                            rules: [
-                                {
-                                    type: "enabled",
-                                    expression: [
-                                        "template", "change", "value", "!=", "undefined"
-                                    ]
-                                }
-                            ]
-                        }
-                    ]
-                },
-                {
-                    legend: "Data",
-                    intro: "Load a JSON-Schema",
-                    fields: [
-                        {
-                            type: "url",
-                            caption: "Enter or select a URL of a JSON Schema",
-                            bind: "instance.buildForm.jsonSchemaUrl",
-                            fileTypes: ["application/json"],
-                            dialog: true
-                        },
-                        {
-                            type: "multiline",
-                            caption: "JSON Schema data",
-                            readonly: true,
-                            class: "code",
-                            rows: 20,
-                            name: "schema-contents",
-                            value: "@instance.buildForm.jsonSchema"
-
-                        }
-                    ]
-                }
-            ],
-            controls: [
-                {
-                    name: "prev",
-                    type: "button",
-                    caption: "◁ Back",
-                    class: "form-prev exf-btn"
-                }
-            ]
-        }
-
-        const schema = {
-            model: {
-                instance: {
-                    data: {
-                        id: "test1",
-                        name: {
-                            first: "Marc",
-                            last: "van Neerven"
-                        },
-                        zoom: 8,
-                        coords: [
-                            55.33656310431969, -4.155451581529087
-                        ],
-                        markers: [
-                            {
-                                position: [52.85582619118, 5.717743972222222],
-                                text: "Home!<br/> Is where the <i>heart</i> is!"
-                            }
-                        ]
-                    }
-                }
-            },
-            pages: [
-                {
-                    fields: [
-                        {
-                            type: "name",
-                            name: "text",
-                            caption: "Name",
-                            bind: "instance.data.name"
-                        },
-
-                        {
-                            type: "multiline",
-                            caption: "Hello @instance.data.name.first",
-                            name: "hello",
-                            autogrow: true
-                        },
-
-                        {
-                            type: "map",
-                            name: "map",
-                            caption: "Map",
-                            bind: "instance.data.coords",
-                            zoom: "@instance.data.zoom",
-                            markers: "@instance.data.markers"
-                        }
-
-                    ]
-                }
-            ]
-        }
-        
-        let form = await xo.form.run(schema, {
-            id: "my-form",
-
-            on: {
-
-                page: this.change.bind(this),
-
-                dataModelChange: this.change.bind(this),
-
-                dom: {
-                    change: e => {
-                        console.log("CHANGED", e.target.name, e.target.value)
-                    }
-                }
-            }
-        });
-
-        this.area.add(form)
+        this.area.add(await xo.form.run(schema))
     }
 
     get area() {
         return this.app.UI.areas.main;
-    }
-
-    change(e) {
-        return
-
-        let isPageEvent = e.type === "page";
-        const context = e.detail;
-        const x = isPageEvent ? context.host : context.host.exo;
-        if (x && x.schema) {
-            const m = x.schema.model,
-                data = m.instance.data,
-                a = x.addins;
-
-            let sendMail = !data.emailSent && isPageEvent && e.detail.from === 1 && e.detail.page === 2;
-
-            if (sendMail) {
-                this.sendCode(data.email);
-                data.confirmationSent = true;
-            }
-
-            if (data.email) {
-                if (!data.code)
-                    data.nextCaption = "Send Confirmation Email ▷"
-                else
-                    data.nextCaption = "Finalize upgrade ▷"
-
-            }
-            else {
-                data.nextCaption = "Continue ▷"
-            }
-        }
-    }
-
-    sendCode(email) {
-        let code = this.generateCode();
-        let url = "http://localhost:4748/#//" + btoa(email + "/" + code);
-
-        let data = {
-            toAddress: email,
-            message: "Confirm ",
-            templateId: "d-e345f5fd07504f30b069e5af1c31e851",
-            variables: {
-                title: "Confirm your email for ASF",
-                intro: "Build any Shopping Experience easily with the ASF Order Management System",
-                subject: "Confirm your email for ASF",
-                preheader: "You're one step away from creating your own shop!",
-                cta_intro: "Code: " + code,
-                cta: "Confirm Email Address",
-                url: url
-            }
-        };
-
-        pwa.restService.post("http://localhost:7071/sendmail/", {
-            body: JSON.stringify(data)
-        })
-    }
-
-    generateCode() {
-        return 'xxxxxxxx'.replace(/[xy]/g, function (c) {
-            var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
-            return v.toString(16);
-        });
     }
 }
 

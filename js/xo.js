@@ -10,6 +10,7 @@ import MsIdentity from '../src/pwa/MsIdentity';
 import ExoEntityManager from '../src/exo/entity/ExoEntityManager';
 import ExoFormSchema from '../src/exo/core/ExoFormSchema';
 import { version } from '../package.json';
+import ExoSandboxControl from '../src/exo/controls/extended/ExoSandboxControl';
 
 /**
  * ExoForm shortcut object
@@ -26,7 +27,9 @@ class Form {
     }
     get run() { return ExoFormFactory.run }
 
-    get sandbox() { return ExoFormFactory.sandbox }
+    get sandbox() { 
+        return ExoSandboxControl 
+    }
 
     /**
      * Bind all datamodel changes to a function

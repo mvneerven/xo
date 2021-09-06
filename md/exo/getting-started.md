@@ -17,7 +17,7 @@ In this case, we simply use the CDN references for XO (CSS & JS):
 <body>
     <h1>Starting with ExoForm</h1>
     <section id="form"></section>
-    <script type="module" src="https://xo-js.dev/v1.4/xo.js"></script>
+    <script type="module" src="https://xo-js.dev/v1.4/xo.min.js"></script>
     <script type="module">
         const schema = {
             pages: [{
@@ -52,7 +52,7 @@ As you've seen in the example above, you can run XO directly from the CDN:
 
 ### Providing a preexisting *ExoFormContext* object
 
-As you've seen, in ```xo.form.run()```, you provide a schema (inline or URL), and an ```options``` object. 
+In ```xo.form.run()```, you provide a schema (inline or URL), and an (optional) ```options``` object. 
 
 Apart from the ```on``` property, for events, the ```options``` object can have numerous settings for ExoForm runtime. For instance, the [context](../refdocs/src-exo-core_ExoFormContext.md) property is used to pass state to the form.
 

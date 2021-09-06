@@ -736,3 +736,42 @@ The Live Edit feature supports drag & drop sorting, deleting fields and editing 
 - You can now link a model instance via a URL instead of declaring it inline
 - Listview control now has a static mode, in which it just renders the data but adds no interactivity 
 - Clicking on a selected item in a singleSelect Listview doesn't deselect the item (unless CTRL is pressed)
+
+# New in 1.4.110
+
+## Sandbox
+
+The new ```sandbox``` control allows you to embed forms in an isolated way, using an IFRAME.
+
+Usage:
+
+```js
+const schema = {
+  pages: [
+    {
+      fields: [
+        {
+          name: "sandbox1",
+          caption: "Sandboxing a form",
+          type: "sandbox",
+          form: {
+            styles: [
+              "/css/my-embed-styles.css"
+            ],
+            schema: "/data/forms/myform.js"
+          }
+        }
+      ]
+    }
+  ]
+}
+```
+
+## Other additions
+
+- ```columns``` property in list controls (checkboxlist, radionuttonlist), which makes long option lists flow in multiple columns.
+
+
+
+
+

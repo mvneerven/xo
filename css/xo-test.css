@@ -174,7 +174,8 @@ body footer {
   margin-top: 2rem;
 }
 
-#xo-test .exf-container.exf-theme-material #xo-test .exf-wrapper fieldset {
+#xo-test .exf-container.exf-theme-material .exf-wrapper > fieldset {
+  height: 70vh;
   overflow-y: auto;
 }
 

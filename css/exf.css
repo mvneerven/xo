@@ -25,10 +25,6 @@
   width: 100%;
 }
 
-.exf-container .exf-wrapper {
-  height: 100%;
-}
-
 .exf-container .exf-wrapper .exf-page {
   display: none;
 }

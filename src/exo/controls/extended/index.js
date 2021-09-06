@@ -23,6 +23,7 @@ import ExoFileDialogControl from './ExoFileDialogControl';
 import listviewDemo from '../../../../data/listview-demo.json';
 import treeviewDemo from '../../../../data/treeview-demo.json';
 import multiInputDemo from '../../../../data/multiinput-demo.json'
+import ExoSandboxControl from './ExoSandboxControl';
 
 class ExoExtendedControls {
     static controls = {
@@ -50,7 +51,7 @@ class ExoExtendedControls {
         dialog: { type: ExoDialogControl, caption: "Dialog", note: "A simple dialog (modal or modeless)", demo: {demo: true} },
         filedialog: { type: ExoFileDialogControl, caption: "File Dialog", note: "A simple file dialog", demo: {demo: true} },
         info: { type: ExoInfoControl, note: "An info panel", demo: { title: "Info", icon: "ti-info", body: "Your informational text" } },
-       
+        sandbox: {type: ExoSandboxControl, note: "Embed an ExoForm form in an isolated way (IFRAME)"},
         map: {type: ExoLeafletMapControl, note: "Leaflet interactive map" },
         listview: {type: ExoListViewControl, note: "Listview control", demo: listviewDemo},
         treeview: {type: ExoTreeViewControl, note: "Treeview control", demo: treeviewDemo}
