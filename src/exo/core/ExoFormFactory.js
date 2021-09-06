@@ -545,39 +545,7 @@ class ExoFormFactory {
                 throw TypeError("Not implemented");
         }
     }
-
     
-    // /**
-    //  * Runs the given schema in a sandbox
-    //  * @param {*} schema 
-    //  * @param {*} options 
-    //  * @returns 
-    //  */
-    // static async sandbox(schema, options) {
-    //     let fr = document.createElement("iframe");
-    //     let du = await Core.jsonToDataUrl(schema)
-    //     let url = Core.dataURLtoBlob(du)
-    //     fr.setAttribute("src", "/xo.form.run.html?b=" + url)
-    //     fr.classList.add("exf-sandbox")
-    //     fr.setAttribute("scrolling", "no");
-    //     fr.setAttribute("frameborder", "0")
-    //     fr.setAttribute("title", "Embedded form")
-    //     fr.addEventListener('load', function () {
-    //         let b = fr.contentDocument.body;
-    //         let w = fr.contentWindow;
-    //         fr.style.height = (b.scrollHeight + 40) + 'px';
-    //         fr.style.width = (b.scrollWidth + 40) + 'px';
-
-    //         // w.addEventListener('message', e => {
-    //         //     options.on(e.data.type, {
-    //         //         ...e.data.data
-    //         //     })
-    //         // })
-    //     });
-        
-    //     return fr
-    // }
-
     /**
      * Read JSON Schema from the given URL.
      * @param {URL} schemaUrl - The URL to read the JSON Schema from
