@@ -15,7 +15,17 @@ class ExoDialogControl extends ExoBaseControls.controls.div.type {
 
     constructor(context) {
         super(context);
-        this.acceptProperties("title", "cancelText", "body", "confirmText", "cancelVisible", "modal", "click");
+        this.acceptProperties("title", "cancelText", "body", "confirmText",
+            {
+                name: "cancelVisible",
+                type: Boolean
+            },
+            {
+                name: "modal",
+                type: Boolean
+            },
+            "click"
+        );
         this.id = `dlg_${Core.guid().split('-').pop()}`;
         this.useContainer = false;
     }

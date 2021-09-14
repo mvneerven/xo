@@ -88,7 +88,7 @@ class ContentTypeCreator {
                     if (e.changed) {
 
                         switch (e.changed.property) {
-                            case"field":
+                            case "field":
                                 //debugger;
                                 break;
                             case "newName":
@@ -149,7 +149,7 @@ class ContentTypeCreator {
                                         return b || "string"
                                     }
                                 }
-                            
+
 
                             ],
                             mappings: {
@@ -599,11 +599,65 @@ class ProductsRoute extends xo.route {
                         <div>${p.name}</div>
                         <div><small>${p.description}</small></div>
                     </span> 
-                    <span class="pull-right">&euro; ${p.price.amount}</span>
+                    <span class="pull-right">&euro; ${Core.formatValue(p.price.amount, { type: "currency", currencyCode: "EUR" })}</span>
                 </div>`))
         })
 
         this.area.add(div)
+    }
+
+    get area() {
+        return this.app.UI.areas.main;
+    }
+}
+
+class ImageSelectRoute extends xo.route {
+    menuIcon = "ti-image";
+
+    title = "Images";
+
+    constructor() {
+        super(...arguments);
+    }
+
+    async render(path) {
+        await this.renderForm(path);
+    }
+
+    async renderForm(path) {
+        const schema = {
+            pages: [{
+                fields: [
+                    {
+                        type: "search",
+                        name: "image",
+                        caption: "Select image",
+                        placeholder: "/img/my-image.png",
+                        autocomplete: {
+                            items: this.items,
+                            minlength: 2
+                        }
+
+                    }
+                ]
+            }]
+        }
+
+        this.area.add(await xo.form.run(schema))
+    }
+
+    get items() {
+        return [
+            {
+                text: "(None)"
+            },
+            {
+                category: "App",
+                text: "/img/icon512px.png",
+                image: "/img/icon512px.png"
+
+            }
+        ]
     }
 
     get area() {
@@ -687,6 +741,7 @@ new PWA({
         "/test": TestRoute,
         "/products": ProductsRoute,
         "/canvas": ISVCanvasRoute,
-        "/contentypes": BuildContenttypeRoute
+        "/contentypes": BuildContenttypeRoute,
+        "/imageselect": ImageSelectRoute
     }
 })

@@ -110,7 +110,7 @@ class ExoTextControlAutoCompleteExtension {
                 this.clear();
             }, 100);
 
-            
+
             var evt = document.createEvent("HTMLEvents");
             evt.initEvent("change", true, true);
             this.control.htmlElement.dispatchEvent(evt);
@@ -234,9 +234,13 @@ class ExoTextControlAutoCompleteExtension {
         let index = 0;
 
         r.forEach(i => {
-            let catHandler = options.categories[i.category] || {};
+            let image = null, catHandler = options.categories[i.category] || {};
+            if (i.image) {
+                i.icon = "exf-ac-img";
+                image = `style="background-image: url('${i.image}')"`;
+            }
             this.resultsDiv.innerHTML += `<div data-index="${index}" class="${this.cssClasses.item}">
-                <span class="${i.icon || catHandler.icon}"></span>
+                <span ${image} class="${i.icon || catHandler.icon}"></span>
                 <span class="text">${this.formatResultItem(i, options, catHandler)}</span>
                 <span title="Sortindex: ${catHandler.sortIndex}" class="category">${i.category || ""}</span></div>`;
 

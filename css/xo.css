@@ -1651,6 +1651,10 @@ html.theme-light nav.ul-drop ul li > ul {
   overflow-y: auto;
 }
 
+.exf-dlg.dlg-ch button.dismiss {
+  display: none;
+}
+
 .exf-dlg.c-mdl {
   opacity: 0;
   pointer-events: none;
@@ -2896,6 +2900,15 @@ html.theme-dark .exf-ctl-cnt.exf-switch input[type="range"] {
   cursor: pointer;
   overflow: hidden;
   padding: 0.5rem;
+  height: 1.1rem;
+}
+
+.exf-ctl-cnt.autocomplete .exf-ac-rs .exf-ac-itm .exf-ac-img {
+  background-repeat: no-repeat;
+  background-size: contain;
+  width: 1.1rem;
+  height: 1.1rem;
+  display: inline-block;
 }
 
 .exf-ctl-cnt.autocomplete .exf-ac-rs .exf-ac-itm:hover {

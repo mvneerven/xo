@@ -8,6 +8,12 @@
     z-index: 99999;
     overflow-y: auto;
 
+    &.dlg-ch {
+        button.dismiss {
+            display: none;
+        }
+    }
+
     &.c-mdl {
         opacity: 0;
         pointer-events: none;
