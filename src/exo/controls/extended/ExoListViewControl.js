@@ -123,6 +123,18 @@ class ExoListViewControl extends ExoDivControl {
         name: "listen",
         type: Object,
         description: "Event listeners",
+      },
+      {
+        name: "noItemsFoundText",
+        type: String,
+        default: "No items found",
+        description: "Text to show when items list is empty"
+      },
+      {
+        name: "tilegrid",
+        type: String,
+        default: "vertical",
+        description: "Flow direction within each tile"
       }
     );
   }
@@ -230,6 +242,9 @@ class ExoListViewControl extends ExoDivControl {
       .on("finishDisable", async () => this.renderItems());
 
     this.container.classList.add("exf-std-lbl");
+
+    this.container.classList.add(`exf-lv-tg-${this.tilegrid}`);
+
     return this.container;
   }
 
@@ -273,6 +288,10 @@ class ExoListViewControl extends ExoDivControl {
       });
   }
 
+  async refresh(){
+    await this.renderItems(true)
+  }
+
   async renderItems(noFetch) {
     try {
       if (!noFetch) {
@@ -310,6 +329,8 @@ class ExoListViewControl extends ExoDivControl {
       this.listDiv.appendChild(failedDiv);
     }
   }
+
+ 
 
   renderPagingButtons(items) {
     // delete current paging buttons from list div if found
@@ -855,7 +876,7 @@ class ExoListViewControl extends ExoDivControl {
     this.renderStyleSheet();
     const emptyDiv = DOM.parseHTML(/*html*/ `
       <div class="exf-lv-item empty">
-        No items found
+        ${this.noItemsFoundText}
       </div>
     `);
 
@@ -1116,12 +1137,16 @@ class ExoListViewControl extends ExoDivControl {
       }
 
       if (prop.tiles) {
+        // get size dependant on tile flow (vert or hor)
+        let size = prop.tiles.size || (this.tilegrid === "horizontal" ?  prop.tiles.width : prop.tiles.height);
+        let autoSize = prop.tiles.autoSize || (this.tilegrid === "horizontal" ?  prop.tiles.autoWidth : prop.tiles.autoHeight); 
+        
         tileTemplate[mappingOrders.tiles.indexOf(prop.key)] =
-          !prop.tiles.height ||
-            prop.tiles.height.trim() === "100%" ||
-            prop.tiles.autoHeight
+          !size ||
+          size.trim() === "100%" ||
+            autoSize
             ? "1fr"
-            : prop.tiles.height.trim();
+            : size.trim();
         tileTemplateAreas[
           mappingOrders.tiles.indexOf(prop.key)
         ] = `'${prop.key}'`;
@@ -1155,7 +1180,9 @@ class ExoListViewControl extends ExoDivControl {
     // set css variables for list view grid templates
     this.cssVariables["--lv-tile-template"] =
       "repeat(auto-fill, minmax(200px, 1fr))";
+    
     this.cssVariables["--lv-tile-content-template"] = tileTemplate.join(" ");
+
     this.cssVariables["--lv-tile-content-template-areas"] =
       tileTemplateAreas.join(" ");
 

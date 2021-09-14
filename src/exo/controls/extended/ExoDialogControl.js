@@ -32,17 +32,17 @@ class ExoDialogControl extends ExoBaseControls.controls.div.type {
         }
     }
 
-
     handleInteraction(e, confirm) {
         var btn = "cancel", b = e.target;
         if (confirm || b.classList.contains("confirm")) {
             btn = "confirm";
         }
 
-        if (!this.modal || this.isDlgButton(b)) {
+        let isClose = b.closest("button").classList.contains("dlg-x"); // standard dialog close button
 
+        if (!this.modal || this.isDlgButton(b) || isClose) {
             if (!b.closest(".exf-dlg-b")) {
-                this.hide.apply(this, [btn, e]);
+                this.hide.apply(this, [btn || (isClose ? "cancel" : undefined), e]);
             }
         }
     }

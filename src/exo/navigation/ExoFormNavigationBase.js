@@ -328,8 +328,16 @@ class ExoFormNavigationBase {
             prev.disabled = this.currentPage < 2;
 
         let nxt = this.getControl("next");
-        if (nxt)
-            nxt.disabled = !this.canMoveNext(); // this.currentPage === this.pageCount;
+        if (nxt){
+            
+            if(this.currentPage === this.pageCount){
+                nxt.visible = false;
+            }
+            else{
+                nxt.visible = true;
+                nxt.disabled = !this.canMoveNext(); // this.currentPage === this.pageCount;
+            }            
+        }
 
         let send = this.getControl("send");
         if (send) {

@@ -79,6 +79,23 @@
         }
     }
 
+    [data-field-type="textconfirm"]{
+        .exf-ctl{
+            position: relative;
+
+            .exf-btn-cnt {
+                position: absolute!important;
+                top: -1.7rem;
+                right: 0;
+
+                button.exf-btn{
+                    padding: .2rem .5rem!important
+                }
+            }
+        }
+        
+    }
+
     &.single-page {
         .exf-page {
             display: block;

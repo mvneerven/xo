@@ -27,8 +27,8 @@ class Form {
     }
     get run() { return ExoFormFactory.run }
 
-    get sandbox() { 
-        return ExoSandboxControl 
+    get sandbox() {
+        return ExoSandboxControl
     }
 
     /**
@@ -80,19 +80,10 @@ class Form {
         if (!elm)
             return;
 
-        let f = ExoFormFactory.getFieldFromElement(elm);
-        if (f && f._control)
-            return f._control.context.exo;
-        else {
-            let cnt = elm.closest(".exf-container");
-            if (cnt) {
-                let o = cnt.querySelector(".exf-page");
-                if (o === elm)
-                    return null;
+        let el = elm.closest("[data-exf]") || elm.querySelector("[data-exf]");
+        if (el && el.data && el.data.field)
+            return el.data.field._control.context.exo;
 
-                return xo.form.from(o);
-            }
-        }
     }
 
     /**

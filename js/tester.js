@@ -1,16 +1,16 @@
 const Core = xo.core;
 const DOM = xo.dom;
 
-class ISVCanvas{
-    static async createForm(){
+class ISVCanvas {
+    static async createForm() {
         const isvcanvas = await xo.core.acquireState("/data/isvcanvas.json"),
-        schema = { pages: [] }
+            schema = { pages: [] }
 
         Object.keys(isvcanvas.groups).forEach(g => {
-            const page = {fields: []}, group = isvcanvas.groups[g];
+            const page = { fields: [] }, group = isvcanvas.groups[g];
             Object.keys(group.questions).forEach(q => {
-                const question = group.questions[q], 
-                field = ISVCanvas.createField(q, question);
+                const question = group.questions[q],
+                    field = ISVCanvas.createField(q, question);
                 page.fields.push(field);
             });
             page.legend = group.name;
@@ -49,9 +49,9 @@ class ISVCanvas{
             options.items = items;
         }
 
-        if(options.caption.substr(options.caption.length-1,1) === "*"){
+        if (options.caption.substr(options.caption.length - 1, 1) === "*") {
             options.required = true;
-            options.caption = options.caption.substr(0,options.caption.length-1);
+            options.caption = options.caption.substr(0, options.caption.length - 1);
         }
 
         return options
@@ -66,17 +66,154 @@ class HomeRoute extends xo.route {
 
     async render(path) {
         const me = this;
-        await this.renderForm(path);
-    }
-
-    async renderForm(path) {
-        const schema = await ISVCanvas.createForm();
-
-        this.area.add(await xo.form.run(schema))
     }
 
     get area() {
         return this.app.UI.areas.main;
+    }
+}
+
+class ContentTypeCreator {
+    static async createForm(host) {
+
+        const schema = {
+            model: {
+                instance: {
+                    data: {
+                        id: "",
+                        fields: []
+                    }
+                },
+                logic: e => {
+                    if (e.changed) {
+
+                        switch (e.changed.property) {
+                            case"field":
+                                //debugger;
+                                break;
+                            case "newName":
+                                if (e.model.instance.data.newName) {
+                                    e.model.instance.data.fields.push({
+                                        id: e.model.instance.data.newName,
+                                        type: "string"
+                                    });
+
+                                    host.listView.refresh()
+                                }
+                                break
+
+                        }
+                    }
+                }
+            },
+            pages: [
+                {
+                    legend: "Add contenttype",
+
+                    fields: [
+                        {
+                            type: "text",
+                            name: "name",
+                            required: true,
+                            minlength: 3,
+                            maxlength: 20,
+                            pattern: "([A-Za-z0-9\-\_]+)",
+                            invalidmessage: "Name has to be between 3 and 20 charachters, and can contain text and numbers, dashes and underscores.",
+                            caption: "Content Type",
+                            placeholder: "e.g. Product",
+                            bind: "instance.data.name"
+                        }
+
+                    ]
+                },
+                {
+                    legend: "Define '@instance.data.name'",
+                    fields: [
+                        {
+                            type: "listview",
+                            name: "list",
+                            items: "@instance.data.fields",
+                            bind: "instance.data.field",
+                            noItemsFoundText: "No properties",
+                            views: ["tiles"],
+                            tilegrid: "horizontal",
+                            //mode: "static",
+                            singleSelect: true,
+                            properties: [
+                                {
+                                    key: "id"
+                                },
+                                {
+                                    key: "type",
+                                    dataCallback: (a, b, c) => {
+                                        return b || "string"
+                                    }
+                                }
+                            
+
+                            ],
+                            mappings: {
+                                tiles: [
+                                    {
+                                        key: "type",
+                                        size: "20px",
+                                    },
+                                    {
+                                        key: "id",
+                                        size: "1fr"
+                                    }
+                                ]
+                            },
+
+                        },
+                        {
+                            name: "addName",
+                            type: "textconfirm",
+                            placeholder: "Property name",
+                            caption: "Name",
+                            pattern: "([A-Za-z0-9\-\_]+)",
+
+                            confirmButton: {
+                                caption: "Add",
+                                tooltip: "Click to add property"
+                            },
+                            bind: "instance.data.newName"
+                        }
+
+                    ]
+                }
+
+            ]
+        };
+        return schema;
+    }
+}
+
+class BuildContenttypeRoute extends xo.route {
+
+    title = "Content Types";
+
+    menuIcon = "ti-pencil-alt2";
+
+    async render(path) {
+        const me = this;
+        await this.renderForm(path);
+    }
+
+    get area() {
+        return this.app.UI.areas.main;
+    }
+
+    async renderForm() {
+        const schema = await ContentTypeCreator.createForm(this);
+
+        this.area.add(await xo.form.run(schema, {
+            on: {
+                interactive: e => {
+                    this.listView = e.detail.host.get("list")._control
+                }
+            }
+        }))
     }
 }
 
@@ -388,6 +525,28 @@ class TestRoute extends xo.route {
     }
 }
 
+class ISVCanvasRoute extends xo.route {
+    menuIcon = "ti-menu-alt";
+
+    title = "ISV Canvas";
+
+    async render(path) {
+        const me = this;
+        await this.renderForm(path);
+    }
+
+    async renderForm(path) {
+        const schema = await ISVCanvas.createForm();
+
+        this.area.add(await xo.form.run(schema))
+    }
+
+    get area() {
+        return this.app.UI.areas.main;
+    }
+
+}
+
 class ProductsRoute extends xo.route {
     menuIcon = "ti-package";
 
@@ -526,6 +685,8 @@ new PWA({
     routes: {
         "/": HomeRoute,
         "/test": TestRoute,
-        "/products": ProductsRoute
+        "/products": ProductsRoute,
+        "/canvas": ISVCanvasRoute,
+        "/contentypes": BuildContenttypeRoute
     }
 })

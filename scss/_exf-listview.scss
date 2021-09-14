@@ -409,14 +409,14 @@
     .exf-listview-list {
       padding: 1rem 0;
       grid-template-columns: var(--lv-tile-template);
-      grid-auto-rows: minmax(150px, auto);
+      grid-auto-rows: minmax(50px, auto);
       grid-gap: 2em;
       .exf-lv-headers,
       .exf-lv-paging {
         display: none;
       }
       .exf-lv-item {
-        min-height: 100px;
+        //min-height: 100px;
         margin-left: 5px;
         margin-right: 5px;
         border: 4px solid transparent;
@@ -424,9 +424,6 @@
         display: grid;
         grid-gap: 0.5rem;
         grid-template-areas: var(--lv-tile-content-template-areas);
-        grid-template-rows: var(--lv-tile-content-template);
-        grid-template-columns: 1fr !important;
-        text-align: center;
         box-shadow: 2px 2px 6px 0px rgba(0, 0, 0, 0.3);
         transform: scale(1);
         transition: all 0.1s;
@@ -435,9 +432,6 @@
           background-color: var(--lv-tile-color);
         }
         &.empty {
-          height: fit-content;
-          min-height: unset;
-          grid-template-rows: 1fr;
           border-radius: 10px;
           background-color: rgba(0, 0, 0, 0.05);
           pointer-events: none;
@@ -489,6 +483,39 @@
           &:not([data-column="image"]),
           &:not(.action-button) {
             padding: 4px 8px;
+          }
+        }
+      }
+    }
+
+    // vertical flow within tile
+    &.exf-lv-tg-vertical {
+      .exf-listview-list {
+        .exf-lv-item {
+          grid-template-rows: var(--lv-tile-content-template);
+          grid-template-columns: 1fr;
+          text-align: center;
+
+          &.empty {
+            height: fit-content;
+            min-height: unset;
+            grid-template-rows: 1fr;
+          }
+        }
+      }
+    }
+    // horizontal flow within tile
+    &.exf-lv-tg-horizontal {
+      .exf-listview-list {
+        .exf-lv-item {
+          grid-template-rows: 1fr;
+          grid-template-columns: var(--lv-tile-content-template);
+          text-align: left;
+
+          &.empty {
+            width: fit-content;
+            min-width: unset;
+            grid-template-columns: 1fr;
           }
         }
       }

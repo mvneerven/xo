@@ -85,6 +85,8 @@ class ExoFormDataBinding {
                 let eventName = this.exo.options.DOMChange || "input";
 
                 const handle = e => {
+                    console.debug("ExoFormDataBinding", "change handling in " + e.target.name)
+
                     if (this.noProxy) {
                         console.debug("ExoFormDataBinding", "DOMChange event SKIPPED BECAUSE NO-PROXY")
                         return

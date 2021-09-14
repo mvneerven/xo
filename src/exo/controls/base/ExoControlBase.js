@@ -348,7 +348,7 @@ class ExoControlBase {
         this._visible = value;
         if (this.rendered) {
             var elm = this.container || this.htmlElement;
-            elm.style.display = value ? "block" : "none";
+            elm.style.display = value ? "unset" : "none";
         }
     }
 
