@@ -6,6 +6,7 @@
   * [exo/controls/base/ExoControlBase](src-exo-controls-base_ExoControlBase.md) - _Abstract base class for ExoForm controls_
   * [exo/controls/base/ExoTextControlAutoCompleteExtension](src-exo-controls-base_ExoTextControlAutoCompleteExtension.md) - _Module exo/controls/base/ExoTextControlAutoCompleteExtension_
   * [exo/controls/extended/ExoSandboxControl](src-exo-controls-extended_ExoSandboxControl.md) - _Module exo/controls/extended/ExoSandboxControl_
+  * [exo/controls/extended/ExoTextConfirm](src-exo-controls-extended_ExoTextConfirm.md) - _Extends textbox and shows button to confirm value_
   * [exo/core/ExoForm](src-exo-core_ExoForm.md) - _ExoForm class. Created using ExoFormContext create() method_
   * [exo/core/ExoFormContext](src-exo-core_ExoFormContext.md) - _Hosts an ExoForm context to create forms with.Created using {ExoFormFactory}.build()_
   * [exo/core/ExoFormFactory](src-exo-core_ExoFormFactory.md) - _Factory class for ExoForm - Used to create an ExoForm context.Provides factory methods. Starting point for using ExoForm._
