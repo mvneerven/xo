@@ -38,7 +38,7 @@ class ExoDialogControl extends ExoBaseControls.controls.div.type {
             btn = "confirm";
         }
 
-        let isClose = b.closest("button").classList.contains("dlg-x"); // standard dialog close button
+        let isClose = b && b.closest("button") && b.closest("button").classList.contains("dlg-x"); // standard dialog close button
 
         if (!this.modal || this.isDlgButton(b) || isClose) {
             if (!b.closest(".exf-dlg-b")) {
