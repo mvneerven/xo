@@ -2816,14 +2816,6 @@ html.theme-dark .exf-ctl-cnt.autocomplete .exf-ac-rs .exf-ac-itm.active {
   border-bottom-width: 1px;
 }
 
-.exf-listview[data-view="grid"] .exf-listview-list .exf-lv-item:hover {
-  border-left-color: var(--color-tile-hover);
-}
-
-.exf-listview[data-view="grid"] .exf-listview-list .exf-lv-item.selected {
-  border-left-color: var(--color-tile-active);
-}
-
 .exf-listview[data-view="grid"] .exf-listview-list .exf-lv-item .thumb {
   width: 100%;
   height: 80px;
@@ -2871,6 +2863,14 @@ html.theme-dark .exf-ctl-cnt.autocomplete .exf-ac-rs .exf-ac-itm.active {
   padding: 50px 0 0;
   background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(255, 255, 255, 0)), to(var(--lv-tile-color)));
   background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0) 0%, var(--lv-tile-color) 100%);
+}
+
+.exf-listview[data-view="grid"]:not(.exf-lv-check) .exf-lv-item:hover {
+  border-left-color: var(--color-tile-hover);
+}
+
+.exf-listview[data-view="grid"]:not(.exf-lv-check) .exf-lv-item.selected {
+  border-left-color: var(--color-tile-active);
 }
 
 .exf-listview[data-view="tiles"] .hide-in-tile {
@@ -2932,22 +2932,6 @@ html.theme-dark .exf-ctl-cnt.autocomplete .exf-ac-rs .exf-ac-itm.active {
           animation: pulse 2s infinite;
 }
 
-.exf-listview[data-view="tiles"] .exf-listview-list .exf-lv-item:hover {
-  border-color: var(--color-tile-hover);
-  -webkit-transform: scale(1.05);
-          transform: scale(1.05);
-  -webkit-transition: all 0.1s;
-  transition: all 0.1s;
-}
-
-.exf-listview[data-view="tiles"] .exf-listview-list .exf-lv-item:hover .action-button {
-  display: block;
-}
-
-.exf-listview[data-view="tiles"] .exf-listview-list .exf-lv-item.selected {
-  border-color: var(--color-tile-active);
-}
-
 .exf-listview[data-view="tiles"] .exf-listview-list .exf-lv-item .action-button {
   display: none;
 }
@@ -2977,6 +2961,22 @@ html.theme-dark .exf-ctl-cnt.autocomplete .exf-ac-rs .exf-ac-itm.active {
   padding: 4px 8px;
 }
 
+.exf-listview[data-view="tiles"]:not(.exf-lv-check) .exf-listview-list .exf-lv-item:hover {
+  border-color: var(--color-tile-hover);
+  -webkit-transform: scale(1.05);
+          transform: scale(1.05);
+  -webkit-transition: all 0.1s;
+  transition: all 0.1s;
+}
+
+.exf-listview[data-view="tiles"]:not(.exf-lv-check) .exf-listview-list .exf-lv-item:hover .action-button {
+  display: block;
+}
+
+.exf-listview[data-view="tiles"]:not(.exf-lv-check) .exf-listview-list .exf-lv-item.selected {
+  border-color: var(--color-tile-active);
+}
+
 .exf-listview[data-view="tiles"].exf-lv-tg-vertical .exf-listview-list .exf-lv-item {
   -ms-grid-rows: var(--lv-tile-content-template);
       grid-template-rows: var(--lv-tile-content-template);
@@ -2995,8 +2995,8 @@ html.theme-dark .exf-ctl-cnt.autocomplete .exf-ac-rs .exf-ac-itm.active {
 }
 
 .exf-listview[data-view="tiles"].exf-lv-tg-horizontal .exf-listview-list .exf-lv-item {
-  -ms-grid-rows: 1fr;
-      grid-template-rows: 1fr;
+  -ms-grid-rows: 1fr !important;
+      grid-template-rows: 1fr !important;
   -ms-grid-columns: var(--lv-tile-content-template);
       grid-template-columns: var(--lv-tile-content-template);
   text-align: left;
@@ -3405,5 +3405,53 @@ html.theme-dark .exf-ctl-cnt.autocomplete .exf-ac-rs .exf-ac-itm.active {
 
 .exf-le-dlg .exf-cnt.exf-nav-cnt {
   display: none;
+}
+
+.exf-lv-chk {
+  display: none;
+  position: absolute;
+  top: 0.5rem;
+  left: -0.5rem;
+  -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none;
+}
+
+.exf-lv-chk:before {
+  content: "";
+  position: absolute;
+  left: 0;
+  z-index: 1;
+  width: 1rem;
+  height: 1rem;
+  border: 2px solid #f2f2f2;
+}
+
+.exf-lv-chk:checked {
+  display: block;
+}
+
+.exf-lv-chk:checked:before {
+  height: 0.5rem;
+  -webkit-transform: rotate(-45deg);
+          transform: rotate(-45deg);
+  border-color: var(--color-tile-active, #ff3344);
+  border-top-style: none;
+  border-right-style: none;
+}
+
+.exf-lv-chk:after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1.1rem;
+  height: 1.1rem;
+  background: transparent;
+  cursor: pointer;
+}
+
+.exf-lv-item:hover .exf-lv-chk {
+  display: block;
 }
 /*# sourceMappingURL=exf.css.map */

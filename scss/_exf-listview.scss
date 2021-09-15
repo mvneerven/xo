@@ -355,12 +355,7 @@
         &:not(:last-child) {
           border-bottom-width: 1px;
         }
-        &:hover {
-          border-left-color: var(--color-tile-hover);
-        }
-        &.selected {
-          border-left-color: var(--color-tile-active);
-        }
+
         .thumb {
           width: 100%;
           height: 80px;
@@ -397,6 +392,17 @@
               background-image: linear-gradient(to bottom, rgba(white, 0) 0%, var(--lv-tile-color) 100%);
             }
           }
+        }
+      }
+    }
+
+    &:not(.exf-lv-check) {
+      .exf-lv-item {
+        &:hover {
+          border-left-color: var(--color-tile-hover);
+        }
+        &.selected {
+          border-left-color: var(--color-tile-active);
         }
       }
     }
@@ -446,17 +452,7 @@
           background-color: rgba(0, 0, 0, 0.15);
           animation: pulse 2s infinite;
         }
-        &:hover {
-          border-color: var(--color-tile-hover);
-          transform: scale(1.05);
-          transition: all 0.1s;
-          .action-button {
-            display: block;
-          }
-        }
-        &.selected {
-          border-color: var(--color-tile-active);
-        }
+
         .action-button {
           display: none;
         }
@@ -488,6 +484,24 @@
       }
     }
 
+    &:not(.exf-lv-check) {
+      .exf-listview-list {
+        .exf-lv-item {
+          &:hover {
+            border-color: var(--color-tile-hover);
+            transform: scale(1.05);
+            transition: all 0.1s;
+            .action-button {
+              display: block;
+            }
+          }
+          &.selected {
+            border-color: var(--color-tile-active);
+          }
+        }
+      }
+    }
+
     // vertical flow within tile
     &.exf-lv-tg-vertical {
       .exf-listview-list {
@@ -508,7 +522,7 @@
     &.exf-lv-tg-horizontal {
       .exf-listview-list {
         .exf-lv-item {
-          grid-template-rows: 1fr;
+          grid-template-rows: 1fr!important;
           grid-template-columns: var(--lv-tile-content-template);
           text-align: left;
 

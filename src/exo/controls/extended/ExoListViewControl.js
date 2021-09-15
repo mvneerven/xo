@@ -135,6 +135,11 @@ class ExoListViewControl extends ExoDivControl {
         type: String,
         default: "vertical",
         description: "Flow direction within each tile"
+      },
+      {
+        name: "checkboxes",
+        type: Boolean,
+        description: "Set to true to enable checkbox selection mode"
       }
     );
   }
@@ -288,7 +293,7 @@ class ExoListViewControl extends ExoDivControl {
       });
   }
 
-  async refresh(){
+  async refresh() {
     await this.renderItems(true)
   }
 
@@ -330,7 +335,7 @@ class ExoListViewControl extends ExoDivControl {
     }
   }
 
- 
+
 
   renderPagingButtons(items) {
     // delete current paging buttons from list div if found
@@ -445,8 +450,13 @@ class ExoListViewControl extends ExoDivControl {
     if (this.mode === MODES[0]) {
       this.listDiv.addEventListener("click", (e) => {
 
+        if(this.checkboxes && e.target.type !== "checkbox"){
+          this.selectFirstDropdownAction(e)
+          return;
+        }
+
         e.stopPropagation();
-        e.returnValue = false;
+        //e.returnValue = false;
 
         let art = e.target.closest("[data-id]")
         if (art) {
@@ -498,6 +508,20 @@ class ExoListViewControl extends ExoDivControl {
     else if (this.properties.length) {
       console.debug("No primary key in properties. Assuming first property");
       this.primaryKey = this.properties[0].key;
+    }
+  }
+
+  // item click when using checkboxes for selection should 
+  // trigger first action as defined in contextmenu
+  selectFirstDropdownAction(e){
+    if(this.contextMenu && this.contextMenu.itemList){
+      let act = e.target;
+      let first = this.contextMenu.itemList[0];
+      let itemId = act.closest("article").getAttribute("data-id");
+      this.events.trigger("action", {
+        id: first.action,
+        items: [itemId],
+      });
     }
   }
 
@@ -560,6 +584,9 @@ class ExoListViewControl extends ExoDivControl {
         `[data-id="${i[this.primaryKey]}"]`
       );
     }
+    
+    
+    this.renderCheckboxes();
 
     // (re)select all ids inside value
     this.renderSelected();
@@ -568,13 +595,13 @@ class ExoListViewControl extends ExoDivControl {
 
     // create single contextmenu and move it to article hovered over
     if (this.contextMenu) {
-      const am = await Core.acquireState(this.contextMenu.items);
+      this.contextMenu.itemList = await Core.acquireState(this.contextMenu.items);
       let btn = await xo.form.run({
         type: "button",
         name: `context-actions`,
         icon: "ti-menu",
         ...this.contextMenu,
-        dropdown: am,
+        dropdown: this.contextMenu.itemList,
       });
       btn.addEventListener("click", e => {
         e.stopPropagation();
@@ -660,6 +687,19 @@ class ExoListViewControl extends ExoDivControl {
     this.events.trigger("ready");
   }
 
+  renderCheckboxes() {
+    if (this.checkboxes) {
+      this.container.classList.add("exf-lv-check");
+      this.listDiv.querySelectorAll(".exf-lv-item").forEach(item => {
+        let checkBox = document.createElement("input");
+        checkBox.type = "checkbox";
+        checkBox.classList.add("exf-lv-chk")
+        //checkBox.style = "position:absolute; left: -.5rem; top: .8rem"
+        item.appendChild(checkBox);
+      });
+    }
+  }
+
   selectItems(i, selectAll) {
     let v = this.value ? JSON.parse(JSON.stringify(this.value)) : undefined;
     if (!v && this.singleSelect) v = null;
@@ -691,15 +731,23 @@ class ExoListViewControl extends ExoDivControl {
   renderSelected() {
     if (this.listDiv) {
       this.listDiv.querySelectorAll("article.exf-lv-item").forEach((art) => {
-        if (
+        
+        let selected =
           (this.singleSelect && this.value && this.value === art.dataset.id) ||
           (!this.singleSelect && this.value && this.value.includes(art.dataset.id))
-        ) {
-          art.classList.add("selected");
-        } else {
-          art.classList.remove("selected");
-        }
+
+        this.selectItem(art, selected)
+
       });
+    }
+  }
+
+  selectItem(item, selected) {
+    if (this.checkboxes) {
+      item.querySelector("input[type=checkbox]").checked = selected;
+    }
+    else {
+      item.classList[selected ? "add" : "remove"]("selected");
     }
   }
 
@@ -765,7 +813,7 @@ class ExoListViewControl extends ExoDivControl {
           }
 
           ev.preventDefault();
-          
+
           ev.stopPropagation();
 
 
@@ -953,16 +1001,6 @@ class ExoListViewControl extends ExoDivControl {
           DOM[enable ? "enable" : "disable"](elm);
         });
       }
-
-      // if (this.singleSelect) {
-      //   this.valid = data != null
-      // }
-      // else {
-      //   this.valid =
-      //     (Array.isArray(data) && data.length >= this.minimum) ||
-      //     (data && this.minimum <= 1);
-      // }
-
       this.renderSelected();
     }
   }
@@ -1005,8 +1043,10 @@ class ExoListViewControl extends ExoDivControl {
 
   getTemplate(item) {
     let columnHtml = "";
+    let i = 0;
     this.properties.forEach((prop) => {
-      columnHtml += this.getGridDiv(item, prop);
+      columnHtml += this.getGridDiv(item, prop, i);
+      i++;
     });
     return /*html*/ `<article data-id="${item[this.primaryKey]
       }" class="exf-lv-item">
@@ -1138,12 +1178,12 @@ class ExoListViewControl extends ExoDivControl {
 
       if (prop.tiles) {
         // get size dependant on tile flow (vert or hor)
-        let size = prop.tiles.size || (this.tilegrid === "horizontal" ?  prop.tiles.width : prop.tiles.height);
-        let autoSize = prop.tiles.autoSize || (this.tilegrid === "horizontal" ?  prop.tiles.autoWidth : prop.tiles.autoHeight); 
-        
+        let size = prop.tiles.size || (this.tilegrid === "horizontal" ? prop.tiles.width : prop.tiles.height);
+        let autoSize = prop.tiles.autoSize || (this.tilegrid === "horizontal" ? prop.tiles.autoWidth : prop.tiles.autoHeight);
+
         tileTemplate[mappingOrders.tiles.indexOf(prop.key)] =
           !size ||
-          size.trim() === "100%" ||
+            size.trim() === "100%" ||
             autoSize
             ? "1fr"
             : size.trim();
@@ -1180,7 +1220,7 @@ class ExoListViewControl extends ExoDivControl {
     // set css variables for list view grid templates
     this.cssVariables["--lv-tile-template"] =
       "repeat(auto-fill, minmax(200px, 1fr))";
-    
+
     this.cssVariables["--lv-tile-content-template"] = tileTemplate.join(" ");
 
     this.cssVariables["--lv-tile-content-template-areas"] =
@@ -1204,7 +1244,7 @@ class ExoListViewControl extends ExoDivControl {
         return `This field is required`;
       }
 
-      
+
       return `Select at least ${this.minimum} item(s)`;
     }
   }
@@ -1214,10 +1254,10 @@ class ExoListViewControl extends ExoDivControl {
   // }
 
   get valid() {
-    if(!this.required){
+    if (!this.required) {
       return true;
     }
-    
+
     if (this.singleSelect) {
       return this.value != null && this.value != ""
     }
