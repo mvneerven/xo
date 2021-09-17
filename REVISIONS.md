@@ -772,6 +772,54 @@ const schema = {
 - ```columns``` property in list controls (checkboxlist, radionuttonlist), which makes long option lists flow in multiple columns.
 
 
+# New in 1.4.116 
+
+## Listview Control
+
+Listview now has ```checkboxes``` property to set behavior to use checkboxes for selection. Clicking an item in the listview will trigger the first action in the contextmenu, if any.
 
 
+## Autocomplete images
+Autocomplete feature on textboxes now allows for images to be displayed. Use ```image: "/image-path"``` to use them in the items returned.
+
+
+## Dialog as sidepanel
+The dialog control now supports a ```mode``` parameter to switch to sidepanel behavior.
+
+```js
+const schema = {
+  model: {
+    logic: context => {
+		if (context.changed.property === "button") {
+		// e.changed.newValue
+		}
+},
+    instance: {
+      control: {
+        button: ""
+      }
+    }
+  },
+  pages: [
+    {
+      fields: [
+        {
+          type: "button",
+          name: "show",
+          caption: "Show dialog! @instance.control.button",
+          action: "dialog:dlg1"
+        },
+        {
+          name: "dlg1",
+          body: "Test dialog!",
+          caption: "Test Field",
+          type: "dialog",
+          mode: "side",
+          bind: "instance.control.button"
+        }
+      ]
+    }
+  ]
+}
+```
 

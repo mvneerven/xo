@@ -1,4 +1,22 @@
 // control specific
+.nsp-xxs {
+  .exf-lv-headers,
+  .exf-lv-item {
+    grid-template-columns: var(--lv-grid-template-xxs);
+    grid-template-areas: var(--lv-grid-template-xxs-areas);
+  }
+  .exf-lv-headers__header,
+  .exf-lv-item__cell {
+    &.hide-xxs,
+    &.hide-xs,
+    &.hide-sm,
+    &.hide-md,
+    &.hide-lg {
+      display: none !important;
+    }
+  }
+}
+
 .nsp-xs {
   .exf-lv-headers,
   .exf-lv-item {
@@ -453,9 +471,6 @@
           animation: pulse 2s infinite;
         }
 
-        .action-button {
-          display: none;
-        }
         &__cell {
           &__content {
             height: 100%;
@@ -522,7 +537,7 @@
     &.exf-lv-tg-horizontal {
       .exf-listview-list {
         .exf-lv-item {
-          grid-template-rows: 1fr!important;
+          grid-template-rows: 1fr !important;
           grid-template-columns: var(--lv-tile-content-template);
           text-align: left;
 
@@ -599,5 +614,13 @@
     opacity: 1;
     z-index: 1;
     transform: translateX(0);
+  }
+}
+
+html:not(.pwa-touch) {
+  .exf-lv-item {
+    .action-button {
+      display: none;
+    }
   }
 }

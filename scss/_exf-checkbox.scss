@@ -1,9 +1,11 @@
+
 .exf-lv-chk {
-    display: none;
+    display: block;
     position: absolute;
     top: 0.5rem;
     left: -0.5rem;
     appearance: none;
+    cursor: pointer;
 
     &:before {
         content: "";
@@ -15,7 +17,7 @@
         width: 1rem;
         height: 1rem;
 
-        border: 2px solid #f2f2f2;
+        border: 2px solid #c2c2c2;
     }
 
     &:checked {
@@ -32,17 +34,12 @@
 
     &:after {
         content: "";
-
         position: absolute;
         top: 0;
         left: 0;
-
         width: 1.1rem;
         height: 1.1rem;
-
         background: transparent;
-
-        cursor: pointer;
     }
 }
 
@@ -50,6 +47,27 @@
     &:hover {
         .exf-lv-chk {
             display: block;
+        }
+    }
+}
+
+[data-view="tiles"] {
+    .exf-lv-chk {
+        top: 0.1rem;
+        left: 0.1rem;
+    }
+}
+
+html:not(.pwa-touch) {
+    .exf-lv-chk:not(:checked) {
+        display: none;
+    }
+
+    .exf-lv-item {
+        &:hover {
+            .exf-lv-chk {
+                display: block;
+            }
         }
     }
 }

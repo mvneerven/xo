@@ -19,6 +19,60 @@
         pointer-events: none;
     }
 
+    &.exf-dlg-side {
+        // side-panel
+        background-color: rgba(0, 0, 0, 0.2);
+        transition: background-color 200ms ease;
+        &.exf-dlg-sidepanel-animation {
+            background-color: rgba(0, 0, 0, 0);
+            .exf-dlg-c {
+                transform: translateX(100%);
+            }
+        }
+        .exf-dlg-c {
+            width: 500px;
+            max-width: 100%;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            margin: 0;
+            padding: 0;
+            position: fixed;
+            right: 0;
+            top: 0;
+            border-radius: 0;
+            box-shadow: -4px 0 10px rgba(0, 0, 0, 0.15);
+            transform: translateX(0);
+            transition: transform 200ms ease;
+        }
+
+        .exf-dlg-b {
+            flex: 1 1 auto;
+            max-height: none;
+            overflow-y: auto;
+            margin: 0;
+            padding: 20px {
+                top: 0;
+            }
+        }
+
+        .exf-dlg-h {
+            flex: 0 0 auto;
+            padding: 20px;
+        }
+        .exf-dlg-f {
+            flex: 0 0 auto;
+            padding: 20px;
+            display: flex;
+            gap: 20px;
+
+            .btn {
+                flex: 1 1 auto;
+                margin: 0;
+            }
+        }
+    }
+
     &.c-mdl:target {
         opacity: 1;
         pointer-events: auto;
@@ -44,7 +98,6 @@
         min-height: 400px;
         max-height: 600px;
         overflow-y: auto;
-    
     }
 
     .dlg-bc {
@@ -54,7 +107,7 @@
     }
 
     .dlg-x.dismiss {
-       // display: none;
+        // display: none;
     }
 
     &.dlg-cv .dlg-x.dismiss {
@@ -66,7 +119,6 @@
         font-weight: 800;
     }
 }
-
 
 @media only screen and (max-width: 752px) {
     .exf-dlg {

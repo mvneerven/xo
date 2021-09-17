@@ -1062,6 +1062,84 @@ html.theme-light nav.ul-drop ul li > ul {
   pointer-events: none;
 }
 
+.exf-dlg.exf-dlg-side {
+  background-color: rgba(0, 0, 0, 0.2);
+  -webkit-transition: background-color 200ms ease;
+  transition: background-color 200ms ease;
+}
+
+.exf-dlg.exf-dlg-side.exf-dlg-sidepanel-animation {
+  background-color: rgba(0, 0, 0, 0);
+}
+
+.exf-dlg.exf-dlg-side.exf-dlg-sidepanel-animation .exf-dlg-c {
+  -webkit-transform: translateX(100%);
+          transform: translateX(100%);
+}
+
+.exf-dlg.exf-dlg-side .exf-dlg-c {
+  width: 500px;
+  max-width: 100%;
+  height: 100vh;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  margin: 0;
+  padding: 0;
+  position: fixed;
+  right: 0;
+  top: 0;
+  border-radius: 0;
+  -webkit-box-shadow: -4px 0 10px rgba(0, 0, 0, 0.15);
+          box-shadow: -4px 0 10px rgba(0, 0, 0, 0.15);
+  -webkit-transform: translateX(0);
+          transform: translateX(0);
+  -webkit-transition: -webkit-transform 200ms ease;
+  transition: -webkit-transform 200ms ease;
+  transition: transform 200ms ease;
+  transition: transform 200ms ease, -webkit-transform 200ms ease;
+}
+
+.exf-dlg.exf-dlg-side .exf-dlg-b {
+  -webkit-box-flex: 1;
+      -ms-flex: 1 1 auto;
+          flex: 1 1 auto;
+  max-height: none;
+  overflow-y: auto;
+  margin: 0;
+  padding: 20px;
+  padding-top: 0;
+}
+
+.exf-dlg.exf-dlg-side .exf-dlg-h {
+  -webkit-box-flex: 0;
+      -ms-flex: 0 0 auto;
+          flex: 0 0 auto;
+  padding: 20px;
+}
+
+.exf-dlg.exf-dlg-side .exf-dlg-f {
+  -webkit-box-flex: 0;
+      -ms-flex: 0 0 auto;
+          flex: 0 0 auto;
+  padding: 20px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  gap: 20px;
+}
+
+.exf-dlg.exf-dlg-side .exf-dlg-f .btn {
+  -webkit-box-flex: 1;
+      -ms-flex: 1 1 auto;
+          flex: 1 1 auto;
+  margin: 0;
+}
+
 .exf-dlg.c-mdl:target {
   opacity: 1;
   pointer-events: auto;
@@ -2381,6 +2459,22 @@ html.theme-dark .exf-ctl-cnt.autocomplete .exf-ac-rs .exf-ac-itm.active {
   display: inline-block;
 }
 
+.nsp-xxs .exf-lv-headers,
+.nsp-xxs .exf-lv-item {
+  -ms-grid-columns: var(--lv-grid-template-xxs);
+      grid-template-columns: var(--lv-grid-template-xxs);
+      grid-template-areas: var(--lv-grid-template-xxs-areas);
+}
+
+.nsp-xxs .exf-lv-headers__header.hide-xxs, .nsp-xxs .exf-lv-headers__header.hide-xs, .nsp-xxs .exf-lv-headers__header.hide-sm, .nsp-xxs .exf-lv-headers__header.hide-md, .nsp-xxs .exf-lv-headers__header.hide-lg,
+.nsp-xxs .exf-lv-item__cell.hide-xxs,
+.nsp-xxs .exf-lv-item__cell.hide-xs,
+.nsp-xxs .exf-lv-item__cell.hide-sm,
+.nsp-xxs .exf-lv-item__cell.hide-md,
+.nsp-xxs .exf-lv-item__cell.hide-lg {
+  display: none !important;
+}
+
 .nsp-xs .exf-lv-headers,
 .nsp-xs .exf-lv-item {
   -ms-grid-columns: var(--lv-grid-template-xs);
@@ -2932,10 +3026,6 @@ html.theme-dark .exf-ctl-cnt.autocomplete .exf-ac-rs .exf-ac-itm.active {
           animation: pulse 2s infinite;
 }
 
-.exf-listview[data-view="tiles"] .exf-listview-list .exf-lv-item .action-button {
-  display: none;
-}
-
 .exf-listview[data-view="tiles"] .exf-listview-list .exf-lv-item__cell__content {
   height: 100%;
 }
@@ -3112,6 +3202,10 @@ html.theme-dark .exf-ctl-cnt.autocomplete .exf-ac-rs .exf-ac-itm.active {
     -webkit-transform: translateX(0);
             transform: translateX(0);
   }
+}
+
+html:not(.pwa-touch) .exf-lv-item .action-button {
+  display: none;
 }
 
 .exf-treeview {
@@ -3408,13 +3502,14 @@ html.theme-dark .exf-ctl-cnt.autocomplete .exf-ac-rs .exf-ac-itm.active {
 }
 
 .exf-lv-chk {
-  display: none;
+  display: block;
   position: absolute;
   top: 0.5rem;
   left: -0.5rem;
   -webkit-appearance: none;
      -moz-appearance: none;
           appearance: none;
+  cursor: pointer;
 }
 
 .exf-lv-chk:before {
@@ -3424,7 +3519,7 @@ html.theme-dark .exf-ctl-cnt.autocomplete .exf-ac-rs .exf-ac-itm.active {
   z-index: 1;
   width: 1rem;
   height: 1rem;
-  border: 2px solid #f2f2f2;
+  border: 2px solid #c2c2c2;
 }
 
 .exf-lv-chk:checked {
@@ -3448,10 +3543,22 @@ html.theme-dark .exf-ctl-cnt.autocomplete .exf-ac-rs .exf-ac-itm.active {
   width: 1.1rem;
   height: 1.1rem;
   background: transparent;
-  cursor: pointer;
 }
 
 .exf-lv-item:hover .exf-lv-chk {
+  display: block;
+}
+
+[data-view="tiles"] .exf-lv-chk {
+  top: 0.1rem;
+  left: 0.1rem;
+}
+
+html:not(.pwa-touch) .exf-lv-chk:not(:checked) {
+  display: none;
+}
+
+html:not(.pwa-touch) .exf-lv-item:hover .exf-lv-chk {
   display: block;
 }
 /*# sourceMappingURL=exf.css.map */

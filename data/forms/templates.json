@@ -48,7 +48,7 @@
     },
     {
         "name": "ListView Example",
-        "value": "https://xo-js.dev/assets/forms/templates/listview.json",
+        "value": "https://xo-js.dev/assets/forms/templates/listview.js",
         "description": "An example of the use of the ListView control to display and manage complex data"
     },
     {

@@ -628,17 +628,32 @@ class ImageSelectRoute extends xo.route {
         const schema = {
             pages: [{
                 fields: [
-                    {
-                        type: "search",
-                        name: "image",
-                        caption: "Select image",
-                        placeholder: "/img/my-image.png",
-                        autocomplete: {
-                            items: this.items,
-                            minlength: 2
-                        }
 
-                    }
+                    {
+                        type: "multiinput",
+                        columns: "4rem 1fr",
+                        areas: "'image search'",
+                        fields: {
+                            image: {
+                                type: "image",
+                                name: "asset_img",
+
+                            },
+                            search: {
+                                type: "search",
+                                caption: "Select image",
+                                placeholder: "/img/my-image.png",
+                                autocomplete: {
+                                    items: this.items,
+                                    minlength: 2
+                                }
+        
+                            
+                            }
+                        }
+                    },
+
+                    
                 ]
             }]
         }
@@ -653,8 +668,14 @@ class ImageSelectRoute extends xo.route {
             },
             {
                 category: "App",
-                text: "/img/icon512px.png",
-                image: "/img/icon512px.png"
+                text: "/img/logo2.svg",
+                image: "/img/logo2.svg"
+
+            },
+            {
+                category: "App",
+                text: "/img/commodity.png",
+                image: "/img/commodity.png"
 
             }
         ]

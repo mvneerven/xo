@@ -3,6 +3,7 @@ import ExoBaseControls from '../base';
 import Core from '../../../pwa/Core';
 import DOM from '../../../pwa/DOM';
 
+const MODES = ["default", "side"];
 
 class ExoDialogControl extends ExoBaseControls.controls.div.type {
     title = "Dialog";
@@ -10,6 +11,8 @@ class ExoDialogControl extends ExoBaseControls.controls.div.type {
     confirmText = "OK";
     cancelText = "Cancel";
     cancelVisible = false;
+
+    _mode = "default";
     body = "The dialog body";
     modal = false;
 
@@ -24,7 +27,16 @@ class ExoDialogControl extends ExoBaseControls.controls.div.type {
                 name: "modal",
                 type: Boolean
             },
-            "click"
+            {
+                name: "click",
+                type: Object
+            },
+            {
+                name: "mode",
+                type: String,
+                description: "Set to 'default', 'side'"
+            }
+
         );
         this.id = `dlg_${Core.guid().split('-').pop()}`;
         this.useContainer = false;
@@ -100,12 +112,33 @@ class ExoDialogControl extends ExoBaseControls.controls.div.type {
         return this._dlgId;
     }
 
+    get mode() {
+        return this._mode;
+    }
+
+    set mode(value) {
+        if (!MODES.includes(value))
+            throw TypeError("Invalid dialog mode");
+        this._mode = value;
+    }
+
     show() {
         const me = this;
         this.generateDialog().then(x => {
+            MODES.forEach(m => {
+                this.dlg.classList.remove("exf-dlg-" + m)
+            })
+
+            this.dlg.classList.add("exf-dlg-" + this.mode);
+            if (this.mode === "side") {
+                this.dlg.classList.add("exf-dlg-sidepanel-animation");
+            }
+
             this.dlg.style.display = "block";
 
             setTimeout(() => {
+                this.dlg.classList.remove("exf-dlg-sidepanel-animation");
+
                 document.body.addEventListener("keydown", e => {
                     if (e.keyCode === 27) this.handleInteraction(e);
                     if (e.keyCode === 13) this.handleInteraction(e, true);

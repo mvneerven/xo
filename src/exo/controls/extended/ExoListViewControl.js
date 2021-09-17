@@ -599,10 +599,11 @@ class ExoListViewControl extends ExoDivControl {
       let btn = await xo.form.run({
         type: "button",
         name: `context-actions`,
-        icon: "ti-menu",
+        icon: "ti-more-alt",
         ...this.contextMenu,
         dropdown: this.contextMenu.itemList,
       });
+      btn.querySelector("button").classList.remove("exf-btn");
       btn.addEventListener("click", e => {
         e.stopPropagation();
         e.returnValue = false;
