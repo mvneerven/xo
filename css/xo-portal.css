@@ -4592,6 +4592,12 @@ html:not(.pwa-touch) .exf-lv-item .action-button {
   display: initial;
 }
 
+.exf-le-cnt .exf-page .exf-le-cnt:hover .exf-le-fd .exf-btn {
+  background-color: transparent !important;
+  -webkit-box-shadow: none !important;
+          box-shadow: none !important;
+}
+
 .exf-le-cnt .exf-page .exf-le-fd {
   position: absolute;
   top: 5px;
@@ -4614,7 +4620,6 @@ html:not(.pwa-touch) .exf-lv-item .action-button {
 
 .exf-le-dlg .exf-page {
   margin-top: 1rem !important;
-  height: 400px !important;
 }
 
 .exf-le-dlg .exf-page .exf-help-wrapper .exf-help {

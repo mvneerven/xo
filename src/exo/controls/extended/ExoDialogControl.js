@@ -98,6 +98,10 @@ class ExoDialogControl extends ExoBaseControls.controls.div.type {
 
             //this.body = "" // clear out standard body
         }
+        else if(Core.isUrl(this.body)){
+            body = await xo.form.run(this.body);
+            this.body="";
+        }
         this.dlg = DOM.parseHTML(this.getTemplate());
 
         if (body)

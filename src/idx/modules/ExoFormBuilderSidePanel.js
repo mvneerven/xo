@@ -22,7 +22,7 @@ class ExoFormBuilderSidePanel {
         if(localStorage.advancedUi){
             tsOptions.tabs = {
                 ...tsOptions.tabs,
-                properties: { caption: "Props", class: "full-height", enabled: false },
+                //properties: { caption: "Props", class: "full-height", enabled: false },
                 model: { caption: "Model", class: "full-height", enabled: false },
                 css: { caption: "CSS", class: "full-height", enabled: false }
             }

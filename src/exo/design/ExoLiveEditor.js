@@ -92,7 +92,7 @@ class ExoLiveEditor {
 
         let info = await xo.form.run({
             type: "button",
-            icon: "ti-menu",
+            icon: "ti-more-alt",
             outerClass: "exf-le-fd",
             tooltip: ctl.toString(),
             dropdown: {
@@ -171,6 +171,7 @@ class ExoLiveEditor {
 
         let dlg = await DOM.showDialog({
             class: "exf-le-dlg",
+            mode: "side",
             title: me.activeControl.toString(),
             body: await xo.form.run(this.generateFormSchemaForField(me.activeControl, raw), {
                 on: {

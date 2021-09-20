@@ -41,6 +41,13 @@
                     //text-decoration: underline;
                     //cursor: pointer;
                     display: initial;
+
+                    .exf-btn {
+                        background-color: transparent!important;
+                        box-shadow: none!important;
+                    }
+
+                    
                 }
             }
         }
@@ -99,9 +106,6 @@
 .exf-le-dlg {
     .exf-page {
         margin-top: 1rem !important;
-
-        height: 400px !important;
-
         .exf-help-wrapper {
             .exf-help {
                 visibility: hidden;
@@ -113,6 +117,9 @@
                 visibility: hidden;
             }
         }
+
+
+        
     }
 
     .exf-cnt.exf-nav-cnt {

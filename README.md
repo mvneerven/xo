@@ -34,9 +34,9 @@ XO-JS is a compact, developer-friendly, pure JavaScript (ES6) Component Library 
 Use XO directly from the CDN:
 
 ```html
-<script src="https://xo-js.dev/v1.3/xo.js"></script>
+<script src="https://xo-js.dev/v1.4/xo.js"></script>
 or...
-<script src="https://xo-js.dev/v1.3/xo.min.js"></script>
+<script src="https://xo-js.dev/v1.4/xo.min.js"></script>
 ```
 
 ## NPM

@@ -47,6 +47,9 @@ class ISVCanvas {
                 })
             })
             options.items = items;
+            if(items.length > 6){
+                options.columns = Math.min(3, Math.round(items.length/6))
+            }
         }
 
         if (options.caption.substr(options.caption.length - 1, 1) === "*") {
