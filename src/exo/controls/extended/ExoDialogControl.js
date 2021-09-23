@@ -107,7 +107,10 @@ class ExoDialogControl extends ExoBaseControls.controls.div.type {
         if (body)
             this.dialogBody.appendChild(body);
 
-        this.dlg.classList.add(this.cancelVisible ? "dlg-cv" : "dlg-ch");
+        if(!this.cancelVisible){
+            this.dialogBody.querySelector(".exf-dlg-f .dismiss").remove();
+        }
+
 
         document.body.appendChild(this.dlg);
     }
