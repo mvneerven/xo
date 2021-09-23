@@ -10,7 +10,7 @@ class ExoDialogControl extends ExoBaseControls.controls.div.type {
     _visible = false;
     confirmText = "OK";
     cancelText = "Cancel";
-    cancelVisible = false;
+    cancelVisible = true;
 
     _mode = "default";
     body = "The dialog body";
