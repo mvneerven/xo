@@ -108,7 +108,7 @@ class ExoDialogControl extends ExoBaseControls.controls.div.type {
             this.dialogBody.appendChild(body);
 
         if(!this.cancelVisible){
-            this.dialogBody.querySelector(".exf-dlg-f .dismiss").remove();
+            this.dlg.querySelector(".exf-dlg-f .dismiss")?.remove();
         }
 
 
