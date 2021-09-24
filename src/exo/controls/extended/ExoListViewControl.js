@@ -450,7 +450,7 @@ class ExoListViewControl extends ExoDivControl {
     if (this.mode === MODES[0]) {
       this.listDiv.addEventListener("click", (e) => {
 
-        if(this.checkboxes && e.target.type !== "checkbox"){
+        if (this.checkboxes && e.target.type !== "checkbox") {
           this.selectFirstDropdownAction(e)
           return;
         }
@@ -513,8 +513,8 @@ class ExoListViewControl extends ExoDivControl {
 
   // item click when using checkboxes for selection should 
   // trigger first action as defined in contextmenu
-  selectFirstDropdownAction(e){
-    if(this.contextMenu && this.contextMenu.itemList){
+  selectFirstDropdownAction(e) {
+    if (this.contextMenu && this.contextMenu.itemList) {
       let act = e.target;
       let first = this.contextMenu.itemList[0];
       let itemId = act.closest("article").getAttribute("data-id");
@@ -584,8 +584,8 @@ class ExoListViewControl extends ExoDivControl {
         `[data-id="${i[this.primaryKey]}"]`
       );
     }
-    
-    
+
+
     this.renderCheckboxes();
 
     // (re)select all ids inside value
@@ -732,7 +732,7 @@ class ExoListViewControl extends ExoDivControl {
   renderSelected() {
     if (this.listDiv) {
       this.listDiv.querySelectorAll("article.exf-lv-item").forEach((art) => {
-        
+
         let selected =
           (this.singleSelect && this.value && this.value === art.dataset.id) ||
           (!this.singleSelect && this.value && this.value.includes(art.dataset.id))
@@ -1142,7 +1142,7 @@ class ExoListViewControl extends ExoDivControl {
   }
 
   setColumnGrid() {
-    const sizes = ["xs", "sm", "md", "lg", "xl"];
+    const sizes = ["xxs", "xs", "sm", "md", "lg", "xl"];
     const gridTemplate = {};
     sizes.forEach((s) => (gridTemplate[s] = { columns: [], areas: [] }));
     const mappingOrders = this.getMappingOrder();
@@ -1168,6 +1168,8 @@ class ExoListViewControl extends ExoDivControl {
             applicableSizes.push(...["md", "lg"]);
           else if (classes.includes("hide-xs"))
             applicableSizes.push(...["sm", "md", "lg"]);
+          else if (classes.includes("hide-xxs"))
+            applicableSizes.push(...["xs", "sm", "md", "lg"]);
           else applicableSizes.push(...["xs", "sm", "md", "lg"]);
         } else applicableSizes.push(...["xs", "sm", "md", "lg"]);
 
