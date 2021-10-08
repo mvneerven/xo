@@ -414,9 +414,9 @@
       }
     }
 
-    &:not(.exf-lv-check) {
+    &:not(.exf-lv-check):not(.static) {
       .exf-lv-item {
-        &:hover {
+        &:hover { 
           border-left-color: var(--color-tile-hover);
         }
         &.selected {
@@ -499,7 +499,7 @@
       }
     }
 
-    &:not(.exf-lv-check) {
+    &:not(.exf-lv-check):not(.static) {
       .exf-listview-list {
         .exf-lv-item {
           &:hover {
@@ -551,16 +551,16 @@
     }
   }
 
-  &.static {
-    .exf-listview-list {
-      .exf-lv-item {
-        &:hover {
-          border-color: transparent;
-          transform: none;
-        }
-      }
-    }
-  }
+  // &.static {
+  //   .exf-listview-list {
+  //     .exf-lv-item {
+  //       &:hover {
+  //         border-color: transparent!important;
+  //         transform: none!important;
+  //       }
+  //     }
+  //   }
+  // }
 }
 
 @keyframes borealisBar {

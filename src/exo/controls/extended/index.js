@@ -25,6 +25,8 @@ import treeviewDemo from '../../../../data/treeview-demo.json';
 import multiInputDemo from '../../../../data/multiinput-demo.json'
 import ExoSandboxControl from './ExoSandboxControl';
 import ExoTextConfirm from './ExoTextConfirm';
+import ExoImageSelector from './ExoImageSelector';
+
 
 class ExoExtendedControls {
     static controls = {
@@ -56,7 +58,9 @@ class ExoExtendedControls {
         map: {type: ExoLeafletMapControl, note: "Leaflet interactive map" },
         listview: {type: ExoListViewControl, note: "Listview control", demo: listviewDemo},
         treeview: {type: ExoTreeViewControl, note: "Treeview control", demo: treeviewDemo},
-        textconfirm: {type: ExoTextConfirm, note: "Textbox with confirmation button"}
+        textconfirm: {type: ExoTextConfirm, note: "Textbox with confirmation button"},
+        imageselector: {type: ExoImageSelector, note: "Image selector control"}
+        
     }
 }
 

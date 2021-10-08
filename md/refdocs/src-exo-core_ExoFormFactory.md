@@ -45,6 +45,20 @@ __*return*__ | `Object` | *- ExoForm schema*
 
 ---
 
+### `read(value, options) ► ExoFormSchema`
+
+![modifier: private](images/badges/modifier-private.svg) ![modifier: static](images/badges/modifier-static.svg)
+
+Loads and parses an ExoForm schema from the given source
+
+Parameters | Type | Description
+--- | --- | ---
+__value__ | `*` | *Object, string, URL*
+__options__ | `*` | *options*
+__*return*__ | [ExoFormSchema](src-exo-core_ExoFormSchema.md) | **
+
+---
+
 ### `determineSchemaType(value) ► String`
 
 ![modifier: private](images/badges/modifier-private.svg) ![modifier: static](images/badges/modifier-static.svg)

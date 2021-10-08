@@ -48,17 +48,6 @@ class PWA_UI {
             }
         }
 
-        window.addEventListener("beforeunload", function (event) {
-            // Cancel the event as stated by the standard.
-            event.preventDefault();
-            // Chrome requires returnValue to be set.
-
-            if (!_.dirty)
-                delete event['returnValue'];
-            else {
-                event.returnValue = '';
-            }
-        });
         this._setAreas();
     }
 

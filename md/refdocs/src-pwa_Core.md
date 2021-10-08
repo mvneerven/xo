@@ -12,6 +12,19 @@ Core utility methods
 
 ## Methods
 
+### `clone(obj) ► `
+
+![modifier: private](images/badges/modifier-private.svg) ![modifier: static](images/badges/modifier-static.svg)
+
+Clone an object.
+
+Parameters | Type | Description
+--- | --- | ---
+__obj__ | `*` | **
+__*return*__ | `undefined` | *cloned object.*
+
+---
+
 ### `fingerprint() ► String`
 
 ![modifier: private](images/badges/modifier-private.svg) ![modifier: static](images/badges/modifier-static.svg)

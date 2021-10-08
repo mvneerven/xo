@@ -90,7 +90,7 @@ class PWA {
 
                 })
                 .catch(function (error) {
-                    console.log('Service worker registration failed, error:', error);
+                    console.error('Service worker registration failed, error:', error);
                 });
         }
 

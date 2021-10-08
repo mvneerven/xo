@@ -46,6 +46,10 @@ class ExoControlBase {
             { name: "invalidmessage", type: String, group: "Data", description: "Message text to show when the control doesn't validate" },
 
             { name: "value", type: String, group: "Data", description: "Value of the control" },
+
+            { name: "remark", type: String, description: "Generic comment/remark - use like HTML or JavaScript comments" },
+
+            { name: "break", type: Object, description: "Set breakpoint" }
         );
     }
 
@@ -483,6 +487,9 @@ class ExoControlBase {
 
     async render() {
         this.setProperties();
+        if (this.break) {
+            debugger
+        }
 
         for (var a in this.attributes) {
             if (a === "required") {
@@ -541,7 +548,7 @@ class ExoControlBase {
             this.showHelp(this.info)
         }
 
-        if(this.placeholder){
+        if (this.placeholder) {
             this.htmlElement.setAttribute("placeholder", this.placeholder)
         }
 
@@ -549,8 +556,8 @@ class ExoControlBase {
 
         this._rendered = true;
 
-        if (!this.visible)
-            this.visible = this.visible; // force 
+        // if (!this.visible)
+        //     this.visible = this.visible; // force 
 
         return this.container
     }
@@ -609,11 +616,10 @@ class ExoControlBase {
             let value = f[name];
 
             if (name !== "bind" && ExoForm.meta.properties.reserved.includes(name)) {
-                //f[name] = this._processProp(name, value);
                 continue;
             }
 
-            let useName = prop;// ExoForm.meta.properties.map[prop] || prop;
+            let useName = prop;
 
             let isSet = this.acceptedProperties.find(e => {
                 return e.name === useName
@@ -641,11 +647,11 @@ class ExoControlBase {
         // resolve bound state 
         let db = this.context.exo.dataBinding;
         if (db) {
-            try{               
+            try {
                 let result = db._processFieldProperty(this, name, value);
                 return result;
             }
-            catch(ex){
+            catch (ex) {
                 throw TypeError(`ExoControlBase: error processing databinding in ${this.name}.${name}: ${ex.toString()}`)
             }
         }

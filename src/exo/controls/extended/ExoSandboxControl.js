@@ -6,22 +6,34 @@ class ExoSandboxControl extends ExoEmbedControl {
     constructor() {
         super(...arguments);
 
-        this.context.exo.on("interactive", async e => {
-            //this.htmlElement.addEventListener("load", this.setupIframe.bind(this))
-            let du = await Core.jsonToDataUrl(this.form);
-            this.htmlElement.setAttribute("src", `/sandbox.html?payload=${Core.dataURLtoBlob(du)}`)
+        window.addEventListener("message", e => {
+            if (e.data.id === this.htmlElement.id) { // accept messages only from owned sandbox
 
-            Core.waitFor(() => {
-                return this.htmlElement.contentWindow.xo
-            }).then(() => {
-                this.setupIframe()
-            })
+                if (e.data.height) {
+                    this.htmlElement.setAttribute("style", `width: 100%; height: ${(e.data.height + 32)}px; visibility: visible`);
+                }
+                else if (e.data.instance) {
+                    this.value = e.data.instance;
+                    var event = new Event('change', { bubbles: true });
+                    this.htmlElement.dispatchEvent(event);
+                }
+            }
         })
+
         this.acceptProperties({
             name: "form",
             type: Object
         })
     }
+
+    get loaderDiv() {
+        if (!this._loaderDiv)
+            this._loaderDiv = document.createElement("div");
+
+        return this._loaderDiv;
+
+    }
+
     async render() {
         this.url = `about:blank`;
 
@@ -31,31 +43,93 @@ class ExoSandboxControl extends ExoEmbedControl {
         this.refElem = document.createElement("span");
         this.container.appendChild(this.refElem);
 
-
         let wrapper = this.container.querySelector(".exf-embed-container");
         if (wrapper) {
             wrapper.classList.remove("exf-embed-container")
         }
-        this.container.classList.add("exf-std-lbl");
+        this.container.classList.add("exf-std-lbl", "exf-sandbox");
+
+        this.context.exo.on("interactive", async e => {
+            this.loaderDiv.style.backgroundColor = this.bgColor;
+            this.container.querySelector(".exf-ctl").appendChild(this.loaderDiv);
+            this.htmlElement.addEventListener("load", this.setupIframe.bind(this))
+            this.setSource()
+        })
 
         return this.container;
     }
 
+    set value(data) {
+        this._value = data
+    }
+
+    get value() {
+        return this._value;
+    }
+
+    async setSource() {
+        this.loaderDiv.classList.add("exf-sb-ldr");
+
+        this.htmlElement.setAttribute("src", await this.createDocumentUrl(this.form))
+    }
+
+    // create the document for the IFRAME
+    async createDocumentUrl(form) {
+
+        if (!form.schema)
+            form.schema = {}
+
+        const schema = await xo.form.read(form.schema);
+
+        // if (schema.raw.model && schema.raw.model.instance)
+        //     throw TypeError("Subform must use binding to parent model")
+
+        let url = new URL(window.location.href);
+
+        form.schema.model = form.schema.model || {};
+        form.schema.model.instance = {
+            data: Core.clone(this.value)
+        }
+
+        const html = /*html*/`<!DOCTYPE html>
+        <html>
+        <head>
+            <base href="${url.origin}" />
+            <link href="${xo.isDebug ? '/css' : xo.path}/exf.css" rel="stylesheet" />
+        </head>
+        <body>
+            <script type="module" src="${xo.isDebug ? '/dist' : xo.path}/xo.js"></script>
+            <script type="module">
+                
+            window.xoMFId = "${this.htmlElement.id}";
+                window.xoPayload = {
+                schema: ${JSON.stringify(form.schema || {})}
+            } ; 
+            
+            xo.form.sandbox.run();
+            </script>
+        </body>
+        </html>`;
+
+        return URL.createObjectURL(new Blob([html], { type: "text/html" }));
+    }
+
+    get bgColor() {
+        if (!this._bgColor) {
+            this._bgColor = this.getElementDefiningCssStyle(this.context.exo.form, "background-color")
+                || "black"
+        }
+        return this._bgColor;
+    }
+
     setupIframe() {
-        console.log("Setting up IFRAME");
-
-        window.addEventListener("message", e => {
-            if (e.data.height) {
-
-                this.htmlElement.style.width = "100%";
-                this.htmlElement.style.height = (e.data.height + 32) + "px";
-                this.htmlElement.style.visibility = 'visible';
-            }
-        })
-        this.htmlElement.contentWindow.postMessage({
+        const me = document.getElementById(this.htmlElement.id);
+        me.contentWindow.postMessage({
             referrer: window.location.href,
             styles: this.getStyles()
-        })
+
+        });
+        this.loaderDiv.classList.add("hidden");
     }
 
     getStyles() {
@@ -65,16 +139,20 @@ class ExoSandboxControl extends ExoEmbedControl {
             color: ${compStyles["color"]};
             font-family: ${compStyles["font-family"]};
             font-size: ${compStyles["font-size"]};
-            background-color: ${this.getElementDefiningCssStyle(this.refElem, "background-color")};
+            background-color: ${this.bgColor};
         }`
     }
 
     getElementDefiningCssStyle(elm, style) {
-        let result = window.getComputedStyle(elm)[style];
-        if (style === "background-color" && (result === "rgba(0, 0, 0, 0)" || result === "transparent")) result = null;
+        let styles = window.getComputedStyle(elm);
+        let result = styles[style];
+        if (style === "background-color") {
+            if (result === "rgba(0, 0, 0, 0)" || result === "transparent")
+                result = null;
+        }
         if (!result) {
             elm = elm.parentNode;
-            if (!elm)
+            if (!elm || !(elm instanceof HTMLElement))
                 return null;
 
             return this.getElementDefiningCssStyle(elm, style)
@@ -88,6 +166,7 @@ class ExoSandboxControl extends ExoEmbedControl {
 
     set form(value) {
         this._form = value
+        this.setSource();
     }
 
     /**
@@ -98,6 +177,7 @@ class ExoSandboxControl extends ExoEmbedControl {
         window.addEventListener("message", e => {
             Object.keys(e.data).forEach(k => {
                 switch (k) {
+
                     case "referrer": // makes sure relative links work in IFRAME
                         let base = document.createElement("base");
                         base.href = e.data[k].split("#")[0];
@@ -110,13 +190,29 @@ class ExoSandboxControl extends ExoEmbedControl {
                         cssSheet.innerHTML = styles;
                         document.querySelector("head").appendChild(cssSheet);
                         break;
+
                 }
             })
         })
 
         const urlParams = new URLSearchParams(window.location.search);
-        const payload = await fetch(urlParams.get('payload')).then(x => x.json());
-        if (payload && payload.schema) {
+        const payloadParam = urlParams.get('payload');
+
+        const payload = payloadParam ? await fetch(payloadParam).then(x => x.json()) : window.xoPayload;
+        window.sandboxId = urlParams.get("id") || window.xoMFId;
+
+        const tellParent = data => {
+            parent.postMessage({
+                id: window.sandboxId,
+                ...data
+            })
+        }
+
+
+        if (payload) {
+
+            if (!payload.schema)
+                throw TypeError("Missing schema object under 'form' node");
 
             if (payload.styles) {
                 payload.styles.forEach(link => {
@@ -126,14 +222,28 @@ class ExoSandboxControl extends ExoEmbedControl {
 
             document.body.appendChild(await xo.form.run(payload.schema, {
                 on: {
+                    schemaLoaded: e => {
+                        e.detail.host.schema.data.navigation = "none"
+                    },
+
+                    dataModelChange: e => {
+                        tellParent({
+                            instance: JSON.parse(JSON.stringify(e.detail.model.instance.data))
+                        })
+                    },
+
                     // when our form is visible and interactive, 
                     // tell hosting page what our dimensions are.
                     // TODO: do same when resizing/DOM is changing
-                    interactive: e => { 
+                    interactive: e => {
                         setTimeout(() => {
+                            const w = document.documentElement.offsetWidth, h = document.documentElement.offsetHeight
+                            console.debug(`ExoSandboxControl: Passing sandbox data to parent -> id: ${window.sandboxId}, width:${w}, height:${h}`);
+
                             parent.postMessage({
-                                width: document.documentElement.offsetWidth,
-                                height: document.documentElement.offsetHeight
+                                id: window.sandboxId,
+                                width: w,
+                                height: h
                             })
                         }, 1);
                     }

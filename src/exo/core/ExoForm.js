@@ -20,9 +20,6 @@ class ExoForm {
     static meta = {
 
         properties: {
-            // all: ["accept", "alt", "autocomplete", "autofocus", "capture", "checked", "dirName", "disabled", "height", "list",
-            //     "max", "maxLength", "min", "minLength", "multiple", "name", "pattern", "placeholder", "readOnly", "required",
-            //     "size", "src", "step", "type", "value", "width", "className"],
             map: {
                 "class": "className",
                 "readonly": "readOnly",
@@ -175,7 +172,7 @@ class ExoForm {
                 this.events.trigger(ExoFormFactory.events.schemaLoading);
 
                 this._dataBinding = new ExoFormDataBinding(this, this._mappedInstance);
-                this._dataBinding.prepare().then(()=>{
+                this._dataBinding.prepare().then(() => {
 
                     this.dataBinding.on("change", e => {
                         e.detail.state = "change";
@@ -186,22 +183,22 @@ class ExoForm {
                     }).on("error", e => {
                         this.events.trigger(ExoFormFactory.events.error, e.detail);
                     });
-    
+
                     this.events.trigger(ExoFormFactory.events.schemaLoaded);
                     this.schema.refreshStats();
-    
+
                     this._createComponents();
-    
+
                     if (this.schema.form) {
                         let formClasses = this.schema.form.class ? this.schema.form.class.split(' ') : ["standard"];
                         formClasses.forEach(c => {
                             this.form.classList.add(c);
                         })
                     }
-    
+
                     resolve();
                 })
-                
+
             })
             this.schema.refreshStats();
         });
@@ -268,6 +265,8 @@ class ExoForm {
             let cmp = ExoFormFactory.meta[n];
 
             let obj = cmp.type.getType(this);
+            if(!obj || !obj.type)
+                throw TypeError("Addin not found: '" + n + "'")
 
             console.debug("ExoForm addin:", n, "type:", obj.name, "component used:", obj.type.name);
 
@@ -278,7 +277,7 @@ class ExoForm {
         }
     }
 
-    toString(){
+    toString() {
 
         return `${this.schema.summary}`;
     }
@@ -288,6 +287,10 @@ class ExoForm {
      * Returns a Promise
      */
     renderForm() {
+
+        if (this.schema.data.dirty) {
+            this.addDirtyCheck();
+        }
 
         this.events.trigger(ExoFormFactory.events.renderStart)
         this._cleanup();
@@ -318,6 +321,21 @@ class ExoForm {
             catch (ex) {
                 reject("Exception in _renderPages(): " + ex.toString())
             }
+        });
+    }
+
+    addDirtyCheck() {
+        window.onbeforeunload = e => {
+            const allDirty = this.form.querySelectorAll(".exf-dirty");
+
+            if (allDirty.length === 0)
+                return;
+
+            return "Are you sure?";
+        }
+
+        document.addEventListener('visibilitychange', function () {
+            console.debug("ExoForm: visible: ", document.visibilityState);
         });
     }
 
@@ -717,14 +735,10 @@ class ExoForm {
 
 
     _generateUniqueElementId() {
-        //let gid = Core.guid();
         let gid = 'xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
             var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
             return v.toString(16);
         });
-
-        //gid = gid.split('-');
-        //gid = gid[gid.length - 1];
         return "exf" + gid;
     }
 

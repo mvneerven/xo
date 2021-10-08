@@ -85,8 +85,6 @@ class ExoFormDataBinding {
                 let eventName = this.exo.options.DOMChange || "input";
 
                 const handle = e => {
-                    console.debug("ExoFormDataBinding", "change handling in " + e.target.name)
-
                     if (this.noProxy) {
                         console.debug("ExoFormDataBinding", "DOMChange event SKIPPED BECAUSE NO-PROXY")
                         return
@@ -96,9 +94,12 @@ class ExoFormDataBinding {
                         master: true // lookup master if nested
                     });
                     if (field && field.bind) {
+
                         if (!field._control.valid) {
                             return; // don't update model if the value isn't valid
                         }
+
+                        console.debug("ExoFormDataBinding", "change handling in ", ExoFormFactory.fieldToString(field))
 
                         let value = field._control.value;
                         Core.setObjectValue(this._model, field.bind, value);
@@ -221,8 +222,7 @@ class ExoFormDataBinding {
         }
 
         return proxify(instanceName, obj, function (object, property, oldValue, newValue) {
-            console.debug("ExoFormDataBinding", 'property ' + property + ' changed from ' + oldValue +
-                ' to ' + newValue);
+            console.debug("ExoFormDataBinding", `property '${property}' changed from ${oldValue} to ${newValue}`);
 
             if (!me.noProxy) {
                 const change = {

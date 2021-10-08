@@ -13,6 +13,7 @@ import ExoLiveEditor from '../design/ExoLiveEditor';
 import Core from '../../pwa/Core';
 import ExoFormSchema from './ExoFormSchema';
 import ExoDropdownExtension from '../controls/base/ExoDropdownExtension';
+import xo from '../../../js/xo';
 
 
 /**
@@ -303,6 +304,20 @@ class ExoFormFactory {
             var field = lib[name];
             ExoFormFactory.library[name] = field;
         }
+    }   
+
+    /**
+     * Loads and parses an ExoForm schema from the given source
+     * @param {*} value - Object, string, URL
+     * @param {*} options - options
+     * @returns {ExoFormSchema}
+     */
+    static async read(value, options){
+        options = {
+            ...options || {},
+            returnSchema: true
+        }
+        return await ExoFormFactory.run(value, options)
     }
 
     /**
@@ -529,6 +544,9 @@ class ExoFormFactory {
                 });
                 applyOptions(x, x.form)
                 await x.load(value);
+                if(options.returnSchema){
+                    return x.schema;
+                }
                 await x.renderForm();
                 return x.container;
             case "field":

@@ -87,6 +87,7 @@ const schema = {
                     singleSelect: true,
                     views: "tiles",
                     caption: "Select how you want to get started",
+                    tilewidth: "300px",
                     properties: [
                         {
                             key: "id"
@@ -156,6 +157,7 @@ const schema = {
                 {
                     id: "template",
                     name: "template",
+                    tilewidth: "300px",
                     bind: "instance.init.template",
                     type: "listview",
                     views: "tiles",

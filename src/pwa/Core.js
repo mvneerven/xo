@@ -84,6 +84,16 @@ class Core {
     };
 
     /**
+     * Clone an object.
+     * @param {*} obj 
+     * @returns cloned object.
+     */
+    static clone(obj){
+        // https://stackoverflow.com/questions/53102700/how-do-i-turn-an-es6-proxy-back-into-a-plain-object-pojo
+        return JSON.parse(JSON.stringify(obj));
+    }
+
+    /**
      * Generates a device fingerprint based on rendering data on a canvas element - See https://en.wikipedia.org/wiki/Canvas_fingerprinting
      * @returns {String} - An identifier known to be relatively unique per device
      */

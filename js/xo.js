@@ -16,16 +16,32 @@ import ExoSandboxControl from '../src/exo/controls/extended/ExoSandboxControl';
  * ExoForm shortcut object
  */
 class Form {
+
+    /**
+     * Returns the ExoFormFactory class
+     */
     get factory() { return ExoFormFactory }
+
     get entity() { return ExoEntityManager }
+    
     get schema() { return ExoFormSchema }
+    
     get fields() {
         return {
             base: ExoBaseControls,
             extended: ExoExtendedControls
         }
     }
+
+    /**
+     * Renders a form
+     */
     get run() { return ExoFormFactory.run }
+
+    /**
+     * Reads and parses any form schema or URL.
+     */
+    get read() {return ExoFormFactory.read }
 
     get sandbox() {
         return ExoSandboxControl
@@ -124,6 +140,8 @@ class XO {
     constructor() {
         this._form = new Form();
         this.events = new Core.Events(this);
+        const v = version.split(".");
+        this._path = `https://xo-js.dev/v${v[0]}.${v[1]}`;
     }
     get core() { return Core }
     get dom() { return DOM }
@@ -131,6 +149,8 @@ class XO {
     get route() { return RouteModule }
     get form() { return this._form }
     get version() { return version }
+    get path() { return this._path }
+    get isDebug() { return ["localhost", "127.0.0.1"].includes(document.location.hostname); }
     identity = {
         msal: MsIdentity
     }

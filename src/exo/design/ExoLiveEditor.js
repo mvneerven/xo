@@ -22,18 +22,23 @@ class ExoLiveEditor {
         this.btnToggle = await xo.form.run({
             type: "button",
             caption: "LIVE",
-            dropdown: [
-                {
-                    caption: `Toggle Live Edit`,
-                    icon: "ti-pencil",
-                    click: async e => {
-                        me.enabled = !me.enabled;
-                        me.btnToggle.classList[me.enabled ? "add" : "remove"]("active");
+            click: e=>{
+                me.enabled = !me.enabled;
+                me.btnToggle.classList[me.enabled ? "add" : "remove"]("active");
+                me.renderActiveState()
+            }
+            // dropdown: [
+            //     {
+            //         caption: `Toggle Live Edit`,
+            //         icon: "ti-pencil",
+            //         click: async e => {
+            //             me.enabled = !me.enabled;
+            //             me.btnToggle.classList[me.enabled ? "add" : "remove"]("active");
 
-                        me.renderActiveState()
-                    }
-                },
-            ]
+            //             me.renderActiveState()
+            //         }
+            //     },
+            // ]
         });
 
         this.btnToggle.classList.add("exf-le-btn");

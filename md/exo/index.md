@@ -23,6 +23,7 @@ ExoForm is a Declarative Web Forms Engine written in pure ES6 JavaScript.
 
 - [Getting Started with ExoForm](./getting-started.md)
 - [Understanding ExoForm](./understanding-exoform.md)
+- [Debugging & Tracing in ExoForm](./debugging-exoform.md)
 - [ExoForm Databinding](./data-binding.md)
 - [JSON Schemas](./json-schema.md)
 

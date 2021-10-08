@@ -28,7 +28,7 @@ class OpenApi {
             }
         }
 
-        console.log("Generated API:", this.api)
+        console.debug("OpenApi: Generated API:", this.api)
 
     }
 
@@ -83,7 +83,7 @@ class OpenApi {
                 }
             }
         }
-        console.log("EndPoints", ar);
+        console.debug("OpenApi: EndPoints", ar);
         return ar;
     }
 }

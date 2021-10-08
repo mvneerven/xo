@@ -123,7 +123,6 @@ class StudioRoute extends xo.route {
         let url = path.substr(1);
         if (Core.isUrl(url)) {
             fetch(url).then(x => x.text()).then(text => {
-                console.log("Loaded url " + url, "length:", text.length)
                 this.loadSchemaInEditor(text);
                 this.renderer.model.load(text);
                 this.tabStrip.tabs.schema.select();
@@ -169,7 +168,6 @@ class StudioRoute extends xo.route {
 
     addLiveEdit(exo) {
         this.liveEditor = new xo.form.factory.LiveEditor(exo).on("schema-change", e => {
-            //console.log(e.detail.schema.toString())
             this.loadSchemaInEditor(e.detail.schema.toString())
         })
         exo.container.parentNode
@@ -359,7 +357,7 @@ class StudioRoute extends xo.route {
     loadSchemaInEditor(schema) {
         if (this.xo_schemaControl) {
             this.xo_schemaControl.mode = this.renderer.model.type;
-            this.xo_schemaControl.schema = schema;
+            this.xo_schemaControl.value = schema;// schema = schema;
         }
         else
             console.warn("No xo schema editor")
@@ -396,7 +394,7 @@ class StudioRoute extends xo.route {
                         {
                             id: "schema-editor",
                             name: "schema",
-                            type: "xo_schema",
+                            type: "xoformeditor",
                             class: "code full-height",
                             mode: "json"
                         }

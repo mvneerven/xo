@@ -16,6 +16,7 @@ XO-JS is a compact, developer-friendly, pure JavaScript (ES6) Component Library 
 
 1. [xo.form](./md/exo/index.md)
    - [Getting Started](./md/exo/getting-started.md)
+   - [Debugging](./md/exo/debugging-exoform.md)
    - [Controls](./md/exo/controls/index.md)
    - [Validation](./md/exo/validation.md)
    - [Navigation](./md/exo/navigation.md)

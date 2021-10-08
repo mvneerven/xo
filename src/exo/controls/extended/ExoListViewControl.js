@@ -140,6 +140,13 @@ class ExoListViewControl extends ExoDivControl {
         name: "checkboxes",
         type: Boolean,
         description: "Set to true to enable checkbox selection mode"
+      },
+
+      {
+        name: "tilewidth",
+        type: String,
+        default: "140px",
+        description: "Tile width, if applicable"
       }
     );
   }
@@ -461,17 +468,18 @@ class ExoListViewControl extends ExoDivControl {
         let art = e.target.closest("[data-id]")
         if (art) {
           let id = art.getAttribute("data-id");
-
-          let i = this.currentItems.find(i => {
-            return i[this.primaryKey] === id
-          })
-
-          if (this.singleSelect && i.id === this.value) {
-            if (!e.ctrlKey)
-              return;
+          if (id) {
+            let i = this.currentItems.find(i => {
+              return i[this.primaryKey] === id
+            })
+            if (i) {
+              if (this.singleSelect && i.id === this.value) {
+                if (!e.ctrlKey)
+                  return;
+              }
+              this.selectItems(i);
+            }
           }
-
-          this.selectItems(i);
         }
       });
     }
@@ -570,8 +578,10 @@ class ExoListViewControl extends ExoDivControl {
       return this.renderNoItemsFound();
     }
 
+    this.cssVariables["--tile-width"] = this.tilewidth;// "100px";
+
     this.cssVariables["--lv-tile-template"] =
-      "repeat(auto-fill, minmax(200px, 1fr))";
+      "repeat(auto-fill, minmax(var(--tile-width, 140px), 1fr))";
     this.renderStyleSheet();
 
     for (const i of items) {
@@ -1171,7 +1181,7 @@ class ExoListViewControl extends ExoDivControl {
           else if (classes.includes("hide-xxs"))
             applicableSizes.push(...["xs", "sm", "md", "lg"]);
           else applicableSizes.push(...["xs", "sm", "md", "lg"]);
-        } else applicableSizes.push(...["xs", "sm", "md", "lg"]);
+        } else applicableSizes.push(...["xxs", "xs", "sm", "md", "lg"]);
 
         applicableSizes.forEach((as) => {
           gridTemplate[as].columns.push(width);

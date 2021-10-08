@@ -13,4 +13,4 @@ ExoForm Studio is an environment that helps you discover ExoForm functionality a
 - Data Model visualization
 - Etc.
 
-> See [https://www.xo-js.dev/#/explore](https://www.xo-js.dev/#/explore)
+> See [https://www.xo-js.dev/#/explore](https://www.xo-js.dev/#/studio)

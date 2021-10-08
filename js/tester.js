@@ -47,8 +47,8 @@ class ISVCanvas {
                 })
             })
             options.items = items;
-            if(items.length > 6){
-                options.columns = Math.min(3, Math.round(items.length/6))
+            if (items.length > 6) {
+                options.columns = Math.min(3, Math.round(items.length / 6))
             }
         }
 
@@ -77,28 +77,176 @@ class HomeRoute extends xo.route {
 }
 
 class ContentTypeCreator {
+
+    static get productTemplate() {
+        return [
+            {
+                type: "text",
+                name: "name",
+                description: "Product name",
+                extra: {
+                    default: "test"
+                }
+            },
+            {
+                type: "longtext",
+                name: "description",
+                description: "Product description"
+
+            },
+            {
+                type: "number",
+                name: "price",
+                description: "Product price"
+            },
+            {
+                name: "defaultImage",
+                type: "asset",
+                description: "Main product image"
+            }
+        ]
+    }
+
+    static get types() {
+        return {
+            "text": {
+                icon: "ti-text",
+                properties: {
+                    default: {
+                        type: "string",
+                        title: "Default"
+                    },
+
+                    pattern: {
+                        type: "string",
+                        title: "Regular Expression"
+                    },
+                    maxlength: {
+                        type: "number",
+                        title: "Maximum characters"
+                    }
+                }
+            },
+            "longtext": {
+                icon: "ti-align-left",
+                properties: {
+                    default: {
+                        type: "string",
+                        title: "Default"
+                    }
+
+                }
+            },
+            "single-select": {
+                icon: "ti-minus"
+
+            },
+            "multi-select": {
+                icon: "ti-list"
+            },
+            "boolean": {
+                icon: "ti-check",
+                properties: {
+                    default: {
+                        type: "boolean",
+                        title: "Default"
+                    }
+                }
+            },
+            "number": {
+                icon: "ti-money",
+                properties: {
+                    default: {
+                        type: "string",
+                        title: "Default"
+                    },
+                    min: {
+                        type: "number",
+                        title: "Minimum"
+
+                    },
+                    max: {
+                        type: "number",
+                        title: "Maximum"
+                    }
+                }
+            },
+            "asset": {
+                icon: "ti-image",
+                properties: {
+                    default: {
+                        type: "string",
+                        title: "Default"
+                    },
+                    types: {
+                        type: "string",
+                        title: "Types allowed"
+                    },
+                    folder: {
+                        type: "string",
+                        title: "Base path for assets"
+                    }
+                }
+
+            },
+            "date": {
+                icon: "ti-calendar",
+                properties: {
+                    default: {
+                        type: "date",
+                        title: "Default"
+                    },
+
+                    min: {
+                        type: "date",
+                        title: "Minimum"
+                    },
+                    max: {
+                        type: "date",
+                        title: "Maximum"
+                    }
+                }
+
+            }
+        }
+    }
+
     static async createForm(host) {
 
         const schema = {
             model: {
                 instance: {
                     data: {
+                        name: "Icecream",
                         id: "",
-                        fields: []
+                        fields: ContentTypeCreator.productTemplate
                     }
                 },
+
                 logic: e => {
                     if (e.changed) {
 
                         switch (e.changed.property) {
+
+                            case "type":
+                                //debugger
+                                console.log("Type change", e)
+                                host.showTypeConfig(e.changed.newValue)
+                                break;
+
+
                             case "field":
-                                //debugger;
+                                if (e.changed.newValue) {
+                                    const list = e.exo.get("list")._control;
+                                    list.value = [];
+                                }
+
                                 break;
                             case "newName":
                                 if (e.model.instance.data.newName) {
                                     e.model.instance.data.fields.push({
-                                        id: e.model.instance.data.newName,
-                                        type: "string"
+                                        name: e.model.instance.data.newName,
+                                        type: "text"
                                     });
 
                                     host.listView.refresh()
@@ -106,12 +254,14 @@ class ContentTypeCreator {
                                 break
 
                         }
+
+                        //console.log(JSON.stringify(e.model.instance.data, null, 2))
                     }
                 }
             },
             pages: [
                 {
-                    legend: "Add contenttype",
+                    legend: "Add Product Type",
 
                     fields: [
                         {
@@ -130,7 +280,8 @@ class ContentTypeCreator {
                     ]
                 },
                 {
-                    legend: "Define '@instance.data.name'",
+                    legend: "Define @instance.data.name",
+                    intro: "Build the @instance.data.name product type, by adding custom properties and configure them.",
                     fields: [
                         {
                             type: "listview",
@@ -138,33 +289,45 @@ class ContentTypeCreator {
                             items: "@instance.data.fields",
                             bind: "instance.data.field",
                             noItemsFoundText: "No properties",
-                            views: ["tiles"],
-                            tilegrid: "horizontal",
-                            //mode: "static",
-                            singleSelect: true,
+                            views: ["grid"],
+                            mode: "static",
                             properties: [
                                 {
-                                    key: "id"
+                                    key: "name",
+                                    name: "Name"
                                 },
                                 {
                                     key: "type",
+                                    name: "",
                                     dataCallback: (a, b, c) => {
-                                        return b || "string"
+                                        let o = ContentTypeCreator.types[b];
+                                        return `<span class="${o?.icon}"></span>`
                                     }
+                                },
+                                {
+                                    key: "description",
+                                    name: "Description"
                                 }
-
-
                             ],
                             mappings: {
-                                tiles: [
+                                grid: [
                                     {
                                         key: "type",
-                                        size: "20px",
+                                        name: "Type",
+                                        width: "3rem",
                                     },
                                     {
-                                        key: "id",
-                                        size: "1fr"
+                                        key: "name",
+
+                                        width: "10rem"
+                                    },
+                                    {
+                                        key: "description",
+                                        name: "Description",
+                                        width: "1fr",
+                                        class: "hide-sm"
                                     }
+
                                 ]
                             },
 
@@ -173,7 +336,7 @@ class ContentTypeCreator {
                             name: "addName",
                             type: "textconfirm",
                             placeholder: "Property name",
-                            caption: "Name",
+                            caption: "Add new Product Property",
                             pattern: "([A-Za-z0-9\-\_]+)",
 
                             confirmButton: {
@@ -194,7 +357,7 @@ class ContentTypeCreator {
 
 class BuildContenttypeRoute extends xo.route {
 
-    title = "Content Types";
+    title = "Product Types";
 
     menuIcon = "ti-pencil-alt2";
 
@@ -214,9 +377,169 @@ class BuildContenttypeRoute extends xo.route {
             on: {
                 interactive: e => {
                     this.listView = e.detail.host.get("list")._control
+                },
+                dom: {
+                    click: e => {
+                        let x = e.target.closest(".exf-lv-item");
+
+                        if (x) {
+                            this.exo = xo.form.from(x);
+                            let propertyName = x.getAttribute("data-id");
+                            this.editProperty(propertyName)
+                        }
+                    }
                 }
             }
         }))
+    }
+
+
+
+    async editProperty(propertyName) {
+
+        const instance = this.exo.dataBinding.model.instance.data;
+        let ix = -1
+        let data = instance.fields.find(x => {
+            ix++;
+            if (x.name === propertyName) {
+                return x
+            }
+        });
+
+        let undoData = Core.clone(data);
+
+        this.property = data;
+
+        this.propTypeSpecificSchema = {}
+
+        pwa.UI.showDialog({
+            modal: false,
+            mode: "side",
+            title: "Field properties",
+            body: await xo.form.run(this.propSchema(data), {
+                on: {
+                    interactive: e => {
+                        this.subForm = e.detail.host.get("proptypeform")._control;
+                        this.showTypeConfig(data.type)
+                    }
+                }
+            }),
+            confirmText: "Save",
+
+            click: async (button, event) => {
+                if (button === "confirm") {
+                    this.listView.refresh();
+                }
+                else {
+                    data = undoData;
+                    instance.fields[ix] = undoData;
+                }
+            }
+        });
+    }
+
+    showTypeConfig(type) {
+        this.propType = type;
+        console.log("Show Type Config: Property", this.property, "Type", type);
+        const schema = this.createJSONSchema(ContentTypeCreator.types[type])
+        console.log(JSON.stringify(schema, null, 2))
+        this.propTypeSpecificSchema = {
+            schema: schema
+        }
+        this.subForm.form = this.propTypeSpecificSchema;
+    }
+
+    createJSONSchema(o) {
+        return {
+            navigation: "static",
+            model: {
+
+                schemas: {
+                    data: {
+                        properties: { ...o?.properties || {} }
+                    }
+                }
+            }
+        }
+    }
+
+
+    propSchema(data) {
+        console.log("Data: ", data);
+        return {
+            navigation: "none",
+            model: {
+                instance: {
+                    data: data
+                }
+            },
+            pages: [
+                {
+                    fields: [
+                        {
+                            name: "name",
+                            type: "text",
+                            bind: "instance.data.name",
+                            caption: "Property name",
+                            readonly: true
+                        },
+                        {
+                            type: "multiline",
+                            caption: "Description",
+                            autogrow: true,
+                            bind: "instance.data.description"
+                        },
+                        {
+                            name: "type",
+                            type: "listview",
+                            tilewidth: "100px",
+                            caption: "Property type",
+                            bind: "instance.data.type",
+                            singleSelect: true,
+                            views: ["tiles"],
+                            properties: [
+                                {
+                                    key: "type"
+                                },
+                                {
+                                    key: "icon",
+                                    dataCallback: (a, b, c) => {
+                                        return `<span class="${b}"></span>`
+                                    }
+                                }
+
+                            ],
+                            mappings: {
+                                tiles: [
+                                    {
+                                        key: "icon",
+                                        size: "20px",
+                                    },
+                                    {
+                                        key: "type",
+                                        size: "1fr"
+                                    }
+                                ]
+                            },
+                            items: Object.entries(ContentTypeCreator.types).map(k => {
+                                return {
+                                    type: k[0],
+                                    icon: k[1].icon
+                                }
+                            })
+                        },
+
+                        {
+                            type: "sandbox",
+                            name: "proptypeform",
+                            form: {},
+                            bind: "instance.data.extra"
+                        }
+
+                    ]
+                }
+            ]
+        }
     }
 }
 
@@ -431,6 +754,7 @@ class TestRoute extends xo.route {
                                     {
                                         key: "description",
                                         autoWidth: true,
+                                        class: "hide-xs",
                                         sort: true
                                     },
                                     {
@@ -650,13 +974,13 @@ class ImageSelectRoute extends xo.route {
                                     items: this.items,
                                     minlength: 2
                                 }
-        
-                            
+
+
                             }
                         }
                     },
 
-                    
+
                 ]
             }]
         }
@@ -682,6 +1006,34 @@ class ImageSelectRoute extends xo.route {
 
             }
         ]
+    }
+
+    get area() {
+        return this.app.UI.areas.main;
+    }
+}
+
+class MicroFrontendRoute extends xo.route {
+    async render(path) {
+
+
+        let frm = await xo.form.run({
+            pages: [
+                {
+                    fields: [
+                        {
+                            type: "sandbox",
+                            form: {
+                                schema: "/data/forms/products.js"
+
+                            }
+                        }
+                    ]
+                }
+            ]
+        })
+
+        this.area.add(frm)
     }
 
     get area() {
@@ -766,6 +1118,7 @@ new PWA({
         "/products": ProductsRoute,
         "/canvas": ISVCanvasRoute,
         "/contentypes": BuildContenttypeRoute,
-        "/imageselect": ImageSelectRoute
+        "/imageselect": ImageSelectRoute,
+        "/microfrontend": MicroFrontendRoute,
     }
 })

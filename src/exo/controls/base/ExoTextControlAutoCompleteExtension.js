@@ -165,7 +165,7 @@ class ExoTextControlAutoCompleteExtension {
         };
 
         this.getItems(options).then(r => {
-            this.clear();
+            this.clear();            
             this.resultsHandler(r, options)
         })
     }

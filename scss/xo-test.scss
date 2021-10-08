@@ -9,7 +9,7 @@
     --color: #333;
     --color-text: #333;
     --color-shade: #ccc;
-    --color-button: hsl(340, 87%, 65%);
+    --color-button: hsl(350, 87%, 36%);
     --color-button-disabled: hsl(340, 0%, 65%);
     --field-box-shadow-subtle: #dedede;
     --color-label-active: rgb(173, 58, 4);
@@ -21,6 +21,9 @@
     --color-dropdown-text: rgba(0, 0, 0, 0.8);
     --color-dropdown-border: rgba(0, 0, 0, 0.1);
 
+    --lv-grid-template-xxs: repeat(5, 1fr);
+    --lv-grid-template-xxs-areas: ".";
+
     --lv-grid-template-xs: repeat(5, 1fr);
     --lv-grid-template-xs-areas: ".";
     --lv-grid-template-sm: repeat(5, 1fr);
@@ -31,13 +34,15 @@
     --lv-grid-template-lg-areas: ".";
     --lv-grid-template-xl: repeat(5, 1fr);
     --lv-grid-template-xl-areas: ".";
-    --lv-tile-template: repeat(auto-fill, minmax(200px, 1fr));
-    --lv-tile-content-template: 200px 2rem 1fr 30px;
+    //--lv-tile-template: repeat(auto-fill, minmax(200px, 1fr));
+    --tile-width: 300px;
+    //--lv-tile-content-template: 200px 2rem 1fr 30px;
     --lv-tile-content-areas: ".";
     --lv-grid-border-color: #ccc;
     --lv-grid-border-color: #ccc;
     --lv-grid-header-color: #f9fafb;
     --lv-tile-color: white;
+    --color-button-text: white;
 }
 
 html,
@@ -53,7 +58,7 @@ main {
     overflow: auto;
     margin: auto;
     max-height: 100%;
-    width: 90%;
+    width: 100%;
 }
 
 #xo-test {
@@ -71,6 +76,21 @@ main {
 
     .exf-dlg-c {
         background-color: #ddd;
+    }
+
+    .exf-lv-item.empty {
+        box-shadow: none;
+        background-color: transparent;
+    }
+
+    .exf-dlg {
+        .exf-container.exf-theme-material {
+            form {
+                box-shadow: none;
+                
+            }
+            
+        }
     }
 }
 
@@ -140,7 +160,7 @@ body {
     }
 
     .exf-container {
-        width: 90%;
+        width: 100%;
         
 
         &.exf-theme-material {
@@ -160,7 +180,7 @@ body {
             }
 
             legend {
-                background-color: #efafaf;
+                color: #666;
                 padding: 0.3em 0.7em;
                 border-radius: 0.3em;
             }
@@ -248,4 +268,25 @@ nav.main-menu {
             }
         }
     }
+}
+
+
+.exf-btn {
+    padding: 0.2rem 0.4rem;
+    border-radius: 0.3rem;
+    outline: none;
+    background-color: var(--color-button);
+    color: var(--color-button-text);
+}
+
+.exf-dlg {
+    .exf-dlg-f {
+        .exf-btn {
+            font-size: 1.1rem;
+            outline: none;
+            padding: 0.4rem 0.8rem;
+            border: none;
+        }
+    }
+    
 }

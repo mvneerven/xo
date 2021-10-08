@@ -53,10 +53,14 @@ class ExoFormSchema {
 
         this._schemaData.pages = this._schemaData.pages || [];
 
-        this._origSchema = JSON.parse(Core.stringifyJSONWithCircularRefs(this._schemaData)) // keep original schema as _schemaData will be modified 
+        this._raw = JSON.parse(Core.stringifyJSONWithCircularRefs(this._schemaData)) // keep original schema as _schemaData will be modified 
 
         this.refreshStats();
 
+    }
+
+    get raw(){
+        return this._raw;
     }
 
     createDefaultUiIfNeeded() {
@@ -64,7 +68,8 @@ class ExoFormSchema {
         let defaultModelInstance = this.getFirstInstanceName();
         if (!defaultModelInstance) {
             defaultModelInstance = "data";
-            this._schemaData.model = this._schemaData.model || { instance: {} };
+            this._schemaData.model = this._schemaData.model || { };
+            this._schemaData.model.instance = this._schemaData.model.instance || { };
             this.model.instance[defaultModelInstance] = {};
         }
 
@@ -74,13 +79,10 @@ class ExoFormSchema {
                 return;
 
             let schemaProps = jsc.schema.properties;
-
-
             let mapped = this.tryMappings(defaultModelInstance);
 
             if (this.pages.length === 0)
                 this.pages.push({ fields: [] });
-
 
             for (var name in schemaProps) {
                 if (!mapped.includes(name)) {
@@ -463,8 +465,8 @@ Pages: ${this.pages.length}
 
         const name = control.name, schema = control.schema
 
-        if (this._origSchema.mappings) {
-            const props = this._origSchema.mappings.properties;
+        if (this.raw.mappings) {
+            const props = this.raw.mappings.properties;
 
             Object.keys(props).forEach(p => {
                 const f = props[p];
@@ -478,7 +480,7 @@ Pages: ${this.pages.length}
         }
         else {
 
-            this._origSchema.pages.forEach(p => {
+            this.raw.pages.forEach(p => {
                 p.fields.forEach(f => {
                     if (f.name === name) {
                         for (var n in schema) {
@@ -488,7 +490,7 @@ Pages: ${this.pages.length}
                 })
             })
         }
-        return ExoFormSchema.read(this._origSchema);
+        return ExoFormSchema.read(this.raw);
     }
 
     /**
@@ -498,10 +500,10 @@ Pages: ${this.pages.length}
      * @returns {ExoFormSchema} - modified schema
      */
     insertBefore(ctl, beforeCtl) {
-        console.log(`Move ${ctl} to before ${beforeCtl}`);
+        console.debug(`ExoFormSchema: Move ${ctl} to before ${beforeCtl}`);
 
-        if (this._origSchema.mappings) {
-            const props = this._origSchema.mappings.properties;
+        if (this.raw.mappings) {
+            const props = this.raw.mappings.properties;
             const newProps = {};
 
             let keep = {
@@ -521,7 +523,7 @@ Pages: ${this.pages.length}
             if (keep !== null) {
                 newProps[keep.name] = { ...keep.props };
             }
-            this._origSchema.mappings.properties = newProps;
+            this.raw.mappings.properties = newProps;
         }
         else {
             let pages = [], names = {};
@@ -537,7 +539,7 @@ Pages: ${this.pages.length}
                 }
             }
 
-            this._origSchema.pages.forEach(p => {
+            this.raw.pages.forEach(p => {
                 let pg = { ...p };
                 pg.fields = [];
 
@@ -556,20 +558,20 @@ Pages: ${this.pages.length}
             if (keep) {
                 pages[pages.length - 1].fields.push(keep.props)
             }
-            this._origSchema.pages = pages;
+            this.raw.pages = pages;
         }
 
-        return ExoFormSchema.read(this._origSchema);
+        return ExoFormSchema.read(this.raw);
     }
 
     delete(control) {
         const name = control.name, schema = control.schema
 
-        if (this._origSchema.mappings) {
-            let props = this._origSchema.mappings.properties;
-            let skip = this._origSchema.mappings.skip || [];
+        if (this.raw.mappings) {
+            let props = this.raw.mappings.properties;
+            let skip = this.raw.mappings.skip || [];
             skip.push(name);
-            this._origSchema.mappings.skip = skip;
+            this.raw.mappings.skip = skip;
 
             let newMappings = {}
 
@@ -579,18 +581,18 @@ Pages: ${this.pages.length}
                     newMappings[p] = props[p];
                 }
             });
-            this._origSchema.mappings.properties = newMappings
+            this.raw.mappings.properties = newMappings
 
         }
         else {
 
-            this._origSchema.pages.forEach(p => {
+            this.raw.pages.forEach(p => {
                 p.fields = p.fields.filter(f => {
                     return f.name !== name;
                 })
             });
         }
-        return ExoFormSchema.read(this._origSchema);
+        return ExoFormSchema.read(this.raw);
     }
 
     get fieldCount() {

@@ -47,7 +47,7 @@
   --color: #333;
   --color-text: #333;
   --color-shade: #ccc;
-  --color-button: hsl(340, 87%, 65%);
+  --color-button: hsl(350, 87%, 36%);
   --color-button-disabled: hsl(340, 0%, 65%);
   --field-box-shadow-subtle: #dedede;
   --color-label-active: rgb(173, 58, 4);
@@ -58,6 +58,8 @@
   --color-dropdown-hover: #b6b6b6;
   --color-dropdown-text: rgba(0, 0, 0, 0.8);
   --color-dropdown-border: rgba(0, 0, 0, 0.1);
+  --lv-grid-template-xxs: repeat(5, 1fr);
+  --lv-grid-template-xxs-areas: ".";
   --lv-grid-template-xs: repeat(5, 1fr);
   --lv-grid-template-xs-areas: ".";
   --lv-grid-template-sm: repeat(5, 1fr);
@@ -68,13 +70,13 @@
   --lv-grid-template-lg-areas: ".";
   --lv-grid-template-xl: repeat(5, 1fr);
   --lv-grid-template-xl-areas: ".";
-  --lv-tile-template: repeat(auto-fill, minmax(200px, 1fr));
-  --lv-tile-content-template: 200px 2rem 1fr 30px;
+  --tile-width: 300px;
   --lv-tile-content-areas: ".";
   --lv-grid-border-color: #ccc;
   --lv-grid-border-color: #ccc;
   --lv-grid-header-color: #f9fafb;
   --lv-tile-color: white;
+  --color-button-text: white;
 }
 
 html,
@@ -89,7 +91,7 @@ main {
   overflow: auto;
   margin: auto;
   max-height: 100%;
-  width: 90%;
+  width: 100%;
 }
 
 #xo-test [data-field-type="listview"][data-view="tiles"] article.exf-lv-item .small {
@@ -99,6 +101,17 @@ main {
 
 #xo-test .exf-dlg-c {
   background-color: #ddd;
+}
+
+#xo-test .exf-lv-item.empty {
+  -webkit-box-shadow: none;
+          box-shadow: none;
+  background-color: transparent;
+}
+
+#xo-test .exf-dlg .exf-container.exf-theme-material form {
+  -webkit-box-shadow: none;
+          box-shadow: none;
 }
 
 body {
@@ -167,7 +180,7 @@ body footer {
 }
 
 #xo-test .exf-container {
-  width: 90%;
+  width: 100%;
 }
 
 #xo-test .exf-container.exf-theme-material {
@@ -188,7 +201,7 @@ body footer {
 }
 
 #xo-test .exf-container.exf-theme-material legend {
-  background-color: #efafaf;
+  color: #666;
   padding: 0.3em 0.7em;
   border-radius: 0.3em;
 }
@@ -275,5 +288,20 @@ nav.main-menu ul li:hover {
 
 nav.main-menu ul li.selected {
   background-color: #fdd;
+}
+
+.exf-btn {
+  padding: 0.2rem 0.4rem;
+  border-radius: 0.3rem;
+  outline: none;
+  background-color: var(--color-button);
+  color: var(--color-button-text);
+}
+
+.exf-dlg .exf-dlg-f .exf-btn {
+  font-size: 1.1rem;
+  outline: none;
+  padding: 0.4rem 0.8rem;
+  border: none;
 }
 /*# sourceMappingURL=xo-test.css.map */

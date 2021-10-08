@@ -1023,6 +1023,23 @@ html:not(.pwa-signed-in) .if-signed-out {
 .exf-sandbox {
   border: 0;
   overflow: visible;
+  position: relative;
+}
+
+.exf-sandbox .exf-sb-ldr {
+  position: absolute;
+  opacity: 1;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.exf-sandbox .exf-sb-ldr.hidden {
+  opacity: 0;
+  pointer-events: none;
+  -webkit-transition: opacity 1s;
+  transition: opacity 1s;
 }
 
 [data-field-type="image"] img {
@@ -3558,11 +3575,11 @@ html.theme-dark .exf-ctl-cnt.autocomplete .exf-ac-rs .exf-ac-itm.active {
   background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0) 0%, var(--lv-tile-color) 100%);
 }
 
-.exf-listview[data-view="grid"]:not(.exf-lv-check) .exf-lv-item:hover {
+.exf-listview[data-view="grid"]:not(.exf-lv-check):not(.static) .exf-lv-item:hover {
   border-left-color: var(--color-tile-hover);
 }
 
-.exf-listview[data-view="grid"]:not(.exf-lv-check) .exf-lv-item.selected {
+.exf-listview[data-view="grid"]:not(.exf-lv-check):not(.static) .exf-lv-item.selected {
   border-left-color: var(--color-tile-active);
 }
 
@@ -3650,7 +3667,7 @@ html.theme-dark .exf-ctl-cnt.autocomplete .exf-ac-rs .exf-ac-itm.active {
   padding: 4px 8px;
 }
 
-.exf-listview[data-view="tiles"]:not(.exf-lv-check) .exf-listview-list .exf-lv-item:hover {
+.exf-listview[data-view="tiles"]:not(.exf-lv-check):not(.static) .exf-listview-list .exf-lv-item:hover {
   border-color: var(--color-tile-hover);
   -webkit-transform: scale(1.05);
           transform: scale(1.05);
@@ -3658,11 +3675,11 @@ html.theme-dark .exf-ctl-cnt.autocomplete .exf-ac-rs .exf-ac-itm.active {
   transition: all 0.1s;
 }
 
-.exf-listview[data-view="tiles"]:not(.exf-lv-check) .exf-listview-list .exf-lv-item:hover .action-button {
+.exf-listview[data-view="tiles"]:not(.exf-lv-check):not(.static) .exf-listview-list .exf-lv-item:hover .action-button {
   display: block;
 }
 
-.exf-listview[data-view="tiles"]:not(.exf-lv-check) .exf-listview-list .exf-lv-item.selected {
+.exf-listview[data-view="tiles"]:not(.exf-lv-check):not(.static) .exf-listview-list .exf-lv-item.selected {
   border-color: var(--color-tile-active);
 }
 
@@ -3698,12 +3715,6 @@ html.theme-dark .exf-ctl-cnt.autocomplete .exf-ac-rs .exf-ac-itm.active {
   min-width: unset;
   -ms-grid-columns: 1fr;
       grid-template-columns: 1fr;
-}
-
-.exf-listview.static .exf-listview-list .exf-lv-item:hover {
-  border-color: transparent;
-  -webkit-transform: none;
-          transform: none;
 }
 
 @-webkit-keyframes borealisBar {

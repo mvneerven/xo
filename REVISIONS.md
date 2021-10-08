@@ -739,38 +739,7 @@ The Live Edit feature supports drag & drop sorting, deleting fields and editing 
 
 # New in 1.4.110
 
-## Sandbox
-
-The new ```sandbox``` control allows you to embed forms in an isolated way, using an IFRAME.
-
-Usage:
-
-```js
-const schema = {
-  pages: [
-    {
-      fields: [
-        {
-          name: "sandbox1",
-          caption: "Sandboxing a form",
-          type: "sandbox",
-          form: {
-            styles: [
-              "/css/my-embed-styles.css"
-            ],
-            schema: "/data/forms/myform.js"
-          }
-        }
-      ]
-    }
-  ]
-}
-```
-
-## Other additions
-
 - ```columns``` property in list controls (checkboxlist, radionuttonlist), which makes long option lists flow in multiple columns.
-
 
 # New in 1.4.116 
 
@@ -823,3 +792,72 @@ const schema = {
 }
 ```
 
+# New in 1.4.130
+
+## Sandbox: using subforms.
+
+The new ```sandbox``` control allows you to embed subforms in an isolated way, using an ```iframe``` tag.
+All communication between main form and subform is done using ```postMessage```.
+
+```js
+const schema = {
+  model: {
+    instance: {
+      data: {
+        test: "My Data",
+        sub: {
+          text: "Subform Control Data"
+        }
+      }
+    }
+  },
+  pages: [
+    {
+      fields: [
+        {
+          name: "testField",
+          caption: "Test Field",
+          type: "text",
+          bind: "instance.data.test"
+        },
+        {
+          type: "sandbox",
+          bind: "instance.data.sub",
+          form: {
+            schema: {
+              pages: [
+                {
+                  fields: [
+                    {
+                      type: "text",
+                      caption: "Subform Textbox",
+                      name: "cc",
+                      bind: "instance.data.text"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
+```
+
+## ```textconfirm``` control added
+This text control fires a change event only when confirmed using a confirmation button (or pressing enter)
+
+## ```imageselector``` control added
+This control uses autocompletion to find and select an image and shows a preview of the selected image.
+
+
+## Other
+
+- xo.isDebug
+- xo.path
+- ```remark``` property added to all controls for general commenting
+- ```break``` property added to all controls, to force debug break in rendering of a control
+- ```listview``` control ```tilewidth``` property added
+- 

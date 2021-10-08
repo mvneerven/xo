@@ -199,17 +199,12 @@ class DocsRoute extends xo.route {
                         var blob = new Blob([json], { type: "application/json" });
                         var url = URL.createObjectURL(blob);
                         document.location.hash = "/studio/" + url;
-                        console.log("Routing  to " + document.location.toString())
                     }
                 }
             }).then(resolve).catch(reject)
 
         });
-
-
-
     }
-
 
     get area() {
         return pwa.UI.areas.main;

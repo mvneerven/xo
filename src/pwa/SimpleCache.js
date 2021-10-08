@@ -9,14 +9,14 @@ class SimpleCache {
     }
 
     async get() {
-        console.log("cache: timediff=", this.timeDiffMs());
+        console.debug("cache: timediff=", this.timeDiffMs());
 
         if (this.timeDiffMs() < this.duration) {
-            console.log("cache:", "Taking cache....");
+            console.debug("cache:", "Taking cache....");
             return this.value;
         }
 
-        console.log("cache:", "Update cache....");
+        console.debug("cache:", "Update cache....");
         this.lastFetchDate = new Date();
         this.value = await this.dataAccessor();
         return this.value;

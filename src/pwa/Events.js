@@ -21,15 +21,12 @@ class Events {
         new Emitter(host); // add simple event system
 
         host.on = (eventName, func) => {
-            console.debug(this.host.constructor.name, "listening to event", { name: eventName, f: func });
             host.addEventListener(eventName, func);
             return host;
         }
     }
 
     trigger(event, detail, ev) {
-        console.debug(this.host.constructor.name, "triggering event", event, "detail: ", detail)
-
         if( typeof(event) === "object" && event instanceof Event ){
             return this.host.dispatchEvent(event);    
         }

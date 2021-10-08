@@ -79,21 +79,20 @@
         }
     }
 
-    [data-field-type="textconfirm"]{
-        .exf-ctl{
+    [data-field-type="textconfirm"] {
+        .exf-ctl {
             position: relative;
 
             .exf-btn-cnt {
-                position: absolute!important;
+                position: absolute !important;
                 top: -1.7rem;
                 right: 0;
 
-                button.exf-btn{
-                    padding: .2rem .5rem!important
+                button.exf-btn {
+                    padding: 0.2rem 0.5rem !important;
                 }
             }
         }
-        
     }
 
     &.single-page {
@@ -455,6 +454,23 @@
 .exf-sandbox {
     border: 0;
     overflow: visible;
+
+    position: relative;
+
+    .exf-sb-ldr {
+        position: absolute;
+        opacity: 1;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+
+        &.hidden {
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 1s;
+        }
+    }
 }
 
 [data-field-type="image"] {
