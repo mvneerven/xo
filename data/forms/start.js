@@ -160,6 +160,7 @@ const schema = {
                     tilewidth: "300px",
                     bind: "instance.init.template",
                     type: "listview",
+                    tilewidth: "200px",
                     views: "tiles",
                     style: "max-height: 300px",
                     singleSelect: true,

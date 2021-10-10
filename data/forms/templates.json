@@ -1,7 +1,7 @@
 [
     {
         "name": "Starter Form",
-        "value": "https://xo-js.dev/assets/forms/templates/empty.json",
+        "value": "https://xo-js.dev/assets/forms/templates/empty.js",
         "description": "A Simple 1 field form to get started with"
     },
     {
