@@ -7,7 +7,7 @@
     "url": "https://github.com/mvneerven/xo"
   },
   "publishConfig": {
-    "registry":"https://www.npmjs.com"
+    "registry": "https://registry.npmjs.org/"
   },
   "author": {
     "name": "Marc van Neerven",
