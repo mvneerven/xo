@@ -5,6 +5,34 @@ class ExoImageSelector extends ExoMultiInputControl {
     constructor() {
         super(...arguments);
 
+        const me = this;
+
+        this.css = {
+            "--exf-ac-itm-grid": "100px 1fr 7rem",
+            "--exf-ac-itm-height": "80px",
+            "--exf-ac-itm-width": "80px",
+        }
+
+        this.height = "200px";
+
+        this.categories = {
+            Image: {
+                
+                trigger: options => { return options.search.length >= 2 },
+                getItems: options => {
+                    return [{
+                        text: "Search images on Pexels for '%search%'"
+                    }]
+                },
+                action: options => {
+                    me.input.value = options.text;
+                    me.value = options.image;
+                    me.image.style.backgroundImage = `url(${options.image})`
+                },
+                icon: "ti-image"
+            },
+        }
+
         this.acceptProperties(
             {
                 name: "items",
@@ -24,22 +52,33 @@ class ExoImageSelector extends ExoMultiInputControl {
             search: {
                 type: "search",
                 caption: "",
-                class: "exf-std-lbl",   
+                class: "exf-std-lbl",
                 placeholder: "Image.png",
                 autocomplete: {
+                    categories: this.categories,
                     items: e => {
-                        return xo.core.acquireState(this.items)
+                        return xo.core.acquireState(this.items).then(x => {
+                            return x.map(i => {
+                                return {
+                                    ...i,
+                                    category: "Image"
+                                }
+                            })
+                        })
                     },
-                    minlength: 2
+                    minlength: 2,
+                    itemheight: "60px"
                 }
             },
             image: {
                 type: "div",
                 caption: "",
                 class: "exf-img-sm"
+            },
+            value: {
+                type: "hidden"
             }
         }
-
     }
 
     set items(data) {
@@ -50,17 +89,16 @@ class ExoImageSelector extends ExoMultiInputControl {
         return this._items
     }
 
-    set value(data){
+    set value(data) {
+
         this._value = data;
 
-        if(this.input){
-            
-            this.input.value = data;
-            this.image.style.backgroundImage = `url(${data})`
+        if (this.variable) {
+            this.variable.value = data;
         }
     }
 
-    get value(){
+    get value() {
         return this._value;
     }
 
@@ -68,16 +106,22 @@ class ExoImageSelector extends ExoMultiInputControl {
         await super.render();
 
         this.image = this.container.querySelector(".exf-img-sm");
-
         this.input = this.container.querySelector("input[type=search]");
+        this.variable = this.container.querySelector("input[type=hidden]");
+
         const setImage = e => {
-            this.image.style.backgroundImage = `url(${e.target.value})`
+            if (e.target.value === "")
+                this.image.style.backgroundImage = `none`
         };
+
         this.input.addEventListener("change", setImage);
         this.input.addEventListener("input", setImage);
 
         this.image.style = `background-repeat: no-repeat; background-size: contain; height: ${this.height || "100px"}; width: auto`
-        
+
+        //debug
+        //this.input.data.field._control._autoComplete.clear = e => { }
+
         return this.container;
     }
 }

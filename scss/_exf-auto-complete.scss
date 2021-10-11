@@ -16,17 +16,17 @@
 
         .exf-ac-itm {
             display: grid;
-            grid-template-columns: 30px 1fr 7rem;
+            grid-template-columns: var(--exf-ac-itm-grid, 30px 1fr 7rem);
             cursor: pointer;
             overflow: hidden;
             padding: 0.5rem;
-            height: 1.1rem;
+            height: var(--exf-ac-itm-height, 1.1rem);
 
             .exf-ac-img {
                 background-repeat: no-repeat;
                 background-size: contain;
-                width: 1.1rem;
-                height: 1.1rem;
+                width: var(--exf-ac-itm-width, 1.1rem);
+                height: var(--exf-ac-itm-height, 1.1rem);
                 display: inline-block;
             }
 

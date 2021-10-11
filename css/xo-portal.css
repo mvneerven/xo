@@ -3539,19 +3539,19 @@ html.theme-dark .exf-ctl-cnt.exf-switch input[type="range"] {
 .exf-ctl-cnt.autocomplete .exf-ac-rs .exf-ac-itm {
   display: -ms-grid;
   display: grid;
-  -ms-grid-columns: 30px 1fr 7rem;
-      grid-template-columns: 30px 1fr 7rem;
+  -ms-grid-columns: var(--exf-ac-itm-grid, 30px 1fr 7rem);
+      grid-template-columns: var(--exf-ac-itm-grid, 30px 1fr 7rem);
   cursor: pointer;
   overflow: hidden;
   padding: 0.5rem;
-  height: 1.1rem;
+  height: var(--exf-ac-itm-height, 1.1rem);
 }
 
 .exf-ctl-cnt.autocomplete .exf-ac-rs .exf-ac-itm .exf-ac-img {
   background-repeat: no-repeat;
   background-size: contain;
-  width: 1.1rem;
-  height: 1.1rem;
+  width: var(--exf-ac-itm-width, 1.1rem);
+  height: var(--exf-ac-itm-height, 1.1rem);
   display: inline-block;
 }
 

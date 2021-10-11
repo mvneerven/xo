@@ -16,7 +16,8 @@ import xo from '../../../js/xo';
  * @hideconstructor
  */
 class ExoForm {
-
+    _cssVariables = {};
+    
     static meta = {
 
         properties: {
@@ -65,6 +66,7 @@ class ExoForm {
         this.form.setAttribute("method", "post");
         this.form.classList.add("exf-form");
         this.container = DOM.parseHTML(ExoForm.meta.templates.exocontainer);
+        this.container.setAttribute("data-id", this.id);
 
         xo.events.trigger("new-form", {
             id: this.id,
@@ -72,8 +74,34 @@ class ExoForm {
         })
     }
 
+    /**
+     * Returns the current Form Schema
+     */
     get schema() {
         return this._schema;
+    }
+
+    /**
+     * Returns a reference to the CSS variables included 
+     */
+    get cssVariables() {        
+        return this._cssVariables;
+    }
+
+    renderStyleSheet() {
+        const id = `form-variables-${this.id}`,
+        prevStyleSheet = document.getElementById(id);
+        if (prevStyleSheet) prevStyleSheet.remove();
+
+        const cssSheet = document.createElement("style");
+        cssSheet.id = id;
+        const css = Object.keys(this.cssVariables).map(
+            (c) => `${c}: ${this.cssVariables[c]};`
+        );
+        cssSheet.innerHTML = `[data-id="${this.id}"] { ${css.join(
+            " "
+        )} }`;
+        document.querySelector("head").appendChild(cssSheet);
     }
 
     /**
@@ -265,7 +293,7 @@ class ExoForm {
             let cmp = ExoFormFactory.meta[n];
 
             let obj = cmp.type.getType(this);
-            if(!obj || !obj.type)
+            if (!obj || !obj.type)
                 throw TypeError("Addin not found: '" + n + "'")
 
             console.debug("ExoForm addin:", n, "type:", obj.name, "component used:", obj.type.name);
@@ -363,6 +391,8 @@ class ExoForm {
         this.addins.rules.checkRules();
 
         this.addins.navigation.restart();
+
+        this.renderStyleSheet();
 
         this.events.trigger(ExoFormFactory.events.renderReady);
 

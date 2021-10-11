@@ -49,7 +49,9 @@ class ExoControlBase {
 
             { name: "remark", type: String, description: "Generic comment/remark - use like HTML or JavaScript comments" },
 
-            { name: "break", type: Object, description: "Set breakpoint" }
+            { name: "break", type: Object, description: "Set breakpoint" },
+
+            { name: "css", type: Object }
         );
     }
 
@@ -556,8 +558,13 @@ class ExoControlBase {
 
         this._rendered = true;
 
-        // if (!this.visible)
-        //     this.visible = this.visible; // force 
+        if (this.css) {
+
+            Object.entries(this.css).map(i => {
+                this.context.exo.cssVariables[i[0]] = i[1];
+            })
+
+        }
 
         return this.container
     }

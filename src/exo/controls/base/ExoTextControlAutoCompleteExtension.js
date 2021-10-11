@@ -240,7 +240,7 @@ class ExoTextControlAutoCompleteExtension {
             this.resultsDiv.innerHTML += `<div data-index="${index}" class="${this.cssClasses.item}">
                 <span ${image} class="${i.icon || catHandler.icon}"></span>
                 <span class="text">${this.formatResultItem(i, options, catHandler)}</span>
-                <span title="Sortindex: ${catHandler.sortIndex}" class="category">${i.category || ""}</span></div>`;
+                <span class="category">${i.category || ""}</span></div>`;
 
             index++;
         });

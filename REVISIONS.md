@@ -860,4 +860,9 @@ This control uses autocompletion to find and select an image and shows a preview
 - ```remark``` property added to all controls for general commenting
 - ```break``` property added to all controls, to force debug break in rendering of a control
 - ```listview``` control ```tilewidth``` property added
+
+
+# New in 1.4.132
+
+- Generic ```css``` property (all controls)
 - 
