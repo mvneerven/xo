@@ -69,6 +69,37 @@ class HomeRoute extends xo.route {
 
     async render(path) {
         const me = this;
+
+        const schema = {
+            pages: [
+                {
+                    legend: "My Form",
+                    intro: "My form description",
+                    fields: [
+                        {
+                            name: "testField",
+                            caption: "Test Field",
+                            type: "imageselector",
+                            height: "400px",
+                            items: e => {
+                                return [
+                                    {
+                                        text: "img/logo.png"
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+
+
+        const frm = await xo.form.run(schema);
+
+        this.area.add(frm)
+
+
     }
 
     get area() {

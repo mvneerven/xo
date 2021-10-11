@@ -1,3 +1,4 @@
+import xo from "../../../../js/xo";
 import ExoMultiInputControl from "./ExoMultiInputControl";
 
 class ExoImageSelector extends ExoMultiInputControl {
@@ -26,7 +27,9 @@ class ExoImageSelector extends ExoMultiInputControl {
                 class: "exf-std-lbl",   
                 placeholder: "Image.png",
                 autocomplete: {
-                    items: this.items || [],
+                    items: e => {
+                        return xo.core.acquireState(this.items)
+                    },
                     minlength: 2
                 }
             },
