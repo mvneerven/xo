@@ -6,9 +6,6 @@
     "type": "git",
     "url": "https://github.com/mvneerven/xo"
   },
-  "publishConfig": {
-    "registry": "https://registry.npmjs.org/"
-  },
   "author": {
     "name": "Marc van Neerven",
     "email": "mvneerven@neerventure.com",
