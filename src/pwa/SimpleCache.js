@@ -1,11 +1,16 @@
 import Core from './Core';
 
+const TYPES = {
+    MEMORY: "memory",
+    STORAGE: "localStorage"
+}
+
 class SimpleCache {
     constructor(dataAccessor, durationMs, type) {
         this.id = 'xo_sc_' + Core.guid().split('-').pop()
         this.dataAccessor = dataAccessor;
         this.duration = durationMs;
-        this.type = type || "memory";
+        this.type = type || TYPES.MEMORY;
     }
 
     async get() {
@@ -24,28 +29,30 @@ class SimpleCache {
 
     get value() {
         switch (this.type) {
-            case "memory":
+            case TYPES.MEMORY:
                 return this.cache;
-            case "localStorage":
+            case TYPES.STORAGE:
                 return JSON.parse(localStorage.getItem(this.id));
         }
     }
 
     set value(data) {
         switch (this.type) {
-            case "memory":
+            case TYPES.MEMORY:
                 this.cache = data;
-            case "localStorage":
+                break;
+            case TYPES.STORAGE:
                 localStorage.setItem(this.id, JSON.stringify(data));
+                break;
         }
     }
 
     delete() {
         switch (this.type) {
-            case "memory":
+            case TYPES.MEMORY:
                 delete this.cache;
                 break;
-            case "localStorage":
+            case TYPES.STORAGE:
                 localStorage.removeItem(this.id);
                 break
         }

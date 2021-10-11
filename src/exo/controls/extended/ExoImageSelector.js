@@ -1,4 +1,4 @@
-import xo from "../../../../js/xo";
+//import xo from "../../../../js/xo";
 import ExoMultiInputControl from "./ExoMultiInputControl";
 
 class ExoImageSelector extends ExoMultiInputControl {
@@ -17,13 +17,6 @@ class ExoImageSelector extends ExoMultiInputControl {
 
         this.categories = {
             Image: {
-                
-                trigger: options => { return options.search.length >= 2 },
-                getItems: options => {
-                    return [{
-                        text: "Search images on Pexels for '%search%'"
-                    }]
-                },
                 action: options => {
                     me.input.value = options.text;
                     me.value = options.image;
@@ -57,14 +50,8 @@ class ExoImageSelector extends ExoMultiInputControl {
                 autocomplete: {
                     categories: this.categories,
                     items: e => {
-                        return xo.core.acquireState(this.items).then(x => {
-                            return x.map(i => {
-                                return {
-                                    ...i,
-                                    category: "Image"
-                                }
-                            })
-                        })
+                        
+                        return me.getImages(e.search.toUpperCase())
                     },
                     minlength: 2,
                     itemheight: "60px"
@@ -79,6 +66,25 @@ class ExoImageSelector extends ExoMultiInputControl {
                 type: "hidden"
             }
         }
+    }
+
+    async getImages(s){
+        let acquire = async () => {
+            return xo.core.acquireState(this.items).then(x => {
+                return x.filter(i=>{
+                    return i.text.toUpperCase().indexOf(s) > -1;
+                }).map(i => {
+                    return {
+                        ...i,
+                        category: "Image"
+                    }
+                })
+            })
+        }
+
+        let cache = new xo.core.SimpleCache(acquire, 1000 * 60) // 1 minute cache
+
+        return await cache.get();
     }
 
     set items(data) {
