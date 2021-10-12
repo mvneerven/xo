@@ -30,7 +30,7 @@ class ExoImageSelector extends ExoMultiInputControl {
                     }
                 },
                 icon: "ti-image"
-            },
+            }
         }
 
         this.acceptProperties(
@@ -45,7 +45,14 @@ class ExoImageSelector extends ExoMultiInputControl {
                 name: "height",
                 type: String,
                 description: "Height of image preview"
+            },
+
+            {
+                name: "textmap",
+                type: Object,
+                description: "Mapping to use to translate URL value to textbox"
             }
+            
         );
 
         this.fields = {
@@ -101,6 +108,8 @@ class ExoImageSelector extends ExoMultiInputControl {
         return this._items
     }
 
+
+
     set value(data) {
 
         this._value = data;
@@ -115,7 +124,7 @@ class ExoImageSelector extends ExoMultiInputControl {
             if (!this.isAction) {
 
                 if (this.input)
-                    this.input.value = this.url.pathname;
+                    this.input.value = this.mapText(this.url.pathname);
 
             }
             if (this.image) {
@@ -124,6 +133,13 @@ class ExoImageSelector extends ExoMultiInputControl {
             }
 
         }
+    }
+
+    mapText(txt){
+        if(typeof(this.textmap) === "function"){
+            return this.textmap(txt)
+        }
+        return txt;
     }
 
     tryParseUrl(data) {
