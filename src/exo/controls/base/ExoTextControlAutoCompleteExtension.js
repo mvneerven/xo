@@ -111,7 +111,10 @@ class ExoTextControlAutoCompleteExtension {
                 this.control.htmlElement.dispatchEvent(event);
             
                 this.clear();
-            }, 100);
+
+                const ev = new Event("result-selected", {bubbles: false})
+                this.htmlElement.dispatchEvent(ev)
+            }, 0);
         }
     }
 
