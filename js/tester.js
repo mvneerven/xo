@@ -74,7 +74,7 @@ class HomeRoute extends xo.route {
             model: {
                 instance: {
                     data: {
-                        image: "test.png"
+                        image: "https://images.pexels.com/photos/616650/pexels-photo-616650.png?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260"
                     }
                 }
             },
@@ -92,18 +92,18 @@ class HomeRoute extends xo.route {
                             items: e => {
                                 return [
                                     {
-                                        text: "img/basket.png",
-                                        image: "https://images.pexels.com/photos/6075966/pexels-photo-6075966.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260"
+                                        text: "img/dog.png",
+                                        image: "https://images.pexels.com/photos/5256144/pexels-photo-5256144.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260"
 
                                     },
                                     {
-                                        text: "img/flower.jpg",
-                                        image: "https://images.pexels.com/photos/3865779/pexels-photo-3865779.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260"
+                                        text: "img/abstract.jpg",
+                                        image: "https://images.pexels.com/photos/616650/pexels-photo-616650.png?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260"
                                     },
 
                                     {
-                                        text: "img/body.jpeg",
-                                        image:  "https://images.pexels.com/photos/6810860/pexels-photo-6810860.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260"
+                                        text: "img/autumn.jpeg",
+                                        image:  "https://images.pexels.com/photos/5838895/pexels-photo-5838895.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260"
                                     }
                                 ]
                             }
