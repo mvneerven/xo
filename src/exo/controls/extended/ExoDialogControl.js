@@ -170,8 +170,7 @@ class ExoDialogControl extends ExoBaseControls.controls.div.type {
     hide(button, e) {
         this.value = button;
 
-        var evt = document.createEvent("HTMLEvents");
-        evt.initEvent("change", true, true);
+        var evt = new Event("change", {bubbles: true, cancelable: true})
         this.htmlElement.dispatchEvent(evt);
 
         if (typeof (this.click) === "function") {

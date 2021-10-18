@@ -1,6 +1,6 @@
-# Deeper into ExoForm controls
+# Deeper into XO form controls
 
-An ExoForm control is a wrapper around DOM objects. Each control eventually renders a containing UI element, mostly using a standard template.
+An XO form control is a wrapper around DOM objects. Each control eventually renders a containing UI element, mostly using a standard template.
 
 ## Standard Control Template
 
@@ -22,13 +22,13 @@ By setting the *useContainer* property to *false*, you can suppress container cr
 
 This is done by *button* and *fieldset*, for instance.
 
-## ExoForm Control Lifecycle
+## XO form Control Lifecycle
 
-When an ExoForm schema is parsed, controls are created from each element in *pages*, *fields* and *controls*. The declarative JSON/JS Object Notation schema properties are then mapped to control properties.
+When an XO form schema is parsed, controls are created from each element in *pages*, *fields* and *controls*. The declarative JSON/JS Object Notation schema properties are then mapped to control properties.
 
 During form runtime, control state can be modified by users, interdependencies between controls, datamodel dependencies, etc. Translating this control state into DOM state (classes, attributes, etc.) is the responsibility of each control. This is where inheritance takes care of a lot. The *ExoControlBase* base class, for example, handles a lot, but if you're building a complex control with a lot of stuff that the base class doesn't know of, you need to take care of state keeping yourself.
 
-ExoForm manages the ExoForm control and DOM element relation, by keeping a reference to the corresponding *field* in DOMElement.data, so you can do this:
+XO form manages the XO form control and DOM element relation, by keeping a reference to the corresponding *field* in DOMElement.data, so you can do this:
 
 ```js
 var f = xo.form.factory.getFieldFromElement(domElm);
@@ -37,5 +37,5 @@ let ctl = f._control;
 
 ---
 
-- [Using and Extending ExoForm in JavaScript](../using-xo-javascript.md)
+- [Using and Extending XO form in JavaScript](../using-xo-javascript.md)
   

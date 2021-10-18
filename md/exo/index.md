@@ -1,6 +1,6 @@
-# XO Form Component (a.k.a ExoForm)
+# XO Form Component (a.k.a XO form)
 
-ExoForm is a Declarative Web Forms Engine written in pure ES6 JavaScript.
+XO form is a Declarative Web Forms Engine written in pure ES6 JavaScript.
 
 ![Portal](https://xo-js.dev/assets/img/schema-form.png "Toggling to JSON schema")
 
@@ -15,15 +15,15 @@ ExoForm is a Declarative Web Forms Engine written in pure ES6 JavaScript.
 * Autocompletion (using standard HTML5 DataLists & more, fixed lists, or dynamic API searches)
 * Customizable built-in validation, navigation, progress indication types (or roll your own using the addins interface)
 * Create and include your own control libraries
-* Experiment with ExoForm using [ExoForm Studio](https://www.xo-js.dev/)
+* Experiment with XO form using [XO form Studio](https://www.xo-js.dev/)
 * Auto-generate forms using [JSON Schema](https://json-schema.org/) & [OpenAPI](https://swagger.io/specification/)
 
 
 # See Also:
 
-- [Getting Started with ExoForm](./getting-started.md)
-- [Understanding ExoForm](./understanding-exoform.md)
-- [Debugging & Tracing in ExoForm](./debugging-exoform.md)
-- [ExoForm Databinding](./data-binding.md)
+- [Getting Started with XO form](./getting-started.md)
+- [Understanding XO form](./understanding-exoform.md)
+- [Debugging & Tracing in XO form](./debugging-exoform.md)
+- [XO form Databinding](./data-binding.md)
 - [JSON Schemas](./json-schema.md)
 

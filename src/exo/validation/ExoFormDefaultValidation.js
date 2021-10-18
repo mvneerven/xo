@@ -25,9 +25,6 @@ class ExoFormDefaultValidation {
         }, settings).length;
 
         let valid = numInvalid === 0;
-
-        console.debug(this.constructor.name, "checkValidity", "Settings:", settings, "Valid=", valid);
-
         return valid;
     }
 

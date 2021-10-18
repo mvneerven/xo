@@ -53,8 +53,7 @@ class ExoTextConfirm extends ExoTextControl {
 
         this.container.querySelector(".exf-ctl").appendChild(this.button);
         this.button.addEventListener("click", e => {
-            var evt = document.createEvent("HTMLEvents");
-            evt.initEvent("change", true, true);
+            var evt = new Event("change", {bubbles: true, cancelable: true})
             evt.detail = { fromClick: true };
             this.htmlElement.dispatchEvent(evt);
             this.htmlElement.value = ""; // clear when confirmed

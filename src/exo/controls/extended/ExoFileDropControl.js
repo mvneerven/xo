@@ -99,8 +99,7 @@ class ExoFileDropControl extends ExoBaseControls.controls.input.type {
 
     _change() {
         console.debug("ExoFileDropControl", "Firing change event");
-        var evt = document.createEvent("HTMLEvents");
-        evt.initEvent("change", true, true);
+        var evt = new Event("change", {bubbles: true, cancelable: true})
         evt.detail = {
             field: "filedrop",
             data: this.value

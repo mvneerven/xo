@@ -4,7 +4,7 @@ import JSONSchema from './JSONSchema';
 import ExoEntitySettings from '../entity/ExoEntitySettings';
 import ExoControlBase from '../controls/base/ExoControlBase';
 /**
- * Hosts the ExoForm json/js form schema and manages its state
+ * Hosts the XO form json/js form schema and manages its state
  */
 class ExoFormSchema {
 
@@ -39,7 +39,7 @@ class ExoFormSchema {
                     this._type = this.types.json;
                 }
                 catch (ex) {
-                    throw TypeError("ExoFormSchema: could not convert string to ExoForm schema: " + ex.toString())
+                    throw TypeError("ExoFormSchema: could not convert string to XO form schema: " + ex.toString())
                 }
             }
         }
@@ -292,6 +292,9 @@ Pages: ${this.pages.length}
     }
 
     static getPathFromBind(bind) {
+        
+        bind = Core.translateBindingPath(bind);
+
         let parts = bind.split('.');
         parts.shift();
         parts.shift();
@@ -427,6 +430,15 @@ Pages: ${this.pages.length}
 
             if (!skip) {
                 if (matcher(p, { type: "page", pageIndex: pageIndex })) {
+
+                    // if(options.includePages){
+                    //     //debugger;
+                    //     matches.push(
+                    //         {...p}
+                    //     )
+                    // }
+
+
                     if (Array.isArray(p.fields)) {
                         p.fields.forEach(f => {
                             f._index = fieldIndex;

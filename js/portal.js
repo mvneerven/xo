@@ -5,12 +5,12 @@ import GridColumnResizer from '../src/idx/modules/GridColumnResizer';
 class ExoFormStudio extends window.xo.pwa {
     routerReady() {
 
-        document.title = `ExoForm ${xo.version}`;
+        document.title = `XO-JS ${xo.version}`;
 
         this.router.generateMenu(this.UI.areas.menu);
 
         this.router.on(window.xo.pwa.Router.events.route, e =>{
-           document.title = `ExoForm ${xo.version} - ${e.detail.module.title}` 
+           document.title = `XO-JS ${xo.version} - ${e.detail.module.title}` 
         })
 
         this.omniBox = new xo.pwa.OmniBox({

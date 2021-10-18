@@ -176,8 +176,7 @@ class ExoTaggingControl extends ExoBaseControls.controls.text.type {
     // override ExoControlBase.triggerChange - dispatch event on htmlElement fails 
     // for some reason - disspatching on visual tag input
     triggerChange() {
-        var evt = document.createEvent("HTMLEvents");
-        evt.initEvent("change", true, true);
+        var evt = new Event("change", {bubbles: true, cancelable: true})
         evt.detail = { field: "tags" };
         this.input.dispatchEvent(evt);
     }

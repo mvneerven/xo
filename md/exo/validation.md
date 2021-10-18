@@ -1,8 +1,8 @@
 # Validation
 
-By default, ExoForm uses HTML5 validations
+By default, XO form uses HTML5 validations
 
-You can specify inline validation mode as follows, in the root node of the ExoForm schema:
+You can specify inline validation mode as follows, in the root node of the XO form schema:
 
 ```json
 {

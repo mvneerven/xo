@@ -1,6 +1,6 @@
-# ExoForm Controls
+# XO form Controls
 
-ExoForm comes with a range of standard (html5 form element based) and extended (complex) controls, and you can roll your own.
+XO form comes with a range of standard (html5 form element based) and extended (complex) controls, and you can roll your own.
 
 ## Syntax
 
@@ -14,7 +14,7 @@ ExoForm comes with a range of standard (html5 form element based) and extended (
 
 ## Standard Controls
 
-| HTML5                           | ExoForm                                        | 
+| HTML5                           | XO form                                        | 
 | ------------------------------- | ---------------------------------------------- | 
 | button                          | [button](./buttoncontrol.md)          |
 | input[type=text]                | [text](./textcontrol.md)              |
@@ -43,7 +43,7 @@ ExoForm comes with a range of standard (html5 form element based) and extended (
 | ----------------------------------------- | --------------------------------------------------------------------------------------------------   | 
 | filedrop                                  | Rich file upload control with drag & drop support                                                    |
 | switch                                    | Checkbox replacement for boolean values                                                              |
-| richtext                                  | A CKEditor wysiwyg/html editor wrapper for ExoForm                                                   |
+| richtext                                  | A CKEditor wysiwyg/html editor wrapper for XO form                                                   |
 | tags                                      | A control for adding multiple tags                                                                   |
 | [multiinput](./multi-input-control.md)    | Input container for collecting multiple values and display in a grid                                 |
 | creditcard                                | Implementation of multiinput for credit card registration                                            |
@@ -60,6 +60,6 @@ ExoForm comes with a range of standard (html5 form element based) and extended (
 
 ---
 
-## More on ExoForm Controls
+## More on XO form Controls
 
-- See [Deeper into ExoForm controls](./controls-advanced.md)
+- See [Deeper into XO form controls](./controls-advanced.md)

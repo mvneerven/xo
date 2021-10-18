@@ -57,7 +57,7 @@ const schema = {
 }
 ```
 
-If you don't have a controls array in your schema, ExoForm will revert to the default behavior based on the selected *navigation* type. For instance, if your *navigation* setting is 'auto' (or not specified in the schema), and your schema consists of one page, the following code will be injected into the runtime schema:
+If you don't have a controls array in your schema, XO form will revert to the default behavior based on the selected *navigation* type. For instance, if your *navigation* setting is 'auto' (or not specified in the schema), and your schema consists of one page, the following code will be injected into the runtime schema:
 
 ```js
 controls = [

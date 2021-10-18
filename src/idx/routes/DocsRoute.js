@@ -109,7 +109,7 @@ class DocsRoute extends xo.route {
                             await this.tryLoadCode(code)
                         }
                         catch {
-                            pwa.UI.notifications.add("Could not load this as an ExoForm schema", {
+                            pwa.UI.notifications.add("Could not load this as an XO form schema", {
                                 type: "error"
                             })
                         }

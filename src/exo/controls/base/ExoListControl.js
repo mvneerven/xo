@@ -72,7 +72,7 @@ class ExoListControl extends ExoElementControl {
             o.listElement = item.element;
             DOM.replace(dummy, item.element);
         }
-        else if (item.field) { // replace item.name with rendered ExoForm control
+        else if (item.field) { // replace item.name with rendered XO form control
             this.renderFieldSync(item, tpl, container);
         }
         else if (item.html) {

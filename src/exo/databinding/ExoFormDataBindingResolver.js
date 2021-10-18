@@ -16,7 +16,6 @@ class ExoFormDataBindingResolver {
     resolve(changedData) {
         try {
             this.dataBinding.noProxy = true;
-            console.debug("ExoFormDataBindingResolver", "Running logic and resolving datamodel changes");
             this._checkSchemaLogic(changedData);
             this._replaceVars(this.exo.container, changedData);
             this._bindControlStateToUpdatedModel(changedData)
@@ -25,8 +24,6 @@ class ExoFormDataBindingResolver {
             this.dataBinding.noProxy = false;
         }
     }
-
-   
 
     _replaceVars(node, changedData) {
         let ar = [];
@@ -85,9 +82,6 @@ class ExoFormDataBindingResolver {
     }
 
     applyJSLogic(f, js, model, changedData) {
-        
-
-        console.debug("ExoFormDataBindingResolver", "Applying schema logic");
         const context = {
             model: model,
             exo: this.exo,
@@ -116,8 +110,6 @@ class ExoFormDataBindingResolver {
 
         this._boundControlState.forEach(obj => {
             let value = this.dataBinding.get(obj.path);
-            console.debug("Databinding: bindControlStateToUpdatedModel", obj.propertyName, "on", ExoFormFactory.fieldToString(obj.field), "to", value, obj.path);
-
             if (obj.propertyName === "bind") {
                 obj.control.value = value;
             }

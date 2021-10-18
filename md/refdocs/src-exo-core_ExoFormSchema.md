@@ -8,7 +8,7 @@
 
 # Class `ExoFormSchema`
 
-Hosts the ExoForm json/js form schema and manages its state
+Hosts the XO form json/js form schema and manages its state
 
 ## Methods
 
@@ -35,7 +35,7 @@ Parameters | Type | Description
 --- | --- | ---
 __matcher__ | `function` | *function to use to filter*
 __options__ | `object` | *query options. e.g. {inScope: true} for querying only fields that are currenttly in scope.*
-__*return*__ | `array` | *- All matched fields in the current ExoForm schema*
+__*return*__ | `array` | *- All matched fields in the current XO form schema*
 
 ---
 
@@ -43,7 +43,7 @@ __*return*__ | `array` | *- All matched fields in the current ExoForm schema*
 
 ![modifier: private](images/badges/modifier-private.svg)
 
-Updates the schema of a field in the ExoForm Schema in place.
+Updates the schema of a field in the XO form Schema in place.
 
 Parameters | Type | Description
 --- | --- | ---

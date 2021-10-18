@@ -17,8 +17,8 @@ import xo from '../../../js/xo';
 
 
 /**
- * Factory class for ExoForm - Used to create an ExoForm context.
- * Provides factory methods. Starting point for using ExoForm. 
+ * Factory class for XO form - Used to create an XO form context.
+ * Provides factory methods. Starting point for using XO form. 
  * 
  * @hideconstructor
  */
@@ -156,7 +156,7 @@ class ExoFormFactory {
             });
         })
     }
-
+    
     static buildLibrary() {
         for (var name in ExoFormFactory.library) {
             var field = ExoFormFactory.library[name];
@@ -218,8 +218,8 @@ class ExoFormFactory {
     }
 
     /**
-     * Generates an ExoForm schema with all available controls
-     * @returns {Object} - ExoForm schema
+     * Generates an XO form schema with all available controls
+     * @returns {Object} - XO form schema
      */
     static async all() {
 
@@ -231,8 +231,8 @@ class ExoFormFactory {
             },
             pages: [
                 {
-                    legend: "All ExoForm controls",
-                    intro: "Below is a list of all available ExoForm controls",
+                    legend: "All XO form controls",
+                    intro: "Below is a list of all available XO form controls",
                     fields: []
                 }
             ]
@@ -307,7 +307,7 @@ class ExoFormFactory {
     }   
 
     /**
-     * Loads and parses an ExoForm schema from the given source
+     * Loads and parses an XO form schema from the given source
      * @param {*} value - Object, string, URL
      * @param {*} options - options
      * @returns {ExoFormSchema}
@@ -321,7 +321,7 @@ class ExoFormFactory {
     }
 
     /**
-     * Determines the ExoForm schema type from an object.
+     * Determines the XO form schema type from an object.
      * @param {Object} value 
      * @returns {String} - the detected type ("field", "json-schema" or "form")
      */
@@ -387,7 +387,7 @@ class ExoFormFactory {
 
             }
             catch (ex) {
-                console.error("tryScriptLiteral", ex)
+                console.error("XO JS Literal Parser error:", ex)
                 result.error = ex.toString();
             }
             finally {
@@ -404,11 +404,9 @@ class ExoFormFactory {
             try {
                 const parse = ExoFormFactory.getTypeParser(fieldMeta);
                 value = parse(rawValue);
-                if (value !== rawValue)
-                    console.debug("ExoFormFactory: value '", rawValue, "' for field", type, " converted to", value, typeof (value));
             }
             catch (ex) {
-                console.error("Error converting '" + value + "'to " + fieldMeta.returnValueType, ex);
+                console.error("Error converting '" + value + "' to " + fieldMeta.returnValueType, ex);
             }
 
         }

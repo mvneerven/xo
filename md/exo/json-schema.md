@@ -72,7 +72,7 @@ const schema = {
   }
 ```
 
-... your average ExoForm UI schema looks a lot simpler:
+... your average XO form UI schema looks a lot simpler:
 
 ```js
 pages: [
@@ -110,8 +110,8 @@ pages: [
 ## The mappings property
 
 With a JSON Schema in the lead, form generation is easier than ever.
-The JSON Schema provides a lot of information that helps ExoForm in binding to a model.
-What you need then is an intuitive way of mapping and customizing the UI for each control, given the rich possibilities ExoForm (and extensions) provide.
+The JSON Schema provides a lot of information that helps XO form in binding to a model.
+What you need then is an intuitive way of mapping and customizing the UI for each control, given the rich possibilities XO form (and extensions) provide.
 
 With *bindings*, you can reuse the property layout in a JSON Schema to specify any customizations per property:
 

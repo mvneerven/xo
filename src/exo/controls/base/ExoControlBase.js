@@ -4,7 +4,7 @@ import DOM from '../../../pwa/DOM';
 import JSONSchema from '../../core/JSONSchema';
 
 /**
- * Abstract base class for ExoForm controls
+ * Abstract base class for XO form controls
  */
 class ExoControlBase {
     attributes = {};
@@ -226,7 +226,7 @@ class ExoControlBase {
     }
 
     /**
-     * Specifies whether ExoForm should use a containing DIV element to render the control.
+     * Specifies whether XO form should use a containing DIV element to render the control.
      * By default for instance, the button and the page control don't use a container.
      */
     set useContainer(value) {
@@ -344,8 +344,7 @@ class ExoControlBase {
     }
 
     triggerChange(detail) {
-        var evt = document.createEvent("HTMLEvents");
-        evt.initEvent("change", true, true);
+        var evt = new Event("change", {bubbles: true, cancelable: true})
         evt.detail = detail;
         this.htmlElement.dispatchEvent(evt);
     }
@@ -574,8 +573,7 @@ class ExoControlBase {
         const f = this.context.field;
 
         this.htmlElement.addEventListener("invalid", e => {
-            if (e.target.closest("[data-page]").getAttribute("data-skip") === "true") {
-                console.debug("invalid event on skipped control", e.target.name);
+            if (e.target.closest("[data-page]").getAttribute("data-skip") === "true") {                
                 e.preventDefault();
                 return false;
             }
@@ -678,7 +676,6 @@ class ExoControlBase {
         rv(elm);
 
         elm.querySelectorAll("*").forEach(rv);
-        console.debug("ExoControlBase valid", DOM.elementToString(elm), numInvalid === 0)
         return numInvalid === 0;
     }
 

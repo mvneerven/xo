@@ -1,3 +1,8 @@
+/*!
+ * XO-JS - Vanilla JavaScript Web Form generation and SPA/PWA helpers.
+ * (c) 2021 Marc van Neerven, MIT License, https://cto-as-a-service.nl 
+*/
+
 import 'regenerator-runtime/runtime'; // included for babel build 
 import ExoFormFactory from '../src/exo/core/ExoFormFactory';
 import RouteModule from '../src/pwa/RouteModule';
@@ -13,7 +18,7 @@ import { version } from '../package.json';
 import ExoSandboxControl from '../src/exo/controls/extended/ExoSandboxControl';
 
 /**
- * ExoForm shortcut object
+ * XO Form shortcut object
  */
 class Form {
 
@@ -23,9 +28,9 @@ class Form {
     get factory() { return ExoFormFactory }
 
     get entity() { return ExoEntityManager }
-    
+
     get schema() { return ExoFormSchema }
-    
+
     get fields() {
         return {
             base: ExoBaseControls,
@@ -41,7 +46,7 @@ class Form {
     /**
      * Reads and parses any form schema or URL.
      */
-    get read() {return ExoFormFactory.read }
+    get read() { return ExoFormFactory.read }
 
     get sandbox() {
         return ExoSandboxControl
@@ -88,7 +93,7 @@ class Form {
     }
 
     /**
-     * Gets an ExoForm instance from an HTML element
+     * Gets an XO form instance from an HTML element
      * @param {HtmlElement} elm 
      * @returns {ExoForm}
      */
@@ -103,7 +108,7 @@ class Form {
     }
 
     /**
-     * Assign a given ExoForm model instance to a variable.
+     * Assign a given XO form model instance to a variable.
      * 
      * Usage:
      * 
@@ -112,7 +117,7 @@ class Form {
      * If you want access to all instances instead of a named one:
      *  let instances = xo.form.data("my-form", o => instances = o);
      * 
-     * @param {String} formId - the id of the ExoForm instance 
+     * @param {String} formId - the id of the XO form instance 
      * @param {String} instanceName - the name of the instance to bind to
      * @param {Function} f - the callback to use when the instance is available
      */

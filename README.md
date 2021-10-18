@@ -15,7 +15,9 @@ XO-JS is a compact, developer-friendly, pure JavaScript (ES6) Component Library 
 # Modules
 
 1. [xo.form](./md/exo/index.md)
+2. - [Why Declarative Webforms?](./md/exo/why.md)
    - [Getting Started](./md/exo/getting-started.md)
+   - [XO Studio](./md/exo/studio.md) 
    - [Debugging](./md/exo/debugging-exoform.md)
    - [Controls](./md/exo/controls/index.md)
    - [Validation](./md/exo/validation.md)
@@ -23,7 +25,7 @@ XO-JS is a compact, developer-friendly, pure JavaScript (ES6) Component Library 
    - [Model Binding](./md/exo/data-binding.md)
    - [JSON-Schema](./md/exo/json-schema.md)
 
-2. [xo.pwa](./md/pwa/index.md) 
+3. [xo.pwa](./md/pwa/index.md) 
    - [Getting Started](./md/pwa/getting-started.md)
    - [Router](./md/pwa/router.md)
    - [UI](./md/pwa/ui.md)
@@ -63,12 +65,12 @@ Why develop a new one, then?
 
 > Well, because I've seen what developers need. They need to save as much time as needed, yet have all the power to themselves.
 
-What does ExoForm bring?
+What does XO-JS bring?
 
-* ExoForm gives developers complete freedom: simply include it in your development stack, and bypass, subclass, add anything you want. 
+* XO-JS gives developers complete freedom: simply include it in your development stack, and bypass, subclass, add anything you want. 
 * No bulky dependencies. HTML5, CSS3, ECMAScript. That's it. They're powerful enough ;-) 
 * Use it in any environment, [Vue](https://codepen.io/mvneerven/pen/GRWbvqp), React, Angular, or plain vanilla JavaScript. 
-* [Create and include your own ExoForm control libraries](./md/exo/controls/building-controls.md). 
+* [Create and include your own XO-JS control libraries](./md/exo/controls/building-controls.md). 
 * Customize anything: styling, validation, navigation, progress indication, etc. 
 * Get typed JSON post data 
 * [All HTML5 controls](./md/exo/controls/index.md) included, plus a large number of custom controls
@@ -78,17 +80,13 @@ What does ExoForm bring?
 * Standard HTML5 & Inline [validation](./md/exo/controls/../validation.md) (or roll your own)
 * Wizards & other multi-page forms, Surveys, Tabstrip-type forms, etc. (see [Navigation](./md/exo/navigation.md))
 * Completely overridable rendering & theming
-* A visual [ExoForm Studio](https://www.xo-js.dev/#/studio) and Test Environment
+* A visual [XO-JS Studio](https://www.xo-js.dev/#/studio) and Test Environment
   * Code Editor with JSON/JS support
   * Wysiwyg designer (in development) 
   * Jest test environment 
 * [Codepen examples](https://codepen.io/collection/XLwaxp)
 * Etc. 
 
-
-# ExoForm Studio
-
-[The ExoForm Studio](./md/exo/exoform-studio.md) is loaded with new functionality to experiment with all the new features.
 
 
 # Team

@@ -6,7 +6,6 @@ out
 img/Thumbs.db
 test.html
 play.html
-js/test*.js
-js/play.js
+js/test/
 test.html
 data/

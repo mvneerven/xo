@@ -1,6 +1,6 @@
 const xo = require("../../dist/xo.cjs.js").default;
 
-describe("ExoForm databinding Tests", () => {
+describe("XO form databinding Tests", () => {
     let context = {};
 
     beforeAll(() => {

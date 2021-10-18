@@ -36,21 +36,21 @@ class ExoFormNavigationBase {
 
             this.renderButtons().then(() => {
                 this.form.appendChild(this.container);
-    
+
                 this.form.setAttribute("data-current-page", this.currentPage);
-    
+
                 this.form.querySelector(".exf-cnt.exf-nav-cnt").addEventListener("click", e => {
-    
+
                     let btn = e.target.closest("[name]")
                     if (!btn)
                         return;
-    
+
                     switch (btn.name) {
                         case "reset":
                             e.preventDefault();
                             this.restart();
                             break;
-    
+
                         case "next":
                             e.preventDefault();
                             this.next();
@@ -59,40 +59,40 @@ class ExoFormNavigationBase {
                             e.preventDefault();
                             this.back();
                             break;
-    
+
                         case "send":
                             e.preventDefault();
                             this.exo.submitForm();
                             break;
                     }
-    
+
                 })
-    
+
                 this.exo.on(ExoFormFactory.events.page, e => {
                     this.updatecontrolstates()
                 });
-    
+
                 this.exo.on(ExoFormFactory.events.pageRelevancyChange, e => {
                     this._pageCount = this.getLastPage();
                     this.updatecontrolstates()
                 })
-    
+
                 this.exo.form.addEventListener("change", e => {
                     this.updatecontrolstates()
                 });
-                if(this.exo.options.DOMChange === "input"){
+                if (this.exo.options.DOMChange === "input") {
                     this.exo.form.addEventListener("input", e => {
                         this.updatecontrolstates()
                     });
                 }
-    
+
                 this.exo.on(ExoFormFactory.events.interactive, this._ready.bind(this));
 
                 resolve();
             });
         });
 
-        
+
 
     }
 
@@ -104,6 +104,10 @@ class ExoFormNavigationBase {
 
             let rendered = 0, count = this.controls.length;
 
+            if (count === 0) { // empty list of controls
+                if (rendered === count)
+                    resolve();
+            }
             this.controls.forEach(b => {
                 this.addButton(b).then(btn => {
 
@@ -126,9 +130,9 @@ class ExoFormNavigationBase {
     }
 
     canMove(fromPage, toPage) { // to be subclassed
-        
-        if (toPage > fromPage){
-            if(!this.exo.addins.validation.isPageValid(fromPage)) {
+
+        if (toPage > fromPage) {
+            if (!this.exo.addins.validation.isPageValid(fromPage)) {
                 return false;
             }
             let np = this._getNextPage(1, fromPage);
@@ -136,8 +140,8 @@ class ExoFormNavigationBase {
                 return false;
 
             return true;
-        } 
-        else{
+        }
+        else {
             return toPage >= 1;
         }
     }
@@ -171,7 +175,7 @@ class ExoFormNavigationBase {
             page = this.currentPage;// parseInt("0" + this.form.getAttribute("data-current-page")) || 1;
 
         page = this._getNextPage(add, page)
-        
+
         this._pageCount = this.getLastPage();
 
         this._currentPage = page;
@@ -271,8 +275,6 @@ class ExoFormNavigationBase {
             let pgElm = this.form.querySelector('.exf-page[data-page="' + page + '"]');
             if (pgElm) {
                 skip = pgElm.getAttribute("data-skip") === "true";
-
-                console.debug("Wizard Page " + page + " currently " + (skip ? "OUT OF" : "in") + " scope");
                 if (!skip) {
                     ok = true;
                 }
@@ -323,20 +325,21 @@ class ExoFormNavigationBase {
             return;
 
 
+
         let prev = this.getControl("prev");
         if (prev)
             prev.disabled = this.currentPage < 2;
 
         let nxt = this.getControl("next");
-        if (nxt){
-            
-            if(this.currentPage === this.pageCount){
+        if (nxt) {
+
+            if (this.currentPage === this.pageCount) {
                 nxt.visible = false;
             }
-            else{
+            else {
                 nxt.visible = true;
                 nxt.disabled = !this.canMoveNext(); // this.currentPage === this.pageCount;
-            }            
+            }
         }
 
         let send = this.getControl("send");

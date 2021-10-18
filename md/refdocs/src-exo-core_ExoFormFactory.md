@@ -8,7 +8,8 @@
 
 # Class `ExoFormFactory`
 
-Factory class for ExoForm - Used to create an ExoForm context.Provides factory methods. Starting point for using ExoForm.
+Factory class for XO form - Used to create an XO form context.XO form
+Provides factory methods. Starting point for using ExoForm.
 
 ## Methods
 
@@ -36,11 +37,11 @@ __*return*__ | `Array` | *- Array containing control metadata.*
 ### `all() ► Object`
 
 ![modifier: private](images/badges/modifier-private.svg) ![modifier: static](images/badges/modifier-static.svg)
-
+XO form
 Generates an ExoForm schema with all available controls
 
 Parameters | Type | Description
---- | --- | ---
+--- | --- | ---XO form
 __*return*__ | `Object` | *- ExoForm schema*
 
 ---
@@ -48,7 +49,7 @@ __*return*__ | `Object` | *- ExoForm schema*
 ### `read(value, options) ► ExoFormSchema`
 
 ![modifier: private](images/badges/modifier-private.svg) ![modifier: static](images/badges/modifier-static.svg)
-
+XO form
 Loads and parses an ExoForm schema from the given source
 
 Parameters | Type | Description
@@ -62,7 +63,7 @@ __*return*__ | [ExoFormSchema](src-exo-core_ExoFormSchema.md) | **
 ### `determineSchemaType(value) ► String`
 
 ![modifier: private](images/badges/modifier-private.svg) ![modifier: static](images/badges/modifier-static.svg)
-
+XO form
 Determines the ExoForm schema type from an object.
 
 Parameters | Type | Description
@@ -81,7 +82,30 @@ Run a form directly and return generated container
 Parameters | Type | Description
 --- | --- | ---
 __value__ | `*` | *JS/JSON schema or a URL to fetch it from.*
-__options__ | `*` | *Object containing options - context: ExoFormContext- on: object with event listeners   e.g.   xo.form.run(schema, {    on: {      post: e &#x3D;&gt; {        // handle post      }    }  })- for DOM event listening, use (on: {dom: {change: e &#x3D;&gt; { ... }}})  xo.form.run(schema, {    on: {      post: e &#x3D;&gt; {        // handle post      },      dom: {        change: e &#x3D;&gt; {          // handle change event        }      }    }  })*
+__options__ | `*` | *Object containing options 
+- context: ExoFormContext
+- on: object with event listeners 
+  e.g. 
+  xo.form.run(schema, {
+    on: {
+      post: e &#x3D;&gt; {
+        // handle post
+      }
+    }
+  })
+- for DOM event listening, use (on: {dom: {change: e &#x3D;&gt; { ... }}})
+  xo.form.run(schema, {
+    on: {
+      post: e &#x3D;&gt; {
+        // handle post
+      },
+      dom: {
+        change: e &#x3D;&gt; {
+          // handle change event
+        }
+      }
+    }
+  })*
 __*return*__ | `undefined` | *div element (form container element div.exf-container)*
 
 ---

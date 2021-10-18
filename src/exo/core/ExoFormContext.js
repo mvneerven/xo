@@ -3,7 +3,7 @@ import ExoFormSchema from './ExoFormSchema';
 import ExoFormFactory from './ExoFormFactory';
 
 /**
- * Hosts an ExoForm context to create forms with.
+ * Hosts an XO form context to create forms with.
  * Created using {ExoFormFactory}.build()
  * 
  * @hideconstructor
@@ -87,7 +87,7 @@ import ExoFormFactory from './ExoFormFactory';
     }
 
     createForm(options) {
-        // the only place where an ExoForm instance can be created       
+        // the only place where an XO form instance can be created       
         let x = new ExoForm(this, options)
         return x;
     }

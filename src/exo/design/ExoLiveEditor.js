@@ -7,7 +7,7 @@ import xo from '../../../js/xo';
 class ExoLiveEditor {
     constructor(exo) {
         if (!(exo instanceof ExoForm))
-            throw TypeError("No ExoForm passed")
+            throw TypeError("No XO form passed")
         this.events = new Core.Events(this);
         this.exo = exo;
         this.init()

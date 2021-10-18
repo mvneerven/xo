@@ -1,10 +1,10 @@
-# ExoForm Events
+# XO Form Events
 
-During runtime, ExoForm triggers a number of events you can hook into.
+During runtime, XO form triggers a number of events you can hook into.
 
 ## Hooking into events
 
-In ```xo.form.run()```, the second paraneter is a generic object you can pass in, with an *on* property that you can use to listen to any of the events ExoForm triggers:
+In ```xo.form.run()```, the second paraneter is a generic object you can pass in, with an *on* property that you can use to listen to any of the events XO form triggers:
 
 
 ```js
@@ -21,7 +21,7 @@ xo.form.run(schema, {
 
 ## schemaParsed
 
-ExoForm has parsed raw schema, no processing done.
+XO form has parsed raw schema, no processing done.
 
 ## schemaLoading
 
@@ -64,7 +64,7 @@ When the underlying datamodel to which the form is bound changes.
 - ```state``` - ready|change
 - ```changed``` - binding that changed (when state is 'change')
 - ```value``` - new value  (when state is 'change')
-- ```model``` - the ExoForm model
+- ```model``` - the XO form model
 
 
 ## beforePage

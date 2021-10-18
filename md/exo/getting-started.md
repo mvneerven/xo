@@ -1,8 +1,8 @@
-# Getting started with ExoForm
+# Getting started with XO form
 
 ## Basic HTML
 
-Let's start by simply showing a complete HTML page that runs an ExoForm schema.
+Let's start by simply showing a complete HTML page that runs an XO form schema.
 In this case, we simply use the CDN references for XO (CSS & JS):
 
 *[Test this HTML](/base.html)*
@@ -11,11 +11,11 @@ In this case, we simply use the CDN references for XO (CSS & JS):
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Starting with ExoForm</title>
+    <title>Starting with XO form</title>
     <style>@import url(https://xo-js.dev/v1.4/xo.css);</style>
 </head>
 <body>
-    <h1>Starting with ExoForm</h1>
+    <h1>Starting with XO form</h1>
     <section id="form"></section>
     <script type="module" src="https://xo-js.dev/v1.4/xo.min.js"></script>
     <script type="module">
@@ -54,7 +54,7 @@ As you've seen in the example above, you can run XO directly from the CDN:
 
 In ```xo.form.run()```, you provide a schema (inline or URL), and an (optional) ```options``` object. 
 
-Apart from the ```on``` property, for events, the ```options``` object can have numerous settings for ExoForm runtime. For instance, the [context](../refdocs/src-exo-core_ExoFormContext.md) property is used to pass state to the form.
+Apart from the ```on``` property, for events, the ```options``` object can have numerous settings for XO form runtime. For instance, the [context](../refdocs/src-exo-core_ExoFormContext.md) property is used to pass state to the form.
 
 See [Custom Controls](./controls/building-controls.md)
 
@@ -70,12 +70,12 @@ const frm = await xo.form.run(schema, {
 document.body.appendChild(frm);
 ```
 
-### ExoForm in Frontend Frameworks (Vue, React, Angular, etc.)
+### XO form in Frontend Frameworks (Vue, React, Angular, etc.)
 
 - [CodePen Vue Example](https://codepen.io/isazulay/pen/ExWBgEJ)
-- [Vue & ExoForm integration (GitHub)](https://github.com/inbarazulay1997/xo-examples) by Inbar Azulay
+- [Vue & XO form integration (GitHub)](https://github.com/inbarazulay1997/xo-examples) by Inbar Azulay
 
 ## More reading
 
-- [Understanding ExoForm](./understanding-exoform.md)
-- [ExoForm events](./events.md)
+- [Understanding XO form](./understanding-exoform.md)
+- [XO form events](./events.md)

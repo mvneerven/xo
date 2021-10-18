@@ -66,7 +66,7 @@ class ExoFormDataBinding {
                     f.name = f.name || ExoFormSchema.getPathFromBind(f.bind);
                     f.defaultValue = f.value;
                     f.value = (modelSetup ? this.get(f.bind) : f.value) || "";
-                    console.debug("ExoFormDatabinding: applying instance." + f.name, f.bind, f.value);
+                    console.debug("DataModel: bind " + f.name, f.bind, f.value);
                     data[f.name] = f.value
                 }
 
@@ -99,7 +99,7 @@ class ExoFormDataBinding {
                             return; // don't update model if the value isn't valid
                         }
 
-                        console.debug("ExoFormDataBinding", "change handling in ", ExoFormFactory.fieldToString(field))
+                        console.debug("DataModel change handling in ", ExoFormFactory.fieldToString(field))
 
                         let value = field._control.value;
                         Core.setObjectValue(this._model, field.bind, value);
@@ -123,13 +123,27 @@ class ExoFormDataBinding {
     get(path, defaultValue) {
         let returnValue = null;
         try {
-            returnValue = Core.getObjectValue(this._model, path, defaultValue);
-            console.debug("ExoFormDataBinding", "resolved", path, returnValue);
+            returnValue = Core.getObjectValue(this._model, path, defaultValue);            
         }
         catch (ex) {
-            this._signalDataBindingError(ex);
+            throw TypeError(`DataBinding.get() - error on ${path}` )
+            //this._signalDataBindingError(ex);
         }
         return returnValue;
+    }
+
+    set(path, value){
+        if(typeof(value) === "string" && value.startsWith("#/"))
+            value = this.get(value);
+            
+        try {
+            Core.setObjectValue(this._model, path, value);            
+        }
+        catch (ex) {
+            //this._signalDataBindingError(ex);
+            throw TypeError(`DataBinding.set() - error on ${path}` )
+        }
+        
     }
 
     async _init(exo, instance) {
@@ -146,7 +160,6 @@ class ExoFormDataBinding {
 
             for (var n in this._model.instance) {
                 let ins = this._model.instance[n];
-
                 if (Core.isUrl(ins)) {
                     ins = await Core.acquireState(ins);
                 }
@@ -187,7 +200,8 @@ class ExoFormDataBinding {
 
     proxy(instanceName, obj) {
         const me = this;
-        const proxify = (instanceName, object, change) => {
+        
+        const proxify = (instanceName, object, change, subPath) => {
             if (object && object.__proxy__) {
                 return object;
             }
@@ -202,11 +216,12 @@ class ExoFormDataBinding {
                     var old = object[name];
                     if (value && typeof value === 'object') {
                         // new object need to be proxified as well
-                        value = proxify(instanceName, value, change);
+                        value = proxify(instanceName, value, change, subPath + "/" + name);
                     }
                     object[name] = value;
                     if (old !== value) {
-                        change(object, name, old, value);
+                        
+                        change(object, name, old, value, subPath);// + "/" + name);
                     }
                     return true;
                 }
@@ -215,17 +230,22 @@ class ExoFormDataBinding {
                 if (object.hasOwnProperty(prop) && object[prop] &&
                     typeof object[prop] === 'object') {
                     // proxify all child objects
-                    object[prop] = proxify(instanceName, object[prop], change);
+                    
+                    object[prop] = proxify(instanceName, object[prop], change, subPath + "/" + prop);
                 }
             }
             return pxy;
         }
 
-        return proxify(instanceName, obj, function (object, property, oldValue, newValue) {
-            console.debug("ExoFormDataBinding", `property '${property}' changed from ${oldValue} to ${newValue}`);
+        return proxify(instanceName, obj, (object, property, oldValue, newValue, subPath) => {
+            
+            const path = `#/${instanceName}${subPath}/${property}`;
+
+            console.debug(`DataModel: '${path}' changed from ${oldValue} to ${newValue}`);
 
             if (!me.noProxy) {
                 const change = {
+                    path: path,
                     model: me._model,
                     instanceName: instanceName,
                     object: object,
@@ -244,11 +264,11 @@ class ExoFormDataBinding {
                 });
                 me.resolver.resolve(change);
             }
-        });
+        }, "");
     }
 
     verboseLog(change) {
-        let s = `Instance ${change.instanceName} modified: property ${change.property} changed from ${change.oldValue} to ${change.newValue}.`
+        let s = `Property ${change.path} changed from ${change.oldValue} to ${change.newValue}.`
         return s;
     }
 
@@ -257,13 +277,11 @@ class ExoFormDataBinding {
 
         if (typeof (value) === "string") {
 
-            let isVarRef = value.startsWith("@");
+            let isVarRef = value.startsWith("#/");
 
-            if (isVarRef || name === "bind" && value.startsWith("instance.")) {
+            if (isVarRef || name === "bind" && value.startsWith("#/") ) {
 
-                let path = isVarRef ? value.substring(1) : value;
-
-                console.debug("ExoFormDatabinding: resolving databound control property", name, value, "path:", path);
+                let path = value;//isVarRef ? value.substring(1) : value;
 
                 returnValue = this.get(path, undefined);
                 if (returnValue === undefined) {
@@ -271,7 +289,6 @@ class ExoFormDataBinding {
                     returnValue = value  // return original string, don't resolve
                 }
                 else {
-                    console.debug("ExoFormDatabinding: resolved databound control property", name, value, ": >", returnValue, "<");
 
                     this.resolver.addBoundControl({
                         control: control,

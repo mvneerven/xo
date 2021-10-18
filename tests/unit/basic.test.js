@@ -1,7 +1,7 @@
 const xo = require("../../dist/xo.cjs.js").default;
 
 
-describe("ExoForm basic Tests", () => {
+describe("XO form basic Tests", () => {
     let context = {};
 
     beforeAll(() => {

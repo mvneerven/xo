@@ -1,26 +1,27 @@
-# Module `exo/core/ExoForm`
+# Module `exo/core/XO form`
 
 ![category:other](https://img.shields.io/badge/category-other-blue.svg?style=flat-square)
 
 
 
-[Source file](..\..\src\exo\core\ExoForm.js)
+[Source file](..\..\src\exo\core\XO form.js)
 
-# Class `ExoForm`
+# Class `XO form`
 
-ExoForm class. Created using ExoFormContext create() method
+XO form class. 
+Created using ExoFormContext create() method
 
 ## Methods
 
 ### `load(schema) ► Promise`
 
 ![modifier: private](images/badges/modifier-private.svg)
-
+XO form
 load ExoForm schema (string or )
 
 Parameters | Type | Description
---- | --- | ---
-__schema__ | `any` | *A JSON ExoForm Schema string or object, or URL to fetch it from.*
+--- | --- | ---XO form
+__schema__ | `any` | *A JSON ExoForm Schema string or XO form or URL to fetch it from.*
 __*return*__ | `Promise` | *- A Promise returning the ExoForm Object with the loaded schema*
 
 ---
@@ -28,11 +29,11 @@ __*return*__ | `Promise` | *- A Promise returning the ExoForm Object with the lo
 ### `loadSchema(schema) ► any`
 
 ![modifier: private](images/badges/modifier-private.svg)
-
+XO form
 load ExoForm schema from object
 
 Parameters | Type | Description
---- | --- | ---
+--- | --- | ---XO form
 __schema__ | `any` | *A JSON ExoForm Schema object.*
 __*return*__ | `any` | *- the loaded schema*
 
@@ -41,8 +42,9 @@ __*return*__ | `any` | *- the loaded schema*
 ### `renderForm()`
 
 ![modifier: private](images/badges/modifier-private.svg)
-
-Render ExoForm schema into a formReturns a Promise
+XO form
+Render ExoForm schema into a form
+Returns a Promise
 
 ---
 
@@ -54,7 +56,7 @@ query all fields using matcher and return matches
 
 Parameters | Type | Description
 --- | --- | ---
-__matcher__ | `function` | *function to use to filter*
+__matcher__ | `function` | *function to use to filter*XO form
 __options__ | `object` | *query options. e.g. {inScope: true} for querying only fields that are currenttly in scope.*
 __*return*__ | `array` | *- All matched fields in the current ExoForm schema*
 
@@ -93,7 +95,7 @@ __*return*__ | `Object` | *- Field*
 Map data to form, once schema is loaded
 
 Parameters | Type | Description
---- | --- | ---
+--- | --- | ---XO form
 __mapper__ | `function` | *a function that will return a value per field*
 __*return*__ | `object` | *- the current ExoForm instance*
 
@@ -125,7 +127,7 @@ __*return*__ | `object` | *- The typed data posted*
 
 ### `renderSingleControl(field) ► promise`
 
-![modifier: private](images/badges/modifier-private.svg)
+![modifier: privaXO formges/badges/modifier-private.svg)
 
 Renders a single ExoForm control
 

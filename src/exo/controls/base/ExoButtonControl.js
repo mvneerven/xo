@@ -167,10 +167,12 @@ class ExoButtonControl extends ExoElementControl {
     }
 
     else {
+      
       if(this.context.field.defaultValue && this.value !== this.context.field.defaultValue){
+        
         this.value = this.context.field.defaultValue;
-        var evt = document.createEvent("HTMLEvents");
-        evt.initEvent("change", true, true);
+        
+        var evt = new Event("change", {bubbles: true, cancelable: true})
         this.htmlElement.dispatchEvent(evt);
       }
     }

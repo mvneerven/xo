@@ -1,8 +1,3 @@
-/*!
- * ExoForm - Generic Form/Wizard Generator - using JSON Form Schemas
- * (c) 2021 Marc van Neerven, MIT License, https://cto-as-a-service.nl 
-*/
-
 import Core from '../../pwa/Core';
 import DOM from '../../pwa/DOM';
 import ExoFormFactory from './ExoFormFactory';
@@ -10,7 +5,7 @@ import ExoFormDataBinding from '../databinding/ExoFormDataBinding';
 import xo from '../../../js/xo';
 
 /**
- * ExoForm class. 
+ * XO form class. 
  * Created using ExoFormContext create() method
  * 
  * @hideconstructor
@@ -105,9 +100,9 @@ class ExoForm {
     }
 
     /**
-     * load ExoForm schema (string or )
-     * @param {any} schema - A JSON ExoForm Schema string or object, or URL to fetch it from.
-     * @return {Promise} - A Promise returning the ExoForm Object with the loaded schema
+     * load XO form schema (string or )
+     * @param {any} schema - A JSON/JS XO form Schema string or object, or URL to fetch it from.
+     * @return {Promise} - A Promise returning the XO form Object with the loaded schema
      */
     load(schema, options) {
         options = options || { mode: "async" };
@@ -178,8 +173,8 @@ class ExoForm {
     }
 
     /**
-     * load ExoForm schema from object
-     * @param {any} schema - A JSON ExoForm Schema object.
+     * load XO form schema from object
+     * @param {any} schema - A JSON/JS XO form Schema object.
      * @return {any} - the loaded schema
      */
     async loadSchema(schema) {
@@ -296,7 +291,7 @@ class ExoForm {
             if (!obj || !obj.type)
                 throw TypeError("Addin not found: '" + n + "'")
 
-            console.debug("ExoForm addin:", n, "type:", obj.name, "component used:", obj.type.name);
+            console.debug("XO form addin:", n, "type:", obj.name, "component used:", obj.type.name);
 
             this.addins[n] = new obj.type(this);
 
@@ -387,8 +382,7 @@ class ExoForm {
             e.stopPropagation();
         })
 
-        // TODO reimplement rules using model binding
-        this.addins.rules.checkRules();
+        this.addins.rules.checkRules(this.context, this.options);
 
         this.addins.navigation.restart();
 
@@ -399,8 +393,7 @@ class ExoForm {
         // Test for fom becoming user-interactive 
         var observer = new IntersectionObserver((entries, observer) => {
             if (this.container.offsetHeight) {
-                observer = null;
-                console.debug("ExoForm: interactive event");
+                observer = null;                
                 if (!this.events.triggeredInteractive) {
                     this.events.trigger(ExoFormFactory.events.interactive);
                     this.events.triggeredInteractive = true;
@@ -444,13 +437,10 @@ class ExoForm {
 
                     if (Array.isArray(p.fields)) {
                         p.fields.forEach(f => {
-                            console.debug("ExoForm: rendering field", f.name, f, cid);
                             f.dummy = DOM.parseHTML('<span/>');
 
                             page.appendChild(f.dummy);
                             _.createControl(f).then(() => {
-                                console.debug("createControl ", f, " on " + cid);
-
                                 f._control.render().then(rendered => {
 
                                     if (!rendered)
@@ -521,9 +511,6 @@ class ExoForm {
         delete f.dummy;
         pageFieldsRendered++;
         if (pageFieldsRendered === p.fields.length) {
-
-            console.debug("ExoForm: page", p.index + "rendered with", pageFieldsRendered, " controls");
-
             page.render().then(pageElm => {
                 DOM.replace(p.dummy, pageElm);
                 delete p.dummy;
@@ -629,7 +616,6 @@ class ExoForm {
 
 
         if (!this.addins.validation.checkValidity()) {
-            console.debug("ExoForm - checkValidity - Form not valid");
             this.addins.validation.reportValidity();
             return;
         }
@@ -692,17 +678,17 @@ class ExoForm {
 
                 c.htmlElement.data = c.htmlElement.data || {}; c.htmlElement.data.field = f; // keep field in element data
                 c.htmlElement.setAttribute("data-exf", "1"); // mark as element holding data
-                console.debug("ExoForm: resolving ", ExoFormFactory.fieldToString(f));
                 resolve(c);
             }
 
             try {
-
-                //this.schema.applyJsonSchema(f);
-
-
-                if (!f.type)
-                    throw TypeError("ExoForm: incorrect field options. Must be object with at least 'type' property. " + JSON.stringify(f))
+                if (!f.type){
+                    if(f.bind){
+                        f.type = this._getDefaultControlType(f.bind);
+                    }
+                    else 
+                        throw TypeError("ExoForm: incorrect field options. Must be object with at least 'type' property. " + JSON.stringify(f))
+                }
 
                 f.id = f.id || _._generateUniqueElementId();
 
@@ -762,6 +748,19 @@ class ExoForm {
         });
     }
 
+
+    _getDefaultControlType(bind){
+        try{
+            let result = this.dataBinding.get(bind);
+            switch(typeof(result)){
+                case "boolean": return "checkbox";
+                case "number": return "number";
+            }
+        }
+        catch{ 
+            return "text"
+        }
+    }
 
 
     _generateUniqueElementId() {

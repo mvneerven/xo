@@ -39,7 +39,7 @@ class ExoExtendedControls {
             }
         },
         switch: { type: ExoSwitchControl, bote: "Checkbox replacement for boolean values " },
-        richtext: { type: ExoCKRichEditor, note: "A CKEditor wysiwyg/html editor wrapper for ExoForm" },
+        richtext: { type: ExoCKRichEditor, note: "A CKEditor wysiwyg/html editor wrapper for XO form" },
         tags: { caption: "Tags control", type: ExoTaggingControl, note: "A control for adding multiple tags", demo: { value: ["JavaScript", "CSS", "HTML"] } },
         multiinput: { type: ExoMultiInputControl, note: "Input container for collecting multiple values and display in a grid", demo: multiInputDemo },
         creditcard: { caption: "Credit Card", type: ExoCreditCardControl, note: "A credit card control" },
@@ -54,7 +54,7 @@ class ExoExtendedControls {
         dialog: { type: ExoDialogControl, caption: "Dialog", note: "A simple dialog (modal or modeless)", demo: {demo: true} },
         filedialog: { type: ExoFileDialogControl, caption: "File Dialog", note: "A simple file dialog", demo: {demo: true} },
         info: { type: ExoInfoControl, note: "An info panel", demo: { title: "Info", icon: "ti-info", body: "Your informational text" } },
-        sandbox: {type: ExoSandboxControl, note: "Embed an ExoForm form in an isolated way (IFRAME)"},
+        sandbox: {type: ExoSandboxControl, note: "Embed an XO form form in an isolated way (IFRAME)"},
         map: {type: ExoLeafletMapControl, note: "Leaflet interactive map" },
         listview: {type: ExoListViewControl, note: "Listview control", demo: listviewDemo},
         treeview: {type: ExoTreeViewControl, note: "Treeview control", demo: treeviewDemo},

@@ -50,8 +50,7 @@ class ExoUrlControl extends ExoTextControl {
                                         let file = fileDropCtl.value[0];
                                         let url = `data:${file.type};base64,${file.b64}`;
                                         me.value = url;
-                                        var evt = document.createEvent("HTMLEvents");
-                                        evt.initEvent("change", true, true);
+                                        var evt = new Event("change", {bubbles: true, cancelable: true})
                                         me.htmlElement.dispatchEvent(evt);
                                     }
                                 }

@@ -1,4 +1,4 @@
-# Understanding ExoForm
+# Understanding XO form
 
 Since XO schemas are fully declarative, it might be hard at first to understand how it all translates into web forms.
 Lets analyze what actually happens at runtime, and we'll start extremely simple. 

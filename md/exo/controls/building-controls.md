@@ -1,6 +1,6 @@
-# Creating Custom ExoForm Controls
+# Creating Custom XO form Controls
 
-All ExoForm control classes are ES6 classes that inherit from the abstract *ExoControlBase* class, but it is more likely that you will inherit from an inherited control class.
+All XO form control classes are ES6 classes that inherit from the abstract *ExoControlBase* class, but it is more likely that you will inherit from an inherited control class.
 
 To illustrate this, let's take the *ExoVideoControl* implementation:
 
@@ -50,7 +50,7 @@ class ExoVideoControl extends ExoEmbedControl {
 
 ### Registering (groups of) custom controls 
 
-ExoForm works with a *ExoFormContext* object that is created before any forms are rendered.
+XO form works with a *ExoFormContext* object that is created before any forms are rendered.
 
 ```js
 

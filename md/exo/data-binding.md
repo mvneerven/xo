@@ -1,8 +1,8 @@
-# ExoForm Data Binding
+# XO form Data Binding
 
 ## Model Binding
 
-ExoForm supports multiple model binding, allowing you to bind parts of your form to specified data models.
+XO form supports multiple model binding, allowing you to bind parts of your form to specified data models.
 
 
 ```json
@@ -71,7 +71,7 @@ You can add a logic property in your forms to allow for dynamic behavior based o
 const schema = {
     model: {
         schemas: {
-            person: "/data/json/schemas/person-schema.json"
+            person: "/data/schemas/person-schema.json"
         },
         instance: {
             person: {
@@ -175,3 +175,8 @@ const schema = {
     }
 }
 ```
+
+> Update: From version 1.5, you can now use ```#/instancename/propertyname``` to refer to state in your model.
+
+---
+See also: [rules engine](./rules.md)

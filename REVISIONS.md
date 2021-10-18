@@ -4,7 +4,7 @@ This is a summary of the changes and additions in XO since version 1.0.
 
 # New in 1.01
 
-A big update to ExoForm, including a rewrite of navigation, progress indicating, validation and theming engines, all of which are now implemented as separate subclassable components, and activated using form schema settings (or using JavaScript code).
+A big update to XO-JS, including a rewrite of navigation, progress indicating, validation and theming engines, all of which are now implemented as separate subclassable components, and activated using form schema settings (or using JavaScript code).
 
 Also, a complete new theme has been added: material.
 
@@ -144,7 +144,7 @@ get value() {
 }
 ```
 
-## ExoForm Portal
+## XO Portal
 
 -	The current workspace is now saved, so if you're working on a form, it will be reloaded next time you open the Explorer.
 -	The dark mode switch now immediately switches Ace Editor themes
@@ -158,7 +158,7 @@ get value() {
 
 ## Model Binding
 
-You can now bind your ExoForm data to a model.
+You can now bind your XO data to a model.
 
 See [Model Binding](./md/exo/data-binding.md)
 
@@ -166,7 +166,7 @@ See [Model Binding](./md/exo/data-binding.md)
 
 You can now easily switch to JavaScript literal notation, which makes it easier to write logic (if you're a developer ;-).
 
-![Portal](https://xo-js.dev/assets/img/js-schema.png "ExoForm Studio editing a JS schema")
+![Portal](https://xo-js.dev/assets/img/js-schema.png "XO Studio editing a JS schema")
 
 In the upper right corner of the editor window, you can toggle between JS and JSON notation:
 
@@ -184,7 +184,7 @@ CDN link: https://xo-js.dev/v1.2/xo.js
 
 ## Form controls in Schema
 
-You can now specify a *controls* array in the ExoForm schema.
+You can now specify a *controls* array in the XO form schema.
 
 See [Navigation](./md/exo/navigation.md)
 
@@ -194,7 +194,7 @@ See [Navigation](./md/exo/navigation.md)
 
 There's now an extremely simple syntax to directly run a form or render a single control, using xo.form.run().
 
-See [Getting Started with ExoForm](./md/exo/getting-started.md)
+See [Getting Started with XO forms](./md/exo/getting-started.md)
 
 ## Changes
 
@@ -220,7 +220,7 @@ See [JSON Schema Support](./md/exo/json-schema.md)
 
 ### Binding to dom events using 'on'
 
-Apart from handling ExoForm events using the 'on' property of the optuons provided in xo.form.run(), you can now also directly provide event handlers for DOM events in the rendered form:
+Apart from handling XO form events using the 'on' property of the optuons provided in xo.form.run(), you can now also directly provide event handlers for DOM events in the rendered form:
 
 ```js
 let container = await xo.form.run("/data/forms/account.json", {
@@ -272,7 +272,7 @@ document.body.appendChild(DOM.parseHTML(html));
 
 # New in 1.3.16
 
-## ExoForm Schema
+## XO form Schema
 
 The *mappings* property for JSON Schema Bound forms.
 
@@ -473,7 +473,7 @@ See above example.
 
 XO now has a simple way to share model data with your reactive framework (Vue, Angular, React, Svelte, etc.).
 
-Simply pass a function to ```xo.form.bind()``` and wait for the state property to be ```ready```. You can then get the instance as mounted in ExoForm and read from and write to it.
+Simply pass a function to ```xo.form.bind()``` and wait for the state property to be ```ready```. You can then get the instance as mounted in XO and read from and write to it.
 
 ```js
 
@@ -490,7 +490,7 @@ The ```verbose``` parameter can be used to watch all binding events in the conso
 
 ## DOMChange option
 
-You can now specify the ```DOMChange``` event name ExoForm will use to signal changes. 
+You can now specify the ```DOMChange``` event name XO will use to signal changes. 
 
 ```js
 await xo.form.run(schema, {
@@ -517,16 +517,15 @@ async createContext(config) {
 ```
 
 
-ExoForm now defaults to ```input``` to allow for a more realtime feel, in 
-
+XO now defaults to ```input``` to allow for a more realtime feel. 
 
 # New in 1.4.68
 
 ## New method: xo.form.from()
 
-You can now use ```xo.form.from(htmlElement)``` to get access to the ExoForm instance controlling it.
+You can now use ```xo.form.from(htmlElement)``` to get access to the XO form instance controlling it.
 
-You can pass it any element within an ExoForm container, including the container itself:
+You can pass it any element within an XO form container, including the container itself:
 
 ```js
 const form = document.querySelector("form.exf-form");
@@ -536,7 +535,7 @@ const exo = xo.form.from(form);
 
 ## New method: xo.form.data() 
 
-In scenarios where ExoForm model data is shared with reactive environments such as Vue, react, Angular or Svelte (or just plain Vanilla JS), there is now an extremely simple way to get a reference to an ExoForm controlled model data instance.
+In scenarios where XO form model data is shared with reactive environments such as Vue, react, Angular or Svelte (or just plain Vanilla JS), there is now an extremely simple way to get a reference to an XO form  controlled model data instance.
 
 For instance, you can use this code anywhere in your page:
 
@@ -558,7 +557,7 @@ xo.form.run(schema, {
 });
 ```
 
-If, instead of binding to a single named instance, you want a reference to the instance root node in an ExoForm model, just omit the ```instanceName``` parameter:
+If, instead of binding to a single named instance, you want a reference to the instance root node in an XO form model, just omit the ```instanceName``` parameter:
 
 ```js
 let sharedData = xo.form.data("person-form", o => sharedData = o);
@@ -641,7 +640,7 @@ xo.form.run(schema);
 
 The ```items``` property accepts both a URL and an inline object defining the tree structure.
 
-## ExoForm Studio Improvemsnts
+## XO Studio Improvemsnts
 
 - Revamped Starter Wizard
 - Generate a Form from a JSON Schema file/url
@@ -723,13 +722,13 @@ See [navigation](./md/exo/navigation.md)
 
 # New in 1.4.92
 
-## LiveEdit in ExoForm Studio
+## LiveEdit in XO Studio
 
-You can now edit forms in place in ExoForm Studio:
+You can now edit forms in place in XO Studio:
 
 ![Portal](https://xo-js.dev/assets/img/live-editor.png "Toggling to JSON schema")
 
-The Live Edit feature supports drag & drop sorting, deleting fields and editing fields using property sheets. This feature leverages the fact that each control now exposes its own XO schema as a property and exposes metadata in the form of JSON Schema, which the property sheet uses to automatically generate an editing form - in ExoForm!
+The Live Edit feature supports drag & drop sorting, deleting fields and editing fields using property sheets. This feature leverages the fact that each control now exposes its own XO schema as a property and exposes metadata in the form of JSON Schema, which the property sheet uses to automatically generate an editing form - in XO!
 
 # New in 1.4.100
 
@@ -865,4 +864,43 @@ This control uses autocompletion to find and select an image and shows a preview
 # New in 1.4.132
 
 - Generic ```css``` property (all controls)
-- 
+
+
+# New in 1.5.0
+
+## Breaking Change in Model Binding and Rules
+> XO 1.5 has a breaking change in its Model Binding principles
+> 
+> Binding syntax is now: ```#/instancename/property``` instead of 
+> ```instance.instancename.property```
+> Also, the binding syntax is globally the same, so you no longer need to use a '@' outside the ```bind``` property.
+
+
+## Model Binding shortcutting syntax
+
+So if your model looks like this:
+
+```js
+model: {
+  instance: {
+    data: {
+      email: "john@doe.com"
+    }
+  }
+}
+```
+... You can bind the email property using this syntax:
+
+```js
+{
+    type: "email",
+    caption: "Email address",    
+    bind: "#/data/email"      
+}
+```
+
+## Rule Engine
+
+We added a [rules engine](./md/exo/rules.md) that model based. Rules can be triggered based on [state in your model](./md/exo/data-binding.md).
+
+

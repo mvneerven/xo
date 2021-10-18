@@ -134,8 +134,7 @@ class ExoTreeViewControl extends ExoDivControl {
     }
 
     triggerChange() {
-        var evt = document.createEvent("HTMLEvents");
-        evt.initEvent("change", true, true);
+        var evt = new Event("change", {bubbles: true, cancelable: true})
         this.variable.dispatchEvent(evt);
     }
 

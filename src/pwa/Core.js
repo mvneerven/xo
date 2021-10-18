@@ -88,7 +88,7 @@ class Core {
      * @param {*} obj 
      * @returns cloned object.
      */
-    static clone(obj){
+    static clone(obj) {
         // https://stackoverflow.com/questions/53102700/how-do-i-turn-an-es6-proxy-back-into-a-plain-object-pojo
         return JSON.parse(JSON.stringify(obj));
     }
@@ -156,6 +156,9 @@ class Core {
      */
     static getObjectValue(obj, path, def) {
         // Get the path as an array
+    
+        path = Core.translateBindingPath(path)
+
         path = Core.stringToPath(path);
         // Cache the current object
         var current = obj;
@@ -168,6 +171,24 @@ class Core {
             current = current[path[i]];
         }
         return current;
+    }
+
+    static translateBindingPath(path){
+        
+        if (path.startsWith("#/")) {
+            path = "instance." + Core.replaceAll(path.substr(2), "/", ".");
+        }
+
+        return path;
+    }
+
+
+    static replaceAll(str, find, replace) {
+        return str.replace(new RegExp(Core.escapeRegExp(find), 'g'), replace);
+    }
+
+    static escapeRegExp(string) {
+        return string.replace(/[.*+\-?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
     }
 
     /**
@@ -258,13 +279,25 @@ class Core {
     static resolveVariables(str, cb, ar) {
 
         // https://regex101.com/r/aEsEq7/1 - Match @object.path, @object.path.subpath, @object.path.subpath etc.
+        // var result = str.replace(
+        //     /(?:^|[\s/+*(-])[@]([A-Za-z_]+[A-Za-z_0-9.]*[A-Za-z_]+[A-Za-z_0-9]*)(?=[\s+/*,.?!)]|$)/gm,
+        //     (match, token) => {
+        //         ar.push(match);
+        //         return " " + cb(token);
+        //     }
+        // );
+
+        // https://regex101.com/r/otpGr5/1
         var result = str.replace(
-            /(?:^|[\s/+*(-])[@]([A-Za-z_]+[A-Za-z_0-9.]*[A-Za-z_]+[A-Za-z_0-9]*)(?=[\s+/*,.?!)]|$)/gm,
+            /(?:^|[\s/+*(-])(#\/[A-Za-z_]+[A-Za-z_0-9/]*[A-Za-z_]+[A-Za-z_0-9]*)(?=[\s+/*,.?!;)]|$)/gm,
             (match, token) => {
                 ar.push(match);
                 return " " + cb(token);
             }
         );
+
+        
+        
         return result;
     }
 
@@ -276,7 +309,7 @@ class Core {
      */
     static async acquireState(data, options) {
         options = options || {
-            process: (data, feched) => {
+            process: (data, fetched) => {
                 return data;
             }
         }
@@ -316,6 +349,8 @@ class Core {
                 return false;
             if (txt.indexOf("\n") !== -1 || txt.indexOf(" ") !== -1)
                 return false;
+            if(txt.startsWith("#/"))
+                return false;
             new URL(txt, window.location.origin)
             return true;
         }
@@ -330,6 +365,9 @@ class Core {
      * @param {Any} value - the value to set
      */
     static setObjectValue(obj, path, value) {
+        
+        path = Core.translateBindingPath(path)
+
         // Get the path as an array
         path = Core.stringToPath(path);
 

@@ -7,9 +7,7 @@ class ExoFormProgressBase {
     }
 
     render() {
-        this.exo.on(ExoFormFactory.events.page, e => {
-            console.debug(this, "Paging", e);
-        })
+        // for subclassing
     }
 }
 
