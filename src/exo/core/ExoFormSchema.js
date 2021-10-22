@@ -63,14 +63,24 @@ class ExoFormSchema {
         return this._raw;
     }
 
+    get submit() {
+        return this._schemaData.submit;
+    }
+
     createDefaultUiIfNeeded() {
 
         let defaultModelInstance = this.getFirstInstanceName();
         if (!defaultModelInstance) {
             defaultModelInstance = "data";
-            this._schemaData.model = this._schemaData.model || { };
-            this._schemaData.model.instance = this._schemaData.model.instance || { };
-            this.model.instance[defaultModelInstance] = {};
+            
+            if(this._schemaData.model){
+                if(!this._schemaData.model.instance)
+                    console.error("The 'model' node must contain an 'instance' node");
+            }
+            else{
+                this._schemaData.model = { instance: {}};
+                this.model.instance[defaultModelInstance] = {};
+            }
         }
 
         if (this.pages.length === 0) {

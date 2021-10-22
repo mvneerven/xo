@@ -53,6 +53,23 @@ class Form {
     }
 
     /**
+     * Link up an XO form ton enable dual binding from and to XO form state.
+     * @param {*} formId - null to catch all
+     * @param {Function} callback to call when the form is ready to link to.
+     */
+    async link(formId, callback) {
+        if(typeof(callback) !== "function")
+            throw TypeError("Must provide a callback function");
+
+        this.bind(e => {
+            if ((!formId || formId === e.exo.id) && e.state === "ready") {
+                callback(e.instances);
+            }
+        });
+    }
+
+
+    /**
      * Bind all datamodel changes to a function
      * @param {Function} f - the function to call
      * @param {*} verbose - Verbose mode

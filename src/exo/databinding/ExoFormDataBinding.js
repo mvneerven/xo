@@ -12,8 +12,8 @@ class ExoFormDataBinding {
     }
 
     _model = {
-        instance: {},
-        bindings: {}
+        //instance: {} //,
+        //bindings: {}
     };
 
     constructor(exo, instance) {
@@ -22,7 +22,7 @@ class ExoFormDataBinding {
         this.events = new Core.Events(this);
     }
 
-    async prepare(){
+    async prepare() {
         this._init(this.exo, this.instance).then(() => {
 
             this._resolver = new ExoFormDataBindingResolver(this);
@@ -42,6 +42,17 @@ class ExoFormDataBinding {
 
             this._ready();
         });
+    }
+
+    setupDefaultButtonBinding(btn) {
+        let id = btn.context.field.name || btn.context.field.id;
+        btn.context.field.defaultValue = -1;
+        if (!this.model.instance.btnstates) {
+            this.model.instance.btnstates = {};
+            this.model.instance.btnstates[id] = "auto";
+            this.model.instance.btnstates = this.proxy('btnstates', this.model.instance.btnstates); // Proxy to monitor changes
+        }
+        btn.context.field.bind = "#/btnstates/" + id
     }
 
     get resolver() {
@@ -75,7 +86,7 @@ class ExoFormDataBinding {
             });
 
             // make sure we have a model if it wasn't passed in
-            if (!modelSetup) {
+            if (!modelSetup) {                
                 this._model.instance.data = data;
             }
 
@@ -85,6 +96,7 @@ class ExoFormDataBinding {
                 let eventName = this.exo.options.DOMChange || "input";
 
                 const handle = e => {
+
                     if (this.noProxy) {
                         console.debug("ExoFormDataBinding", "DOMChange event SKIPPED BECAUSE NO-PROXY")
                         return
@@ -123,30 +135,31 @@ class ExoFormDataBinding {
     get(path, defaultValue) {
         let returnValue = null;
         try {
-            returnValue = Core.getObjectValue(this._model, path, defaultValue);            
+            returnValue = Core.getObjectValue(this._model, path, defaultValue);
         }
         catch (ex) {
-            throw TypeError(`DataBinding.get() - error on ${path}` )
+            throw TypeError(`${path} not set`)
             //this._signalDataBindingError(ex);
         }
         return returnValue;
     }
 
-    set(path, value){
-        if(typeof(value) === "string" && value.startsWith("#/"))
+    set(path, value) {
+        if (typeof (value) === "string" && value.startsWith("#/"))
             value = this.get(value);
-            
+
         try {
-            Core.setObjectValue(this._model, path, value);            
+            Core.setObjectValue(this._model, path, value);
         }
         catch (ex) {
             //this._signalDataBindingError(ex);
-            throw TypeError(`DataBinding.set() - error on ${path}` )
+            throw TypeError(`DataBinding.set() - error on ${path}`)
         }
-        
+
     }
 
     async _init(exo, instance) {
+        
         if (instance) { //TODO deprecate
             this._mapped = instance;
             this._model.instance = instance;
@@ -166,8 +179,6 @@ class ExoFormDataBinding {
 
                 this._model.instance[n] = this.proxy(n, ins); // Proxy to monitor changes
             }
-
-            this._model.bindings = this._model.bindings || {}
         }
         else {
             this._origin = ExoFormDataBinding.origins.none;
@@ -189,7 +200,7 @@ class ExoFormDataBinding {
             }
             catch { }
             finally {
-                this._instanceInitialized = true;
+                this._instanceInitialized = true;                
                 this._model.instance = this._model.instance || { data: {} };
             }
         }
@@ -200,7 +211,7 @@ class ExoFormDataBinding {
 
     proxy(instanceName, obj) {
         const me = this;
-        
+
         const proxify = (instanceName, object, change, subPath) => {
             if (object && object.__proxy__) {
                 return object;
@@ -220,7 +231,7 @@ class ExoFormDataBinding {
                     }
                     object[name] = value;
                     if (old !== value) {
-                        
+
                         change(object, name, old, value, subPath);// + "/" + name);
                     }
                     return true;
@@ -230,7 +241,7 @@ class ExoFormDataBinding {
                 if (object.hasOwnProperty(prop) && object[prop] &&
                     typeof object[prop] === 'object') {
                     // proxify all child objects
-                    
+
                     object[prop] = proxify(instanceName, object[prop], change, subPath + "/" + prop);
                 }
             }
@@ -238,7 +249,7 @@ class ExoFormDataBinding {
         }
 
         return proxify(instanceName, obj, (object, property, oldValue, newValue, subPath) => {
-            
+
             const path = `#/${instanceName}${subPath}/${property}`;
 
             console.debug(`DataModel: '${path}' changed from ${oldValue} to ${newValue}`);
@@ -279,7 +290,7 @@ class ExoFormDataBinding {
 
             let isVarRef = value.startsWith("#/");
 
-            if (isVarRef || name === "bind" && value.startsWith("#/") ) {
+            if (isVarRef || name === "bind" && value.startsWith("#/")) {
 
                 let path = value;//isVarRef ? value.substring(1) : value;
 
@@ -304,11 +315,11 @@ class ExoFormDataBinding {
 
             for (var p in value) {
                 if (typeof (value[p]) == "string" && value[p].indexOf("@") >= 0) {
-                   // debugger;
+                    // debugger;
                 }
                 returnValue[p] = this._processFieldProperty(control, p, returnValue[p])
                 if (value[p] !== returnValue[p]) {
-                   // debugger;
+                    // debugger;
                 }
             }
         }

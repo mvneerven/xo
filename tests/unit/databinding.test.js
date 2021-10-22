@@ -9,6 +9,9 @@ describe("XO form databinding Tests", () => {
         return form({
             model: {
                 instance: {
+                    state: {
+                        caption: "The Caption"
+                    },
                     data: {
                         txt: "Hello dear",
                         tags: ["beer", "pong"],
@@ -18,7 +21,7 @@ describe("XO form databinding Tests", () => {
             },
             pages: [{
                 fields: [
-                    { type: "text", name: "text1", bind: "instance.data.txt" },
+                    { type: "text", name: "text1", bind: "instance.data.txt", caption: "#/state/caption" },
                     { type: "tags", name: "tags1", value: ["dead", "can", "dance"] },
                     { type: "tags", name: "tags2", bind: "instance.data.tags" },
                     { type: "radiobuttonlist", name: "radio1", bind: "instance.data.vl1" , items: ["one", "two", "three"] }
@@ -47,6 +50,11 @@ describe("XO form databinding Tests", () => {
     it("Form field with name test1 has textbox control", () => {
         expect(context.exo.get("text1")._control.htmlElement.type).toBe("text");
     });
+
+    it("Form field with name test1 has caption bound to state instance", () => {
+        expect(context.exo.get("text1")._control.container.querySelector("label").innerHTML==="The Caption");
+    });
+
 
     it("Tags are rendered", () => {
         expect(context.exo.get("tags1")._control.value.join(", ")).toBe("dead, can, dance");

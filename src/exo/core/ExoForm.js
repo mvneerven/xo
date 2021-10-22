@@ -52,7 +52,11 @@ class ExoForm {
             customMethods: {},
             DOMChange: context.config.defaults.DOMChange || "input"
         }
-        this.options = { ...defOptions, ...opts };
+        this.options = { 
+            ...defOptions, 
+            ...context.config.runOptions || {},
+            ...opts 
+        };
 
         this.id = this.options.id || Core.guid();
         this.events = new Core.Events(this);
@@ -325,7 +329,7 @@ class ExoForm {
                 this.container.setAttribute("id", this.schema.form.id);
             }
 
-            try {
+            //try {
 
                 this._renderPages().then(() => {
 
@@ -336,14 +340,14 @@ class ExoForm {
 
                 })
 
-                    .catch(ex => {
-                        reject("_renderPages() failed: " + ex.toString());
-                    });
+                    // .catch(ex => {
+                    //     reject("_renderPages() failed: " + ex.toString());
+                    // });
 
-            }
-            catch (ex) {
-                reject("Exception in _renderPages(): " + ex.toString())
-            }
+            //}
+            //catch (ex) {
+            //    reject("Exception in _renderPages(): " + ex.toString())
+            //}
         });
     }
 
@@ -614,7 +618,6 @@ class ExoForm {
         if (ev)
             ev.preventDefault();
 
-
         if (!this.addins.validation.checkValidity()) {
             this.addins.validation.reportValidity();
             return;
@@ -638,7 +641,7 @@ class ExoForm {
                 data[f.name] = f._control.value;
             }
         })
-        return data;
+        return Core.clone(data);
     }
 
     getFieldValue(elementOrField) {
@@ -687,7 +690,7 @@ class ExoForm {
                         f.type = this._getDefaultControlType(f.bind);
                     }
                     else 
-                        throw TypeError("ExoForm: incorrect field options. Must be object with at least 'type' property. " + JSON.stringify(f))
+                        f.type = "text";
                 }
 
                 f.id = f.id || _._generateUniqueElementId();
@@ -756,6 +759,7 @@ class ExoForm {
                 case "boolean": return "checkbox";
                 case "number": return "number";
             }
+            return "text"
         }
         catch{ 
             return "text"

@@ -5,31 +5,28 @@ import xo from '../../../js/xo';
 class Rule {
     constructor(o) {
         this.field = o.field;
-        this.scope = o.scope || o.field.bind;
         this.rule = o.rule;
+        this.if = o.rule?.if;
+        this.scope = this.if?.property || o.field.bind;
+
+        if (typeof (this.if) === "object") {
+            let keys = Object.keys(this.if);
+            if (keys) {
+                const index = keys.indexOf('property');
+                if (index > -1)
+                    keys.splice(index, 1);
+                this.compare = keys[0];
+            }
+        }
     }
 
     toString() {
-        return `Rule: ${JSON.stringify(this.rule?.condition || this.rule).substr(0, 25)}... on ${ExoFormFactory.fieldToString(this.field)}`;
+        return `${JSON.stringify(this.if || this.rule).substr(0, 25)}... on ${ExoFormFactory.fieldToString(this.field)}`;
     }
 }
 
+
 class XOFormDataRulesEngine extends ExoRuleEngineBase {
-
-    static TESTS = {
-        is: (e, v) => { return e == v },
-        in: (e, v) => { return e.includes(v) },
-        not: (e, v) => { return e != v },
-        gt: (e, v) => { return v > e },
-        gte: (e, v) => { return v >= e },
-        lt: (e, v) => { return v < e },
-        lte: (e, v) => { return v <= e },
-        and: (e, v) => { return v & e },
-        or: (e, v) => { return v | e },
-        match: (e, v) => { return new RegExp(e, "g").test(v) },
-        xor: (e, v) => { return v ^ e }
-    }
-
     rules = [];
 
     checkRules(context, options) {
@@ -38,121 +35,216 @@ class XOFormDataRulesEngine extends ExoRuleEngineBase {
         this.options = options;
 
         let fields = this.exo.query(field => {
-            return Array.isArray(field.rules)
+            return Array.isArray(field.actions)
         })
         this.exo.schema.pages.forEach(p => {
-            if (Array.isArray(p.rules)) {
+            if (Array.isArray(p.actions)) {
                 fields.push(p)
             }
         })
 
         fields.forEach(field => {
-            field.rules.forEach(r => {
+            field.actions.forEach(r => {
 
                 this.rules.push(new Rule({
                     field: field,
-                    scope: r.condition?.scope,
                     rule: r
                 }))
-
             })
         });
 
-        this.exo.on("dataModelChange", this.checkState.bind(this));
+        this.exo.events.trigger(ExoFormFactory.events.ruleContextReady, {
+            context: this
+        })
 
-        this.checkState(true)
+        this.exo.on("dataModelChange", this._checkState.bind(this));
+
+        this._checkState(true)
     }
 
-    checkState(mode) {
+    _checkState(mode) {
+
+        const TESTS = {
+            is: (e, v) => { return e == v },
+            in: (e, v) => { return e.includes(v) },
+            not: (e, v) => { return e != v },
+            gt: (e, v) => { return v > e },
+            gte: (e, v) => { return v >= e },
+            lt: (e, v) => { return v < e },
+            lte: (e, v) => { return v <= e },
+            and: (e, v) => { return v & e },
+            or: (e, v) => { return v | e },
+            match: (e, v) => { return new RegExp(e, "g").test(v) },
+            xor: (e, v) => { return v ^ e },
+            empty: (e, v) => { return v == null || v === "" },
+            nonempty: (e, v) => { return v != null && v !== "" },
+            ...this.options.rules?.operators
+        }
 
         this.rules.forEach(c => {
-            try {
-                if (mode === true || this.isRuleAffected(mode, c)) {
-                    if (c.rule.break) {
-                        debugger;
-                    }
-                    let on = true; 1
-                    let test = c.rule.condition?.test;
-                    if (test) {
-                        let value = this.exo.dataBinding.get(c.scope);
-                        const key = Object.keys(test)[0];
-                        if (key) {
-                            const te = XOFormDataRulesEngine.TESTS[key];
-                            if (!te) {
-                                throw TypeError(`Missing test criteria in rule ${c}`)
-                            }
-                            on = te(test[key], value)
+
+            if (mode === true || this._isAffected(mode, c)) {
+                if (c.rule.break) {
+                    debugger;
+                }
+                let on = true;
+                let test = c.rule.if;
+                let te;
+                if (!test && c.field.type === "button") {
+                    on = this.var(c.scope) === c.field._control.value
+                }
+
+                if (test) {
+                    let value = this.var(c.scope);
+
+                    if (c.compare) {
+                        te = TESTS[c.compare];
+                        if (!te) {
+                            throw TypeError(`Missing test criteria in rule ${c}`)
                         }
-                        else {
-                            throw TypeError(`No test parameter found in rule ${c}`);
-                        }
+                        on = te(test[c.compare], value);
                     }
-                    this.triggerRule(c, on)
+                }
+                if (on)
+                    this._run(c, c.rule.do)
+                else if (c.rule.else){
+                    if(te)
+                        this._run(c, c.rule.else)
+                    else 
+                        throw TypeError(`Can't execute else clause: missing if rule ${c}`)
                 }
             }
-            catch (ex) {
-                console.error(`Error in rule ${c} - ${ex}`)
-            }
+
         })
     }
 
     // determines whether a change in the model affects the given rule
-    isRuleAffected(e, r) {
+    _isAffected(e, r) {
         let path = e.detail?.changeData?.path;
-        let scope = r.rule?.condition?.scope || r.field.bind; // if no scope is defined, use field bind 
-        if (scope && path)
-            return (path.indexOf(scope) > -1)
 
+        //check parameters of do {action: [] } arrays
+        let isAffected = false;
+        if (r.rule?.do) {
 
-    }
-
-    triggerRule(c, on) {
-        const elm = c.field._control.container;
-        if (c.rule.state) {
-            switch (c.rule.state) {
-                case "visible":
-                    if (elm.classList.contains("exf-page")) {
-                        this.setPageRelevant(elm, on)
-                    }
-                    else {
-                        console.log("visible", on, elm)
-                        xo.dom[on ? "show" : "hide"](elm);
-                    }
-                    break;
-                case "enabled":
-                    console.log("enabled", on, elm)
-                    xo.dom[on ? "enable" : "disable"](elm);
-                    break;
+            let p = r.rule?.if?.property;
+            if (p) {
+                if (path.indexOf(p) > -1)
+                    return true
             }
+
+            Object.keys(r.rule?.do).forEach(d => {
+                if (!isAffected) {
+                    let v = r.rule?.do[d];
+                    if (Array.isArray(v)) {
+                        v.forEach(q => {
+                            if (path.indexOf(q) > -1)
+                                isAffected = true
+                        })
+                    }
+                }
+            })
         }
-        else if (on && c.rule.action) {
-            this.runAction(c.rule.action)
+        if (isAffected)
+            return true;
+
+        if (r.scope && path)
+            return (path.indexOf(r.scope) > -1)
+    }
+
+    _run(c, act) {
+        const elm = c.field._control.container;
+
+        let key = Object.keys(act)[0];
+
+        if (key === "sequence" && Array.isArray(act.sequence)) {
+            act.sequence.forEach(f => {
+                key = Object.keys(f)[0];
+                this._callAction(c, elm, key, f[key])
+            })
+        }
+        else {
+            this._callAction(c, elm, key, act[key])
         }
     }
 
-    runAction(act) {
-
-        const getVar = (n, def) => {
-            let v = this.exo.dataBinding.get(n);
+    /**
+     * Gets a variable from the model
+     * @param {String} path 
+     * @param {Any} def 
+     * @returns {Any} variable value
+     */
+    var(path, def) {
+        try {
+            let v = typeof (path) === "string" && path.startsWith("#/") ? this.exo.dataBinding.get(path) : path;
             return v === undefined ? def : v
-        };
+        }
+        catch (ex) {
+            console.error(`Could not get ${path} - ${ex.message}`)
+        }
+    };
+
+    _callAction(c, elm, key, b) {
+        if (!key)
+            return;
 
         const calc = (a, b, m) => {
-            this.exo.dataBinding.set(a, m(getVar(a), getVar(b)));
+            this.exo.dataBinding.set(a, m(this.var(a), this.var(b)));
         }
 
         const ACTIONS = {
-            goto: e => { this.exo.addins.navigation.goto(this.getPage(e)) },
-            alert: e => alert(e),
+            goto: e => { this.exo.addins.navigation.goto(this._getPage(this.var(e))) },
+            alert: e => alert(this.var(e)),
             dialog: e => {
-                let dlg = this.exo.get(e);
+                let dlg = this.exo.get(this.var(e));
                 dlg._control.show();
             },
             set: (a, b) => {
                 this.exo.dataBinding.set(a, b)
             },
+            submit: (a, b) => {
+
+                const result = this.exo.getFormValues();
+                console.log("submit: ", result);
+
+            },
+
+            show: a => {
+                let on = this.var(a);
+                if (elm.classList.contains("exf-page")) {
+                    this._setPageRelevant(elm, on)
+                }
+                else {
+                    xo.dom[on ? "show" : "hide"](elm);
+                }
+            },
+            setclass: e => {
+                elm.classList.add(this.var(e));
+            },
+            enable: a => {
+                let on = this.var(a);
+                xo.dom[on ? "enable" : "disable"](elm);
+            },
+            fetch: async (url, type, variable) => {
+                let result = await fetch(url);
+                this.exo.dataBinding.set(variable, await result[type]());
+            },
             convert: (a, b) => {
-                this.exo.dataBinding.set(a, this.convert(a, b));
+                const cvt = (value, type) => {
+                    value = this.var(value);
+                    if (typeof (value) === "string") {
+                        switch (type.substr(0, 3)) {
+                            case "upp":
+                                return value.toUpperCase();
+                            case "low":
+                                return value.toUpperCase();
+                            case "cap":
+                                return value.charAt(0).toUpperCase() + value.slice(1);
+                        }
+                    }
+                    return value;
+                }
+
+                this.exo.dataBinding.set(a, cvt(a, b));
             },
             sum: (a, b) => {
                 calc(a, b, (c, d) => { return c + d })
@@ -166,53 +258,33 @@ class XOFormDataRulesEngine extends ExoRuleEngineBase {
             multiply: (a, b) => {
                 calc(a, b, (c, d) => { return c * d })
             },
-            remainder: (a, b) => {
+            modulus: (a, b) => {
                 calc(a, b, (c, d) => { return c % d })
             },
             power: (a, b) => {
                 calc(a, b, (c, d) => { return c ** d })
             },
+            trigger: (a, b) => {
+                this.exo.trigger(this.var(a))
+            },
             ...this.options.rules?.actions
         }
 
-        //debugger
+        const f = ACTIONS[key]
+        if (typeof (f) === "function") {
+            let args = [...b || []]
 
-        let action, key = Object.keys(act)[0];
+            console.debug(`Action called: ${key}(${args})`);
 
-        if (key === "sequence" && Array.isArray(act.sequence)) {
-            act.sequence.forEach(f => {
-                key = Object.keys(f)[0];
-                action = ACTIONS[key];
-                action(...f[key] || [])
-            })
+            var bscoped = f.bind(this);
+            bscoped(...args)
         }
         else {
-            action = ACTIONS[key];
-            action(...act[key] || [])
+            throw TypeError("Action not found: " + key)
         }
-
-
     }
 
-    convert(value, type) {
-        value = this.exo.dataBinding.get(value);
-        if (typeof (value) === "string") {
-            switch (type.substr(0, 3)) {
-                case "upp":
-                    return value.toUpperCase();
-                case "low":
-                    return value.toUpperCase();
-                case "cap":
-                    return value.charAt(0).toUpperCase() + value.slice(1);
-            }
-        }
-        return value;
-    }
-
-    setPageRelevant(pageElm, on) {
-
-        console.log("scoped", on, pageElm)
-
+    _setPageRelevant(pageElm, on) {
         pageElm[on ? "removeAttribute" : "setAttribute"]("data-skip", "true")
 
         const page = pageElm.data.field._control;
@@ -223,12 +295,11 @@ class XOFormDataRulesEngine extends ExoRuleEngineBase {
         });
     }
 
-    getPage(p) {
+    _getPage(p) {
         if (typeof (p) === "string") {
             p = this.exo.schema.pages.find(i => {
                 return i.id === p;
             }).index;
-
         }
         return p;
     }

@@ -2,9 +2,9 @@ const schema = {
   navigation: "static",
   model: {
     logic: context => {
-		const o = context.model.instance;
-		o.map.coords = [o.coords.longitude, o.coords.latitude]
-},
+          const o = context.model.instance;  
+          o.map.coords = [o.coords.longitude, o.coords.latitude]
+        },
     schemas: {
       coords: "https://xo-js.dev/assets/json-schemas/geo-schema.json"
     },
@@ -24,16 +24,14 @@ const schema = {
   mappings: {
     properties: {
       latitude: {
-        type: "number",
-        step: "0.01"
+        type: "number"
       },
       longitude: {
-        type: "number",
-        step: "0.01"
+        type: "number"
       },
       test: {
         type: "map",
-        bind: "instance.map.coords"
+        bind: "#/map/coords"
       }
     }
   },

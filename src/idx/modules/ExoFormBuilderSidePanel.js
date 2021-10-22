@@ -325,10 +325,10 @@ class ExoFormBuilderSidePanel {
                             max: 100,
                             showoutput: true,
                             caption: "Current Page",
-                            value: 1,
-                            bindings: {
-                                max: "page.pages.value"
-                            }
+                            value: 1 //,
+                            // bindings: {
+                            //     max: "page.pages.value"
+                            // }
 
                         }
                     ]

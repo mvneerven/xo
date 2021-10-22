@@ -42,11 +42,11 @@ class ExoEntitySettings {
             },
             instance: {
                 data: {},
-            },
-            logic: (context) => {
-                let m = context.model;
-                m.bindings.edit = !m.instance.data.id;
-            }
+            } //,
+            // logic: (context) => {
+            //     let m = context.model;
+            //     m.bindings.edit = !m.instance.data.id;
+            // }
         }
     }
 
@@ -161,7 +161,7 @@ class ExoEntitySettings {
                         },
                         logic: (context) => {
                             const m = context.model;
-                            m.bindings.noSelection = true;
+                            //m.bindings.noSelection = true;
                             this.model = m;
                         },
                     },

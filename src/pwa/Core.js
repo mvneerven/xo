@@ -113,6 +113,16 @@ class Core {
         new Emitter(obj);
     }
 
+    static calcAge(dateValue) {
+        const date = new Date(dateValue);
+        const [year, month, day] = [date.getFullYear(), date.getMonth(), date.getDay()];
+        let today = new Date();
+        let age = today.getFullYear() - year;
+        if (today.getMonth() < month || (today.getMonth() == month && today.getDate() < day)) {
+            age--;
+        }
+        return age;
+    }
     /**
      * Converts a data URL to a Blob and returns a Blob URL.
      * @param {URL} dataurl 
@@ -156,7 +166,7 @@ class Core {
      */
     static getObjectValue(obj, path, def) {
         // Get the path as an array
-    
+
         path = Core.translateBindingPath(path)
 
         path = Core.stringToPath(path);
@@ -173,8 +183,8 @@ class Core {
         return current;
     }
 
-    static translateBindingPath(path){
-        
+    static translateBindingPath(path) {
+
         if (path.startsWith("#/")) {
             path = "instance." + Core.replaceAll(path.substr(2), "/", ".");
         }
@@ -296,8 +306,8 @@ class Core {
             }
         );
 
-        
-        
+
+
         return result;
     }
 
@@ -349,7 +359,7 @@ class Core {
                 return false;
             if (txt.indexOf("\n") !== -1 || txt.indexOf(" ") !== -1)
                 return false;
-            if(txt.startsWith("#/"))
+            if (txt.startsWith("#/"))
                 return false;
             new URL(txt, window.location.origin)
             return true;
@@ -365,7 +375,7 @@ class Core {
      * @param {Any} value - the value to set
      */
     static setObjectValue(obj, path, value) {
-        
+
         path = Core.translateBindingPath(path)
 
         // Get the path as an array

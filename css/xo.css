@@ -74,6 +74,18 @@ html:not(.pwa-signed-in) .if-signed-out {
   min-height: 350px;
 }
 
+.exf-sm {
+  font-size: 0.9rem !important;
+}
+
+.exf-lg {
+  font-size: 1.7rem !important;
+}
+
+.exf-xl {
+  font-size: 2.5rem !important;
+}
+
 .non-empty .if-empty {
   display: none;
 }
@@ -147,6 +159,18 @@ html:not(.pwa-signed-in) .if-signed-out {
   height: -moz-fit-content;
   height: fit-content;
   min-height: 350px;
+}
+
+.exf-sm {
+  font-size: 0.9rem !important;
+}
+
+.exf-lg {
+  font-size: 1.7rem !important;
+}
+
+.exf-xl {
+  font-size: 2.5rem !important;
 }
 
 @-webkit-keyframes loading {

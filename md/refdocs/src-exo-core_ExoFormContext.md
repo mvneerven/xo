@@ -8,8 +8,7 @@
 
 # Class `ExoFormContext`
 
-Hosts an XO form context to create forms with.
-Created using {ExoFormFactory}.build()
+Hosts an XO form context to create forms with.Created using {ExoFormFactory}.build()
 
 ## Methods
 

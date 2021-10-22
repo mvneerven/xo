@@ -3,14 +3,27 @@ import DOM from "../../../pwa/DOM";
 import ExoFormFactory from "../../core/ExoFormFactory";
 
 class ExoButtonControl extends ExoElementControl {
+
+  clickCount = 0;
+
   constructor(context) {
     super(context);
 
     this._useContainer = false; // no container by default
 
+
     this.iconHtml = "";
 
     this.htmlElement = DOM.parseHTML('<button type="button" class="exf-btn" />');
+
+    // if no binding is set up, add one to 
+    // make clicking the button change a value in the model
+    // for conditionless RuleEngine actions to fire then.
+    if (!context.field.bind) {
+      if (context.exo.dataBinding) {
+        context.exo.dataBinding.setupDefaultButtonBinding(this)
+      }
+    }
 
     this.acceptProperties(
       {
@@ -23,24 +36,19 @@ class ExoButtonControl extends ExoElementControl {
       },
       {
         name: "action",
-        description: `Possible values: 
-                    - 'next' (next page in Wizard)
-                    - 'reset' (back to first page)
-                    - 'goto:[page]' (jump to given page)
-                    - dialog:[dialogname]
-                `,
+        description: `DEPRECATED - use generic actions array - Search for Rules Engine.
+    Possible values: 
+      - 'next' (next page in Wizard)
+      - 'reset' (back to first page)
+      - 'goto:[page]' (jump to given page)
+      - dialog:[dialogname]
+  `,
       },
       {
         name: "dropdown",
         type: Object | Array,
         description: "A list of items that shows on hover, or an object with an items array and optionally 'direction' and 'dropEvent' properties",
       },
-
-      // {
-      //   name: "direction",
-      //   type: "string",
-      //   description: "Optional direction form dropdown. Options: 'down' (default), 'left'"
-      // },
 
       {
         name: "class",
@@ -94,6 +102,7 @@ class ExoButtonControl extends ExoElementControl {
     e.preventDefault();
 
     const me = this;
+    me.clickCount++;
     let givenAction = this.action, isDropDown = false;
 
     if (e.target.closest(".exf-btn-dropdown")) {
@@ -167,15 +176,31 @@ class ExoButtonControl extends ExoElementControl {
     }
 
     else {
-      
-      if(this.context.field.defaultValue && this.value !== this.context.field.defaultValue){
-        
-        this.value = this.context.field.defaultValue;
-        
-        var evt = new Event("change", {bubbles: true, cancelable: true})
+
+      if (this.context.field.defaultValue && this.value !== this.context.field.defaultValue) {
+
+        if (this.context.field.defaultValue === -1) {
+          this.value = this.clickCount;
+        }
+        else {
+          this.value = this.context.field.defaultValue;
+        }
+        var evt = new Event("change", { bubbles: true, cancelable: true })
         this.htmlElement.dispatchEvent(evt);
       }
     }
+  }
+
+  /**
+  * @deprecated Use generic actions array - Search for Rules Engine.
+  * Set action to execute on click.
+  */
+  set action(value){
+    this._action = value;
+  }
+
+  get action(){
+    return this._action;
   }
 
   set class(value) {

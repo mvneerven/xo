@@ -32,6 +32,7 @@ class ExoFormFactory {
         jsonSchemasApplied: "jsonSchemasApplied",
         renderStart: "renderStart", // when form rendering starts
         getListItem: "getListItem", // 
+        ruleContextReady: "ruleContextReady",
         renderReady: "renderReady", // when form rendering is complete
         interactive: "interactive", // when form is actually shown to user
         reportValidity: "reportValidity", // when form control validity is reported
@@ -127,10 +128,8 @@ class ExoFormFactory {
                 ...this.defaults,
                 ...options
             }
-            //options.imports = options.imports || this.defaults.imports;
 
             // add standard controls from Base Libraries
-
             this.add(ExoBaseControls.controls);
             this.add(ExoExtendedControls.controls);
             this.add(ExoDevControls.controls);
@@ -224,6 +223,7 @@ class ExoFormFactory {
     static async all() {
 
         const schema = {
+            submit: false,
             model: {
                 instance: {
                     data: {}

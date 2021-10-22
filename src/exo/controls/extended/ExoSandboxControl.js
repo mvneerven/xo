@@ -20,10 +20,17 @@ class ExoSandboxControl extends ExoEmbedControl {
             }
         })
 
-        this.acceptProperties({
-            name: "form",
-            type: Object
-        })
+        this.acceptProperties(
+            {
+                name: "form",
+                type: Object
+            },
+            {
+                name: "subform",
+                type: Boolean,
+                description: "Set to true to embed a form and bind it to a node in the master model"
+            }
+        )
     }
 
     get loaderDiv() {
@@ -75,20 +82,24 @@ class ExoSandboxControl extends ExoEmbedControl {
 
     // create the document for the IFRAME
     async createDocumentUrl(form) {
+        let url = new URL(window.location.href);
 
         if (!form.schema)
             form.schema = {}
 
-        const schema = await xo.form.read(form.schema);
+        
 
-        // if (schema.raw.model && schema.raw.model.instance)
-        //     throw TypeError("Subform must use binding to parent model")
+        if(this.subform){
+            const schema = await xo.form.read(form.schema);
+            if (schema.raw.model && schema.raw.model.instance)
+                throw TypeError("Subform must use binding to parent model")
 
-        let url = new URL(window.location.href);
+            
 
-        form.schema.model = form.schema.model || {};
-        form.schema.model.instance = {
-            data: Core.clone(this.value)
+            form.schema.model = form.schema.model || {};
+            form.schema.model.instance = {
+                data: Core.clone(this.value)
+            }
         }
 
         const html = /*html*/`<!DOCTYPE html>

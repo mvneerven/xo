@@ -428,7 +428,7 @@ let form = await xo.form.run(schema, {
 });
 ```
 
-Using the events xo now emits, you can then hook into the form runtime:
+Using the events XO now emits, you can then hook into the form runtime:
 
 ```js
 let data = null;
@@ -469,14 +469,13 @@ See above example.
 
 # New in 1.4.59
 
-## Simplified Model Sharing for reactive frameworks.
+## Simplified Model Sharing for reactive frameworks (two-way model binding).
 
 XO now has a simple way to share model data with your reactive framework (Vue, Angular, React, Svelte, etc.).
 
 Simply pass a function to ```xo.form.bind()``` and wait for the state property to be ```ready```. You can then get the instance as mounted in XO and read from and write to it.
 
 ```js
-
 let sharedData = null;
 
 xo.form.bind(e=>{
@@ -640,7 +639,7 @@ xo.form.run(schema);
 
 The ```items``` property accepts both a URL and an inline object defining the tree structure.
 
-## XO Studio Improvemsnts
+## XO Studio Improvements
 
 - Revamped Starter Wizard
 - Generate a Form from a JSON Schema file/url
@@ -903,4 +902,134 @@ model: {
 
 We added a [rules engine](./md/exo/rules.md) that model based. Rules can be triggered based on [state in your model](./md/exo/data-binding.md).
 
+## Default ```xo.form.run()``` options
+
+You can now add defaults for the options passed to each form ```xo.form.run()``` when creating the xo form context:
+
+```js
+const context = await window.xo.form.factory.build({
+    defaults: {
+        validation: "inline"                
+    },
+    runOptions: {
+        rules: {
+            actions: {
+                myCustomAction: (a, b) => {
+                    // my custom implementation
+                }
+            }
+        }
+    }
+});
+```
+
+In the example above, the [Rules Engine](./md/exo/rules.md) is being instructed that, apart from the internal actions the XO Rules Engine provides, a ```myCustomAction``` action exists, and all forms that are run can use it.
+
+Just don't forget to pass the context created to the form runner:
+
+```js
+let fr = await xo.form.run(schema, {
+    context: context
+});
+```
+
+### Event ruleContextReady
+
+The ```ruleContextReady``` is dispatched when the Rules Engine is ready to execute rules.
+Use it to get access to the ```context``` of the rules engine:
+
+```js
+let fr = await xo.form.run(schema, {
+    on: {
+        ruleContextReady: e => {
+            this.ruleContext = e.detail.context
+        }
+    },
+    rules: {
+        actions: {
+            myCustomAction: (a, b) => {
+                alert(this.ruleContext.var(a))
+            }
+        }
+    }
+});
+```
+
+## Sandbox ```subform``` property
+
+The sandbox control now has a ```subform``` property (boolean).
+Setting ```subform``` to ```true``` will make the form loaded in the sandbox bind to a node in the master model.
+
+```js
+const schema = {
+  model: {
+    instance: {
+      data: {
+        test: "My Data",
+        sub: {
+          text: "Subform Control Data"
+        }
+      }
+    }
+  },
+  pages: [
+    {
+      fields: [
+        {
+          caption: "Test Field",
+          type: "text",
+          bind: "instance.data.test"
+        },
+        {
+          type: "sandbox",
+          bind: "#/data/sub",
+          form: {
+            schema: {
+              pages: [
+                {
+                  fields: [
+                    {
+                      type: "text",
+                      caption: "Subform Textbox",
+                      bind: "#/data/text"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
+```
+
+> Note the bind: "#/data/text" in the subform: the subform cannot have a model of itself in this case, and the node used in the ```bind``` property translates to an instance in the subform called 'data'. 
+
+## Other changes and additions
+
+### Command: ```submit: false```
+
+With the new command ```submit: false```, you can suppress the automatically generated submit button.
+
+The command needs to be placed at the top level of your schema.
+
+```js
+const schema = {
+  submit: false,
+  pages: [
+    {
+      fields: [
+        {
+          type: "text",
+          name: "name",
+          caption: "Your name",
+          placeholder: "John Doe"
+        }
+      ]
+    }
+  ]
+}
+```
 
