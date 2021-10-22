@@ -1,20 +1,31 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <title>Starting with XO Forms</title>
-    <style>@import url(https://xo-js.dev/v1.4/xo.css);</style>
+    <style>
+        @import url(https://xo-js.dev/v1.5/xo.css);
+    </style>
 </head>
+
 <body>
     <h1>Starting with XO Forms</h1>
     <section id="form"></section>
-    <script type="module" src="https://xo-js.dev/v1.4/xo.min.js"></script>
+    <script type="module" src="https://xo-js.dev/v1.5/xo.min.js"></script>
     <script type="module">
         const schema = {
+            model: {
+                instance: {
+                    data: {
+                        name: ""
+                    }
+                }
+            },
             pages: [{
                 fields: [
                     {
-                        type: "name",
-                        name: "name",
+                        type: "text",
+                        bind: "#/data/name",
                         caption: "Enter your name"
                     }
                 ]
@@ -29,4 +40,5 @@
         }));
     </script>
 </body>
+
 </html>

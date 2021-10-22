@@ -3,6 +3,7 @@
 ## Table of contents
 
 * ![category:other](https://img.shields.io/badge/category-other-blue.svg?style=flat-square)
+  * [exo/controls/base/ExoButtonControl](src-exo-controls-base_ExoButtonControl.md) - _Module exo/controls/base/ExoButtonControl_
   * [exo/controls/base/ExoControlBase](src-exo-controls-base_ExoControlBase.md) - _Abstract base class for XO form controls_
   * [exo/controls/base/ExoTextControlAutoCompleteExtension](src-exo-controls-base_ExoTextControlAutoCompleteExtension.md) - _Module exo/controls/base/ExoTextControlAutoCompleteExtension_
   * [exo/controls/extended/ExoSandboxControl](src-exo-controls-extended_ExoSandboxControl.md) - _Module exo/controls/extended/ExoSandboxControl_

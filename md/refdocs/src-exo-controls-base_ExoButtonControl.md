@@ -5,7 +5,3 @@
 
 
 [Source file](..\..\src\exo\controls\base\ExoButtonControl.js)
-
-# Class `ExoButtonControl`
-
-Renders a button
