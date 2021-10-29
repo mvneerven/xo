@@ -176,14 +176,14 @@ class ExoButtonControl extends ExoElementControl {
     }
 
     else {
+      const dv = this.context.field.defaultValue;
+      if (dv && this.value !== dv) {
 
-      if (this.context.field.defaultValue && this.value !== this.context.field.defaultValue) {
-
-        if (this.context.field.defaultValue === -1) {
+        if (dv === -1) {
           this.value = this.clickCount;
         }
         else {
-          this.value = this.context.field.defaultValue;
+          this.value = dv;
         }
         var evt = new Event("change", { bubbles: true, cancelable: true })
         this.htmlElement.dispatchEvent(evt);
@@ -195,11 +195,11 @@ class ExoButtonControl extends ExoElementControl {
   * @deprecated Use generic actions array - Search for Rules Engine.
   * Set action to execute on click.
   */
-  set action(value){
+  set action(value) {
     this._action = value;
   }
 
-  get action(){
+  get action() {
     return this._action;
   }
 

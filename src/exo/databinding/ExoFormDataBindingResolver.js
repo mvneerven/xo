@@ -30,7 +30,7 @@ class ExoFormDataBindingResolver {
 
         if (node.nodeType == 3) {
             let s = node.data;
-            if (node.parentElement.data && node.parentElement.data.origData) {
+            if (node.parentElement?.data?.origData) {
                 s = node.parentElement.data.origData;
             }
 
@@ -62,7 +62,7 @@ class ExoFormDataBindingResolver {
         changedData = changedData || {};
 
         const model = this.exo.dataBinding.model;
-        if (model && model.logic) {
+        if (model?.logic) {
 
             if (typeof (model.logic) === "function") {
                 this.applyJSLogic(model.logic, null, model, changedData)
@@ -75,7 +75,7 @@ class ExoFormDataBindingResolver {
     }
 
     assembleScript(logic) {
-        if (logic && Array.isArray(logic.lines)) {
+        if (Array.isArray(logic?.lines)) {
             return `const context = {model: this.exo.dataBinding.model, exo: this, changed: this.changed};\n` + logic.lines.join('\n');
         }
         return "";

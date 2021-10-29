@@ -53,17 +53,34 @@
     },
     {
         "name": "TreeView Example",
-        "value": "https://xo-js.dev/assets/forms/templates/treeview.json",
+        "value": "https://xo-js.dev/assets/forms/templates/treeview.js",
         "description": "An example of the use of the TreeView control to display hierarchical data"
     },
     {
-        "name": "Complex Form with conditional logic",
-        "value": "https://xo-js.dev/assets/forms/templates/complex.json",
+        "name": "Age calculation",
+        "value": "https://xo-js.dev/assets/forms/templates/age-check.js",
+        "description": "A form that uses a date control to conditionallly enable another control based on age calculation"
+    },
+    {
+        "name": "Book a table",
+        "value": "https://xo-js.dev/assets/forms/templates/book-a-table.js",
         "description": "A multi-page form with interdepedencies, using the ExoForm Rules engine"
+    },
+
+    {
+        "name": "Receive Newsletter",
+        "value": "https://xo-js.dev/assets/forms/templates/receive-newsletter.js",
+        "description": "A simple setup for conditionally enabling a control"
+    },
+    
+    {
+        "name": "Make all input uppercase",
+        "value": "https://xo-js.dev/assets/forms/templates/action-upper.js",
+        "description": "Make text entered in a text input be converted to upper case"
     },
     {
         "name": "Model Binding",
-        "value": "https://xo-js.dev/assets/forms/templates/model-binding.json",
+        "value": "https://xo-js.dev/assets/forms/templates/model-binding.js",
         "description": "A form that shows how to use model binding"
     },
     {

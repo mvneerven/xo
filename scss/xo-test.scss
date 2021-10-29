@@ -116,6 +116,13 @@ body {
 }
 
 #xo-test {
+    &.nsp-grid.nsp-grid-3rc, &.nsp-grid.nsp-grid-3r {
+        body {
+            grid-template-rows: minmax(4vh, 60px) 1fr 30px;
+        }
+    }
+
+
     .md-converted-html {
         max-width: 90%;
 

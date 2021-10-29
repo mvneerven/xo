@@ -103,7 +103,7 @@ class ExoAceCodeEditor extends ExoBaseControls.controls.div.type {
     }
 
     get ace() {
-        if (this.htmlElement.data && this.htmlElement.data.editor)
+        if (this.htmlElement.data?.editor)
             return this.htmlElement.data.editor;
 
         return null;

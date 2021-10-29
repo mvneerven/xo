@@ -130,7 +130,7 @@ class ULTabStrip {
     isThisTabStrip(elm) {
         try {
             let div = elm.parentElement.parentElement.parentElement;
-            if (div && div.classList.contains("ul-tabs")) {
+            if (div?.classList.contains("ul-tabs")) {
                 if (elm.id && elm.id.split('-')[0] === div.getAttribute('data-name'))
                     return true;
             }
@@ -160,7 +160,7 @@ class ULTabStrip {
             let p = child.id.lastIndexOf('-');
             let id = child.id.substring(p + 1);
             console.debug("Tab selected on tabStrip '" + this.name + "': " + id)
-            if (this.events && this.events["tabSelected"]) {
+            if (this.events?.tabSelected) {
                 let tab = null
                 for (var t in this.tabs) {
                     if (t === id) {
@@ -168,8 +168,6 @@ class ULTabStrip {
                         break;
                     }
                 }
-
-               // this.setHtmlElementClass(id);
 
                 this.events["tabSelected"].apply(this, [{
                     target: e.target,

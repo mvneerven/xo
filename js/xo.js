@@ -119,7 +119,7 @@ class Form {
             return;
 
         let el = elm.closest("[data-exf]") || elm.querySelector("[data-exf]");
-        if (el && el.data && el.data.field)
+        if (el?.data?.field)
             return el.data.field._control.context.exo;
 
     }

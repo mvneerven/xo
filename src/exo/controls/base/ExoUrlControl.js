@@ -13,9 +13,9 @@ class ExoUrlControl extends ExoTextControl {
                 objectSchema: { // TODO: implement in 
                     $schema: "http://json-schema.org/draft-04/schema#",
                     properties: {
-                        title: {type: "string"},
-                        fileTypes: {type: "array"},
-                        maxSize: {type: "number"}
+                        title: { type: "string" },
+                        fileTypes: { type: "array" },
+                        maxSize: { type: "number" }
                     },
                     required: []
                 }
@@ -46,11 +46,11 @@ class ExoUrlControl extends ExoTextControl {
                                 if (button === "confirm") {
                                     let field = context.field._control.exo.get("drop");
                                     let fileDropCtl = field._control;
-                                    if (fileDropCtl.value && fileDropCtl.value.length) {
+                                    if (fileDropCtl.value?.length) {
                                         let file = fileDropCtl.value[0];
                                         let url = `data:${file.type};base64,${file.b64}`;
                                         me.value = url;
-                                        var evt = new Event("change", {bubbles: true, cancelable: true})
+                                        var evt = new Event("change", { bubbles: true, cancelable: true })
                                         me.htmlElement.dispatchEvent(evt);
                                     }
                                 }

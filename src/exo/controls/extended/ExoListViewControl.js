@@ -522,10 +522,10 @@ class ExoListViewControl extends ExoDivControl {
   // item click when using checkboxes for selection should 
   // trigger first action as defined in contextmenu
   selectFirstDropdownAction(e) {
-    if (this.contextMenu && this.contextMenu.itemList) {
+    if (this.contextMenu?.itemList) {
       let act = e.target;
       let first = this.contextMenu.itemList[0];
-      let itemId = act.closest("article").getAttribute("data-id");
+      let itemId = act.closest("article")?.getAttribute("data-id");
       this.events.trigger("action", {
         id: first.action,
         items: [itemId],
@@ -1138,7 +1138,7 @@ class ExoListViewControl extends ExoDivControl {
         <div class="exf-lv-item__cell__content">{{content}}</div>
     </div>`;
 
-    if (prop.grid && prop.grid.filterInPlace) {
+    if (prop.grid?.filterInPlace) {
       const base = prop.grid.searchURL || `${location.href}/`;
       const url = `${base}${cellData}`;
       cellData = `<a href="${url}">${cellData}</a>`;

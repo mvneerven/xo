@@ -152,8 +152,8 @@ class ExoFormDataBinding {
             Core.setObjectValue(this._model, path, value);
         }
         catch (ex) {
-            //this._signalDataBindingError(ex);
-            throw TypeError(`DataBinding.set() - error on ${path}`)
+            
+            throw TypeError(`Could not set ${path}: ${ex.message}`);// to ${value}: ${ex.message}`)
         }
 
     }
@@ -213,7 +213,7 @@ class ExoFormDataBinding {
         const me = this;
 
         const proxify = (instanceName, object, change, subPath) => {
-            if (object && object.__proxy__) {
+            if (object?.__proxy__) {
                 return object;
             }
             const pxy = new Proxy(object, {

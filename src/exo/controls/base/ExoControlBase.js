@@ -84,7 +84,7 @@ class ExoControlBase {
             }
 
             if (jsonSchemaType === "object") {
-                if (p.objectSchema && p.objectSchema.properties) {
+                if (p.objectSchema?.properties) {
                     schema.properties[p.name] = {
                         ...schema.properties[p.name],
                         ...p.objectSchema
@@ -697,7 +697,7 @@ class ExoControlBase {
     }
 
     showValidationError() {
-        if (this.htmlElement && this.htmlElement.reportValidity)
+        if (this.htmlElement?.reportValidity)
             return this.htmlElement.reportValidity()
 
         return true;

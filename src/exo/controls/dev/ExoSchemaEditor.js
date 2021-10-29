@@ -78,7 +78,7 @@ class ExoSchemaEditor extends ExoAceCodeEditor {
             }
         }
         else if (typeof (value) === "object") {
-            if (value.model && typeof (value.model.logic) === "function")
+            if (typeof (value.model?.logic) === "function")
                 return "javascript"
 
             return "json";

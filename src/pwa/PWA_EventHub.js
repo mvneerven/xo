@@ -17,7 +17,7 @@ class PWA_EventHub {
 
     async init() {
         return new Promise((resolve, reject) => {
-            if (this.settings && this.settings.enabled) {
+            if (this.settings?.enabled) {
                 
                 console.debug("PWA_EventHub", "Opening signalR connection ", this.settings.notificationServiceUrl);
 

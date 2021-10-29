@@ -117,7 +117,7 @@ class ExoInputControl extends ExoElementControl {
                 q = q.substr(0, 1).toUpperCase() + q.substr(1);
                 let url = o.data.url + "?$top=20&$filter=substring(" + o.data.field + ",0," + q.length + ") eq '" + q + "'";
                 fetch(url).then(x => x.json()).then(data => {
-                    if (data && data.value) {
+                    if (data?.value) {
                         o.callback(o.field, data.value.map(e => {
                             return e.Title
                         }));

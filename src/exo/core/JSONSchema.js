@@ -18,7 +18,7 @@ class JSONSchema {
 
     expandSchema(schema) {
         let props = {};
-        if (schema && schema.properties) {
+        if (schema?.properties) {
             for (var name in schema.properties) {
                 let obj = schema.properties[name];
                 props[name] = obj;
@@ -66,11 +66,11 @@ class JSONSchema {
                 field.caption = (props ? props.title : null) || Core.toWords(path);
             }
 
-            if (props && props.description) { // https://json-schema.org/draft/2020-12/json-schema-validation.html#rfc.section.9.1
+            if (props?.description) { // https://json-schema.org/draft/2020-12/json-schema-validation.html#rfc.section.9.1
                 field.info = props.description;
             }
 
-            if (props && props.enum && !field.items) {
+            if (props?.enum && !field.items) {
                 field.type = "dropdown";
                 field.items = props.enum
             }

@@ -193,6 +193,8 @@ class XOFormDataRulesEngine extends ExoRuleEngineBase {
 
         const ACTIONS = {
             goto: e => { this.exo.addins.navigation.goto(this._getPage(this.var(e))) },
+            next: e => { this.exo.addins.navigation.next() },
+            back: e => { this.exo.addins.navigation.back() },
             alert: e => alert(this.var(e)),
             dialog: e => {
                 let dlg = this.exo.get(this.var(e));

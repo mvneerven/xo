@@ -36,7 +36,7 @@ class ExoDropDownButton extends ExoListControl {
   }
 
   async populateList(containerElm, tpl) {
-    if (this.items && Array.isArray(this.items)) {
+    if (Array.isArray(this.items)) {
       this.items.forEach((i, index) => {
         this.addListItem(this.context.field, i, tpl, containerElm, index);
       });

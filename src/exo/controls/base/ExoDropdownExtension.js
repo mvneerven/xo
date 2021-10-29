@@ -19,7 +19,7 @@ class ExoDropdownExtension {
 
         const state = await Core.acquireState(ctl.dropdown, {
             process: (data, options)=>{
-                if(typeof(data) === "object" && Array.isArray(data.items)){
+                if(Array.isArray(data?.items)){
                     ctl.direction = data.direction || ctl.direction;
                     ctl.dropEvent = data.event || ctl.dropEvent
                     return data.items;

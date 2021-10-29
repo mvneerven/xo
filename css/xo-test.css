@@ -136,6 +136,11 @@ body footer {
   padding-top: 5px;
 }
 
+#xo-test.nsp-grid.nsp-grid-3rc body, #xo-test.nsp-grid.nsp-grid-3r body {
+  -ms-grid-rows: minmax(4vh, 60px) 1fr 30px;
+      grid-template-rows: minmax(4vh, 60px) 1fr 30px;
+}
+
 #xo-test .md-converted-html {
   max-width: 90%;
 }

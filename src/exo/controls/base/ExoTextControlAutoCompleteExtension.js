@@ -362,10 +362,10 @@ class ExoTextControlAutoCompleteExtension {
     }
 
     isMatch(options, i) {
-        if (i.text.indexOf("%search%") >= 0)
+        if (i.text?.indexOf("%search%") >= 0)
             return true
 
-        return options.search ? i.text.toLowerCase().indexOf(options.search.toLowerCase()) >= 0 : options.suggest;
+        return options.search ? i.text?.toLowerCase().indexOf(options.search.toLowerCase()) >= 0 : options.suggest;
     }
 
 }

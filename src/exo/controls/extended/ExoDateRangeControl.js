@@ -1,7 +1,10 @@
 import ExoMultiInputControl from './ExoMultiInputControl';
 
 class ExoDateRangeControl extends ExoMultiInputControl {
-    grid = "exf-cols-10em-10em";
+    
+    columns = "14rem 14rem "
+
+    areas = "'from to'"
 
     fields = {
         from: { caption: "From", type: "date" },

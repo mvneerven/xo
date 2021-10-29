@@ -248,7 +248,7 @@ class ExoForm {
         }
 
         return new Promise((resolve, reject) => {
-            if (this.schema.model && this.schema.model.schemas) {
+            if (this.schema.model?.schemas) {
                 for (var instanceName in this.schema.model.schemas) {
                     let schemaRef = this.schema.model.schemas[instanceName]
                     if (Core.isUrl(schemaRef)) {
@@ -529,7 +529,7 @@ class ExoForm {
             class: "exf-wrapper",
             ...this.schema.form.container,
             ...{
-                pages: this.schema.pages && this.schema.pages.length ? this.schema.pages.map(y => {
+                pages: this.schema.pages?.length ? this.schema.pages.map(y => {
                     return {
                         id: "page" + y.id,
                         caption: y.legend

@@ -193,16 +193,6 @@ class ExoTaggingControl extends ExoBaseControls.controls.text.type {
 
         return false;
     }
-
-
-    // addData(array) {
-    //     var plugin = this;
-
-    //     array.forEach(function (string) {
-    //         plugin.addTag(string);
-    //     })
-    //     return this;
-    // }
 }
 
 export default ExoTaggingControl;

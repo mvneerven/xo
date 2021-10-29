@@ -25,7 +25,7 @@ class ExoFormSchema {
         if (typeof (schemaData) !== "object") {
 
             let test = ExoFormFactory.tryScriptLiteral(schemaData);
-            if (test && test.type === "javascript") {
+            if (test?.type === "javascript") {
                 this._type = this.types.js;
                 if (test.executed)
                     schemaData = test.schema;
@@ -173,7 +173,7 @@ class ExoFormSchema {
     }
 
     getFirstInstanceName() {
-        if (this.model && this.model.instance) {
+        if (this.model?.instance) {
             let names = Object.getOwnPropertyNames(this.model.instance);
             return names[0];
         }
@@ -267,7 +267,7 @@ Pages: ${this.pages.length}
     }
 
     guessType() {
-        if (this.model && typeof (this.model.logic) === "function") {
+        if (typeof (this.model?.logic) === "function") {
             return this.types.js
         }
         return this.types.json;
@@ -348,7 +348,7 @@ Pages: ${this.pages.length}
 
     logicToJson(data) {
         let logic;
-        if (data.model && typeof (data.model.logic) === "function") {
+        if (typeof (data.model?.logic) === "function") {
             logic = data.model.logic;
 
             data.model.logic = {
@@ -360,7 +360,7 @@ Pages: ${this.pages.length}
     }
 
     logicToJs(data) {
-        if (data.model && typeof (data.model.logic) === "object" && data.model.logic.type === "JavaScript" && Array.isArray(data.model.logic.lines)) {
+        if (typeof (data.model?.logic) === "object" && data.model.logic.type === "JavaScript" && Array.isArray(data.model.logic.lines)) {
             let body = data.model.logic.lines.map(l => {
                 return '\t\t' + l.trim();
             }).join('\n');
@@ -440,15 +440,6 @@ Pages: ${this.pages.length}
 
             if (!skip) {
                 if (matcher(p, { type: "page", pageIndex: pageIndex })) {
-
-                    // if(options.includePages){
-                    //     //debugger;
-                    //     matches.push(
-                    //         {...p}
-                    //     )
-                    // }
-
-
                     if (Array.isArray(p.fields)) {
                         p.fields.forEach(f => {
                             f._index = fieldIndex;
@@ -534,7 +525,7 @@ Pages: ${this.pages.length}
             }
 
             for (var p in props) {
-                if (beforeCtl && p === beforeCtl.context.field.name) {
+                if (p === beforeCtl?.context.field.name) {
                     newProps[keep.name] = { ...keep.props };
                     keep = null;
                 }

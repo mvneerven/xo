@@ -2,9 +2,9 @@ const schema = {
   navigation: "static",
   model: {
     logic: context => {
-          const o = context.model.instance;  
-          o.map.coords = [o.coords.longitude, o.coords.latitude]
-        },
+      const o = context.model.instance;
+      o.map.coords = [o.coords.longitude, o.coords.latitude]
+    },
     schemas: {
       coords: "https://xo-js.dev/assets/json-schemas/geo-schema.json"
     },
@@ -34,8 +34,6 @@ const schema = {
         bind: "#/map/coords"
       }
     }
-  },
-  pages: [
-    
-  ]
+  }
+
 }

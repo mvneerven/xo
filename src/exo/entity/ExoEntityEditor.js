@@ -68,9 +68,7 @@ class ExoEntityEditor {
     }
 
     async _handleButtonClick(e, button) {
-
-
-        if (e && e.target && e.target.tagName !== "BUTTON") {
+        if (e?.target?.tagName !== "BUTTON") {
             e.cancelBubble = true;
             return;
         }

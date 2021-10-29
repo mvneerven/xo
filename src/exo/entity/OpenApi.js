@@ -66,7 +66,7 @@ class OpenApi {
                     let c = r200.content;
                     if (c) {
                         let cjs = c["application/json"];
-                        if (cjs && cjs.schema) {
+                        if (cjs?.schema) {
                             // get list of items
                             if (cjs.schema.type === "array" && cjs.schema.items.$ref === "#/components/schemas/" + this.jsonSchemaId) {
                                 ar[methodName] = new OpenApiEndPoint(methodName, this._data.info.title.toLowerCase() + name, {

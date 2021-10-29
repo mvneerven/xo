@@ -1,33 +1,48 @@
 const schema = {
     model: {
-        logic: context => {
-            if (context.changed.property === "button") {
-                // e.changed.newValue
-            }
-        },
-        instance: {
-            control: {
-                button: ""
-            }
+      instance: {
+        control: {
+          button: ""
         }
+      }
     },
     pages: [
-        {
-            fields: [
-                {
-                    type: "button",
-                    name: "show",
-                    caption: "Show dialog! @instance.control.button",
-                    action: "dialog:dlg1"
-                },
-                {
-                    name: "dlg1",
-                    body: "Test dialog!",
-                    caption: "Test Field",
-                    type: "dialog",
-                    bind: "instance.control.button"
+      {
+        fields: [
+          {
+            type: "button",
+            name: "show",
+            caption: "Show dialog! #/control/button",
+            actions: [
+              {
+                do: {
+                  dialog: [
+                    "dlg1"
+                  ]
                 }
+              },
+              {
+                if: {
+                  property: "#/control/button",
+                  is: "confirm"
+                },
+                do: {
+                  alert: [
+                    "Pressed confirm!"
+                  ]
+                }
+              }
             ]
-        }
+          },
+          {
+            name: "dlg1",
+            body: "Test dialog!",
+            mode: "side",
+            bind: "#/control/button",
+            caption: "Test Field",
+            type: "dialog"
+          }
+        ]
+      }
     ]
-}
+  }

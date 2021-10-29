@@ -369,7 +369,7 @@ class ExoEntitySettings {
         let ar = this.options.forms.list.control.properties;
         if (Array.isArray(ar)) {
             let ar1 = [];
-            if (mapped && mapped.list && mapped.list.control) {
+            if (mapped?.list?.control) {
                 let obj = mapped.list.control.properties;
                 if (typeof (obj) === "object") {
 

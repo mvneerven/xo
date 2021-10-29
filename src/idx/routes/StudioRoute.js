@@ -4,7 +4,6 @@ import ExoFormBuilderSidePanel from '../modules/ExoFormBuilderSidePanel';
 import ExoFormBuilderSchema from '../modules/ExoFormBuilderSchema';
 import ExoSchemaRenderer from '../modules/ExoSchemaRenderer';
 import ExoFormBuilderWorkspace from '../modules/ExoFormBuilderWorkspace';
-import ExoFormAceExtension from '../modules/ExoFormAceExtension';
 
 
 const DOM = window.xo.dom;
@@ -80,11 +79,7 @@ class StudioRoute extends xo.route {
                 validation: "inline"
             }
         });
-
-        ExoFormAceExtension.extend(context)
-
         return context;
-
     }
 
     render(path) {

@@ -91,10 +91,8 @@ class ExoSandboxControl extends ExoEmbedControl {
 
         if(this.subform){
             const schema = await xo.form.read(form.schema);
-            if (schema.raw.model && schema.raw.model.instance)
+            if (schema.raw.model?.instance)
                 throw TypeError("Subform must use binding to parent model")
-
-            
 
             form.schema.model = form.schema.model || {};
             form.schema.model.instance = {

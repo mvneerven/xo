@@ -61,11 +61,8 @@ import ExoFormFactory from './ExoFormFactory';
 
         let demo = {};
 
-        if (control && control.acceptedProperties.length) {
-            
-            
+        if (control?.acceptedProperties.length) {
             control.acceptedProperties.forEach(p => {
-                
                 let name = p;
                 if (typeof (p) === "object") {
                     name = p.name

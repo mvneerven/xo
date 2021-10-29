@@ -8,7 +8,7 @@ class ExoFormSurveyNavigation extends ExoFormWizardNavigation {
     async render() {
         const check = e => {
             let exf = e.target.closest("[data-exf]");
-            if (exf && exf.data && exf.data.field) {
+            if (exf?.data?.field) {
                 this.checkForward(exf.data.field, "change", e)
             }
         };
@@ -56,7 +56,7 @@ class ExoFormSurveyNavigation extends ExoFormWizardNavigation {
 
         var first = this.exo.form.querySelector(".exf-page.active .exf-ctl-cnt");
 
-        if (first && first.offsetParent !== null) {
+        if (first?.offsetParent !== null) {
             first.closest(".exf-page").scrollIntoView();
             setTimeout(e => {
                 let ctl = first.querySelector("[name]");
@@ -85,7 +85,7 @@ class ExoFormSurveyNavigation extends ExoFormWizardNavigation {
             else {
                 // special case: detail.field included - workaround 
                 let type = f.type;
-                if (e.detail && e.detail.field)
+                if (e.detail?.field)
                     type = e.detail.field;
 
                 if (!["checkboxlist", "tags"].includes(type)) { // need metadata from controls
