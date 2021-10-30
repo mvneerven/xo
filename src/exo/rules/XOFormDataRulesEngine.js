@@ -248,6 +248,9 @@ class XOFormDataRulesEngine extends ExoRuleEngineBase {
 
                 this.exo.dataBinding.set(a, cvt(a, b));
             },
+            navigate: (a) => {
+                document.location.href = a
+            },
             sum: (a, b) => {
                 calc(a, b, (c, d) => { return c + d })
             },

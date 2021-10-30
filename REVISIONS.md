@@ -1033,3 +1033,11 @@ const schema = {
 }
 ```
 
+
+
+# New in 1.5.2
+
+- The ```tags``` control now also supports ```autocomplete```.
+- The ```autocomplete``` settings now include a ```strict``` boolean setting, to allow only values from the autocomplete ```items```.
+
+- The action ```navigate``` was added to the list of available actions in the Rules Engine.

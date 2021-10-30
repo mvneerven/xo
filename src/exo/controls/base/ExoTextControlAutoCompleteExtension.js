@@ -23,7 +23,8 @@ class ExoTextControlAutoCompleteExtension {
     }
 
     attach() {
-        this.htmlElement = this.control.htmlElement
+
+        this.htmlElement = this.control.autoCompleteInput || this.control.htmlElement
         this.htmlElement.setAttribute("autocomplete", "off");
 
         this.container = this.control.container;
@@ -39,7 +40,7 @@ class ExoTextControlAutoCompleteExtension {
         this.resultsDiv = document.createElement("div");
         this.resultsDiv.classList.add(this.cssClasses.result)
         this.resultsDiv.addEventListener("mousedown", this.resultClick.bind(this))
-        
+
         //this.container.appendChild(this.resultsDiv)
         this.container.insertBefore(this.resultsDiv, this.container.querySelector(".exf-fld-details"))
 
@@ -110,19 +111,27 @@ class ExoTextControlAutoCompleteExtension {
                         this.tabWindow.close();
                     }
                 }
-                var event = new Event('change', {bubbles: true});
+                var event = new Event('change', { bubbles: true });
                 this.control.htmlElement.dispatchEvent(event);
-            
+
                 this.clear();
 
-                const ev = new Event("result-selected", {bubbles: false})
+                const ev = new Event("result-selected", { bubbles: false })
+                ev.detail = {
+                    text: options.text
+                }
                 this.htmlElement.dispatchEvent(ev)
             }, 0);
         }
     }
 
     setText(options) {
-        this.control.value = options.text;
+        if (this.control.autoCompleteInput) {
+            //this.control.autoCompleteInput.value = options.text;
+        }
+        else {
+            this.control.value = options.text;
+        }
         this.hide();
     }
 
@@ -171,14 +180,14 @@ class ExoTextControlAutoCompleteExtension {
         };
 
         this.getItems(options).then(r => {
-            this.clear();            
+            this.clear();
             this.resultsHandler(r, options)
         })
     }
 
     keyDownHandler(e) {
         switch (e.keyCode) {
-            case 13:
+            case 13:                
                 e.stopPropagation();
                 e.preventDefault();
                 break;
@@ -200,9 +209,18 @@ class ExoTextControlAutoCompleteExtension {
                 this.hide();
                 break;
             case 13:
-                e.stopPropagation();
-                e.preventDefault();
-                this.selectResult()
+                
+                if (this.getSelectedDiv()) {
+                    this.control.preventEnter = true
+                    e.stopPropagation();
+                    e.preventDefault();
+                    this.selectResult()
+                    setTimeout(() => {
+                        this.control.preventEnter = false    
+                    }, 10);
+                    
+                }
+                
                 break;
             default:
                 //this.toggle();

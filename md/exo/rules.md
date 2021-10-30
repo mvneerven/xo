@@ -75,7 +75,8 @@ Under the ```do``` node, one or more actions can be placed
 
 - ```goto``` - jump to wizard page given in first parameter using index or page id (eg: ```goto: "mypage"```)
 - ```dialog``` - open given dialog (eg: ```dialog: ["my-dialog"]```)
-- ```set``` - set state in model when condition is met
+- ```set``` - set state in model 
+- ```navigate``` - navigate to given URL
 - ```convert``` - convert variable 
 - ```sequence``` - bundle multiple actions into an array and execute them
 - ```sum```
@@ -91,12 +92,7 @@ Each ```if``` node can have a ```property``` property that works just like the `
 
 If ```property``` is not set, the ```bind``` scope is used.
 
-
-
-
 If ```if``` is not set, the rule fires on all changes in the given or implicit scope.
-
-
 
 In the example below, the ```if``` clause is omitted, causing all input to be converted to upper case:
 

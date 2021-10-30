@@ -1,4 +1,5 @@
 import ExoBaseControls from '../base';
+import ExoTextControlAutoCompleteExtension from '../base/ExoTextControlAutoCompleteExtension';
 
 class ExoTaggingControl extends ExoBaseControls.controls.text.type {
     max = null;
@@ -15,8 +16,13 @@ class ExoTaggingControl extends ExoBaseControls.controls.text.type {
 
         this.wrapper = document.createElement('div');
         this.input = document.createElement('input');
-        this.wrapper.append(this.input);
+        this.input.addEventListener("result-selected", e => {
+            this.addTag(e.detail.text);
+            //isRestrictedToAutoComplete
+            this.input.value="";
+        })
 
+        this.wrapper.append(this.input);
 
         this.acceptProperties(
             {
@@ -34,6 +40,20 @@ class ExoTaggingControl extends ExoBaseControls.controls.text.type {
                 description: "Tag names to set (array)",
                 demoValue: ["Good", "Bad", "Ugly"],
                 type: Array
+            },
+            {
+                name: "autocomplete",
+                type: Object,
+                description: `Object describing autocompletion settings.
+
+                - autocomplete: {items: ["Mr", "Mrs", "Ms"]}
+                - autocomplete: this.myAutoCompleteProvider.bind(this)
+                - autocomplete: {
+                    items: "https://restcountries.eu/rest/v2/name/%search%",
+                    map: "name",
+                    minlength: 2,
+                    max: 5
+                  }`
             }
         )
     }
@@ -49,7 +69,7 @@ class ExoTaggingControl extends ExoBaseControls.controls.text.type {
 
             this.htmlElement.parentNode.insertBefore(this.wrapper, this.htmlElement);
 
-            this.htmlElement.setAttribute('type', 'hidden');1
+            this.htmlElement.setAttribute('type', 'hidden'); 1
             this.htmlElement.addEventListener("change", e => {
                 if (!e.detail) {
                     e.stopImmediatePropagation();
@@ -66,16 +86,20 @@ class ExoTaggingControl extends ExoBaseControls.controls.text.type {
                 inp.focus();
             });
 
-            this.input.addEventListener('keydown', e => {
-                var str = this.input.value.trim();
-                if (!!(~[9, 13, 188].indexOf(e.keyCode))) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    e.returnValue = false;
+            this.input.addEventListener('keyup', e => {
 
-                    this.input.value = "";
-                    if (str !== "") {
-                        this.addTag(str);
+
+                if (!!(~[9, 13, 188].indexOf(e.keyCode))) {
+                    if (!this.isRestrictedToAutoComplete && !this.preventEnter) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        e.returnValue = false;
+                        const str = this.input.value.trim();
+                        this.input.value = "";
+                        if (str !== "") {
+                            console.log("bbbb")
+                            this.addTag(str);
+                        }
                     }
                 }
                 else if (e.key === 'Backspace') {
@@ -96,6 +120,20 @@ class ExoTaggingControl extends ExoBaseControls.controls.text.type {
         finally {
             this._rendered = true
         }
+    }
+
+    set autocomplete(obj) {
+        this.autoCompleteInput = this.input; // contrary to text control
+
+        this._autoComplete = new ExoTextControlAutoCompleteExtension(this, obj);
+    }
+
+    get autocomplete() {
+        return this._autoComplete;
+    }
+
+    get isRestrictedToAutoComplete() {
+        return this.autocomplete?.settings.strict;
     }
 
     renderTags() {
@@ -125,11 +163,6 @@ class ExoTaggingControl extends ExoBaseControls.controls.text.type {
             throw TypeError("Data for tags control must be array");
 
         this._value = data;
-
-        if (this.rendered) {
-           // this.wrapper.innerHTML = "";
-           // this.renderTags()
-        }
     }
 
     // Add Tag
@@ -176,7 +209,7 @@ class ExoTaggingControl extends ExoBaseControls.controls.text.type {
     // override ExoControlBase.triggerChange - dispatch event on htmlElement fails 
     // for some reason - disspatching on visual tag input
     triggerChange() {
-        var evt = new Event("change", {bubbles: true, cancelable: true})
+        var evt = new Event("change", { bubbles: true, cancelable: true })
         evt.detail = { field: "tags" };
         this.input.dispatchEvent(evt);
     }
