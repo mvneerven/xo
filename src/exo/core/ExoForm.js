@@ -80,28 +80,28 @@ class ExoForm {
         return this._schema;
     }
 
-    /**
-     * Returns a reference to the CSS variables included 
-     */
-    get cssVariables() {        
-        return this._cssVariables;
-    }
+    // /**
+    //  * Returns a reference to the CSS variables included 
+    //  */
+    // get cssVariables() {        
+    //     return this._cssVariables;
+    // }
 
-    renderStyleSheet() {
-        const id = `form-variables-${this.id}`,
-        prevStyleSheet = document.getElementById(id);
-        if (prevStyleSheet) prevStyleSheet.remove();
+    // renderStyleSheet() {
+    //     const id = `form-variables-${this.id}`,
+    //     prevStyleSheet = document.getElementById(id);
+    //     if (prevStyleSheet) prevStyleSheet.remove();
 
-        const cssSheet = document.createElement("style");
-        cssSheet.id = id;
-        const css = Object.keys(this.cssVariables).map(
-            (c) => `${c}: ${this.cssVariables[c]};`
-        );
-        cssSheet.innerHTML = `[data-id="${this.id}"] { ${css.join(
-            " "
-        )} }`;
-        document.querySelector("head").appendChild(cssSheet);
-    }
+    //     const cssSheet = document.createElement("style");
+    //     cssSheet.id = id;
+    //     const css = Object.keys(this.cssVariables).map(
+    //         (c) => `${c}: ${this.cssVariables[c]};`
+    //     );
+    //     cssSheet.innerHTML = `[data-id="${this.id}"] { ${css.join(
+    //         " "
+    //     )} }`;
+    //     document.querySelector("head").appendChild(cssSheet);
+    // }
 
     /**
      * load XO form schema (string or )
@@ -390,7 +390,7 @@ class ExoForm {
 
         this.addins.navigation.restart();
 
-        this.renderStyleSheet();
+        //this.renderStyleSheet();
 
         this.events.trigger(ExoFormFactory.events.renderReady);
 

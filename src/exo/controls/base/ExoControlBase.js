@@ -13,7 +13,7 @@ class ExoControlBase {
     _disabled = false;
     _rendered = false;
     _useContainer = true;
-
+    _cssVariables = {};
     acceptedProperties = [];
 
     dataProps = {};
@@ -143,6 +143,34 @@ class ExoControlBase {
         });
 
         return mappings;
+    }
+
+    /**
+     * Returns a reference to the CSS variables included 
+     */
+    get cssVariables() {
+        return this._cssVariables;
+    }
+
+    renderStyleSheet() {
+        
+        const keys = this.cssVariables ? Object.keys(this.cssVariables) : null;
+        if (keys?.length) {
+            const cid = this.context.field.id;
+            const id = `ctl-variables-${cid}`,
+                prevStyleSheet = document.getElementById(id);
+            if (prevStyleSheet) prevStyleSheet.remove();
+
+            const cssSheet = document.createElement("style");
+            cssSheet.id = id;
+            const css = keys.map(
+                (c) => `${c}: ${this.cssVariables[c]};`
+            );
+            cssSheet.innerHTML = `[data-id="${cid}"] { ${css.join(
+                " "
+            )} }`;
+            document.querySelector("head").appendChild(cssSheet);
+        }
     }
 
     getBindings() {
@@ -344,7 +372,7 @@ class ExoControlBase {
     }
 
     triggerChange(detail) {
-        var evt = new Event("change", {bubbles: true, cancelable: true})
+        var evt = new Event("change", { bubbles: true, cancelable: true })
         evt.detail = detail;
         this.htmlElement.dispatchEvent(evt);
     }
@@ -560,10 +588,12 @@ class ExoControlBase {
         if (this.css) {
 
             Object.entries(this.css).map(i => {
-                this.context.exo.cssVariables[i[0]] = i[1];
+                this.cssVariables[i[0]] = i[1];
             })
 
         }
+
+        this.renderStyleSheet();
 
         return this.container
     }
@@ -573,7 +603,7 @@ class ExoControlBase {
         const f = this.context.field;
 
         this.htmlElement.addEventListener("invalid", e => {
-            if (e.target.closest("[data-page]").getAttribute("data-skip") === "true") {                
+            if (e.target.closest("[data-page]").getAttribute("data-skip") === "true") {
                 e.preventDefault();
                 return false;
             }
