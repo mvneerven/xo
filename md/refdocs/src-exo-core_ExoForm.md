@@ -141,5 +141,4 @@ __*return*__ | `promise` | *- A promise with the typed rendered element*
 Name | Type | Description
 --- | --- | ---
 __schema__ | `undefined` | *Returns the current Form Schema*
-__cssVariables__ | `undefined` | *Returns a reference to the CSS variables included*
 __dataBinding__ | `object` | *Gets the data binding object*

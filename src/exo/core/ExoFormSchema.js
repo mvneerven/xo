@@ -75,7 +75,7 @@ class ExoFormSchema {
             
             if(this._schemaData.model){
                 if(!this._schemaData.model.instance)
-                    console.error("The 'model' node must contain an 'instance' node");
+                    throw TypeError("The 'model' node must contain an 'instance' node");
             }
             else{
                 this._schemaData.model = { instance: {}};

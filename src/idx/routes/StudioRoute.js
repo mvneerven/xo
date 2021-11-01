@@ -29,7 +29,6 @@ class StudioRoute extends xo.route {
             this.applyJSLogic(e.detail.exo);
         }).on("ready", e => { // form rendered using current schema tab contents
             this.rendered(e.detail);
-
         }).on("schemaloaded", e => {
             if (this.renderer.model.fieldCount === 0) {
                 this.showFormNotRendered({
@@ -41,7 +40,8 @@ class StudioRoute extends xo.route {
 
             }
         }).on("error", e => {
-            this.app.UI.notifications.add("Error " + e.detail.error.toString(), { type: "error" })
+            this.setError(e)
+            //this.app.UI.notifications.add("Error " + e.detail.error.toString(), { type: "error" })
         }).on("post", e => {
             //let jsonString = JSON.stringify(e.detail.postData, null, 2);
             //alert(jsonString);
@@ -57,6 +57,20 @@ class StudioRoute extends xo.route {
         })
 
 
+    }
+
+
+    clearError(){
+        this.sidePanel.tabStrip.tabs.errors.panel.innerHTML=""
+    }
+
+    setError(e){
+        this.recentError = e.detail.error.toString();
+        
+        let elm = document.createElement("div");
+        elm.innerHTML = this.recentError;
+        this.sidePanel.tabStrip.tabs.errors.panel.appendChild(elm);
+        this.sidePanel.tabStrip.tabs.errors.select()
     }
 
     showFormNotRendered(data) {
@@ -83,6 +97,8 @@ class StudioRoute extends xo.route {
     }
 
     render(path) {
+
+        
 
         this.app.UI.areas.main.clear()
 
@@ -138,17 +154,16 @@ class StudioRoute extends xo.route {
         if (this.tabStrip.tabs.js)
             this.tabStrip.tabs.js.enabled = true;
 
-        this.tabStrip.tabs.form.replaceWith(x.container);
+        this.tabStrip.tabs.form.replaceWith(o.form);
 
         this.currentForm = x;
-        console.debug("Showing Model instance at render time");
         this.sidePanel.showModelChange(x.dataBinding.model)
 
         // when paging in rendered form, update sidepanel
         this.currentForm.on(window.xo.form.factory.events.page, e => {
             this.sidePanel.updateCurrentFormPage(e.detail.page);
         }).on(window.xo.form.factory.events.dataModelChange, e => {
-            console.debug("ExoFormsStudio", "dataModelChange", e.detail.state, e.detail.model);
+            console.debug("XO Studio", "dataModelChange", e.detail.state, e.detail.model);
             this.sidePanel.showModelChange(e.detail.model)
         })
 
@@ -277,6 +292,7 @@ class StudioRoute extends xo.route {
 
     renderFormFromSchema(value, ready) {
         try {
+            this.clearError()
             this.renderer.model.load(value);
 
             try {

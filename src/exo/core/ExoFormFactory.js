@@ -72,7 +72,7 @@ class ExoFormFactory {
 
     static Schema = ExoFormSchema;
 
-    static LiveEditor = ExoLiveEditor;   
+    static LiveEditor = ExoLiveEditor;
 
     static defaults = {
         imports: [],
@@ -147,7 +147,8 @@ class ExoFormFactory {
 
             Promise.all(promises).then(() => {
                 let lib = ExoFormFactory.buildLibrary();
-                console.debug("ExoFormFactory: loaded library", lib, "from", options.imports);
+                console.debug("XO Controls", lib);
+
                 resolve(new ExoFormContext({
                     ...options,
                     library: lib
@@ -155,7 +156,7 @@ class ExoFormFactory {
             });
         })
     }
-    
+
     static buildLibrary() {
         for (var name in ExoFormFactory.library) {
             var field = ExoFormFactory.library[name];
@@ -304,7 +305,7 @@ class ExoFormFactory {
             var field = lib[name];
             ExoFormFactory.library[name] = field;
         }
-    }   
+    }
 
     /**
      * Loads and parses an XO form schema from the given source
@@ -312,7 +313,7 @@ class ExoFormFactory {
      * @param {*} options - options
      * @returns {ExoFormSchema}
      */
-    static async read(value, options){
+    static async read(value, options) {
         options = {
             ...options || {},
             returnSchema: true
@@ -464,7 +465,7 @@ class ExoFormFactory {
         return field;
     }
 
-    static async createDropDown(control){
+    static async createDropDown(control) {
         const dex = new ExoDropdownExtension(control);
         await dex.init();
         return dex;
@@ -519,7 +520,7 @@ class ExoFormFactory {
         options = options || {};
         options.context = options.context || await ExoFormFactory.build()
         let type = ExoFormFactory.determineSchemaType(value), x, result;
-
+        
         const applyOptions = (x, dom) => {
             if (options.on) {
                 for (var o in options.on) {
@@ -537,16 +538,25 @@ class ExoFormFactory {
 
         switch (type) {
             case "form":
-                x = options.context.createForm({
-                    ...options
-                });
-                applyOptions(x, x.form)
-                await x.load(value);
-                if(options.returnSchema){
-                    return x.schema;
+                try{
+                    x = options.context.createForm({
+                        ...options
+                    });
+                    applyOptions(x, x.form)
+                    await x.load(value);
+                    if (options.returnSchema) {
+                        return x.schema;
+                    }
+                    await x.renderForm();
+                    return x.container;
                 }
-                await x.renderForm();
-                return x.container;
+                catch(ex){
+                    x.events.trigger(xo.form.factory.events.error, {
+                        error: ex.message
+                    })
+                }
+                break;
+            
             case "field":
                 x = options.context.createForm({
                     ...options
@@ -561,7 +571,7 @@ class ExoFormFactory {
                 throw TypeError("Not implemented");
         }
     }
-    
+
     /**
      * Read JSON Schema from the given URL.
      * @param {URL} schemaUrl - The URL to read the JSON Schema from

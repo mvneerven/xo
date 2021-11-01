@@ -39,7 +39,7 @@ class SettingsRoute extends xo.route {
         let frm = await pwa.settings.render({
             on: {
                 interactive: e => {
-                    //debugger;
+                    
                 }
             }
         });

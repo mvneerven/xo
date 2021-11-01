@@ -159,7 +159,6 @@ class ULTabStrip {
             let child = e.target;
             let p = child.id.lastIndexOf('-');
             let id = child.id.substring(p + 1);
-            console.debug("Tab selected on tabStrip '" + this.name + "': " + id)
             if (this.events?.tabSelected) {
                 let tab = null
                 for (var t in this.tabs) {

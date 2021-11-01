@@ -18,6 +18,9 @@ class ExoDialogControl extends ExoBaseControls.controls.div.type {
 
     constructor(context) {
         super(context);
+        
+        this.events = new xo.core.Events(this);
+
         this.acceptProperties("title", "cancelText", "body", "confirmText",
             {
                 name: "cancelVisible",
@@ -88,15 +91,12 @@ class ExoDialogControl extends ExoBaseControls.controls.div.type {
     async generateDialog() {
         let body;
         if (typeof (this.body) === "object") { // body element passed
-
             if (this.body instanceof HTMLElement) {
                 body = this.body;
             }
             else {
                 body = await xo.form.run(this.body);
             }
-
-            //this.body = "" // clear out standard body
         }
         else if(Core.isUrl(this.body)){
             body = await xo.form.run(this.body);
@@ -110,9 +110,8 @@ class ExoDialogControl extends ExoBaseControls.controls.div.type {
         if(!this.cancelVisible){
             this.dlg.querySelector(".exf-dlg-f .dismiss")?.remove();
         }
-
-
         document.body.appendChild(this.dlg);
+        return this.dlg;
     }
 
     get dlgId() {
@@ -132,6 +131,10 @@ class ExoDialogControl extends ExoBaseControls.controls.div.type {
     show() {
         const me = this;
         this.generateDialog().then(x => {
+
+            me.events.trigger("ready", {
+                body: x
+            });
             MODES.forEach(m => {
                 this.dlg.classList.remove("exf-dlg-" + m)
             })

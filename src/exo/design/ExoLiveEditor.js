@@ -27,18 +27,6 @@ class ExoLiveEditor {
                 me.btnToggle.classList[me.enabled ? "add" : "remove"]("active");
                 me.renderActiveState()
             }
-            // dropdown: [
-            //     {
-            //         caption: `Toggle Live Edit`,
-            //         icon: "ti-pencil",
-            //         click: async e => {
-            //             me.enabled = !me.enabled;
-            //             me.btnToggle.classList[me.enabled ? "add" : "remove"]("active");
-
-            //             me.renderActiveState()
-            //         }
-            //     },
-            // ]
         });
 
         this.btnToggle.classList.add("exf-le-btn");
@@ -47,7 +35,6 @@ class ExoLiveEditor {
 
         this.exo.container.insertBefore(this.btnToggle, this.exo.form);
         this.btnToggle.setAttribute("title", await this.getFormMeta())
-        console.debug("ExoLiveEditor: attached live editor to form ", this.exo.id)
     }
 
     renderActiveState() {
@@ -130,12 +117,6 @@ class ExoLiveEditor {
                 ]
             }
         })
-
-
-        //info.classList.add("exf-le-fd");
-
-
-        //info.innerHTML = ctl;
         wrapper.appendChild(info);
     }
 

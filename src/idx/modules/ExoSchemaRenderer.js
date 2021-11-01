@@ -20,33 +20,40 @@ class ExoSchemaRenderer {
         return this._model;
     }
 
-    render() {
+    async render() {
+        const me=  this;
+        let schema = me.getSchema();
 
-
-        let schema = this.getSchema();
-
-        this.exo = this.builder.exoContext.createForm();
-        this.events.trigger("created", { exo: this.exo });
-
-        this.exo.on(window.xo.form.factory.events.post, e => {
-            this.events.trigger("post", e.detail)
+        let frm = await xo.form.run(schema, {
+            context: this.builder.exoContext,
+            on: {
+                created: e=> {
+                    me.exo = e.detail.host 
+                    me.events.trigger("created", { exo: me.exo });
+                },
+                
+                schemaLoaded: e=>{
+                    me.events.trigger("schemaloaded", { exo: me.exo })
+                },
+                
+                error: ex => {
+                    
+                    this.events.trigger("error", {
+                        error: ex.detail.error
+                    })
+                },
+                post: e => {
+                    this.events.trigger("post", e.detail)
+                }
+            }
         })
 
-            .load(schema).then(x => {
-                this.events.trigger("schemaloaded", { exo: x })
-                return x;
-            })
-            .then(x => x.renderForm()).then(x => {
-                this.events.trigger("ready", {
-                    exo: x
-                })
-            }).catch(ex => {
-                this.events.trigger("error", {
-                    error: ex
-                })
-            }).finally(() => {
-                //this.updateWorkspaceSchema();
-            })
+        me.events.trigger("ready", {
+            exo: me.exo,
+            form: frm
+            
+        })
+
     }
 
     getSchema() {

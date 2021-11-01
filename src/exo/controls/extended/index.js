@@ -26,7 +26,7 @@ import multiInputDemo from '../../../../data/multiinput-demo.json'
 import ExoSandboxControl from './ExoSandboxControl';
 import ExoTextConfirm from './ExoTextConfirm';
 import ExoImageSelector from './ExoImageSelector';
-
+import ExoListDetailControl from './ExoListViewEditExtension';
 
 class ExoExtendedControls {
     static controls = {
@@ -59,8 +59,8 @@ class ExoExtendedControls {
         listview: {type: ExoListViewControl, note: "Listview control", demo: listviewDemo},
         treeview: {type: ExoTreeViewControl, note: "Treeview control", demo: treeviewDemo},
         textconfirm: {type: ExoTextConfirm, note: "Textbox with confirmation button"},
-        imageselector: {type: ExoImageSelector, note: "Image selector control"}
-        
+        imageselector: {type: ExoImageSelector, note: "Image selector control"},
+        //listdetail: {type: ExoListDetailControl, note: "Master/detail Listview with editor"}
     }
 }
 

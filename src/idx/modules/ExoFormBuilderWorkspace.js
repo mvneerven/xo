@@ -25,7 +25,6 @@ class ExoFormBuilderWorkspace {
     }
 
     _save(){
-        console.debug("ExoFormBuilderWorkspace", "Store current workspace in local storage 'xo-workspace'")
         localStorage.setItem("xo-workspace", this.toString())
     }
 

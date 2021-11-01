@@ -1,6 +1,7 @@
 import Core from "../../../pwa/Core";
 import DOM from "../../../pwa/DOM";
 import ExoDivControl from "../base/ExoDivControl";
+import ExoListViewEditExtension from './ExoListViewEditExtension';
 
 const SortingTypes = {
   UNSET: "unset",
@@ -147,6 +148,11 @@ class ExoListViewControl extends ExoDivControl {
         type: String,
         default: "140px",
         description: "Tile width, if applicable"
+      },
+      {
+        name: "edit",
+        type: Object,
+        description: "Optional edit settings to create a master-detail listview"
       }
     );
   }
@@ -226,6 +232,7 @@ class ExoListViewControl extends ExoDivControl {
   async render() {
     await super.render();
 
+    this.trySetupEdit();
     this.setPrimaryKey();
     this.mapProperties();
     this.renderList();
@@ -258,6 +265,12 @@ class ExoListViewControl extends ExoDivControl {
     this.container.classList.add(`exf-lv-tg-${this.tilegrid}`);
 
     return this.container;
+  }
+
+  trySetupEdit(){
+    if(typeof(this.edit) === "object"){
+      new ExoListViewEditExtension(this, this.edit)
+    }
   }
 
   // renderStyleSheet() {
@@ -328,6 +341,7 @@ class ExoListViewControl extends ExoDivControl {
 
       this.renderListContent(this.currentItems);
     } catch (e) {
+      console.error("Failed to fetch items", this.items, e);
       this.listDiv
         .querySelectorAll(".exf-lv-item")
         .forEach((el) => el.remove());

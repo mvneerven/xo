@@ -22,7 +22,7 @@ class ExoFormStepsProgress extends ExoFormDefaultProgress {
             </nav>`,
         progressstep: /*html*/`
             <li class="">
-                <button type="button" id="step{{step}}">
+                <button data-step="{{step}}" type="button" id="step{{step}}">
                     <div class="step">{{step}}</div>
                     <div class="title">{{pagetitle}}</div>
                 </button>
@@ -46,8 +46,18 @@ class ExoFormStepsProgress extends ExoFormDefaultProgress {
 
         this.container.querySelectorAll(".step-wizard ul button").forEach(b => {
             b.addEventListener("click", e => {
-                var step = parseInt(b.querySelector("div.step").innerText);
-                this.exo.addins.navigation[step > 0 ? "next" : "back"]();
+                var step = parseInt(b.getAttribute("data-step"));
+                if(step > this.exo.addins.navigation.currentPage){
+                    if (this.exo.addins.validation.isPageValid(this.exo.addins.navigation.currentPage)) {
+                        this.exo.addins.navigation.goto(step);
+                    }
+                    else{
+                        this.exo.addins.validation.reportValidity(this.exo.addins.navigation.currentPage);
+                    }
+                }
+                else{
+                    this.exo.addins.navigation.goto(step);
+                }
             })
         });
 

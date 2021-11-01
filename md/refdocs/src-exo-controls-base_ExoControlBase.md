@@ -38,6 +38,7 @@ __options__ | `Object` | *The options (type: &quot;info|error|invalid&quot;)*
 Name | Type | Description
 --- | --- | ---
 __jsonSchema__ | `undefined` | *Gets the control properties as a JSON schema*
+__cssVariables__ | `undefined` | *Returns a reference to the CSS variables included*
 __htmlElement__ | `undefined` | *Sets the HTML element*
 __useContainer__ | `undefined` | *Specifies whether XO form should use a containing DIV element to render the control.By default for instance, the button and the page control don&#x27;t use a container.*
 __caption__ | `undefined` | *The control&#x27;s caption/label*

@@ -12,7 +12,7 @@ import xo from '../../../js/xo';
  */
 class ExoForm {
     _cssVariables = {};
-    
+
     static meta = {
 
         properties: {
@@ -52,10 +52,10 @@ class ExoForm {
             customMethods: {},
             DOMChange: context.config.defaults.DOMChange || "input"
         }
-        this.options = { 
-            ...defOptions, 
+        this.options = {
+            ...defOptions,
             ...context.config.runOptions || {},
-            ...opts 
+            ...opts
         };
 
         this.id = this.options.id || Core.guid();
@@ -186,49 +186,50 @@ class ExoForm {
         this.events.trigger(ExoFormFactory.events.created);
 
 
-        return new Promise((resolve, reject) => {
-            this._schema = this.context.createSchema();
-            this.schema.parse(schema);
+        //return new Promise((resolve, reject) => {
+        this._schema = this.context.createSchema();
+        this.schema.parse(schema);
 
-            this.events.trigger(ExoFormFactory.events.schemaParsed);
+        this.events.trigger(ExoFormFactory.events.schemaParsed);
 
-            this.resolveJsonSchemas().then(() => {
+        await this.resolveJsonSchemas()
 
-                this.schema.createDefaultUiIfNeeded();
+        this.schema.createDefaultUiIfNeeded();
 
-                this.events.trigger(ExoFormFactory.events.schemaLoading);
+        this.events.trigger(ExoFormFactory.events.schemaLoading);
 
-                this._dataBinding = new ExoFormDataBinding(this, this._mappedInstance);
-                this._dataBinding.prepare().then(() => {
+        this._dataBinding = new ExoFormDataBinding(this, this._mappedInstance);
+        await this._dataBinding.prepare();
 
-                    this.dataBinding.on("change", e => {
-                        e.detail.state = "change";
-                        this.events.trigger(ExoFormFactory.events.dataModelChange, e.detail)
-                    }).on("ready", e => {
-                        e.detail.state = "ready";
-                        this.events.trigger(ExoFormFactory.events.dataModelChange, e.detail)
-                    }).on("error", e => {
-                        this.events.trigger(ExoFormFactory.events.error, e.detail);
-                    });
 
-                    this.events.trigger(ExoFormFactory.events.schemaLoaded);
-                    this.schema.refreshStats();
+        console.debug("Model loaded", this.dataBinding.model)
 
-                    this._createComponents();
-
-                    if (this.schema.form) {
-                        let formClasses = this.schema.form.class ? this.schema.form.class.split(' ') : ["standard"];
-                        formClasses.forEach(c => {
-                            this.form.classList.add(c);
-                        })
-                    }
-
-                    resolve();
-                })
-
-            })
-            this.schema.refreshStats();
+        this.dataBinding.on("change", e => {
+            e.detail.state = "change";
+            this.events.trigger(ExoFormFactory.events.dataModelChange, e.detail)
+        }).on("ready", e => {
+            e.detail.state = "ready";
+            this.events.trigger(ExoFormFactory.events.dataModelChange, e.detail)
+        }).on("error", e => {
+            this.events.trigger(ExoFormFactory.events.error, e.detail);
         });
+
+        this.events.trigger(ExoFormFactory.events.schemaLoaded);
+        this.schema.refreshStats();
+
+        this._createComponents();
+
+        if (this.schema.form) {
+            let formClasses = this.schema.form.class ? this.schema.form.class.split(' ') : ["standard"];
+            formClasses.forEach(c => {
+                this.form.classList.add(c);
+            })
+        }
+
+        //resolve();
+
+        this.schema.refreshStats();
+        //});
     }
 
     // resolve 
@@ -295,13 +296,15 @@ class ExoForm {
             if (!obj || !obj.type)
                 throw TypeError("Addin not found: '" + n + "'")
 
-            console.debug("XO form addin:", n, "type:", obj.name, "component used:", obj.type.name);
 
             this.addins[n] = new obj.type(this);
 
             this.container.classList.add(`exf-${n}-${obj.name}`);
 
         }
+
+        console.debug("Registered addins:", this.addins);
+
     }
 
     toString() {
@@ -331,18 +334,18 @@ class ExoForm {
 
             //try {
 
-                this._renderPages().then(() => {
+            this._renderPages().then(() => {
 
-                    this._finalizeForm().then(() => {
+                this._finalizeForm().then(() => {
 
-                        resolve(this);
-                    });
+                    resolve(this);
+                });
 
-                })
+            })
 
-                    // .catch(ex => {
-                    //     reject("_renderPages() failed: " + ex.toString());
-                    // });
+            // .catch(ex => {
+            //     reject("_renderPages() failed: " + ex.toString());
+            // });
 
             //}
             //catch (ex) {
@@ -397,7 +400,7 @@ class ExoForm {
         // Test for fom becoming user-interactive 
         var observer = new IntersectionObserver((entries, observer) => {
             if (this.container.offsetHeight) {
-                observer = null;                
+                observer = null;
                 if (!this.events.triggeredInteractive) {
                     this.events.trigger(ExoFormFactory.events.interactive);
                     this.events.triggeredInteractive = true;
@@ -685,11 +688,11 @@ class ExoForm {
             }
 
             try {
-                if (!f.type){
-                    if(f.bind){
+                if (!f.type) {
+                    if (f.bind) {
                         f.type = this._getDefaultControlType(f.bind);
                     }
-                    else 
+                    else
                         f.type = "text";
                 }
 
@@ -752,16 +755,16 @@ class ExoForm {
     }
 
 
-    _getDefaultControlType(bind){
-        try{
+    _getDefaultControlType(bind) {
+        try {
             let result = this.dataBinding.get(bind);
-            switch(typeof(result)){
+            switch (typeof (result)) {
                 case "boolean": return "checkbox";
                 case "number": return "number";
             }
             return "text"
         }
-        catch{ 
+        catch {
             return "text"
         }
     }

@@ -19,8 +19,9 @@ const schema = {
         logic: context => {
             const inst = context.model.instance.buildForm;
             let url;
+            
             switch (context.changed.property) {
-
+                
                 case "action":
                     let page = parseInt(context.changed.newValue);
                     if(page > 0){

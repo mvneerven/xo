@@ -23,25 +23,26 @@ class ExoFormDataBinding {
     }
 
     async prepare() {
-        this._init(this.exo, this.instance).then(() => {
+        await this._init(this.exo, this.instance);
 
-            this._resolver = new ExoFormDataBindingResolver(this);
+        this._resolver = new ExoFormDataBindingResolver(this);
 
-            this.exo.on(ExoFormFactory.events.renderStart, e => { // run logic for initial state of controls
-                this.resolver._checkSchemaLogic();
-            })
+        this.exo.on(ExoFormFactory.events.renderStart, e => { // run logic for initial state of controls
+            this.resolver._checkSchemaLogic();
+        })
 
-            this.exo.on(ExoFormFactory.events.renderReady, e => {
-                this.exo.on(ExoFormFactory.events.dataModelChange, e => {
-                    this.resolver.resolve();
-                }).on(ExoFormFactory.events.page, e => { // on navigate, resolve again (e.g. for navigation control state)
-                    this.resolver.resolve();
-                })
+        this.exo.on(ExoFormFactory.events.renderReady, e => {
+            this.exo.on(ExoFormFactory.events.dataModelChange, e => {
+                this.resolver.resolve();
+            }).on(ExoFormFactory.events.page, e => { // on navigate, resolve again (e.g. for navigation control state)
                 this.resolver.resolve();
             })
+            this.resolver.resolve();
 
-            this._ready();
-        });
+        })
+
+        this._ready();
+
     }
 
     setupDefaultButtonBinding(btn) {
@@ -77,7 +78,6 @@ class ExoFormDataBinding {
                     f.name = f.name || ExoFormSchema.getPathFromBind(f.bind);
                     f.defaultValue = f.value;
                     f.value = (modelSetup ? this.get(f.bind) : f.value) || "";
-                    console.debug("DataModel: bind " + f.name, f.bind, f.value);
                     data[f.name] = f.value
                 }
 
@@ -86,7 +86,7 @@ class ExoFormDataBinding {
             });
 
             // make sure we have a model if it wasn't passed in
-            if (!modelSetup) {                
+            if (!modelSetup) {
                 this._model.instance.data = data;
             }
 
@@ -152,37 +152,59 @@ class ExoFormDataBinding {
             Core.setObjectValue(this._model, path, value);
         }
         catch (ex) {
-            
+
             throw TypeError(`Could not set ${path}: ${ex.message}`);// to ${value}: ${ex.message}`)
         }
 
     }
 
     async _init(exo, instance) {
-        
-        if (instance) { //TODO deprecate
-            this._mapped = instance;
-            this._model.instance = instance;
-            this._origin = ExoFormDataBinding.origins.bind;
-        }
-        else if (exo.schema.model) {
-            this._origin = ExoFormDataBinding.origins.schema;
-            this._model = {
-                ...exo.schema.model
-            };
+        return new Promise(resolve => {
 
-            for (var n in this._model.instance) {
-                let ins = this._model.instance[n];
-                if (Core.isUrl(ins)) {
+            if (instance) { //TODO deprecate
+                this._mapped = instance;
+                this._model.instance = instance;
+                this._origin = ExoFormDataBinding.origins.bind;
+                resolve();
+            }
+            else if (exo.schema.model) {
+                this._origin = ExoFormDataBinding.origins.schema;
+                this._model = {
+                    ...exo.schema.model
+                };
+
+                let keys = Object.keys(this._model.instance);
+
+                let promises = [];
+
+                const fetchInstance = async (key, ins) => {
+                    console.debug("Fetching instance from URL: " + ins)
                     ins = await Core.acquireState(ins);
+                    console.debug("Fetched instance from URL: " + ins)
+                    this._model.instance[key] = this.proxy(key, ins); // Proxy to monitor changes
                 }
 
-                this._model.instance[n] = this.proxy(n, ins); // Proxy to monitor changes
+                keys.forEach(async key => {
+                    let ins = this._model.instance[key];
+                    if (Core.isUrl(ins)) {
+                        promises.push(fetchInstance(key, ins))
+                    }
+                    else {
+                        this._model.instance[key] = this.proxy(key, ins); // Proxy to monitor changes
+                    }
+                })
+
+                Promise.all(promises).then(() => {
+                    resolve();
+                });
             }
-        }
-        else {
-            this._origin = ExoFormDataBinding.origins.none;
-        }
+            else {
+                this._origin = ExoFormDataBinding.origins.none;
+                resolve();
+            }
+        });
+
+
     }
 
     toString() {
@@ -200,7 +222,7 @@ class ExoFormDataBinding {
             }
             catch { }
             finally {
-                this._instanceInitialized = true;                
+                this._instanceInitialized = true;
                 this._model.instance = this._model.instance || { data: {} };
             }
         }
@@ -290,9 +312,12 @@ class ExoFormDataBinding {
 
             let isVarRef = value.startsWith("#/");
 
-            if (isVarRef || name === "bind" && value.startsWith("#/")) {
-
-                let path = value;//isVarRef ? value.substring(1) : value;
+            if (isVarRef) {// (isVarRef || name === "bind" && value.startsWith("#/")) {
+                console.debug("Resolving ", value);
+                // if (value === "#/products/items") {
+                //     debugger;
+                // }
+                let path = value;
 
                 returnValue = this.get(path, undefined);
                 if (returnValue === undefined) {
@@ -300,7 +325,6 @@ class ExoFormDataBinding {
                     returnValue = value  // return original string, don't resolve
                 }
                 else {
-
                     this.resolver.addBoundControl({
                         control: control,
                         field: control.context.field,
@@ -312,21 +336,12 @@ class ExoFormDataBinding {
             }
         }
         else if (typeof (value) === 'object') {
-
             for (var p in value) {
-                if (typeof (value[p]) == "string" && value[p].indexOf("@") >= 0) {
-                    // debugger;
-                }
                 returnValue[p] = this._processFieldProperty(control, p, returnValue[p])
-                if (value[p] !== returnValue[p]) {
-                    // debugger;
-                }
             }
         }
-
         return returnValue;
     }
-
 }
 
 export default ExoFormDataBinding;

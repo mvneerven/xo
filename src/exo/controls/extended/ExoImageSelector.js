@@ -60,7 +60,7 @@ class ExoImageSelector extends ExoMultiInputControl {
                 type: "search",
                 caption: "",
                 class: "exf-std-lbl",
-                placeholder: "Image!.png",
+                placeholder: this.placeholder,
                 autocomplete: {
                     categories: this.categories,
                     items: e => {
