@@ -103,5 +103,11 @@
         "name": "Textbox with countries autocomplete",
         "value": "https://xo-js.dev/assets/forms/templates/autocomplete-countries.js",
         "description": "An example showing a textbox with autocompletion using search on a REST API"
+    },
+
+    {
+        "name": "Tags with autocomplete",
+        "value": "https://xo-js.dev/assets/forms/templates/tags-autocomplete.js",
+        "description": "A tags control that has autocompletion to suggest tags"
     }
 ]

@@ -150,5 +150,33 @@ const schema = {
 
 > Update: From version 1.5, you can now use ```#/instancename/propertyname``` to refer to state in your model.
 
+## Instances from URLs (> 1.5.4)
+
+You can now point an instance to a URL.
+
+```js
+{
+  "model": {
+    "instance": {
+      "people": "https://my.rest.api/people"
+    }
+  },
+  "pages": [
+    {
+      "legend": "My Form",
+      "fields": [
+        {
+          "type": "listview",
+          "caption": "People",
+          "items": "#/people/names"
+        }
+      ]
+    }
+  ]
+}
+
+```
+
+
 ---
 See also: [rules engine](./rules.md)

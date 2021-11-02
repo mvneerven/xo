@@ -1037,7 +1037,70 @@ const schema = {
 
 # New in 1.5.2
 
-- The ```tags``` control now also supports ```autocomplete```.
+## Tags control supports autocompletion
+The ```tags``` control now also supports ```autocomplete```, like all text controls.
+
+```js
+const schema = {
+  submit: true,
+  model: {
+    instance: {
+      you: {
+        pets: [
+          "Cat"
+        ]
+      }
+    }
+  },
+  pages: [
+    {
+      fields: [
+        {
+          type: "tags",
+          bind: "#/you/pets",
+          caption: "What pets do you have?",
+          autocomplete: {
+            strict: true,
+            items: [
+              "Dog",
+              "Cat",
+              "Parrot",
+              "Rabbit",
+              "Pig",
+              "Snake",
+              "Turtle",
+              "Other"
+            ]
+          },
+          info: "You can select multiple pets"
+        }
+      ]
+    }
+  ]
+}
+```
+
+## Autocomplete settings (all text controls)
 - The ```autocomplete``` settings now include a ```strict``` boolean setting, to allow only values from the autocomplete ```items```.
 
+## Rules Engine
 - The action ```navigate``` was added to the list of available actions in the Rules Engine.
+
+# New in 1.5.4
+
+## Listview ```edit``` 
+
+You can now turn a ```listview``` control into a master-detail editor. 
+See [ListView Control](./md/exo/controls/listview-control.md)
+
+## Model Binding
+You can now point an instance to a URL.
+See [Data Binding](./md/exo/data-binding.md)
+
+## Other changes
+- Progress mode ```steps```: fix in navigating to shown page headers
+
+# New in 1.5.5
+
+- New Rules Engine action: focus. See [Rules Engine](./md/exo/rules.md)
+

@@ -230,6 +230,10 @@ class XOFormDataRulesEngine extends ExoRuleEngineBase {
                 let result = await fetch(url);
                 this.exo.dataBinding.set(variable, await result[type]());
             },
+            focus: a => {
+                a = this.var(a);
+                this.exo.get(a)?._control.focus();
+            },
             convert: (a, b) => {
                 const cvt = (value, type) => {
                     value = this.var(value);
@@ -238,7 +242,7 @@ class XOFormDataRulesEngine extends ExoRuleEngineBase {
                             case "upp":
                                 return value.toUpperCase();
                             case "low":
-                                return value.toUpperCase();
+                                return value.toLowerCase();
                             case "cap":
                                 return value.charAt(0).toUpperCase() + value.slice(1);
                         }

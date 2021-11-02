@@ -80,6 +80,7 @@ Under the ```do``` node, one or more actions can be placed
 - ```convert``` - convert variable 
 - ```sequence``` - bundle multiple actions into an array and execute them
 - ```sum```
+- ```focus``` - set focus to given control
 - ```subtract```
 - ```divide```
 - ```multiply```

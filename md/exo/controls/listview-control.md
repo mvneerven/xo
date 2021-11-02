@@ -73,3 +73,10 @@ ContextMenu
 }
 ```
 
+# Edit mode (> 1.5.4)
+
+You can now turn a listview into a master-detail handling editor.
+
+```js
+
+```
