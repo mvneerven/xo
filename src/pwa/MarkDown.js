@@ -6,19 +6,17 @@ class MarkDown {
 
     static CMS = MarkDownCMS;
 
-    // static constructor
-    static _staticConstructor = (function () {
-        DOM.addStyleSheet("//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.0.1/build/styles/default.min.css");
-
-        DOM.require("https://cdnjs.cloudflare.com/ajax/libs/markdown-it/12.0.6/markdown-it.min.js", e => {
-            DOM.require("//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.0.1/build/highlight.min.js", e => {
-                MarkDown.ready = true
-            });
-        });
-    })();
-
     static async read(urlOrMd) {
         return new Promise((resolve, reject) => {
+
+            DOM.addStyleSheet("//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.0.1/build/styles/default.min.css");
+
+            DOM.require("https://cdnjs.cloudflare.com/ajax/libs/markdown-it/12.0.6/markdown-it.min.js", e => {
+                DOM.require("//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.0.1/build/highlight.min.js", e => {
+                    MarkDown.ready = true
+                });
+            });
+
             Core.waitFor(() => {
                 return MarkDown.ready;
             }).then(async () => {

@@ -3,18 +3,10 @@ import DOM from '../../../pwa/DOM';
 import Core from '../../../pwa/Core';
 
 class ExoLeafletMapControl extends ExoElementControl {
-
-    static _staticConstructor = (function () {
-        DOM.addStyleSheet("https://unpkg.com/leaflet@1.7.1/dist/leaflet.css");
-        DOM.require("https://unpkg.com/leaflet@1.7.1/dist/leaflet.js", e => {
-            ExoLeafletMapControl.ready = true
-        });
-    })();
-
     constructor() {
         super(...arguments);
 
-        this._zoom = 10;        
+        this._zoom = 10;
         this.width = 640;
         this.height = 480;
 
@@ -46,18 +38,31 @@ class ExoLeafletMapControl extends ExoElementControl {
     async render() {
         await super.render();
 
-        let elm = document.createElement("div");
-        if (this.width)
-            elm.style.width = typeof (this.width) === "number" ? this.width + "px" : this.width;
+        DOM.addStyleSheet("https://unpkg.com/leaflet@1.7.1/dist/leaflet.css");
 
-        if (this.height)
-            elm.style.height = typeof (this.height) === "number" ? this.height + "px" : this.height;
 
-        this.map = await ExoLeafletMapControl.create(elm, this.value || [0,0], this.zoom, this)
+        return new Promise(resolve => {
+            DOM.require("https://unpkg.com/leaflet@1.7.1/dist/leaflet.js", async e => {
+                ExoLeafletMapControl.ready = true
 
-        this.container.appendChild(elm)
+                let elm = document.createElement("div");
+                if (this.width)
+                    elm.style.width = typeof (this.width) === "number" ? this.width + "px" : this.width;
 
-        return this.container;
+                if (this.height)
+                    elm.style.height = typeof (this.height) === "number" ? this.height + "px" : this.height;
+
+                this.map = await ExoLeafletMapControl.create(elm, this.value || [0, 0], this.zoom, this)
+
+                this.container.appendChild(elm)
+
+                resolve(this.container);
+            });
+
+
+        })
+
+
     }
 
     get value() {
@@ -78,10 +83,10 @@ class ExoLeafletMapControl extends ExoElementControl {
         }
     }
 
-    set markers(value){
+    set markers(value) {
         this._markers = value;
 
-        if(this.rendered){
+        if (this.rendered) {
 
             value.forEach(e => {
                 let map = this.map;
@@ -92,7 +97,7 @@ class ExoLeafletMapControl extends ExoElementControl {
         }
     }
 
-    get markers(){
+    get markers() {
         return this._markers;
     }
 
@@ -116,8 +121,8 @@ class ExoLeafletMapControl extends ExoElementControl {
     }
 
     static generate(elm, pos, zoom, options, ready) {
-        
-        pos = Array.isArray(pos) && pos.length > 1 ? pos : [0,0];
+
+        pos = Array.isArray(pos) && pos.length > 1 ? pos : [0, 0];
 
         let p = [pos[0], pos[1]];
 
@@ -135,9 +140,9 @@ class ExoLeafletMapControl extends ExoElementControl {
 
         elm.data.map = map;
 
-        if(options.markers){
+        if (options.markers) {
             options.markers.forEach(e => {
-                
+
                 L.marker(e.position).addTo(map)
                     .bindPopup(e.text)
                     .openPopup();
@@ -149,8 +154,8 @@ class ExoLeafletMapControl extends ExoElementControl {
 
     refresh() {
         console.debug("ExoLeafletMapControl", "Update map" + this.value, this.map);
-        this.map.setView(this.value || [0,0], this.zoom);
-        
+        this.map.setView(this.value || [0, 0], this.zoom);
+
     }
 }
 

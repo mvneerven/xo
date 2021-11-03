@@ -262,7 +262,7 @@ const context = await xo.form.factory.build({
 });
 ```
 
-In the example above, the [Rules Engine](./md/exo/rules.md) is being instructed that, apart from the internal actions the XO Rules Engine provides, a ```myCustomAction``` action exists, and all forms that are run (using this context) can use it.
+In the example above, the Rules Engine is being instructed that, apart from the internal actions the XO Rules Engine provides, a ```myCustomAction``` action exists, and all forms that are run (using this context) can use it.
 
 Just don't forget to pass the context created to the form runner:
 

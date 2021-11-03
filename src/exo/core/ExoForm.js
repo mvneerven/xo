@@ -629,8 +629,21 @@ class ExoForm {
         let e = { target: this.form };
 
         let data = this.getFormValues(ev);
-        this.events.trigger(ExoFormFactory.events.post, { postData: data })
-        e.returnValue = false;
+        let detail = { postData: data };
+        let result = this.events.trigger(ExoFormFactory.events.beforePost, detail)
+        if(result){
+            this.prePost().then(result=>{
+                if(result){
+                    data._prePostResult = result;
+                }
+                this.events.trigger(ExoFormFactory.events.post, { postData: data })
+            });
+            
+            e.returnValue = false;
+        }
+    }
+
+    async prePost(){
     }
 
     /**
