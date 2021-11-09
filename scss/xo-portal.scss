@@ -33,6 +33,10 @@
     }
 }
 
+#features {
+    padding: 1rem;
+}
+
 main{
     border-top: 1px solid #999;
 }
@@ -50,6 +54,10 @@ main{
         }
 
         article.exf-lv-item {
+            background-color: var(--color-background-variation);
+            border-radius: 1rem;
+            padding: 1rem;
+
             .small {
                 font-size: smaller;
                 opacity: 0.7;

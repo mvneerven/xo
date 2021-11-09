@@ -3632,14 +3632,14 @@ html.theme-dark .exf-ctl-cnt.exf-switch input[type="range"] {
   cursor: pointer;
   overflow: hidden;
   padding: 0.5rem;
-  height: var(--exf-ac-itm-height, 1.1rem);
+  height: var(--exf-ac-itm-height, auto);
 }
 
 .exf-ctl-cnt.autocomplete .exf-ac-rs .exf-ac-itm .exf-ac-img {
   background-repeat: no-repeat;
   background-size: contain;
   width: var(--exf-ac-itm-width, 1.1rem);
-  height: var(--exf-ac-itm-height, 1.1rem);
+  height: var(--exf-ac-itm-height, auto);
   display: inline-block;
 }
 
@@ -4898,6 +4898,7 @@ html.theme-light:root {
   --color-secondary: var(--color-primary-darker);
   --color-shade: #bfcadb;
   --color-heading: rgb(173, 58, 4);
+  --color-highlight: rgb(195, 97, 51);
   --placeholder-color: #ccc;
   --shadow-color: var(--color-primary-lighter);
   --color-button-text: black;
@@ -4923,6 +4924,7 @@ html.theme-dark:root {
   --color-dropdown-hover: #444;
   --color-text: #ddd;
   --color-button: #bbb;
+  --color-highlight: rgb(173, 58, 4);
   --color-highlighttext: #fff455;
   --color-highlighttext-bg: #666;
   --color-button-primary: #2eb4cc;
@@ -5228,7 +5230,7 @@ html.theme-dark select > option {
 }
 
 .md-converted-html blockquote {
-  border-left: 10px solid var(--color-highlighttext-bg, #ccc);
+  border-left: 10px solid var(--color-highlight, #ccc);
   padding: 0rem .5rem;
 }
 
@@ -5275,6 +5277,10 @@ html.theme-dark select > option {
   bottom: 30px;
 }
 
+#features {
+  padding: 1rem;
+}
+
 main {
   border-top: 1px solid #999;
 }
@@ -5290,6 +5296,12 @@ main {
 
 #xo-portal body #app-title {
   display: none;
+}
+
+#xo-portal body article.exf-lv-item {
+  background-color: var(--color-background-variation);
+  border-radius: 1rem;
+  padding: 1rem;
 }
 
 #xo-portal body article.exf-lv-item .small {

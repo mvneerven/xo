@@ -176,25 +176,17 @@ class StudioRoute extends xo.route {
         if (this.tabStrip.tabs.js)
             this.tabStrip.tabs.js.enabled = true;
 
-        //this.tabStrip.tabs.form.replaceWith(o.form);
-        //this.sidePanel.tabStrip.tabs.live.replaceWith(o.form);
         this.sidePanel.renderPanel.innerHTML = "";
         this.sidePanel.renderPanel.appendChild(o.form);
 
         this.currentForm = x;
-        //this.sidePanel.showModelChange(x.dataBinding.model)
 
         // when paging in rendered form, update sidepanel
         this.currentForm.on(window.xo.form.factory.events.page, e => {
             this.sidePanel.updateCurrentFormPage(e.detail.page);
         })
 
-        // .on("dataModelChange", e => {
-        //     //console.debug("XO Studio", "dataModelChange", e.detail.state, e.detail.model);
-        //     //this.sidePanel.showModelChange(e.detail.model)
-        // })
-
-        //x.container.setAttribute("id", "xfb");
+        x.container.setAttribute("id", "xfb");
         this.addLiveEdit(x)
     }
 

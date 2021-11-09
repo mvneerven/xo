@@ -63,8 +63,7 @@ class DocsRoute extends xo.route {
                     return results.map(i => {
                         return {
                             text: i.name,
-                            description: i.description,
-                            example: i.example
+                            description: i.note
                         }
                     })
                 },

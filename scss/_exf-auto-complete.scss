@@ -20,13 +20,13 @@
             cursor: pointer;
             overflow: hidden;
             padding: 0.5rem;
-            height: var(--exf-ac-itm-height, 1.1rem);
+            height: var(--exf-ac-itm-height, auto);
 
             .exf-ac-img {
                 background-repeat: no-repeat;
                 background-size: contain;
                 width: var(--exf-ac-itm-width, 1.1rem);
-                height: var(--exf-ac-itm-height, 1.1rem);
+                height: var(--exf-ac-itm-height, auto);
                 display: inline-block;
             }
 

@@ -38,6 +38,7 @@ class ExoTextControlAutoCompleteExtension {
         on("keydown", this.keyDownHandler.bind(this));
 
         this.resultsDiv = document.createElement("div");
+        this.resultsDiv.title = ""; // block 
         this.resultsDiv.classList.add(this.cssClasses.result)
         this.resultsDiv.addEventListener("mousedown", this.resultClick.bind(this))
 
@@ -261,7 +262,7 @@ class ExoTextControlAutoCompleteExtension {
                 i.icon = "exf-ac-img";
                 image = `style="background-image: url('${i.image}')"`;
             }
-            this.resultsDiv.innerHTML += `<div data-index="${index}" class="${this.cssClasses.item}">
+            this.resultsDiv.innerHTML += `<div title="${i.tooltip || ""}" data-index="${index}" class="${this.cssClasses.item}">
                 <span ${image} class="${i.icon || catHandler.icon}"></span>
                 <span class="text">${this.formatResultItem(i, options, catHandler)}</span>
                 <span class="category">${i.category || ""}</span></div>`;

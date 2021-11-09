@@ -1145,3 +1145,21 @@ document.getElementById("form").appendChild(await xo.form.run(schema, {
     }
 }));
 ```
+
+# New in 1.5.9 
+
+## Revamped Studio
+
+![Portal](https://xo-js.dev/assets/img/side-by-side.png "Side by side code & rendering")
+
+The XO Studio finally has side-by-side code & rendering, for immediate feedback on your code changes.
+
+Also, you will now directly see model changes as well as posted form values in the 'Data' panel.
+
+## Improved Error handling
+
+We have done a lot to improve the error handling & debugging experience. Errors in your schema now lead to a friendlier and clearer message shown in the form rendering panel.
+
+## OpenAPI support
+
+XO now has better support for OpenAPI. For instance, when selecting OpenAPI in the Start wizard, you will now be able to select a schema to work with in the OpenAPI definition.

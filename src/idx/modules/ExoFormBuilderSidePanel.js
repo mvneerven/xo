@@ -12,10 +12,9 @@ class ExoFormBuilderSidePanel {
 
         let tsOptions = {
             tabs: {
-                // live: {caption: "Live"},
                 settings: { caption: "Options", class: "full-height", enabled: true },
                 addField: { caption: "Add", class: "full-height", enabled: false },
-                //errors: {caption: "Errors"}
+                dataTab: { caption: "Data", class: "full-height", enabled: true },
             },
             class: "full-height"
         }
@@ -23,9 +22,6 @@ class ExoFormBuilderSidePanel {
         if (localStorage.advancedUi === "On") {
             tsOptions.tabs = {
                 ...tsOptions.tabs,
-
-                //properties: { caption: "Props", class: "full-height", enabled: false },
-                dataTab: { caption: "Data", class: "full-height", enabled: true },
                 css: { caption: "CSS", class: "full-height", enabled: false }
 
             }
@@ -50,9 +46,6 @@ class ExoFormBuilderSidePanel {
         containerPanel.add(this.renderPanel)
 
         containerPanel.add(this.tabStrip.render());
-
-        // this.tabStrip.adaptHeight(containerPanel.element)
-
 
         let div = DOM.parseHTML(`<div title="Type to filter fields..." class="field-search exf-ctl-cnt"><input name="_search" type="search" placeholder="Search..." /></div>`)
         _.tabStrip.tabs.addField.panel.appendChild(div);
