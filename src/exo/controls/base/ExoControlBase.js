@@ -517,7 +517,7 @@ class ExoControlBase {
     async render() {
         this.setProperties();
         if (this.break) {
-            debugger
+            debugger // LEAVE THIS HERE!
         }
 
         for (var a in this.attributes) {
@@ -687,7 +687,7 @@ class ExoControlBase {
                 return result;
             }
             catch (ex) {
-                throw TypeError(`ExoControlBase: error processing databinding in ${this.name}.${name}: ${ex.toString()}`)
+                throw TypeError(`Databinding error in ${this.name}.${name}: ${ex.toString()}`)
             }
         }
         return value;

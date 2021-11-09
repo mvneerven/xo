@@ -1,426 +1,598 @@
 {
     "openapi": "3.0.1",
     "info": {
-      "title": "AssetManagementApi",
-      "version": "1.0.0"
+        "title": "AssetManagementApi",
+        "version": "1.0.0"
     },
     "paths": {
-      "/assets/{assetpathandname}": {
-        "delete": {
-          "description": "Delete an asset in both the BlobStorage and in the domain that tracks references to that asset.",
-          "operationId": "DeleteAsset",
-          "parameters": [
-            {
-              "name": "assetPathAndName",
-              "in": "path",
-              "description": "Note: forward slashes in the path are to be URLEncoded to '%2F', e.g. mysubfolder%2Fmysubsubfolder%2Fmyimage.png",
-              "required": true,
-              "schema": {
-                "title": "assetPathAndName",
-                "type": "string",
-                "format": ""
-              }
-            }
-          ],
-          "requestBody": {
-            "content": { }
-          },
-          "responses": {
-            "200": {
-              "description": "OK"
-            }
-          }
-        }
-      },
-      "/assets": {
-        "post": {
-          "description": "Returns the contents of 1 folder within the container. ",
-          "operationId": "GetAssetFolder",
-          "requestBody": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/fetchSpecificationDTO"
-                }
-              }
-            }
-          },
-          "responses": {
-            "200": {
-              "description": "OK",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "$ref": "#/components/schemas/pagedResultDTO"
-                  }
-                }
-              }
-            }
-          }
-        }
-      },
-      "/assets/{assetpathandname}/dependents": {
-        "get": {
-          "description": "Get entities that are dependent on the specified asset.",
-          "operationId": "GetDependentEntities",
-          "parameters": [
-            {
-              "name": "assetPathAndName",
-              "in": "path",
-              "description": "Note: forward slashes in the path are to be URLEncoded to '%2F', e.g. mysubfolder%2Fmysubsubfolder%2Fmyimage.png",
-              "required": true,
-              "schema": {
-                "title": "assetPathAndName",
-                "type": "string",
-                "format": ""
-              }
-            }
-          ],
-          "responses": {
-            "200": {
-              "description": "OK",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "type": "array",
-                    "items": {
-                      "$ref": "#/components/schemas/dependentEntityDTO"
+        "/openapi": {
+            "get": {
+                "description": "The service contract in OpenApi format",
+                "operationId": "GetOpenApiDefinition",
+                "responses": {
+                    "200": {
+                        "description": "OK"
                     }
-                  }
                 }
-              }
             }
-          }
-        }
-      },
-      "/openapi": {
-        "get": {
-          "description": "The service contract in OpenApi format",
-          "operationId": "GetOpenApiDefinition",
-          "responses": {
-            "200": {
-              "description": "OK"
-            }
-          }
-        }
-      },
-      "/sastoken": {
-        "get": {
-          "description": "Returns a SAS Token that grants access to the blobstorage container.",
-          "operationId": "GetSasToken",
-          "responses": {
-            "200": {
-              "description": "OK",
-              "links": {
-                "ListAssetsLink": {
-                  "operationId": "ListAssets",
-                  "parameters": {
-                    "sasToken": "$response.body"
-                  }
-                },
-                "DownloadAssetLink": {
-                  "operationId": "DownloadAsset",
-                  "parameters": {
-                    "sasToken": "$response.body"
-                  }
-                },
-                "UploadAssetLink": {
-                  "operationId": "UploadAsset",
-                  "parameters": {
-                    "sasToken": "$response.body"
-                  }
-                },
-                "DeleteAssetLink": {
-                  "operationId": "DeleteAsset",
-                  "parameters": {
-                    "sasToken": "$response.body"
-                  }
+        },
+        "/blobStorageConnectionInfo": {
+            "get": {
+                "description": "Returns tenant specific information for accessing the Azure Blob Storage API directly from the client (consult component schema  BlobStorageConnectionInfoDTO ).             The OpenApi 'links' refer to endpoints on said API, that can be called using the connection information.             The SAS token has the same expiration time as the overall session (as stated in the OAuth access token).",
+                "operationId": "GetBlobStorageConnectionInfo",
+                "parameters": [{
+                    "name": "tenant-id",
+                    "in": "header",
+                    "required": true,
+                    "schema": {
+                        "default": null
+                    }
+                }],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/blobStorageConnectionInfoDTO"
+                                }
+                            }
+                        },
+                        "links": {
+                            "DownloadAssetLink": {
+                                "operationId": "DownloadAsset",
+                                "parameters": {
+                                    "sasToken": "$response.body#/sasToken"
+                                }
+                            },
+                            "UploadAssetLink": {
+                                "operationId": "UploadAsset",
+                                "parameters": {
+                                    "sasToken": "$response.body#/sasToken"
+                                }
+                            }
+                        }
+                    }
                 }
-              }
             }
-          }
-        }
-      },
-      "/{tenantid}?{sastoken}&restype=container&comp=list": {
-        "get": {
-          "description": "ListAssets",
-          "operationId": "ListAssets",
-          "parameters": [
-            {
-              "name": "tenantId",
-              "in": "path",
-              "description": "tenantId",
-              "required": true,
-              "schema": {
-                "title": "tenantId",
-                "type": "string",
-                "format": "uuid"
-              }
-            },
-            {
-              "name": "sasToken",
-              "in": "path",
-              "description": "sasToken",
-              "required": true,
-              "schema": {
-                "title": "sasToken",
-                "type": "string",
-                "format": ""
-              }
-            }
-          ],
-          "responses": {
-            "200": {
-              "description": "OK"
-            }
-          },
-          "servers": [
-            {
-              "url": "https://stasfassetsdev.blob.core.windows.net"
-            }
-          ]
-        }
-      },
-      "/{tenantid}/{filename}?{sastoken}": {
-        "get": {
-          "description": "DownloadAsset",
-          "operationId": "DownloadAsset",
-          "parameters": [
-            {
-              "name": "tenantId",
-              "in": "path",
-              "description": "tenantId",
-              "required": true,
-              "schema": {
-                "title": "tenantId",
-                "type": "string",
-                "format": "uuid"
-              }
-            },
-            {
-              "name": "filename",
-              "in": "path",
-              "description": "filename",
-              "required": true,
-              "schema": {
-                "title": "filename",
-                "type": "string",
-                "format": ""
-              }
-            },
-            {
-              "name": "sasToken",
-              "in": "path",
-              "description": "sasToken",
-              "required": true,
-              "schema": {
-                "title": "sasToken",
-                "type": "string",
-                "format": ""
-              }
-            }
-          ],
-          "responses": {
-            "200": {
-              "description": "OK"
-            }
-          },
-          "servers": [
-            {
-              "url": "https://stasfassetsdev.blob.core.windows.net"
-            }
-          ]
         },
-        "put": {
-          "description": "UploadAsset",
-          "operationId": "UploadAsset",
-          "parameters": [
-            {
-              "name": "tenantId",
-              "in": "path",
-              "description": "tenantId",
-              "required": true,
-              "schema": {
-                "title": "tenantId",
-                "type": "string",
-                "format": "uuid"
-              }
-            },
-            {
-              "name": "filename",
-              "in": "path",
-              "description": "filename",
-              "required": true,
-              "schema": {
-                "title": "filename",
-                "type": "string",
-                "format": ""
-              }
-            },
-            {
-              "name": "sasToken",
-              "in": "path",
-              "description": "sasToken",
-              "required": true,
-              "schema": {
-                "title": "sasToken",
-                "type": "string",
-                "format": ""
-              }
-            },
-            {
-              "name": "x-ms-blob-type",
-              "in": "header",
-              "required": true,
-              "schema": {
-                "default": "BlockBlob"
-              }
+        "/assets": {
+            "post": {
+                "description": "Returns the contents of 1 folder within the container. ",
+                "operationId": "GetAssetFolder",
+                "parameters": [{
+                    "name": "tenant-id",
+                    "in": "header",
+                    "required": true,
+                    "schema": {
+                        "default": null
+                    }
+                }],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/fetchSpecificationDTO"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/pagedResultDTO"
+                                }
+                            }
+                        }
+                    }
+                }
             }
-          ],
-          "requestBody": {
-            "content": { }
-          },
-          "responses": {
-            "200": {
-              "description": "OK"
-            }
-          },
-          "servers": [
-            {
-              "url": "https://stasfassetsdev.blob.core.windows.net"
-            }
-          ]
         },
-        "delete": {
-          "description": "Delete an asset in both the BlobStorage and in the domain that tracks references to that asset.",
-          "operationId": "DeleteAsset",
-          "parameters": [
-            {
-              "name": "tenantId",
-              "in": "path",
-              "description": "tenantId",
-              "required": true,
-              "schema": {
-                "title": "tenantId",
-                "type": "string",
-                "format": "uuid"
-              }
+        "/assets/{assetPathAndName}/meta": {
+            "get": {
+                "description": "Returns the metadata of the specified asset",
+                "operationId": "GetAssetMetadata",
+                "parameters": [{
+                    "name": "assetPathAndName",
+                    "in": "path",
+                    "description": "Note: must be Base64 encoded",
+                    "required": true,
+                    "schema": {
+                        "title": "assetPathAndName",
+                        "type": "string",
+                        "format": ""
+                    }
+                }],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/caseNeutralDictionary`1"
+                                }
+                            }
+                        }
+                    }
+                }
             },
-            {
-              "name": "filename",
-              "in": "path",
-              "description": "filename",
-              "required": true,
-              "schema": {
-                "title": "filename",
-                "type": "string",
-                "format": ""
-              }
+            "put": {
+                "description": "Update the metadata items provided in the requestbody (others remain as they are)",
+                "operationId": "ModifyMetadataItems",
+                "parameters": [{
+                    "name": "assetPathAndName",
+                    "in": "path",
+                    "description": "Note: must be Base64 encoded",
+                    "required": true,
+                    "schema": {
+                        "title": "assetPathAndName",
+                        "type": "string",
+                        "format": ""
+                    }
+                }, {
+                    "name": "tenant-id",
+                    "in": "header",
+                    "required": true,
+                    "schema": {
+                        "default": null
+                    }
+                }],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "array"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
             },
-            {
-              "name": "sasToken",
-              "in": "path",
-              "description": "sasToken",
-              "required": true,
-              "schema": {
-                "title": "sasToken",
-                "type": "string",
-                "format": ""
-              }
+            "post": {
+                "description": "Replace the entire current set of metadata by the set provided in the requestbody ",
+                "operationId": "ReplaceMetadata",
+                "parameters": [{
+                    "name": "assetPathAndName",
+                    "in": "path",
+                    "description": "Note: must be Base64 encoded",
+                    "required": true,
+                    "schema": {
+                        "title": "assetPathAndName",
+                        "type": "string",
+                        "format": ""
+                    }
+                }, {
+                    "name": "tenant-id",
+                    "in": "header",
+                    "required": true,
+                    "schema": {
+                        "default": null
+                    }
+                }],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "array"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
             }
-          ],
-          "requestBody": {
-            "content": { }
-          },
-          "responses": {
-            "200": {
-              "description": "OK"
+        },
+        "/assets/{assetPathAndName}/dependents": {
+            "get": {
+                "description": "Get entities that are dependent on the specified asset.",
+                "operationId": "GetDependentEntities",
+                "parameters": [{
+                    "name": "assetPathAndName",
+                    "in": "path",
+                    "description": "Note: must be Base64 encoded",
+                    "required": true,
+                    "schema": {
+                        "title": "assetPathAndName",
+                        "type": "string",
+                        "format": ""
+                    }
+                }, {
+                    "name": "tenant-id",
+                    "in": "header",
+                    "required": true,
+                    "schema": {
+                        "default": null
+                    }
+                }],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/dependentEntityDTO"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             }
-          },
-          "servers": [
-            {
-              "url": "https://stasfassetsdev.blob.core.windows.net"
+        },
+        "/assets/{assetPathAndName}": {
+            "delete": {
+                "description": "Delete an asset from the storage container. Returns an error if that asset is still being referred to by any domain entity.",
+                "operationId": "DeleteAsset",
+                "parameters": [{
+                    "name": "assetPathAndName",
+                    "in": "path",
+                    "description": "Note: must be Base64 encoded",
+                    "required": true,
+                    "schema": {
+                        "title": "assetPathAndName",
+                        "type": "string",
+                        "format": ""
+                    }
+                }, {
+                    "name": "tenant-id",
+                    "in": "header",
+                    "required": true,
+                    "schema": {
+                        "default": null
+                    }
+                }],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
             }
-          ]
+        },
+        "/{assetPathAndName}?{sasToken}": {
+            "get": {
+                "description": "Download an asset object (binary) from the tenant's container",
+                "operationId": "DownloadAsset",
+                "parameters": [{
+                    "name": "assetPathAndName",
+                    "in": "path",
+                    "description": "e.g. somefolder/somesubfolder/someimage.png",
+                    "required": true,
+                    "schema": {
+                        "title": "assetPathAndName",
+                        "type": "string",
+                        "format": ""
+                    }
+                }, {
+                    "name": "sasToken",
+                    "in": "path",
+                    "description": "the SAS token, for getting access to your blob container",
+                    "required": true,
+                    "schema": {
+                        "title": "sasToken",
+                        "type": "string",
+                        "format": ""
+                    }
+                }],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                },
+                "servers": [{
+                    "url": "Retrieve this from the GetBlobStorageBaseUrl method"
+                }]
+            },
+            "put": {
+                "description": "Upload an asset object (binary) to the tenant's container",
+                "operationId": "UploadAsset",
+                "parameters": [{
+                    "name": "assetPathAndName",
+                    "in": "path",
+                    "description": "e.g. somefolder/somesubfolder/someimage.png",
+                    "required": true,
+                    "schema": {
+                        "title": "assetPathAndName",
+                        "type": "string",
+                        "format": ""
+                    }
+                }, {
+                    "name": "sasToken",
+                    "in": "path",
+                    "description": "the SAS token, for getting access to your blob container",
+                    "required": true,
+                    "schema": {
+                        "title": "sasToken",
+                        "type": "string",
+                        "format": ""
+                    }
+                }, {
+                    "name": "x-ms-blob-type",
+                    "in": "header",
+                    "required": true,
+                    "schema": {
+                        "default": "BlockBlob"
+                    }
+                }],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                },
+                "servers": [{
+                    "url": "Retrieve this from the GetBlobStorageBaseUrl method"
+                }]
+            }
         }
-      }
     },
     "components": {
-      "schemas": {
-        "fetchSpecificationDTO": {
-          "title": "FetchSpecificationDTO",
-          "properties": {
-            "folderPath": {
-              "title": "FolderPath",
-              "type": "string",
-              "description": "The path of the folder to request data from. Use ~ for rootpath. For subpaths use a syntax like: ~/mypath/mysubpath",
-              "format": ""
+        "schemas": {
+            "blobStorageConnectionInfoDTO": {
+                "title": "BlobStorageConnectionInfoDTO",
+                "required": ["containerBaseUrl", "sasToken", "sasTokenExpirationTime"],
+                "properties": {
+                    "sasToken": {
+                        "title": "SasToken",
+                        "type": "string",
+                        "description": "Shared Access Signature (SAS) token that grants secure access to the blobstorage container of one particular tenant, directly from a client.",
+                        "format": ""
+                    },
+                    "sasTokenExpirationTime": {
+                        "title": "SasTokenExpirationTime",
+                        "type": "string",
+                        "description": "The moment of expiration of the SAS token",
+                        "format": "date-time"
+                    },
+                    "containerBaseUrl": {
+                        "title": "ContainerBaseUrl",
+                        "type": "string",
+                        "description": "Baseurl of the Azure BlobStorage Container for one particular tenant (example: \"https://xxxxxxx.blob.core.windows.net/71cca591-f9cd-40b6-a8d6-e1627f8af511\").",
+                        "format": ""
+                    }
+                },
+                "description": "Exposes the tenant specific information to a client that wants secure access to the Azure Blob Storage directly (bypassing ASF's AssetManagement API)."
             },
-            "targetPageReference": {
-              "title": "TargetPageReference",
-              "type": "string",
-              "description": "Specifies the page to target (works in conjunction with )             - For the FIRST page  : provide null.             - For the SECOND page : provide the ASF.Backend.Shared.AzStorageAccess.PagedResult.NextPageReference as returned by the FIRST page call             - For the THIRD page  : provide the ASF.Backend.Shared.AzStorageAccess.PagedResult.NextPageReference as returned by the SECOND page call             And so on...",
-              "format": "",
-              "nullable": true
+            "fetchSpecificationDTO": {
+                "title": "FetchSpecificationDTO",
+                "required": ["folderPath", "includeDependentEntitiesCount", "includeMetadata", "take"],
+                "properties": {
+                    "folderPath": {
+                        "title": "FolderPath",
+                        "type": "string",
+                        "description": "The path of the folder to request data from. Use ~ for rootpath. For subpaths use a syntax like: ~/mypath/mysubpath",
+                        "format": ""
+                    },
+                    "targetPageReference": {
+                        "title": "TargetPageReference",
+                        "type": "string",
+                        "description": "Specifies the page to target (works in conjunction with  Take )             - For the FIRST page  : provide null.             - For the SECOND page : provide the  NextPageReference  as returned by the FIRST page call             - For the THIRD page  : provide the  NextPageReference  as returned by the SECOND page call             And so on...",
+                        "format": "",
+                        "nullable": true
+                    },
+                    "take": {
+                        "title": "Take",
+                        "type": "integer",
+                        "description": "The amount or records to return (works in conjunction with  TargetPageReference )",
+                        "format": "int32"
+                    },
+                    "includeDependentEntitiesCount": {
+                        "title": "IncludeDependentEntitiesCount",
+                        "type": "boolean",
+                        "description": "If set to true, the  DependentEntityDTO  collection size will be included for every returned Asset.",
+                        "format": ""
+                    },
+                    "includeMetadata": {
+                        "title": "IncludeMetadata",
+                        "type": "boolean",
+                        "description": "If set to true, the  MetaData  will be provided in the response",
+                        "format": ""
+                    }
+                },
+                "description": "Specifies what data to fetch from an Asset storage folder."
             },
-            "take": {
-              "title": "Take",
-              "type": "integer",
-              "description": "The amount or records to return (works in conjunction with )",
-              "format": "int32"
+            "pagedResultDTO": {
+                "title": "PagedResultDTO",
+                "required": ["currentPageResults"],
+                "properties": {
+                    "currentPageResults": {
+                        "title": "CurrentPageResults",
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "blobInfoDTO": {
+                                    "properties": {
+                                        "isFolder": {
+                                            "title": "IsFolder",
+                                            "type": "boolean",
+                                            "description": "Helper property to distinguish between a TreeNode that is a (sub-)Folder, or one that is a Blob",
+                                            "format": ""
+                                        },
+                                        "name": {
+                                            "title": "Name",
+                                            "type": "string",
+                                            "description": "The name of the property the  PreState  and  PostState  is about.",
+                                            "format": ""
+                                        },
+                                        "contentType": {
+                                            "title": "ContentType",
+                                            "type": "string",
+                                            "description": "The content-type of the blob (null if TreeNode is not a Blob but a Container)",
+                                            "format": "",
+                                            "nullable": true
+                                        },
+                                        "contentLength": {
+                                            "title": "ContentLength",
+                                            "type": "integer",
+                                            "description": "The content-length of the blob (null if TreeNode is not a Blob but a Container)",
+                                            "format": "int64",
+                                            "nullable": true
+                                        },
+                                        "dependentEntitiesCount": {
+                                            "title": "DependentEntitiesCount",
+                                            "type": "integer",
+                                            "description": "Contains the  DependentEntityDTO  collection size (0..n), if the  IncludeDependentEntitiesCount  in the request was set to True.             If it was set to False, this property is not populated.",
+                                            "format": "int32",
+                                            "nullable": true
+                                        },
+                                        "metaData": {
+                                            "title": "MetaData",
+                                            "required": ["comparer", "count", "keys", "values", "item"],
+                                            "type": "object",
+                                            "properties": {
+                                                "comparer": {
+                                                    "title": "Comparer",
+                                                    "type": "object",
+                                                    "description": "Comparer",
+                                                    "format": ""
+                                                },
+                                                "count": {
+                                                    "title": "Count",
+                                                    "type": "integer",
+                                                    "description": "Count",
+                                                    "format": "int32"
+                                                },
+                                                "keys": {
+                                                    "title": "Keys",
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "count": {
+                                                            "title": "Count",
+                                                            "type": "integer",
+                                                            "description": "Count",
+                                                            "format": "int32"
+                                                        }
+                                                    },
+                                                    "description": "Keys",
+                                                    "format": ""
+                                                },
+                                                "values": {
+                                                    "title": "Values",
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "count": {
+                                                            "title": "Count",
+                                                            "type": "integer",
+                                                            "description": "Count",
+                                                            "format": "int32"
+                                                        }
+                                                    },
+                                                    "description": "Values",
+                                                    "format": ""
+                                                },
+                                                "item": {
+                                                    "title": "Item",
+                                                    "type": "string",
+                                                    "description": "Item",
+                                                    "format": ""
+                                                }
+                                            },
+                                            "description": "The custom metadata for this asset, as key-value pairs",
+                                            "format": "",
+                                            "nullable": true
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "description": "The results of the current page,  NextPageReference .",
+                        "format": ""
+                    },
+                    "nextPageReference": {
+                        "title": "NextPageReference",
+                        "type": "string",
+                        "description": "A reference to the next page. If null, then there is no more data to retrieve. If not null, then provide this value with the call for retrieval of the next page.",
+                        "format": "",
+                        "nullable": true
+                    }
+                },
+                "description": "Contains fetched blob metadata for the current page, and a reference for fetching the next page."
+            },
+            "caseNeutralDictionary`1": {
+                "title": "CaseNeutralDictionary`1",
+                "required": ["comparer", "count", "item", "keys", "values"],
+                "properties": {
+                    "comparer": {
+                        "title": "Comparer",
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "description": "Comparer",
+                        "format": ""
+                    },
+                    "count": {
+                        "title": "Count",
+                        "type": "integer",
+                        "description": "Count",
+                        "format": "int32"
+                    },
+                    "keys": {
+                        "title": "Keys",
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "description": "Keys",
+                        "format": ""
+                    },
+                    "values": {
+                        "title": "Values",
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "description": "Values",
+                        "format": ""
+                    },
+                    "item": {
+                        "title": "Item",
+                        "type": "string",
+                        "description": "Item",
+                        "format": ""
+                    }
+                },
+                "description": "CaseNeutralDictionary`1"
+            },
+            "dependentEntityDTO": {
+                "title": "DependentEntityDTO",
+                "required": ["dependentPropertyNames", "entityId", "entityType"],
+                "properties": {
+                    "entityType": {
+                        "title": "EntityType",
+                        "type": "string",
+                        "description": "The Type of the entity",
+                        "format": ""
+                    },
+                    "entityId": {
+                        "title": "EntityId",
+                        "type": "string",
+                        "description": "The Id of the entity",
+                        "format": "uuid"
+                    },
+                    "dependentPropertyNames": {
+                        "title": "DependentPropertyNames",
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "description": "The names of the properties (1..n) that contain the reference to an Asset (like: \"ThumbnailImage\", \"IntroVideo\").",
+                        "format": ""
+                    }
+                },
+                "description": "Represents one domainentity (like product, user, etc) that is dependent on (aka: refers to) an Asset (like an image). A dependent entity can have 1..n properties (see array DependentPropertyNames) that refer to the asset."
             }
-          },
-          "description": "Specifies what data to fetch from an Asset storage folder."
-        },
-        "pagedResultDTO": {
-          "title": "PagedResultDTO",
-          "properties": {
-            "currentPageResults": {
-              "title": "CurrentPageResults",
-              "type": "array",
-              "items": {
-                "type": "object"
-              },
-              "description": "The results of the current page, .",
-              "format": ""
-            },
-            "nextPageReference": {
-              "title": "NextPageReference",
-              "type": "string",
-              "description": "A reference to the next page. If null, then there is no more data to retrieve. If not null, then provide this value with the call for retrieval of the next page.",
-              "format": "",
-              "nullable": true
-            }
-          },
-          "description": "Contains fetched blob metadata for the current page, and a reference for fetching the next page."
-        },
-        "dependentEntityDTO": {
-          "title": "DependentEntityDTO",
-          "properties": {
-            "entityType": {
-              "title": "EntityType",
-              "type": "string",
-              "description": "The typename of the entity",
-              "format": ""
-            },
-            "entityId": {
-              "title": "EntityId",
-              "type": "string",
-              "description": "The Id of the entity",
-              "format": "uuid"
-            },
-            "dependentPropertyNames": {
-              "title": "DependentPropertyNames",
-              "type": "array",
-              "items": {
-                "type": "string"
-              },
-              "description": "The names of the properties (1..n) that contain the reference to an Asset (like: \"ThumbnailImage\", \"IntroVideo\").",
-              "format": ""
-            }
-          },
-          "description": "Represents one domainentity (like product, user, etc) that is dependent on (aka: refers to) an Asset (like an image). A dependent entity can have 1..n properties (see array DependentPropertyNames) that refer to the asset."
         }
-      }
     }
-  }
+}

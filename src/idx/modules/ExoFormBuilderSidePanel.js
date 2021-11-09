@@ -12,21 +12,22 @@ class ExoFormBuilderSidePanel {
 
         let tsOptions = {
             tabs: {
-                settings: { caption: "Form", class: "full-height", enabled: true },
-                addField: { caption: "Add", class: "full-height", enabled: false }
-                
+                // live: {caption: "Live"},
+                settings: { caption: "Options", class: "full-height", enabled: true },
+                addField: { caption: "Add", class: "full-height", enabled: false },
+                //errors: {caption: "Errors"}
             },
             class: "full-height"
         }
 
-        if(localStorage.advancedUi){
+        if (localStorage.advancedUi === "On") {
             tsOptions.tabs = {
                 ...tsOptions.tabs,
-                
+
                 //properties: { caption: "Props", class: "full-height", enabled: false },
-                model: { caption: "Model", class: "full-height", enabled: false },
-                css: { caption: "CSS", class: "full-height", enabled: false },
-                errors: {caption: "Errors"}
+                dataTab: { caption: "Data", class: "full-height", enabled: true },
+                css: { caption: "CSS", class: "full-height", enabled: false }
+
             }
         }
 
@@ -38,24 +39,19 @@ class ExoFormBuilderSidePanel {
                 case "addField":
                     this.tabStrip.tabs.addField.panel.querySelector("[name='_search']").focus();
                     break;
-                case "model":
 
-                    if (this.builder.currentForm) {
-                        this.showModelChange(this.builder.currentForm.dataBinding.model)
-                    }
-
-                    break;
-                case "errors":
-                    
-                    break;
                 default:
                     break;
             }
         })
 
+        this.renderPanel = document.createElement("div");
+        this.renderPanel.classList.add("render-panel");
+        containerPanel.add(this.renderPanel)
+
         containerPanel.add(this.tabStrip.render());
 
-        this.tabStrip.adaptHeight(containerPanel.element)
+        // this.tabStrip.adaptHeight(containerPanel.element)
 
 
         let div = DOM.parseHTML(`<div title="Type to filter fields..." class="field-search exf-ctl-cnt"><input name="_search" type="search" placeholder="Search..." /></div>`)
@@ -72,10 +68,12 @@ class ExoFormBuilderSidePanel {
 
         })
 
-        if(this.tabStrip.tabs.model){
+        if (this.tabStrip.tabs.dataTab) {
             this.builder.renderCodeEditor({ mode: "json", id: "exo-datamodel", value: "" }).then(elm => {
-                this.tabStrip.tabs.model.panel.appendChild(elm);
-                this.tabStrip.tabs.model.enabled = true;
+
+
+                this.builder.formDataViewer = xo.form.factory.getFieldFromElement(elm)._control;
+                this.tabStrip.tabs.dataTab.panel.appendChild(elm);
             })
         }
 
@@ -156,15 +154,18 @@ class ExoFormBuilderSidePanel {
         })
     }
 
-    showModelChange(model) {
-        let elm = document.getElementById("exo-datamodel");
-        if (elm) {
-            let f = window.xo.form.factory.getFieldFromElement(elm)
-            if (f) {
-                f._control.value = JSON.stringify(model, null, 2);
-            }
-        }
-    }
+    // showDataChange() {
+    //     let elm = document.getElementById("exo-datamodel");
+    //     if (elm) {
+    //         let f = window.xo.form.factory.getFieldFromElement(elm)
+    //         if (f) {
+    //             f._control.value = JSON.stringify(
+    //                 this.builder.renderer.data    
+    //             , null, 2);
+
+    //         }
+    //     }
+    // }
 
     updateCurrentFormPage(index) {
         this.settingsForm.get("page")._control.value = index;

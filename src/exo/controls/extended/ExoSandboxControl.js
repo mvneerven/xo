@@ -1,6 +1,5 @@
 import ExoEmbedControl from './ExoEmbedControl';
 import Core from '../../../pwa/Core';
-import xo from '../../../../js/xo';
 
 class ExoSandboxControl extends ExoEmbedControl {
     constructor() {
@@ -84,6 +83,8 @@ class ExoSandboxControl extends ExoEmbedControl {
     async createDocumentUrl(form) {
         let url = new URL(window.location.href);
 
+        if(!form)
+            form = {};
         if (!form.schema)
             form.schema = {}
 
@@ -175,6 +176,7 @@ class ExoSandboxControl extends ExoEmbedControl {
 
     set form(value) {
         this._form = value
+        console.log("Form set in sandbox", value);
         this.setSource();
     }
 

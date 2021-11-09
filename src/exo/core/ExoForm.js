@@ -2,7 +2,7 @@ import Core from '../../pwa/Core';
 import DOM from '../../pwa/DOM';
 import ExoFormFactory from './ExoFormFactory';
 import ExoFormDataBinding from '../databinding/ExoFormDataBinding';
-import xo from '../../../js/xo';
+
 
 /**
  * XO form class. 
@@ -12,6 +12,7 @@ import xo from '../../../js/xo';
  */
 class ExoForm {
     _cssVariables = {};
+
 
     static meta = {
 
@@ -41,6 +42,7 @@ class ExoForm {
     static setup() { } // reserved for later  
 
     constructor(context, opts) {
+        this._state = "Loading";
         if (!context || !(context instanceof ExoFormFactory.Context))
             throw TypeError("ExoForm: invalid instantiation of ExoForm: need ExoFormContext instance");
 
@@ -71,6 +73,12 @@ class ExoForm {
             id: this.id,
             exoForm: this
         })
+
+
+    }
+
+    get state() {
+        return this._state;
     }
 
     /**
@@ -80,35 +88,15 @@ class ExoForm {
         return this._schema;
     }
 
-    // /**
-    //  * Returns a reference to the CSS variables included 
-    //  */
-    // get cssVariables() {        
-    //     return this._cssVariables;
-    // }
-
-    // renderStyleSheet() {
-    //     const id = `form-variables-${this.id}`,
-    //     prevStyleSheet = document.getElementById(id);
-    //     if (prevStyleSheet) prevStyleSheet.remove();
-
-    //     const cssSheet = document.createElement("style");
-    //     cssSheet.id = id;
-    //     const css = Object.keys(this.cssVariables).map(
-    //         (c) => `${c}: ${this.cssVariables[c]};`
-    //     );
-    //     cssSheet.innerHTML = `[data-id="${this.id}"] { ${css.join(
-    //         " "
-    //     )} }`;
-    //     document.querySelector("head").appendChild(cssSheet);
-    // }
-
     /**
      * load XO form schema (string or )
      * @param {any} schema - A JSON/JS XO form Schema string or object, or URL to fetch it from.
      * @return {Promise} - A Promise returning the XO form Object with the loaded schema
      */
     load(schema, options) {
+
+        this._state = "Loading schema";
+
         options = options || { mode: "async" };
 
         return new Promise((resolve, reject) => {
@@ -120,9 +108,10 @@ class ExoForm {
                         this.schema.applyJsonSchemas();
                         this.events.trigger(ExoFormFactory.events.jsonSchemasApplied);
                         resolve(this);
-                    }).catch(ex => {
-                        reject(ex)
-                    });
+                    })
+                    // .catch(ex => {
+                    //     reject(ex)
+                    // });
                 }
             }
 
@@ -139,13 +128,7 @@ class ExoForm {
                             throw TypeError("HTTP Status " + x.status);
                         }).then(r => {
                             loader(r);
-                        }).catch(ex => {
-                            this.events.trigger(ExoFormFactory.events.error, {
-                                error: ex,
-                                message: `Error loading schema from ${url}: ${ex.toString()}`
-                            });
-                            reject(ex);
-                        });
+                        })
                     }
                     else {
                         fetch(url, settings).then(x => {
@@ -155,12 +138,6 @@ class ExoForm {
                             throw TypeError("HTTP Status " + x.status);
                         }).then(r => {
                             loader(r);
-                        }).catch(ex => {
-                            this.events.trigger(ExoFormFactory.events.error, {
-                                error: ex,
-                                message: `Error loading schema from ${url}: ${ex.toString()}`
-                            });
-                            reject(ex);
                         });
                     }
                 }
@@ -185,8 +162,6 @@ class ExoForm {
 
         this.events.trigger(ExoFormFactory.events.created);
 
-
-        //return new Promise((resolve, reject) => {
         this._schema = this.context.createSchema();
         this.schema.parse(schema);
 
@@ -198,7 +173,7 @@ class ExoForm {
 
         this.events.trigger(ExoFormFactory.events.schemaLoading);
 
-        this._dataBinding = new ExoFormDataBinding(this, this._mappedInstance);
+        this._dataBinding = new ExoFormDataBinding(this);
         await this._dataBinding.prepare();
 
 
@@ -217,7 +192,7 @@ class ExoForm {
         this.events.trigger(ExoFormFactory.events.schemaLoaded);
         this.schema.refreshStats();
 
-        this._createComponents();
+        this._loadAddins();
 
         if (this.schema.form) {
             let formClasses = this.schema.form.class ? this.schema.form.class.split(' ') : ["standard"];
@@ -226,14 +201,12 @@ class ExoForm {
             })
         }
 
-        //resolve();
-
         this.schema.refreshStats();
-        //});
     }
 
     // resolve 
     async resolveJsonSchemas() {
+        this._state = "Resolving JSON schemas";
 
         let promises = [];
         const loadJsonSchema = async (url, instanceName) => {
@@ -282,12 +255,13 @@ class ExoForm {
         return this._dataBinding;
     }
 
-    bind(instance) {
-        //TODO
-        this._mappedInstance = instance;
-    }
+    // bind(instance) {
+    //     //TODO
+    //     this._mappedInstance = instance;
+    // }
 
-    _createComponents() {
+    _loadAddins() {
+        this._state = "Loading addins";
         this.addins = {};
         for (var n in ExoFormFactory.meta) {
             let cmp = ExoFormFactory.meta[n];
@@ -318,6 +292,8 @@ class ExoForm {
      */
     renderForm() {
 
+        this._state = "Start rendering";
+
         if (this.schema.data.dirty) {
             this.addDirtyCheck();
         }
@@ -326,31 +302,15 @@ class ExoForm {
         this._cleanup();
 
         return new Promise((resolve, reject) => {
-
             this.container.appendChild(this.form);
-            if (this.schema.form.id) {
-                this.container.setAttribute("id", this.schema.form.id);
+            if (this.schema.id) {
+                this.container.setAttribute("id", this.schema.id);
             }
-
-            //try {
-
             this._renderPages().then(() => {
-
                 this._finalizeForm().then(() => {
-
                     resolve(this);
                 });
-
             })
-
-            // .catch(ex => {
-            //     reject("_renderPages() failed: " + ex.toString());
-            // });
-
-            //}
-            //catch (ex) {
-            //    reject("Exception in _renderPages(): " + ex.toString())
-            //}
         });
     }
 
@@ -370,6 +330,8 @@ class ExoForm {
     }
 
     async _finalizeForm() {
+
+        this._state = "Finalizing";
 
         await this.addins.navigation.render();
 
@@ -392,8 +354,6 @@ class ExoForm {
         this.addins.rules.checkRules(this.context, this.options);
 
         this.addins.navigation.restart();
-
-        //this.renderStyleSheet();
 
         this.events.trigger(ExoFormFactory.events.renderReady);
 
@@ -421,25 +381,24 @@ class ExoForm {
     }
 
     _renderPages() {
-        const _ = this;
-
-        let cid = this.container.id;
+        const me = this;
+        this._state = "Rendering";
 
         return new Promise((resolve, reject) => {
             var pageNr = 0;
 
             let totalFieldsRendered = 0;
 
-            _.pageContainer = DOM.parseHTML('<div class="exf-wrapper" />');
+            me.pageContainer = DOM.parseHTML('<div class="exf-wrapper" />');
 
-            _.schema.pages.forEach(p => {
+            me.schema.pages.forEach(p => {
                 pageNr++;
 
-                p = _._enrichPageSettings(p, pageNr);
+                p = me._enrichPageSettings(p, pageNr);
 
-                _.pageContainer.appendChild(p.dummy);
+                me.pageContainer.appendChild(p.dummy);
 
-                _.createControl(p).then(page => {
+                me.createControl(p).then(page => {
                     let pageFieldsRendered = 0;
 
                     if (Array.isArray(p.fields)) {
@@ -447,68 +406,26 @@ class ExoForm {
                             f.dummy = DOM.parseHTML('<span/>');
 
                             page.appendChild(f.dummy);
-                            _.createControl(f).then(() => {
+                            me.createControl(f).then(() => {
                                 f._control.render().then(rendered => {
-
-                                    if (!rendered)
-                                        throw TypeError("ExoForm: " + ExoFormFactory.fieldToString(f) + " does not render an HTML element");
-
                                     pageFieldsRendered = this._addRendered(f, rendered, pageFieldsRendered, p, page);
 
-                                }).catch(ex => {
-                                    let showError = !this.events.trigger(ExoFormFactory.events.error, { error: ex });
-                                    console.error(ex);
-                                    let rendered = DOM.parseHTML(DOM.format('<span class="exf-error exf-render-error" title="{{title}}">ERROR</span>', {
-                                        title: "ExoForm: error rendering field " + ExoFormFactory.fieldToString(f) + ": " + ex.toString()
-
-                                    }))
-                                    pageFieldsRendered = this._addRendered(f, rendered, pageFieldsRendered, p, page);
-
-                                }).finally(r => {
-
-                                    totalFieldsRendered++;
-
-                                    if (totalFieldsRendered === _.schema.fieldCount) {
-                                        _.container.classList.add(pageNr > 1 ? "exf-multi-page" : "exf-single-page");
-
-                                        // check for custom container
-                                        if (_.schema.form.container) {
-                                            let cf = _._getFormContainerProps(_)
-
-                                            _.createControl(cf).then(cx => {
-                                                cx.render().then(x => {
-                                                    x.appendChild(_.pageContainer);
-                                                    _.pageContainer = DOM.unwrap(_.pageContainer);
-                                                    cx.finalize(_.pageContainer);
-                                                    _.form.appendChild(x);
-
-                                                    resolve();
-                                                })
-                                            });
-
-                                        }
-                                        else {
-                                            _.form.appendChild(_.pageContainer);
+                                })
+                                    .finally(r => {
+                                        totalFieldsRendered++;
+                                        if (totalFieldsRendered === me.schema.fieldCount) {
+                                            me.container.classList.add(pageNr > 1 ? "exf-multi-page" : "exf-single-page");
+                                            me.form.appendChild(me.pageContainer);
                                             resolve();
                                         }
-
-                                    }
-                                });
+                                    });
                             })
-
-                                .catch(ex => {
-                                    reject("Exception in createControl() for control " + ExoFormFactory.fieldToString(f) + ": " + ex.toString())
-                                });
                         });
                     }
                     else {
                         console.warn(`Page ${pageNr} has no fields array`);
                     }
                 })
-
-                    .catch(ex => {
-                        reject("Exception in createControl() for page container " + ExoFormFactory.fieldToString(p) + ": " + ex.toString())
-                    });
             });
         });
     }
@@ -631,19 +548,19 @@ class ExoForm {
         let data = this.getFormValues(ev);
         let detail = { postData: data };
         let result = this.events.trigger(ExoFormFactory.events.beforePost, detail)
-        if(result){
-            this.prePost().then(result=>{
-                if(result){
+        if (result) {
+            this.prePost().then(result => {
+                if (result) {
                     data._prePostResult = result;
                 }
                 this.events.trigger(ExoFormFactory.events.post, { postData: data })
             });
-            
+
             e.returnValue = false;
         }
     }
 
-    async prePost(){
+    async prePost() {
     }
 
     /**
@@ -689,7 +606,7 @@ class ExoForm {
     }
 
     createControl(f) {
-        const _ = this;
+        const me = this;
         return new Promise((resolve, reject) => {
 
             const doResolve = (f, c) => {
@@ -700,68 +617,45 @@ class ExoForm {
                 resolve(c);
             }
 
-            try {
-                if (!f.type) {
-                    if (f.bind) {
-                        f.type = this._getDefaultControlType(f.bind);
-                    }
-                    else
-                        f.type = "text";
+
+            if (!f.type) {
+                if (f.bind) {
+                    f.type = this._getDefaultControlType(f.bind);
                 }
-
-                f.id = f.id || _._generateUniqueElementId();
-
-                let field = _.context.get(f.type);
-                if (!field)
-                    throw TypeError("ExoForm: " + f.type + " is not a registered ExoForm field type");
-
-                let baseType = field.type;
-
-                if (!baseType)
-                    throw TypeError("ExoForm: class for " + f.type + " not defined");
-
-                if (!_.context.isExoFormControl(f))
-                    throw TypeError("ExoForm: cannot create control: class for " + f.type + " is not derived from ExoControlBase");
-
-                let control = null;
-
-                let context = {
-                    exo: _,
-                    field: f
-                };
-
-                if (f.custom) {
-                    ExoFormFactory.loadCustomControl(f, f.custom).then(x => {
-                        let customType = x.default;
-                        control = new customType(context);
-                        doResolve(f, control);
-                    })
-                }
-                else {
-                    control = new baseType(context);
-                    doResolve(f, control);
-                }
-
+                else
+                    f.type = "text";
             }
-            catch (ex) {
-                let field = _.context.get("div");
-                let control = new field.type({
-                    exo: _,
-                    field: {
-                        ...f
-                    }
-                });
 
-                let showError = !_.events.trigger(ExoFormFactory.events.error, {
-                    stage: "Create",
-                    error: ex
-                });
+            f.id = f.id || me._generateUniqueElementId();
 
-                console.error(ex);
-                control.htmlElement.appendChild(DOM.parseHTML(DOM.format('<span class="exf-error exf-create-error" title="{{title}}">ERROR</span>', {
-                    title: "Error creating " + ExoFormFactory.fieldToString(f) + ": " + ex.toString()
-                })));
+            let field = me.context.get(f.type);
+            if (!field)
+                throw TypeError(f.type + " is not a registered ExoForm field type");
 
+            let baseType = field.type;
+
+            if (!baseType)
+                throw TypeError("Class for " + f.type + " not defined");
+
+            if (!me.context.isExoFormControl(f))
+                throw TypeError("Cannot create control: class for " + f.type + " is not derived from ExoControlBase");
+
+            let control = null;
+
+            let context = {
+                exo: me,
+                field: f
+            };
+
+            if (f.custom) {
+                ExoFormFactory.loadCustomControl(f, f.custom).then(x => {
+                    let customType = x.default;
+                    control = new customType(context);
+                    doResolve(f, control);
+                })
+            }
+            else {
+                control = new baseType(context);
                 doResolve(f, control);
             }
         });

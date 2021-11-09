@@ -21,10 +21,10 @@ describe("XO form databinding Tests", () => {
             },
             pages: [{
                 fields: [
-                    { type: "text", name: "text1", bind: "instance.data.txt", caption: "#/state/caption" },
+                    { type: "text", name: "text1", bind: "#/data/txt", caption: "#/state/caption" },
                     { type: "tags", name: "tags1", value: ["dead", "can", "dance"] },
-                    { type: "tags", name: "tags2", bind: "instance.data.tags" },
-                    { type: "radiobuttonlist", name: "radio1", bind: "instance.data.vl1" , items: ["one", "two", "three"] }
+                    { type: "tags", name: "tags2", bind: "#/data/tags" },
+                    { type: "radiobuttonlist", name: "radio1", bind: "#/data/vl1" , items: ["one", "two", "three"] }
                 ]
             }]
         }).then(x => {

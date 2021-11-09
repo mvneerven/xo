@@ -8,7 +8,8 @@ class ExoRadioButtonListControl extends ExoInputListControl {
     }
 
     set value(data) {
-        let inp = this.htmlElement.querySelectorAll("[name]").forEach(el => {
+        this._value = data;
+        this.htmlElement.querySelectorAll("[name]").forEach(el => {
             if (el.value == data)
                 el.checked = true;
         });
@@ -16,7 +17,13 @@ class ExoRadioButtonListControl extends ExoInputListControl {
 
     get value() {
         let inp = this.htmlElement.querySelector("[name]:checked");
-        return inp ? inp.value : "";
+        this._value = inp ? inp.value : "";
+        return this._value;
+    }
+
+    isItemSelected(item){
+        let i = super.isItemSelected(item);
+        return i || this._value === (item?.value || item)
     }
 }
 

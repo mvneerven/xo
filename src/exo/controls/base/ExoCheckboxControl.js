@@ -30,16 +30,12 @@ class ExoCheckboxControl extends ExoCheckboxListControl {
     }
 
     get value() {
-        if (this.rendered)
-            return this.container.querySelector(":checked") ? true : false;
-
-        return super.value;
+        return this.htmlElement.querySelector(":checked") ? true : false;
     }
 
     set value(data) {
-        super.value = data;
         if (this.rendered)
-            this.container.querySelector("[name]").checked = data;
+            this.htmlElement.querySelector("[name]").checked = data;
     }
 }
 

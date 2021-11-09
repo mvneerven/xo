@@ -26,7 +26,7 @@ import multiInputDemo from '../../../../data/multiinput-demo.json'
 import ExoSandboxControl from './ExoSandboxControl';
 import ExoTextConfirm from './ExoTextConfirm';
 import ExoImageSelector from './ExoImageSelector';
-import ExoListDetailControl from './ExoListViewEditExtension';
+import xo from '../../../../js/xo';
 
 class ExoExtendedControls {
     static controls = {
@@ -51,15 +51,15 @@ class ExoExtendedControls {
         dropdownbutton: { hidden: true, type: ExoDropDownButton, note: "A dropdown menu button" },
         captcha: { caption: "A wrapper around the Google ReCaptcha Control, both visible and hidden", type: ExoCaptchaControl, note: "Captcha field", demo: { sitekey: "<your key here>" } },
         starrating: { type: ExoStarRatingControl, note: "An accessible star rating control", demo: { value: 2.5 } },
-        dialog: { type: ExoDialogControl, caption: "Dialog", note: "A simple dialog (modal or modeless)", demo: {demo: true} },
-        filedialog: { type: ExoFileDialogControl, caption: "File Dialog", note: "A simple file dialog", demo: {demo: true} },
+        dialog: { type: ExoDialogControl, caption: "Dialog", note: "A simple dialog (modal or modeless)", demo: { demo: true } },
+        filedialog: { type: ExoFileDialogControl, caption: "File Dialog", note: "A simple file dialog", demo: { demo: true } },
         info: { type: ExoInfoControl, note: "An info panel", demo: { title: "Info", icon: "ti-info", body: "Your informational text" } },
-        sandbox: {type: ExoSandboxControl, note: "Embed an XO form form in an isolated way (IFRAME)"},
-        map: {type: ExoLeafletMapControl, note: "Leaflet interactive map" },
-        listview: {type: ExoListViewControl, note: "Listview control", demo: listviewDemo},
-        treeview: {type: ExoTreeViewControl, note: "Treeview control", demo: treeviewDemo},
-        textconfirm: {type: ExoTextConfirm, note: "Textbox with confirmation button"},
-        imageselector: {type: ExoImageSelector, note: "Image selector control"},
+        sandbox: { type: ExoSandboxControl, note: "Embed an XO form form in an isolated way (IFRAME)", demo: { form: { schema: {pages: [{ fields: [{ type: "text", caption: "Textbox 1" }] }] } }} },
+        map: { type: ExoLeafletMapControl, note: "Leaflet interactive map" },
+        listview: { type: ExoListViewControl, note: "Listview control", demo: listviewDemo },
+        treeview: { type: ExoTreeViewControl, note: "Treeview control", demo: treeviewDemo },
+        textconfirm: { type: ExoTextConfirm, note: "Textbox with confirmation button" },
+        imageselector: { type: ExoImageSelector, note: "Image selector control" },
         //listdetail: {type: ExoListDetailControl, note: "Master/detail Listview with editor"}
     }
 }

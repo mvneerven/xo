@@ -97,7 +97,6 @@ class ExoTaggingControl extends ExoBaseControls.controls.text.type {
                         const str = this.input.value.trim();
                         this.input.value = "";
                         if (str !== "") {
-                            console.log("bbbb")
                             this.addTag(str);
                         }
                     }

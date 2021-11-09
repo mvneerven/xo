@@ -34,20 +34,19 @@ class ExoEntitySettings {
         ready: 2
     }
 
-    static baseEditFormSchema = {
-        navigation: "static",
-        model: {
-            schemas: {
-                data: undefined
-            },
-            instance: {
-                data: {},
-            } //,
-            // logic: (context) => {
-            //     let m = context.model;
-            //     m.bindings.edit = !m.instance.data.id;
-            // }
+    static get baseEditFormSchema() {
+        return {
+            navigation: "static",
+            model: {
+                schemas: {
+                    data: undefined
+                },
+                instance: {
+                    data: {},
+                } 
+            }
         }
+        
     }
 
     options = {
@@ -201,7 +200,9 @@ class ExoEntitySettings {
             switch (meta.type) {
 
                 case "openapi":
-                    this.openApi = new OpenApi(meta.data);
+                    this.openApi = new OpenApi(meta.data, {
+                        dto: this.options.dto
+                    });
                     await this.openApi.read();
                     this.jsonSchema = this.openApi.jsonSchema;
                     this.options.api = this.openApi.api;

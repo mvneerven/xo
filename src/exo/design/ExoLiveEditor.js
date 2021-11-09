@@ -2,12 +2,12 @@ import ExoFormFactory from '../core/ExoFormFactory';
 import ExoForm from '../core/ExoForm';
 import DOM from '../../pwa/DOM';
 import Core from '../../pwa/Core';
-import xo from '../../../js/xo';
 
 class ExoLiveEditor {
-    constructor(exo) {
+    constructor(exo, options) {
         if (!(exo instanceof ExoForm))
             throw TypeError("No XO form passed")
+        this.options = { ...options };
         this.events = new Core.Events(this);
         this.exo = exo;
         this.init()
@@ -19,22 +19,29 @@ class ExoLiveEditor {
 
         this.renderStyleSheet();
 
-        this.btnToggle = await xo.form.run({
-            type: "button",
-            caption: "LIVE",
-            click: e=>{
-                me.enabled = !me.enabled;
-                me.btnToggle.classList[me.enabled ? "add" : "remove"]("active");
-                me.renderActiveState()
-            }
-        });
+        if (this.options.auto) {
+            me.enabled = true;
+            me.renderActiveState()
+        }
+        else {
+            this.btnToggle = await xo.form.run({
+                type: "button",
+                caption: "LIVE",
+                click: e => {
+                    me.enabled = !me.enabled;
+                    me.btnToggle.classList[me.enabled ? "add" : "remove"]("active");
+                    me.renderActiveState()
+                }
+            });
 
-        this.btnToggle.classList.add("exf-le-btn");
-        this.btnToggle.classList.remove("exf-btn");
-        this.btnToggle.querySelector("button").classList.remove("exf-btn");
+            this.btnToggle.classList.add("exf-le-btn");
+            this.btnToggle.classList.remove("exf-btn");
+            this.btnToggle.querySelector("button").classList.remove("exf-btn");
 
-        this.exo.container.insertBefore(this.btnToggle, this.exo.form);
-        this.btnToggle.setAttribute("title", await this.getFormMeta())
+            this.exo.container.insertBefore(this.btnToggle, this.exo.form);
+            this.btnToggle.setAttribute("title", await this.getFormMeta())
+        }
+
     }
 
     renderActiveState() {
@@ -129,7 +136,7 @@ class ExoLiveEditor {
             this.startEdit(e)
         }
     }
-    
+
     isLiveEditButton(elm) {
         return elm.closest(".exf-le-ctx")
     }
@@ -213,7 +220,7 @@ class ExoLiveEditor {
                                 name: "code",
                                 mode: "json",
                                 caption: "Field",
-                                bind: "instance.data.raw"
+                                bind: "#/data/raw"
                             }
                         ]
                     }

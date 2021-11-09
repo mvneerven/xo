@@ -174,7 +174,7 @@ const schema = {
           caption: "A Button",
           type: "button",
           value: "yes",
-          bind: "instance.data.btn1Clicked"
+          bind: "#/data/btn1Clicked"
         }
       ]
     }

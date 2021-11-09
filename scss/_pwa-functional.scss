@@ -5,7 +5,10 @@
 }
 
 .full-height {
+    display: flex;
+    flex-flow: column;
     height: 100%;
+    flex: 1 1 auto;
 }
 
 .disabled {

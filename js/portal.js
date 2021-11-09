@@ -3,6 +3,13 @@ import routes from "../src/idx/routes";
 import GridColumnResizer from '../src/idx/modules/GridColumnResizer';
 
 class ExoFormStudio extends window.xo.pwa {
+
+    constructor(){
+        super(...arguments);
+
+        
+    }
+
     routerReady() {
 
         document.title = `XO-JS ${xo.version}`;

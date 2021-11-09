@@ -27,11 +27,15 @@ class ExoFormSchema {
             let test = ExoFormFactory.tryScriptLiteral(schemaData);
             if (test?.type === "javascript") {
                 this._type = this.types.js;
-                if (test.executed)
+                if (test.executed){
                     schemaData = test.schema;
-                else {
-                    throw TypeError("ExoFormSchema: Error in JavaScript Schema: " + test.error);
                 }
+                else if(test.syntaxError) {
+                    throw test.syntaxError;
+                }
+                else
+                    throw test.error;
+                
             }
             else {
                 try {
@@ -39,7 +43,7 @@ class ExoFormSchema {
                     this._type = this.types.json;
                 }
                 catch (ex) {
-                    throw TypeError("ExoFormSchema: could not convert string to XO form schema: " + ex.toString())
+                    throw TypeError(ex.toString())
                 }
             }
         }
@@ -403,7 +407,7 @@ Pages: ${this.pages.length}
 
         str = str.replace("function anonymous(context\n) {", "context => {");
 
-        return "const schema = " + str;
+        return `const schema = ${str};`;
     }
 
     removeEmptyObject(obj, name) {
@@ -650,8 +654,10 @@ Pages: ${this.pages.length}
         });
     }
 
-    static async fromOpenApiSchema(openApiSchema) {
-        let ent = new xo.form.entity({ dataSchema: openApiSchema });
+    static async fromOpenApiSchema(openApiSchema, options) {
+        options = {...options}
+        let ent = new xo.form.entity({ dataSchema: openApiSchema, dto: options.dto });
+        
         let editor = await ent.createEditor({});
         return await ExoFormSchema.fromJsonSchema(editor.schema.model.schemas.data);
     }

@@ -119,7 +119,7 @@ const schema = {
           type: "checkboxlist",
           name: "checkboxlist1",
           caption: "Choices",
-          bind: "instance.data.selectedItems",
+          bind: "#/data/selectedItems",
           items: "@instance.options.checks"
         }
       ]

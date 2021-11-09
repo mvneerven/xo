@@ -46,6 +46,7 @@ class JSONSchema {
             let path = ExoFormSchema.getPathFromBind(field.bind);
 
             let props = this.schema.properties[path] // todo deep path
+           
 
             if (!field.name) {
                 field.name = path;
@@ -66,9 +67,9 @@ class JSONSchema {
                 field.caption = (props ? props.title : null) || Core.toWords(path);
             }
 
-            if (props?.description) { // https://json-schema.org/draft/2020-12/json-schema-validation.html#rfc.section.9.1
-                field.info = props.description;
-            }
+            // if (props?.description) { // https://json-schema.org/draft/2020-12/json-schema-validation.html#rfc.section.9.1
+            //     //field.info = props.description;
+            // }
 
             if (props?.enum && !field.items) {
                 field.type = "dropdown";
@@ -77,6 +78,7 @@ class JSONSchema {
 
         }
 
+        
         catch (ex) {
             console.error(`Error applying JSON Schema for field ${ExoFormFactory.fieldToString(field)}`, ex)
 
@@ -86,7 +88,7 @@ class JSONSchema {
 
     static mapType(field, prop) {
         // string, number, integer, object, array, boolean, null
-        switch (prop.type) {
+        switch (prop?.type) {
 
             case "string": return JSONSchema.applyStringType(field, prop);
             case "number": return JSONSchema.applyNumericType(field, prop);
@@ -96,7 +98,10 @@ class JSONSchema {
             case "object":
                 return JSONSchema.applyObjectType(field, prop);
 
+            default:
+                console.error("Mapping ", field, prop )
         }
+
 
         return { type: "text" }
     }

@@ -1,4 +1,3 @@
-//import xo from "../../../../js/xo";
 import ExoMultiInputControl from "./ExoMultiInputControl";
 
 class ExoImageSelector extends ExoMultiInputControl {

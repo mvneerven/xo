@@ -1,7 +1,6 @@
 import ExoInputControl from './ExoInputControl';
 import DOM from '../../../pwa/DOM';
 import ExoTextControlAutoCompleteExtension from './ExoTextControlAutoCompleteExtension';
-import xo from '../../../../js/xo';
 
 // Textbox control (input[type=text])
 class ExoTextControl extends ExoInputControl {

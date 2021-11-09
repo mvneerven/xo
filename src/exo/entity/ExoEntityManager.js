@@ -1,4 +1,3 @@
-import xo from '../../../js/xo';
 import Core from '../../pwa/Core';
 import ExoEntitySettings from './ExoEntitySettings';
 import ExoEntityEditor from './ExoEntityEditor';

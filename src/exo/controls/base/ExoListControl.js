@@ -20,7 +20,7 @@ class ExoListControl extends ExoElementControl {
                 description: "Set the view mode (list, tiles)"
             },
             {
-                name:"items",
+                name: "items",
                 type: Object,
                 description: "Items to show as options"
             }
@@ -28,12 +28,8 @@ class ExoListControl extends ExoElementControl {
     }
 
     async populateList(containerElm, tpl) {
-        
         const f = this.context.field;
-
         let items = await Core.acquireState(this.items)
-
-
         if (items && Array.isArray(items)) {
             let index = 0;
             items.forEach(i => {
@@ -49,14 +45,15 @@ class ExoListControl extends ExoElementControl {
         var dummy = DOM.parseHTML('<span/>')
         container.appendChild(dummy);
 
+        let isSelected = this.isItemSelected(i);
         let item = {
             ...i,
             name: typeof (i.name) === "string" ? i.name : i.toString(),
             value: (i.value != undefined) ? i.value : i,
             type: _.optionType,
-            inputname: f.name,
-            checked: (i.checked || i.selected) ? "checked" : "",
-            selected: (i.checked || i.selected) ? "selected" : "",
+            inputname: f.name || f.id,
+            checked: isSelected ? "checked" : "",
+            selected: isSelected,
             disabled: (i.disabled || i.enabled === false) ? "disabled" : "",
             tooltip: (i.tooltip || i.name || "").replace('{{field}}', ''),
             oid: f.id + "_" + index
@@ -85,6 +82,10 @@ class ExoListControl extends ExoElementControl {
             DOM.replace(dummy, o.listElement);
         }
         _.context.exo.events.trigger(ExoFormFactory.events.getListItem, o);
+    }
+
+    isItemSelected(item) {
+        return (item.checked || item.selected) ? "checked" : ""
     }
 
     // use trick to run async stuff and wait for it.

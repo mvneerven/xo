@@ -15,10 +15,7 @@ class HomeRoute extends xo.route {
                 ui: {
                     type: "radiobuttonlist",
                     view: "tiles",
-                    items: [
-                        { value: "false", name: "Off" },
-                        { value: "true", name: "On" }
-                    ]
+                    items: ["Off","On" ]
                 }
             },
             {
@@ -29,10 +26,8 @@ class HomeRoute extends xo.route {
                 ui: {
                     type: "radiobuttonlist",
                     view: "tiles",
-                    items: [
-                        { value: false, name: "Off" },
-                        { value: true, name: "On" }
-                    ]
+                    items: ["Off" , "On" ]
+                    
                 }
             }
         );
@@ -44,18 +39,19 @@ class HomeRoute extends xo.route {
         pwa.settings.add(this.settings)
             .on("read", e => {
                 let data = {
-                    darkmode: pwa.UI.theme === "dark" ? "true" : "false",
+                    darkmode: ["dark", "On"].includes( pwa.UI.theme) ? "On" : "Off",
                     pagesize: pwa.UI.pagesize || 8,
-                    advancedUi: localStorage.advancedUi
+                    advancedUi: ["true", "On", true].includes(localStorage.advancedUi)  ? "On": "Off"
                 }
 
                 e.detail.instance.data = data;
             })
             .on("write", e => {
+
                 let settings = e.detail.instance.data;
-                pwa.UI.theme = settings.darkmode === "true" ? "dark" : "light";
+                pwa.UI.theme = settings.darkmode === "On" ? "dark": "light";
                 pwa.UI.pagesize = settings.pagesize;
-                localStorage.advancedUi = settings.advancedUi
+                localStorage.advancedUi = settings.advancedUi === "On" ? "On" : "Off"
             })
 
     }

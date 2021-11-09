@@ -179,24 +179,24 @@ class ULTabStrip {
             };
         })
         
-        this.adaptHeight(this.container)
+        //this.adaptHeight(this.container)
 
         return this.container;
     }
 
-    // fix full height
-    adaptHeight(cn) {
-        const _ = this;
-        let ctn = cn.parentNode;
-        let ulH = ctn.querySelector(".ul-tabs > ul").clientHeight;
-        new ResizeObserver(e=>{
-            let ch = e[0].contentRect.height-10;
-            let h = (ch - ulH)
-            ctn.querySelectorAll(".ul-tabs div.full-height").forEach(c=>{
-                c.style.height = h + "px";
-            })
-        }).observe(ctn);
-    }
+    // // fix full height
+    // adaptHeight(cn) {
+    //     const _ = this;
+    //     let ctn = cn.parentNode;
+    //     let ulH = ctn.querySelector(".ul-tabs > ul").clientHeight;
+    //     new ResizeObserver(e=>{
+    //         let ch = e[0].contentRect.height-10;
+    //         let h = (ch - ulH)
+    //         ctn.querySelectorAll(".ul-tabs div.full-height").forEach(c=>{
+    //             c.style.height = h + "px";
+    //         })
+    //     }).observe(ctn);
+    // }
 
     // setHtmlElementClass(tabId) {
     //     let prefix = "exb-tab-" + this.name + "-";

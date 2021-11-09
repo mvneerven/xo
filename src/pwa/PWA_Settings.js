@@ -1,4 +1,3 @@
-import xo from "../../js/xo";
 import JSONSchema from "../exo/core/JSONSchema";
 import Core from "./Core";
 import PWA_SettingsSection from "./PWA_SettingsSection";
@@ -46,7 +45,7 @@ class PWA_Settings {
             sec = new PWA_SettingsSection(name);
             sec.title = name;
             sec.id = id;
-            sec.binding = "instance." + sec.id + ".";
+            sec.binding = "#/" + sec.id + "/";
             this.schema.model.instance[sec.id] = {};
 
             this._sections[sec.id] = sec;
@@ -60,6 +59,8 @@ class PWA_Settings {
 
     async render(options) {
         this.build();
+        
+        console.debug("Settings Model", this.schema.model);
 
         const defOptions = {
             on: {
@@ -75,6 +76,7 @@ class PWA_Settings {
                     }
                 },
                 dataModelChange: e => {
+                    console.log("dm change")
                     
                     let b = e.detail.changed;
                     if (b) {

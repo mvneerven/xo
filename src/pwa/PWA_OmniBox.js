@@ -1,4 +1,3 @@
-import xo from "../../js/xo";
 import ExoFormFactory from "../exo/core/ExoFormFactory";
 import Core from "./Core";
 

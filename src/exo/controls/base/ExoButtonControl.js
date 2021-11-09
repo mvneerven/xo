@@ -16,8 +16,7 @@ class ExoButtonControl extends ExoElementControl {
 
     this.htmlElement = DOM.parseHTML('<button type="button" class="exf-btn" />');
 
-    // if no binding is set up, add one to 
-    // make clicking the button change a value in the model
+    // if no binding is set up, add one to make clicking the button change a value in the model
     // for conditionless RuleEngine actions to fire then.
     if (!context.field.bind) {
       if (context.exo.dataBinding) {
@@ -98,7 +97,6 @@ class ExoButtonControl extends ExoElementControl {
   }
 
   handleClick(e) {
-    //e.stopPropagation();
     e.preventDefault();
 
     const me = this;

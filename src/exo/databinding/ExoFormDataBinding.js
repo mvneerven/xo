@@ -16,14 +16,15 @@ class ExoFormDataBinding {
         //bindings: {}
     };
 
-    constructor(exo, instance) {
+    constructor(exo) {
         this.exo = exo;
-        this.instance = instance;
+        
         this.events = new Core.Events(this);
     }
 
     async prepare() {
-        await this._init(this.exo, this.instance);
+
+        await this._init(this.exo);
 
         this._resolver = new ExoFormDataBindingResolver(this);
 
@@ -33,7 +34,7 @@ class ExoFormDataBinding {
 
         this.exo.on(ExoFormFactory.events.renderReady, e => {
             this.exo.on(ExoFormFactory.events.dataModelChange, e => {
-                this.resolver.resolve();
+                this.resolver.resolve(e.detail.changeData);
             }).on(ExoFormFactory.events.page, e => { // on navigate, resolve again (e.g. for navigation control state)
                 this.resolver.resolve();
             })
@@ -42,7 +43,6 @@ class ExoFormDataBinding {
         })
 
         this._ready();
-
     }
 
     setupDefaultButtonBinding(btn) {
@@ -71,7 +71,7 @@ class ExoFormDataBinding {
             exo.query(f => {
                 if (!f.bind && !modelSetup) {
                     if (f.name) {
-                        f.bind = "instance.data." + f.name; // use default model binding if no binding is specified
+                        f.bind = "#/data/" + f.name; // use default model binding if no binding is specified
                     }
                 }
                 if (f.bind) { // field uses databinding to model -> set databinding value
@@ -93,6 +93,10 @@ class ExoFormDataBinding {
             this.events.trigger("ready", { model: this._model });
         })
             .on(ExoFormFactory.events.interactive, () => {
+
+                console.debug("Bindings", this.resolver._boundControlState)
+
+
                 let eventName = this.exo.options.DOMChange || "input";
 
                 const handle = e => {
@@ -158,17 +162,13 @@ class ExoFormDataBinding {
 
     }
 
-    async _init(exo, instance) {
+    async _init(exo) {
+        
         return new Promise(resolve => {
 
-            if (instance) { //TODO deprecate
-                this._mapped = instance;
-                this._model.instance = instance;
-                this._origin = ExoFormDataBinding.origins.bind;
-                resolve();
-            }
-            else if (exo.schema.model) {
+            if (exo.schema.model) {
                 this._origin = ExoFormDataBinding.origins.schema;
+
                 this._model = {
                     ...exo.schema.model
                 };
@@ -234,10 +234,17 @@ class ExoFormDataBinding {
     proxy(instanceName, obj) {
         const me = this;
 
+        const equals = (x,y) => {
+            if(typeof(x)==="object")
+                return Core.objectEquals(x,y)
+            return x === y;
+        }
         const proxify = (instanceName, object, change, subPath) => {
+
             if (object?.__proxy__) {
                 return object;
-            }
+            }           
+
             const pxy = new Proxy(object, {
                 get: function (object, name) {
                     if (name === '__proxy__') {
@@ -245,26 +252,35 @@ class ExoFormDataBinding {
                     }
                     return object[name];
                 },
-                set: function (object, name, value) {
+                set: function (object, name, value, receiver) {
                     var old = object[name];
-                    if (value && typeof value === 'object') {
-                        // new object need to be proxified as well
-                        value = proxify(instanceName, value, change, subPath + "/" + name);
+                    if (value ){
+                        if( typeof value === 'object') {
+                            // new object needs to be proxified as well
+                            value = proxify(instanceName, value, change, subPath + "/" + name);
+                        }
                     }
-                    object[name] = value;
-                    if (old !== value) {
-
-                        change(object, name, old, value, subPath);// + "/" + name);
+                    
+                    if(old === undefined && Array.isArray(receiver)){
+                        object.push(value);
+                        change(object, null, old, value, subPath);
+                        return true;
+                    }
+                    else{
+                        object[name] = value;
+                    }
+                    
+                    if (!equals(old, value)) {
+                        change(object, name, old, value, subPath);
                     }
                     return true;
                 }
             });
             for (var prop in object) {
-                if (object.hasOwnProperty(prop) && object[prop] &&
-                    typeof object[prop] === 'object') {
-                    // proxify all child objects
-
-                    object[prop] = proxify(instanceName, object[prop], change, subPath + "/" + prop);
+                if (object.hasOwnProperty(prop) && object[prop]){
+                    if(typeof object[prop] === 'object') { // proxify all child objects
+                        object[prop] = proxify(instanceName, object[prop], change, subPath + "/" + prop);
+                    }
                 }
             }
             return pxy;
@@ -272,8 +288,10 @@ class ExoFormDataBinding {
 
         return proxify(instanceName, obj, (object, property, oldValue, newValue, subPath) => {
 
-            const path = `#/${instanceName}${subPath}/${property}`;
 
+            const path = property ?  `#/${instanceName}${subPath}/${property}` : `#/${instanceName}${subPath}`;
+            console.log("proxify path: " , path)
+            
             console.debug(`DataModel: '${path}' changed from ${oldValue} to ${newValue}`);
 
             if (!me.noProxy) {
@@ -314,9 +332,7 @@ class ExoFormDataBinding {
 
             if (isVarRef) {// (isVarRef || name === "bind" && value.startsWith("#/")) {
                 console.debug("Resolving ", value);
-                // if (value === "#/products/items") {
-                //     debugger;
-                // }
+
                 let path = value;
 
                 returnValue = this.get(path, undefined);

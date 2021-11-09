@@ -5,7 +5,6 @@ import ExoFormBuilderSchema from '../modules/ExoFormBuilderSchema';
 import ExoSchemaRenderer from '../modules/ExoSchemaRenderer';
 import ExoFormBuilderWorkspace from '../modules/ExoFormBuilderWorkspace';
 
-
 const DOM = window.xo.dom;
 const Core = window.xo.core;
 
@@ -18,6 +17,8 @@ class StudioRoute extends xo.route {
     menuIcon = "ti-panel";
 
     async asyncInit() {
+        window.studioRoute = this;
+
         this.workspace = new ExoFormBuilderWorkspace(this);
 
         this.exoContext = await this.buildExoFormContext();
@@ -25,11 +26,14 @@ class StudioRoute extends xo.route {
         // main rendering of current schema tab
         this.renderer = new ExoSchemaRenderer(this);
 
-        this.renderer.on("created", e => {
+        this.renderer
+        .on("created", e => {
             this.applyJSLogic(e.detail.exo);
-        }).on("ready", e => { // form rendered using current schema tab contents
+        })
+        .on("ready", e => { // form rendered using current schema tab contents
             this.rendered(e.detail);
-        }).on("schemaloaded", e => {
+        })
+        .on("schemaloaded", e => {
             if (this.renderer.model.fieldCount === 0) {
                 this.showFormNotRendered({
                     title: "Nothing to render",
@@ -39,12 +43,16 @@ class StudioRoute extends xo.route {
 
 
             }
-        }).on("error", e => {
+        })
+        .on("error", e => {
             this.setError(e)
             //this.app.UI.notifications.add("Error " + e.detail.error.toString(), { type: "error" })
-        }).on("post", e => {
-            //let jsonString = JSON.stringify(e.detail.postData, null, 2);
-            //alert(jsonString);
+        })
+        .on("dataChange", e => {
+            this.sidePanel.tabStrip.tabs.dataTab.select()
+            this.formDataViewer.value = JSON.stringify(
+                this.renderer.data
+                , null, 2);
         });
 
         this.renderer.model.on("change", e => {
@@ -56,21 +64,29 @@ class StudioRoute extends xo.route {
             this.currentForm.addins.navigation.goto(this.renderer.model.page)
         })
 
-
+        window.onunhandledrejection = function (error) {
+            
+            studioRoute.showFormNotRendered({
+                title: "Nothing to render",
+                body: error?.reason || "Empty schema/no fields rendered",
+                icon: "ti-na"
+            });
+          };
     }
 
 
-    clearError(){
-        this.sidePanel.tabStrip.tabs.errors.panel.innerHTML=""
+    clearError() {
+        this.recentError = null;
+        //this.sidePanel.tabStrip.tabs.errors.panel.innerHTML=""
     }
 
-    setError(e){
+    setError(e) {
         this.recentError = e.detail.error.toString();
-        
-        let elm = document.createElement("div");
-        elm.innerHTML = this.recentError;
-        this.sidePanel.tabStrip.tabs.errors.panel.appendChild(elm);
-        this.sidePanel.tabStrip.tabs.errors.select()
+
+        // let elm = document.createElement("div");
+        // elm.innerHTML = this.recentError;
+        // this.sidePanel.tabStrip.tabs.errors.panel.appendChild(elm);
+        // this.sidePanel.tabStrip.tabs.errors.select()
     }
 
     showFormNotRendered(data) {
@@ -80,7 +96,8 @@ class StudioRoute extends xo.route {
             body: "No details",
             ...data || {}
         }
-        this.tabStrip.tabs.form.replaceWith(
+        this.sidePanel.renderPanel.innerHTML = "";
+        this.sidePanel.renderPanel.appendChild(
             DOM.parseHTML(
                 /*html*/`<div class="xos-info"><h2><span class="${data.icon}"></span> ${data.title}</h2><p>${data.body}</p></div>`));
     }
@@ -98,7 +115,7 @@ class StudioRoute extends xo.route {
 
     render(path) {
 
-        
+        const me = this;
 
         this.app.UI.areas.main.clear()
 
@@ -117,7 +134,7 @@ class StudioRoute extends xo.route {
                 this.renderer.restoreCache();
             }
             catch (ex) {
-                this.showFormNotRendered({
+                me.showFormNotRendered({
                     icon: "ti-face-sad",
                     title: "Cache contains invalid schema",
                     body: ex.toString()
@@ -148,26 +165,36 @@ class StudioRoute extends xo.route {
     async rendered(o) {
         let x = o.exo;
 
+        if(!o.form){
+            throw TypeError("Form not rendered")
+        }
+            
+
         if (this.sidePanel.tabStrip.tabs.css)
             this.sidePanel.tabStrip.tabs.css.enabled = true;
 
         if (this.tabStrip.tabs.js)
             this.tabStrip.tabs.js.enabled = true;
 
-        this.tabStrip.tabs.form.replaceWith(o.form);
+        //this.tabStrip.tabs.form.replaceWith(o.form);
+        //this.sidePanel.tabStrip.tabs.live.replaceWith(o.form);
+        this.sidePanel.renderPanel.innerHTML = "";
+        this.sidePanel.renderPanel.appendChild(o.form);
 
         this.currentForm = x;
-        this.sidePanel.showModelChange(x.dataBinding.model)
+        //this.sidePanel.showModelChange(x.dataBinding.model)
 
         // when paging in rendered form, update sidepanel
         this.currentForm.on(window.xo.form.factory.events.page, e => {
             this.sidePanel.updateCurrentFormPage(e.detail.page);
-        }).on(window.xo.form.factory.events.dataModelChange, e => {
-            console.debug("XO Studio", "dataModelChange", e.detail.state, e.detail.model);
-            this.sidePanel.showModelChange(e.detail.model)
         })
 
-        x.container.setAttribute("id", "xfb");
+        // .on("dataModelChange", e => {
+        //     //console.debug("XO Studio", "dataModelChange", e.detail.state, e.detail.model);
+        //     //this.sidePanel.showModelChange(e.detail.model)
+        // })
+
+        //x.container.setAttribute("id", "xfb");
         this.addLiveEdit(x)
     }
 
@@ -209,12 +236,12 @@ class StudioRoute extends xo.route {
             tabs: {
                 start: { caption: "Start", class: "full-height", tooltip: "Select a templates or import DTO to generate an XO form Schema with" },
                 schema: { caption: "Schema", class: "full-height", tooltip: "Edit XO form Schema" },
-                form: { caption: "▷ Run", class: "full-height", tooltip: "Run schema & view generated form" }
+                //form: { caption: "▷ Run", class: "full-height", tooltip: "Run schema & view generated form" }
 
             },
             class: "full-height"
         }
-        if (localStorage.advancedUi) {
+        if (localStorage.advancedUi == "On") {
             tsOptions.tabs = {
                 ...tsOptions.tabs,
                 //html: { caption: "HTML", class: "full-height", enabled: false, tooltip: "Show generated form HTML" },
@@ -247,7 +274,7 @@ class StudioRoute extends xo.route {
 
         this.app.UI.areas.main.add(this.tabStrip.render());
 
-        this.tabStrip.adaptHeight(this.app.UI.areas.main.element)
+        //this.tabStrip.adaptHeight(this.app.UI.areas.main.element)
     }
 
     unload() {
@@ -290,28 +317,33 @@ class StudioRoute extends xo.route {
         return elm;
     }
 
-    renderFormFromSchema(value, ready) {
+    async renderFormFromSchema(value, ready) {
         try {
             this.clearError()
             this.renderer.model.load(value);
 
             try {
-                this.renderer.render();
+                await this.renderer.render();
             }
             catch (ex) {
+                let friendlyError = xo.form.err(ex, this.renderer.exo)
                 this.showFormNotRendered({
                     icon: "ti-face-sad",
                     title: "Form not rendered",
-                    body: ex.toString()
+                    body: friendlyError.toString()
                 })
             }
 
         }
         catch (ex) {
+
+            
+            let friendlyError = xo.form.err(ex, this.renderer.exo)
+
             this.showFormNotRendered({
                 icon: "ti-face-sad",
-                title: "Form could not be loaded",
-                body: ex.toString()
+                title: "An error occurred",
+                body: friendlyError.toString()
             })
         }
 
@@ -414,6 +446,12 @@ class StudioRoute extends xo.route {
 
             this.schemafield = x.get("schema");
             this.xo_schemaControl = this.schemafield._control
+            this.xo_schemaControl.on("SchemaReady", e => {
+                let value = this.xo_schemaControl.value
+                this.workspace.set("xo-schema", value)
+                this.renderFormFromSchema(value);
+
+            })
 
             this.loadSchemaInEditor(this.getCurrentSchema())
 
@@ -452,16 +490,6 @@ class StudioRoute extends xo.route {
             this.sidePanel.tabStrip.tabs.css.replaceWith(e);
         });
     }
-
-    // renderHtmlTab() {
-    //     if (!this.tabStrip.tabs.html)
-    //         return;
-
-    //     this.renderCodeEditor({ mode: "html" }).then(htmlEditor => {
-    //         this.tabStrip.tabs.html.replaceWith(htmlEditor);
-    //         this.htmlEditor = xo.form.factory.getFieldFromElement(htmlEditor)._control;
-    //     })
-    // }
 
     renderJsTab() {
         if (!this.tabStrip.tabs.js)

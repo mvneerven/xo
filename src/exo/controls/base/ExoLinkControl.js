@@ -84,7 +84,7 @@ class ExoLinkControl extends ExoElementControl {
         if (this.dropdown) {
             this.dropdownExtension = await ExoFormFactory.createDropDown(this);
             this.dropdownExtension.on("click", e=>{
-                debugger;
+                //TODO
             })
         }
         return this.htmlElement

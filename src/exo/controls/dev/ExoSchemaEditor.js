@@ -1,17 +1,17 @@
 import DOM from '../../../pwa/DOM';
+import Core from '../../../pwa/Core';
 import ExoAceCodeEditor from './ExoAceCodeEditor';
 
 class ExoSchemaEditor extends ExoAceCodeEditor {
 
-    constructor(){
-        super(...arguments);
-        this.mode = "js";
-    }
+    interval = null;
+    focused = 0;
+    throttleInterval = 400;
+    events = new Core.Events(this);
 
     async render() {
         await super.render();
-
-
+        const me = this;
         this.modeSwitch = DOM.parseHTML('<div title="Switch js/json" style="cursor: pointer; position:absolute; top: 10px; right: 30px">' + this.mode + '</div>');
         this.modeSwitch.addEventListener("click", e => {
             this.mode = this.mode === "javascript" ? "json" : "javascript";
@@ -26,33 +26,48 @@ class ExoSchemaEditor extends ExoAceCodeEditor {
 
         this.container.appendChild(this.modeSwitch)
 
-        this.ace.on("change", e => {
-            let data = this.ace.getValue();
-            if (data.length > 10) {
-                let contentType = this.checkAceMode(data);
-                if (contentType !== this.mode)
-                    this.mode = contentType;
-            }
-        })
+        this.ace.on("focus", e => {
+            this.focused++;
+        });
 
+        this.ace.on("change", e => {
+            this.hasChanged = true;
+            clearInterval(this.interval);
+            this.interval = setInterval(() => {
+                if (this.hasChanged) {
+                    me.events.trigger("SchemaReady");
+                    me.hasChanged = false;
+
+                    let data = me.ace.getValue();
+                    if (data.length > 10) {
+                        let contentType = me.checkAceMode(data);
+                        if (contentType !== this.mode)
+                            me.mode = contentType;
+                    }
+                }
+            }, this.throttleInterval);
+        })
         return this.container;
     }
 
     set value(value) {
-
+        const me = this;
         try {
             let sch = this.context.exo.context.createSchema();
             sch.parse(value);
             this.mode = sch.type;
-            super.value = sch.toString(this.mode)
+            super.value = sch.toString(this.mode);
+
+            if (me.events)
+                me.events.trigger("SchemaReady");
+
         }
         catch (ex) {
-            console.error("ExoFormAceExtension.schema setter", ex)
             super.value = value;
         }
     }
 
-    get value(){
+    get value() {
         return super.value;
     }
 
@@ -68,7 +83,6 @@ class ExoSchemaEditor extends ExoAceCodeEditor {
     }
 
     checkAceMode(value) {
-
         if (typeof (value) == "string") {
             if (value.length > 6 && value.startsWith("const ")) {
                 return "javascript"

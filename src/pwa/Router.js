@@ -57,7 +57,7 @@ class Router {
             let id = "/" + h.substr(1).split('/')[0];
             let path = h.substr(id.length);
             let route = this.routes[id];
-            console.debug(W.location.hash, "RouteModule: ", route);
+            console.debug(W.location.hash, "Route: ", id);
 
             if (route) {
                 let m = this.findByRoute(route);

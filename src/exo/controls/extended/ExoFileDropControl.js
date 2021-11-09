@@ -92,9 +92,6 @@ class ExoFileDropControl extends ExoBaseControls.controls.input.type {
 
     set value(data) {
         // TODO 
-
-        //debugger;
-        // this._value = data;
     }
 
     _change() {

@@ -12,11 +12,24 @@ class OpenApi {
     }
 
     async read() {
+        
         const me = this;
         this._data = Core.isUrl(this._raw) ? await fetch(this._raw).then(x => x.json()) : this._raw
         this._schemas = this._getSchemas();
+        
+        let index = 0;
+        if(this.schemas.length > 1){
+            if(!this.options.dto)
+                throw TypeError("Multiple DTOs detected in OpenAPI schema, and no 'dto' provided in options");
+
+            index = this.schemas.findIndex(s=>{
+                return s.id===this.options.dto;
+            })
+        }
+        
         this.jsonSchemaId = this.options.schemaId || this.schemas[0].id;
-        this.jsonSchema = this.schemas[0].schema;
+        this.jsonSchema = this.schemas[index].schema;
+        
         let ar = this._determineEndpoints();
         this._api = {};
         for (var name in ar) {

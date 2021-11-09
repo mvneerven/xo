@@ -1,4 +1,3 @@
-import xo from "../../../../js/xo";
 import ExoTextControl from "../base/ExoTextControl";
 
 /**

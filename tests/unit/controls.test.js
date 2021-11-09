@@ -21,17 +21,7 @@ describe("Controls Tests", () => {
         });
     });
 
-//TODO dynamic repeat over all controls 
-
-    // test.each([
-    //     controls,
-    //     controls,
-    //     controls,
-    //   ])('.add(%i, %i)', (a, b, expected) => {
-    //     //expect(a + b).toBe(expected);
-    //     return form({ type: a, name: a }).then(x => expect(x.querySelector("[data-field-type]").getAttribute("data-field-type")).toBe(a));
-    //   });
-
+    
     it("Checkbox", () => {
         const a = "checkbox"
         return form({ type: a, name: a }).then(x => expect(x.querySelector("[data-field-type]").getAttribute("data-field-type")).toBe(a));

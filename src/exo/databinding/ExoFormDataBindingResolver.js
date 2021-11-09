@@ -7,13 +7,23 @@ class ExoFormDataBindingResolver {
         this.dataBinding = dataBinding;
         this.exo = dataBinding.exo;
         this._boundControlState = [];
+        this._hash = {};
+
     }
 
     addBoundControl(settings) {
-        this._boundControlState.push(settings);
+
+        
+        let h = `${ExoFormFactory.fieldToString(settings.field)}.${settings.propertyName}`;
+        if(!this._hash[h]){
+            this._hash[h] = 1;
+            this._boundControlState.push(settings);
+        }
+        
     }
 
     resolve(changedData) {
+
         try {
             this.dataBinding.noProxy = true;
             this._checkSchemaLogic(changedData);
@@ -109,14 +119,18 @@ class ExoFormDataBindingResolver {
     _bindControlStateToUpdatedModel(changedData) {
 
         this._boundControlState.forEach(obj => {
-            let value = this.dataBinding.get(obj.path);
-            if (obj.propertyName === "bind") {
-                obj.control.value = value;
+
+            if(!changedData?.path || obj.path === changedData?.path){
+
+                let value = this.dataBinding.get(obj.path);
+                if (obj.propertyName === "bind") {
+                    obj.control.value = value;
+                }
+
+                obj.control[obj.propertyName] = value;
+
+                obj.updatedValue = value
             }
-
-            obj.control[obj.propertyName] = value;
-
-            obj.updatedValue = value
         });
     }
 }

@@ -1,6 +1,5 @@
 import ExoRuleEngineBase from './ExoRuleEngineBase';
 import ExoFormFactory from '../core/ExoFormFactory';
-import xo from '../../../js/xo';
 
 class Rule {
     constructor(o) {
@@ -85,7 +84,7 @@ class XOFormDataRulesEngine extends ExoRuleEngineBase {
 
             if (mode === true || this._isAffected(mode, c)) {
                 if (c.rule.break) {
-                    debugger;
+                    debugger; // LEAVE THIS HERE!
                 }
                 let on = true;
                 let test = c.rule.if;

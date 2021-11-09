@@ -13,7 +13,6 @@ import ExoLiveEditor from '../design/ExoLiveEditor';
 import Core from '../../pwa/Core';
 import ExoFormSchema from './ExoFormSchema';
 import ExoDropdownExtension from '../controls/base/ExoDropdownExtension';
-import xo from '../../../js/xo';
 
 
 /**
@@ -376,21 +375,35 @@ class ExoFormFactory {
             type: "unknown",
             parsed: false,
             executed: false,
-            error: ""
+            error: null
         };
         if (result.guessedType === "javascript") {
             try {
+                result.type = "javascript";
                 const f = new Function("function s(){" + scriptLiteral + "; return schema};return s()");
-                result.type = "javascript"
-                result.parsed = true,
-
-                    result.schema = f.call();
+                result.parsed = true;
+                result.schema = f.call();
                 result.executed = true;
 
             }
+
+
+
             catch (ex) {
-                console.error("XO JS Literal Parser error:", ex)
-                result.error = ex.toString();
+                let type = ex.__proto__?.name || "TypeError", msg = ex.toString().replace(type + ": ", "");
+
+                switch (type) {
+                    case "SyntaxError":
+                        result.syntaxError = ex.message;
+                        result.error = new SyntaxError("Error parsing JS Literal")
+                        return result;
+
+                    case "ReferenceError":
+                        break;
+                }
+                //console.error("XO JS Literal Parser error:", ex, scriptLiteral)
+
+                result.error = ex;//msg
             }
             finally {
                 return result;
@@ -521,7 +534,7 @@ class ExoFormFactory {
         options = options || {};
         options.context = options.context || await ExoFormFactory.build()
         let type = ExoFormFactory.determineSchemaType(value), x, result;
-        
+
         const applyOptions = (x, dom) => {
             if (options.on) {
                 for (var o in options.on) {
@@ -539,7 +552,7 @@ class ExoFormFactory {
 
         switch (type) {
             case "form":
-                try{
+                try {
                     x = options.context.createForm({
                         ...options
                     });
@@ -551,13 +564,13 @@ class ExoFormFactory {
                     await x.renderForm();
                     return x.container;
                 }
-                catch(ex){
+                catch (ex) {
                     x.events.trigger(xo.form.factory.events.error, {
                         error: ex.message
                     })
                 }
                 break;
-            
+
             case "field":
                 x = options.context.createForm({
                     ...options
@@ -571,6 +584,13 @@ class ExoFormFactory {
             default:
                 throw TypeError("Not implemented");
         }
+
+
+    }
+
+    static err(error, exo) {
+        let type = error?.__proto__?.name || "TypeError";
+        return `${error} (${exo?.state || "loading"})`;
     }
 
     /**

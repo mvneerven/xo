@@ -589,7 +589,7 @@ const schema = {
                 {
                     type: "treeview",
                     name: "treeview",
-                    bind: "instance.data.selectedNodes",
+                    bind: "#/data/selectedNodes",
                     singleSelect: false,
                     minimum: 2,
                     caption: "Treeview!!",
@@ -702,6 +702,8 @@ const schema = {
   ]
 }
 ```
+
+> UPDATE: ```action``` is now deprecated - see actions in 1.5.0 [Rules Engine](./md/exo/rules.md)
 
 
 # New in 1.4.78
@@ -816,11 +818,11 @@ const schema = {
           name: "testField",
           caption: "Test Field",
           type: "text",
-          bind: "instance.data.test"
+          bind: "#/data/test"
         },
         {
           type: "sandbox",
-          bind: "instance.data.sub",
+          bind: "#/data/sub",
           form: {
             schema: {
               pages: [
@@ -830,7 +832,7 @@ const schema = {
                       type: "text",
                       caption: "Subform Textbox",
                       name: "cc",
-                      bind: "instance.data.text"
+                      bind: "#/data/text"
                     }
                   ]
                 }
@@ -978,7 +980,7 @@ const schema = {
         {
           caption: "Test Field",
           type: "text",
-          bind: "instance.data.test"
+          bind: "#/data/test"
         },
         {
           type: "sandbox",
@@ -1104,3 +1106,42 @@ See [Data Binding](./md/exo/data-binding.md)
 
 - New Rules Engine action: focus. See [Rules Engine](./md/exo/rules.md)
 
+# New in 1.5.8
+
+The XO Form LiveEditor can now be automatically started, using the ```auto: true``` setting.
+
+```js
+const schema = {
+    model: {
+        instance: {
+            data: {
+                name: ""
+            }
+        }
+    },
+    pages: [{
+        fields: [
+            {
+                type: "text",
+                bind: "#/data/name",
+                caption: "Enter your name"
+            }
+        ]
+    }]
+}
+document.getElementById("form").appendChild(await xo.form.run(schema, {
+    on: {
+        post: e => {
+            alert(JSON.stringify(e.detail.postData, null, 2))
+        },
+        interactive: e=>{
+            let exo = e.detail.host;
+            new xo.form.factory.LiveEditor(exo, {
+                auto: true
+            }).on("schema-change", e => {
+                debugger
+            })
+        }
+    }
+}));
+```

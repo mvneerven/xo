@@ -40,7 +40,7 @@ Let's analyze what happens when you call ```xo.form.run()```:
 2. In the case of a URL, the data is fetched before passing it to the parser
 3. The Schema Parser then takes control, and interprets the base instructions at the top level of the schema, such as ```navigation```, ```validation```, ```progress```, etc.
 4. Each of these launch a dedicated addin, that then takes care of this aspect of the form. 
-5. If an explicit ```model``` object structure exists, data binding is set up. See [Data Binding](./data-binding.md). An implicit model can also be created if the parser finds control definitions with the ```bind``` property set. For instance, ```bind: "instance.mydata.username"``` will create an instance named ```mydata``` and add a property ```username``` under it.
+5. If an explicit ```model``` object structure exists, data binding is set up. See [Data Binding](./data-binding.md). An implicit model can also be created if the parser finds control definitions with the ```bind``` property set. For instance, ```bind: "#/mydata/username"``` will create an instance named ```mydata``` and add a property ```username``` under it.
 6. The form is rendered, starting with the ```pages``` array, which contains one or more ```page``` objects, each with a ```fields``` array.
 7. For each page and each control, instances of the underlying control ES6 Classes are instantiated. For instance, looking at the ```text``` and ```email``` field types, instances of the ```ExoTextControl``` and ```ExoEmailControl``` are created respectively. Each of these controls inherit, directly or indirectly, from the ```ExoControlBase``` abstract base class.
 8. For each of the controls created, property values from the field schema are applied to class properties

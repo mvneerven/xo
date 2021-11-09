@@ -31,11 +31,17 @@ class Form {
 
     get schema() { return ExoFormSchema }
 
+    get empty() { return { pages: [{ fields: [{ type: "text", caption: "Textbox 1" }] }] } }
+
     get fields() {
         return {
             base: ExoBaseControls,
             extended: ExoExtendedControls
         }
+    }
+
+    get err() {
+        return ExoFormFactory.err ; 
     }
 
     /**
@@ -58,7 +64,7 @@ class Form {
      * @param {Function} callback to call when the form is ready to link to.
      */
     async link(formId, callback) {
-        if(typeof(callback) !== "function")
+        if (typeof (callback) !== "function")
             throw TypeError("Must provide a callback function");
 
         this.bind(e => {

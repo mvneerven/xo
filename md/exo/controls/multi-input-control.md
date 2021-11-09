@@ -22,7 +22,7 @@ const schema = {
         {
           type: "multiinput",
           name: "person",
-          bind: "instance.data.person",
+          bind: "#/data/person",
           caption: "Person",
           required: true,
           fields: {
@@ -66,7 +66,7 @@ const schema = {
         {
           type: "multiinput",
           name: "person",
-          bind: "instance.data.person",
+          bind: "#/data/person",
           caption: "Person",
           columns: "8rem 1fr",
           areas: "email name",

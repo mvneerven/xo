@@ -78,23 +78,23 @@ const schema = {
 pages: [
     {
         fields: [
-            { bind: "instance.data.name" },
-            { bind: "instance.data.type"}, 
-            { bind: "instance.data.alt" },
-            { bind: "instance.data.size"},
+            { bind: "#/data/name" },
+            { bind: "#/data/type"}, 
+            { bind: "#/data/alt" },
+            { bind: "#/data/size"},
             { 
-                bind: "instance.data.imageUri",
+                bind: "#/data/imageUri",
                 disabled: true
             }, 
             { 
-                bind: "instance.data.imageUri",
+                bind: "#/data/imageUri",
                 caption: " " ,
                 type: "image",
                 style: "max-width: 400px"
             }, 
             {
                 name: "tags",
-                bind: "instance.data.tags",
+                bind: "#/data/tags",
                 type: "tags"
             }
         ]
