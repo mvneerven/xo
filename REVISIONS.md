@@ -1163,3 +1163,17 @@ We have done a lot to improve the error handling & debugging experience. Errors 
 ## OpenAPI support
 
 XO now has better support for OpenAPI. For instance, when selecting OpenAPI in the Start wizard, you will now be able to select a schema to work with in the OpenAPI definition.
+
+
+
+# New in 1.5.11
+
+## New Router with history and hash support
+
+A new Router is available, and the [PWA Router](./md/exo/../pwa/router.md) has been rewrittenn to use this history and hash routing suporting router.
+The new router can also be used outside the [PWA](./md/pwa/index.md) component structure.
+
+## Other changes
+
+- Fixed scrolling in ```autocomplete``` controls
+- 
