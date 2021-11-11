@@ -8,40 +8,30 @@
 
 # Class `Router`
 
-Hash-based PWA router
+SPA Router - replacement for Framework Routers (history and hash).
 
 ## Methods
 
-### `listModules(filter) ► `
+### `listen() ► Router`
 
 ![modifier: private](images/badges/modifier-private.svg)
 
-Returns an array of objects representing the router&#x27;s route modules
+Start listening for route changes.
 
 Parameters | Type | Description
 --- | --- | ---
-__filter__ | `function` | **
-__*return*__ | `undefined` | *Array of objects with route module properties*
+__*return*__ | [Router](src-pwa_Router.md) | *reference to itself.*
 
 ---
 
-### `home()`
+### `setRoute(path)`
 
 ![modifier: private](images/badges/modifier-private.svg)
 
-Navigates to the home route
-
----
-
-### `generateMenu(pwaArea, filter)`
-
-![modifier: private](images/badges/modifier-private.svg)
-
-Generates a menu based on the provided routes and adds it to
+Makes the router navigate to the given route
 
 Parameters | Type | Description
 --- | --- | ---
-__pwaArea__ | `Object` | *the PWA area to use*
-__filter__ | `function` | *Optional function to filter menu items out*
+__path__ | `String` | **
 
 ---
