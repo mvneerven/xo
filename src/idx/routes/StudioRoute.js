@@ -154,7 +154,9 @@ class StudioRoute extends xo.route {
                 this.loadSchemaInEditor(text);
                 this.renderer.model.load(text);
                 this.tabStrip.tabs.schema.select();
-                DOM.changeHash("/studio")
+                //DOM.changeHash("/studio")
+                pwa.router.route = "/studio";
+
             }).catch(ex => {
                 console.error(ex)
             })

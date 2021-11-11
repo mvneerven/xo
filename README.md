@@ -1,6 +1,5 @@
-# XO-JS
+# XO Documentation
 
-> ## ▷ Docs
 > This documentation is best viewed at [https://www.xo-js.dev](https://www.xo-js.dev/#/docs).
 >
 > A complete playground (Studio) is included and code examples can directly be run and edited.

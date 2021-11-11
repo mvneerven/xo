@@ -62,9 +62,7 @@ class ExoFormBuilderSidePanel {
         })
 
         if (this.tabStrip.tabs.dataTab) {
-            this.builder.renderCodeEditor({ mode: "json", id: "exo-datamodel", value: "" }).then(elm => {
-
-
+            this.builder.renderCodeEditor({ mode: "json", readOnly: true, id: "exo-datamodel", value: "" }).then(elm => {
                 this.builder.formDataViewer = xo.form.factory.getFieldFromElement(elm)._control;
                 this.tabStrip.tabs.dataTab.panel.appendChild(elm);
             })

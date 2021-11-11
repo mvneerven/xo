@@ -1,4 +1,5 @@
 {
+    "router": "history",
     "signalR": {
         "enabled": false,
         "notificationServiceUrl": "https://func-notificationservice-dev.azurewebsites.net",

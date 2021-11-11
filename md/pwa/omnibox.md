@@ -64,7 +64,7 @@ However intuitive your app's UI is, for novice users of your app, OmniBox will h
               text: "Search for '%search%' products",
               icon: "ti-package",
               action: options => {
-                  document.location.hash = `/products/${options.search}`;
+                  pwa.router.route = `/products/${options.search}`;
               }
           }
       }
@@ -94,7 +94,7 @@ Add a 'Products' category:
         },
         icon: "ti-package",
         action: options => {
-            document.location.hash = '/products/' + options.text
+            pwa.router.route = '/products/' + options.text
         }
 
     }

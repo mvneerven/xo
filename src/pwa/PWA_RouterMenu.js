@@ -51,7 +51,7 @@ class PWA_RouterMenu {
     }
 
     updateGeneratedMenu(module) {
-        if (this.menu) {
+        if (this.menu && module) {
             this.menu.element.querySelectorAll("li").forEach(li => {
                 let selected = module.path === li.getAttribute("data-route");
                 li.classList[selected ? "add" : "remove"]("selected")

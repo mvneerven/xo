@@ -16,16 +16,16 @@ class DocsRoute extends xo.route {
 
     constructor() {
         super(...arguments);
-
+        DocsRoute.cms.options = {
+            routerType: pwa.config.router
+        };
         pwa.on("omnibox-init", e => {
             e.detail.options.categories["Help"] = {
                 sortIndex: 50,
                 trigger: options => { return options.search.length >= 2 },
                 getItems: async options => {
                     let results = DocsRoute.cms.find(options.search.toLowerCase());
-
                     return results.map(i => {
-
                         return {
                             path: i.url,
                             text: i.title,
@@ -36,13 +36,11 @@ class DocsRoute extends xo.route {
                 },
                 icon: "ti-help",
                 action: options => {
-                    document.location.hash = "/docs" + options.path;
+                    pwa.router.route = "/docs" + options.path;
                     setTimeout(() => {
-
                         DOM.locateText(options.text, {
                             root: document.querySelector(".md-converted-html")
                         });
-
                     }, 500)
                 }
             }
@@ -197,7 +195,7 @@ class DocsRoute extends xo.route {
                         var json = e.detail.host.schema.toString("json")
                         var blob = new Blob([json], { type: "application/json" });
                         var url = URL.createObjectURL(blob);
-                        document.location.hash = "/studio/" + url;
+                        pwa.router.route = "/studio/" + url;
                     }
                 }
             }).then(resolve).catch(reject)

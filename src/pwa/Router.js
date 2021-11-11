@@ -1,232 +1,135 @@
-import Core from './Core';
-import RouteModule from './RouteModule';
-
+const ROUTER_TYPES = {
+    hash: "hash", history: "history"
+}
 /**
- * Hash-based PWA router
- */
+ * SPA Router - replacement for Framework Routers (history and hash).
+*/
 class Router {
-    static events = {
-        route: "route"
+    constructor(options = {}) {
+        this.events = new xo.core.Events(this);
+        this.options = {
+            type: ROUTER_TYPES.hash,
+            ...options
+        }
     }
 
-    modules = [];
+    /**
+     * Start listening for route changes.
+     * @returns {Router} reference to itself.
+     */
+    listen() {
+        // sort descending by key length
+        this.routeHash = Object.keys(this.options.routes).sort((a, b) => {
+            if (a.length < b.length)
+                return 1;
+            if (a.length > b.length)
+                return -1
+            return 0;
+        }).map(i => {
+            if (!i.startsWith("/"))
+                throw TypeError("Malformed route")
+            return i
+        })
 
-    constructor(app, routes, settings) {
+        if (this.routeHash.length === 0)
+            throw TypeError("No routes defined")
 
-        this.events = new Core.Events(this); // add simple event system
-        this.app = app;
-        this.routes = routes;
+        if (this.routeHash.at(-1) !== "/")
+            throw TypeError("No home route found");
 
-        this.setupHashListener(settings.onRoute)
 
-        console.debug("Router", "Loading Route modules");
-        this.loadModules().then(() => {
-            console.debug("Router", "Loaded Route modules", this.modules);
-            let ev = new Event("hashchange");
-            window.dispatchEvent(ev);
+        const defer = x => { setTimeout(() => x(), 10); }
 
-        }).then(() => {
-            console.debug("Router", "Router Ready");
-            settings.ready();
+        if (this.isHashRouter) {
+            window.addEventListener('hashchange', this._hashChanged.bind(this));
+            defer(() => this._tryNav(document.location.hash.substr(1)));
+        }
+        else {
+            let href = document.location.origin;
+            document.addEventListener("click", this._onNavClick.bind(this));
+            window.onpopstate = this._triggerPopState.bind(this)
+            defer(() => this._tryNav(href));
+        }
+        return this;
+    }
+
+    _hashChanged() {
+        this._tryNav(document.location.hash.substr(1))
+    }
+
+    _triggerPopState(e) {
+        this._triggerRouteChange(e.state.path, e.target.location.href);
+    }
+
+    _triggerRouteChange(path, url) {
+        this.events.trigger("route", {
+            route: this.options.routes[path],
+            path: path,
+            url: url
         })
     }
 
-    static changeHash(anchor) {
-        history.replaceState(null, null, document.location.pathname + '#' + anchor);
+    _findRoute(url) { // routeHash is sorted on string length, descending
+        let key = null;
+        for (key of this.routeHash) {
+            if (url.startsWith(key)) break;
+        }
+        if (key === "/" && url.split("?")[0].length > 1) {
+            return null;
+        }
+        return key;
+    }
+
+    _tryNav(href) {
+        const url = this._createUrl(href),
+            routePath = this._findRoute(url.pathname);
+
+        if (routePath && this.options.routes[routePath]) {
+            if (this.options.type === "history") {
+                window.history.pushState({ path: routePath }, routePath, url.origin + url.pathname);
+            }
+            this._triggerRouteChange(routePath, url);
+            return true;
+        }
+    }
+
+    _createUrl(href) {
+        if (this.isHashRouter && href.startsWith("#")) {
+            href = href.substr(1);
+        }
+        return new URL(href, document.location.origin)
+    }
+
+    _onNavClick(e) { // handle click in document
+        const href = e.target?.closest("[href]")?.href;
+        if (href) {
+            if (this._tryNav(href))
+                e.preventDefault();
+        }
     };
 
-    setupHashListener(callback) {
-        this.routeCallback = (m, p) => {
-
-            this.events.trigger(Router.events.route, {
-                id: m.id,
-                module: m,
-                path: p
-            });
-            callback(m, p)
-        };
-        window.addEventListener('hashchange', () => {
-            this.hashChanged();
-        });
-    }
-
-    hashChanged() {
-        const W = window;
-        var h = W.location.hash.substr(1);
-        if (h.startsWith("/")) {
-            let id = "/" + h.substr(1).split('/')[0];
-            let path = h.substr(id.length);
-            let route = this.routes[id];
-            console.debug(W.location.hash, "Route: ", id);
-
-            if (route) {
-                let m = this.findByRoute(route);
-                if (m && m.module) {
-                    this._route = id;
-
-                    let html = document.querySelector("html");
-                    html.setAttribute("data-pwa-route", id);
-
-                    if (this.current) {
-                        this.app.UI.clearAffectedAreas(); // clear areas with data-reset="route" attrib
-                        this.current.module._unload();
-                    }
-
-                    this.current = m;
-
-                    this.events.trigger("route", {
-                        module: m.module,
-                        path: path
-                    });
-
-                    this.routeCallback(m.module, path);
-                }
-            }
-            else if (!h.startsWith("dlg-")) {
-                this.home();
-            }
-        }
-        else {
-            this.home();
-        }
-
-    }
-
-    set route(routePath) {
-
-        if (!routePath.startsWith("/"))
+    /**
+     * Makes the router navigate to the given route
+     * @param {String} path 
+     */
+    setRoute(path) {
+        if (!this._findRoute(path))
             throw TypeError("Invalid route");
 
-        let routeParts = routePath.substring(1).split('/');
+        let href = null;
+        if (this.isHashRouter)
 
-        if (this.routes["/" + routeParts[0]]) {
-            Router.changeHash(routePath); // update history, prevent endless redirects back to home router
-            this.hashChanged();
-        }
+            href = '#' + path
         else
-            throw TypeError("Unknown route: " + routePath);
+            href = document.location.origin + path;
+
+        history.replaceState(null, null, href);
+        this._tryNav(href);
     }
 
-    get route() {
-        return this._route;
+    get isHashRouter() {
+        return this.options.type === ROUTER_TYPES.hash;
     }
-
-    findByRoute(route) {
-        return this.modules.find(x => { return x.route === route });
-    }
-
-    findById(id) {
-        return this.modules.find(x => { return x.path === id });
-    }
-
-    loadModules() {
-        let promises = [];
-        let homeRouteFound = false;
-        for (var r in this.routes) {
-            if (r === "/")
-                homeRouteFound = true;
-
-            let route = this.routes[r];
-            if (!r.startsWith('/'))
-                throw TypeError("Malformed route: " + r);
-
-            promises.push(new Promise((resolve, reject) => {
-
-                if (route.prototype && route.prototype instanceof RouteModule) {
-                    let o = new route(this.app, route, r)
-                    resolve(o);
-
-                }
-                else if (typeof (route) === "string") {
-                    this.loadES6Module(route, this.app, route, r).then(o => {
-                        resolve(o);
-                    })
-                }
-            }));
-        }
-        if (!homeRouteFound) {
-            throw TypeError("Router misconfiguration: no home (/) route found");
-        }
-
-        return Promise.all(promises).then(e => {
-            e.forEach(o => {
-                this.modules.push({
-                    route: o.route,
-                    url: "#" + o.path,
-                    path: o.path,
-                    title: o.title,
-                    menuTitle: o.menuTitle,
-                    menuIcon: o.menuIcon,
-                    class: o.class || "",
-                    module: o
-                });
-
-            });
-        });
-    }
-
-    loadES6Module(src) {
-        src = new URL(src, this.app.config.baseUrl);
-
-        let args = Array.prototype.slice.call(arguments, 1);
-        const imp = async (src) => {
-            try {
-                return await import(/* webpackMode: "eager" */ src);
-            }
-            catch (ex) {
-                throw TypeError(`Could not load ${src}: ${ex.toString()}`);
-            }
-        };
-        return imp(src).then(x => {
-            let h = x.default;
-            let mod = new h(...args);
-            mod.init();
-            return mod;
-        });
-    }
-
-    /**
-     * Returns an array of objects representing the router's route modules
-     * @param {Function} filter 
-     * @returns Array of objects with route module properties
-     */
-    listModules(filter) {
-        let ar = [];
-
-        if (!filter)
-            filter = m => { return !m.hidden };
-
-        this.modules.forEach(m => {
-            let o = {
-                ...m,
-                name: m.module.constructor.name,
-                menuTitle: m.menuTitle || m.title,
-                class: `${m.class || ""} ${m.path === this.route ? "selected" : ""}`
-            };
-            if (filter(o)) {
-                ar.push(o);
-            }
-        });
-        return ar;
-    }
-
-    /**
-     * Navigates to the home route
-     */
-    home() {
-        this.route = "/";
-    }
-
-    /**
-     * Generates a menu based on the provided routes and adds it to 
-     * @param {Object} pwaArea - the PWA area to use
-     * @param {Function} filter - Optional function to filter menu items out
-     */
-    generateMenu(pwaArea, filter) {
-        this.routerMenu = this.app.UI.createMenu(this);
-        this.routerMenu.generate(pwaArea, filter);
-    }
-
 }
 
 export default Router;

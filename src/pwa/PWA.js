@@ -1,22 +1,23 @@
 import Core from './Core';
-import Router from './Router';
+import PWA_Router from './PWA_Router';
 import RouteModule from './RouteModule';
 import PWA_UI from './PWA_UI';
 import PWA_EventHub from './PWA_EventHub';
 import PWA_RESTService from './PWA_RESTService';
 import PWA_OmniBox from './PWA_OmniBox';
 import PWA_Settings from './PWA_Settings';
-import PWA_SettingsGroup from './PWA_SettingsGroup';
 import ULTabStrip from './ULTabStrip';
+import Router from './Router';
 
 /**
  * Progressive Web App container 
  */
 class PWA {
-    static RouteModule = RouteModule;
-    static Router = Router;
-    static OmniBox = PWA_OmniBox;
-    static TabStrip = ULTabStrip;
+    static get RouteModule() { return RouteModule };
+    //static get PWA_Router() { return PWA_Router };
+    static get Router() { return Router };
+    static get OmniBox() { return PWA_OmniBox; }
+    static get TabStrip() { return ULTabStrip };
 
     defaults = {
         UI: {
@@ -64,9 +65,9 @@ class PWA {
             cl.add("pwa-env-" + this.config.environment);
             this.execute()
         });
-    
 
-        
+
+
     }
 
     _registerWorker(serviceWorker) {
@@ -103,14 +104,14 @@ class PWA {
     /**
      * Returns the REST service (using a fetch implementation)
      */
-    get restService(){
+    get restService() {
         return this._restService;
     }
 
     /**
      * Returns the UI instance for this PWA
      */
-    get UI(){
+    get UI() {
         return this._UI;
     }
 
@@ -125,9 +126,9 @@ class PWA {
     execute(async) {
         this.setupUI()
 
-        this._router = new Router(this, this.config.routes, {
+        this._router = new PWA_Router(this, this.config.routes, {
             onRoute: (mod, path) => {
-                console.debug("PWA Executes Route", mod, path);
+                console.log("PWA Executes Route", mod, path);
 
                 if (!this.events.trigger("pwa.route", {
                     module: mod,
@@ -176,7 +177,7 @@ class PWA {
      */
     routerReady() { } // to be subclassed
 
-    get settings(){
+    get settings() {
         return this._settings;
     }
 }

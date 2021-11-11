@@ -67,8 +67,10 @@ class ExoTextControlAutoCompleteExtension {
         })
 
         let div = this.getSelectedDiv();
-        if (div)
+        if (div){
             div.classList.add("selected")
+            div.scrollIntoView({behavior: "smooth", block: "end", inline: "nearest"});
+        }
         else {
             this.clickHandler({
                 target: this.htmlElement
@@ -188,7 +190,7 @@ class ExoTextControlAutoCompleteExtension {
 
     keyDownHandler(e) {
         switch (e.keyCode) {
-            case 13:                
+            case 13:
                 e.stopPropagation();
                 e.preventDefault();
                 break;
@@ -210,18 +212,18 @@ class ExoTextControlAutoCompleteExtension {
                 this.hide();
                 break;
             case 13:
-                
+
                 if (this.getSelectedDiv()) {
                     this.control.preventEnter = true
                     e.stopPropagation();
                     e.preventDefault();
                     this.selectResult()
                     setTimeout(() => {
-                        this.control.preventEnter = false    
+                        this.control.preventEnter = false
                     }, 10);
-                    
+
                 }
-                
+
                 break;
             default:
                 //this.toggle();
@@ -279,6 +281,7 @@ class ExoTextControlAutoCompleteExtension {
 
         if (options.search) {
             result = result.replace("%search%", options.search);
+            i.description = i.description?.replace("%search%", options.search);
         }
 
         result = this.highlight(result, options.search);

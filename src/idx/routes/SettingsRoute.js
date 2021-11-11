@@ -29,7 +29,7 @@ class SettingsRoute extends xo.route {
                 text: "Search for '%search%' products",
                 icon: "ti-package",
                 action: options => {
-                    document.location.hash = "/settings/" + options.field
+                    pwa.router.route = "/settings/" + options.field
                 }
             }
         })

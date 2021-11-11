@@ -35,6 +35,10 @@ class ExoAceCodeEditor extends ExoBaseControls.controls.div.type {
             DOM.require("https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/ace.js", () => {
 
                 var editor = ace.edit(this.htmlElement);
+                
+                if(this.context.field.readOnly)
+                    editor.setReadOnly(true);
+
                 editor.setTheme("ace/theme/" + this.theme);
                 editor.session.setMode("ace/mode/" + this.mode);
 

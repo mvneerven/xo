@@ -11,6 +11,7 @@ class ExoFormBuilderSchema {
 
         const schema = {
             id: "start-wiz",
+            submit: false,
             navigation: "auto",
             progress: "none",
             model: {
@@ -54,7 +55,7 @@ class ExoFormBuilderSchema {
                             }
                             break
                         case "template":
-                            document.location.hash = "/studio/" + context.changed.newValue;
+                            pwa.router.route = "/studio/" + context.changed.newValue;
         
                             break;
                         case "jsonSchemaUrl":
@@ -70,10 +71,7 @@ class ExoFormBuilderSchema {
                             console.log("OpenAPI URL", url)
                             fetch(url).then(x => x.json()).then(x => {
                                 inst.openAPISchema = x;
-                                
                                 inst.openAPISchemaDTOs = Object.keys(x.components.schemas)
-        
-                                //inst.openAPISchemaText = JSON.stringify(x, null, 2);
                             })
                             break
                         case "openAPISchemaDTOs":
@@ -115,6 +113,7 @@ class ExoFormBuilderSchema {
                             type: "listview",
                             style: "max-height: 300px",
                             singleSelect: true,
+                            required: true,
                             views: "tiles",
                             caption: "Select how you want to get started",
                             tilewidth: "300px",
@@ -193,6 +192,7 @@ class ExoFormBuilderSchema {
                             views: "tiles",
                             style: "max-height: 300px",
                             singleSelect: true,
+                            required: true,
                             caption: "",
                             properties: [
                                 {
@@ -231,7 +231,7 @@ class ExoFormBuilderSchema {
                             type: "url",
                             caption: "Enter or select a URL of a JSON Schema",
                             bind: "instance.buildForm.jsonSchemaUrl",
-        
+                            required: true,
                             dialog: {
                                 title: "Upload a JSON Schema",
                                 fileTypes: ["application/json"],
@@ -261,7 +261,7 @@ class ExoFormBuilderSchema {
                             type: "url",
                             caption: "Enter or select a URL of an OpenAPI Schema",
                             bind: "instance.buildForm.openAPISchemaUrl",
-        
+                            required: true,
                             dialog: {
                                 title: "Upload an OpenAPI Schema",
                                 fileTypes: ["application/json"],

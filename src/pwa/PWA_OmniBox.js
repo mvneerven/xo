@@ -47,7 +47,7 @@ class PWA_OmniBox {
                 text: "Route",
                 icon: "ti-arrow-right",
                 action: options => {
-                    document.location.hash = options.route
+                    pwa.router.route = options.route
                 }
             }
         }

@@ -8,17 +8,10 @@ PWA technology is still in development, but the gap between PWAs and native mobi
 
 XO includes a few building blocks for efficient PWA building, including a router, Event handler, DOM helpers, etc.
 
-Create a PWA container:
-
-```js
-class PWA extends xo.pwa {
-    ...
-}
-```
-
-Set it up with some routes:
+Create a PWA container, and set it up with some routes:
 ```js
 new PWA({
+    router: "history",
     routes: {
         "/": HomeRoute,
         "/test": TestRoute,
@@ -47,6 +40,10 @@ class HomeRoute extends xo.route {
     }
 }
 ```
+
+## Rendering
+
+See [UI](./ui.md) to see how your route components interact with the HTML in your app.
 
 ## Further reading
 

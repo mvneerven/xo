@@ -61,13 +61,15 @@ class MarkDownCMS {
     }
 
     async getChildren(node, elm) {
+        
+        const prefix = this.options?.routerType === "hash" ? "#/docs" : "/docs";
         let links = elm.querySelectorAll("a[href]");
         for (const a of links) {
             if (a.href.endsWith(".md")) {
 
                 let link = this.resolveLink(node, a);
 
-                a.setAttribute("href", "#/docs" + link)
+                a.setAttribute("href", prefix + link)
                 node.children[link] = {
                     title: a.innerText
                 }
