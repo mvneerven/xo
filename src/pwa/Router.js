@@ -46,6 +46,9 @@ class Router {
         }
         else {
             let href = document.location.origin;
+            if (this._findRoute(document.location.pathname)) {
+                href += document.location.pathname;
+            }
             document.addEventListener("click", this._onNavClick.bind(this));
             window.onpopstate = this._triggerPopState.bind(this)
             defer(() => this._tryNav(href));
@@ -116,13 +119,7 @@ class Router {
         if (!this._findRoute(path))
             throw TypeError("Invalid route");
 
-        let href = null;
-        if (this.isHashRouter)
-
-            href = '#' + path
-        else
-            href = document.location.origin + path;
-
+        let href = this.isHashRouter ? '#' + path : document.location.origin + path;
         history.replaceState(null, null, href);
         this._tryNav(href);
     }

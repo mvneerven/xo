@@ -1,5 +1,3 @@
-
-
 // Simple Vanilla JS Event System
 class Emitter {
     constructor(obj) {
@@ -40,7 +38,6 @@ class Events {
             host: this.host
         };
 
-
         if (event === "fetch") {
             return new Promise((resolve, reject) => {
                 ev.respondWith = promise => {
@@ -51,10 +48,8 @@ class Events {
                 this.host.dispatchEvent(ev);
             });
         }
-
         return this.host.dispatchEvent(ev);
     }
-
 }
 
 export default Events;
