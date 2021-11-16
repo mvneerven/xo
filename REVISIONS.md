@@ -1176,4 +1176,10 @@ The new router can also be used outside the [PWA](./md/pwa/index.md) component s
 ## Other changes
 
 - Fixed scrolling in ```autocomplete``` controls
+
+
+
+# New in 1.5.13 
+
+- Autocomplete search results can now return a complete HTML element, using the ```element``` property of the returned object array.
 - 
