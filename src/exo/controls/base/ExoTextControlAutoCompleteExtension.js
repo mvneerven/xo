@@ -1,4 +1,5 @@
 import Core from '../../../pwa/Core'
+import DOM from '../../../pwa/DOM'
 
 // Autocomplete helper for all textbox derived controls.
 class ExoTextControlAutoCompleteExtension {
@@ -67,9 +68,9 @@ class ExoTextControlAutoCompleteExtension {
         })
 
         let div = this.getSelectedDiv();
-        if (div){
+        if (div) {
             div.classList.add("selected")
-            div.scrollIntoView({behavior: "smooth", block: "end", inline: "nearest"});
+            div.scrollIntoView({ behavior: "smooth", block: "end", inline: "nearest" });
         }
         else {
             this.clickHandler({
@@ -264,11 +265,22 @@ class ExoTextControlAutoCompleteExtension {
                 i.icon = "exf-ac-img";
                 image = `style="background-image: url('${i.image}')"`;
             }
-            this.resultsDiv.innerHTML += `<div title="${i.tooltip || ""}" data-index="${index}" class="${this.cssClasses.item}">
-                <span ${image} class="${i.icon || catHandler.icon}"></span>
-                <span class="text">${this.formatResultItem(i, options, catHandler)}</span>
-                <span class="category">${i.category || ""}</span></div>`;
-
+            if (i.element) {
+                this.resultsDiv.appendChild(i.element);
+            }
+            else if (i.text) {
+                this.resultsDiv.appendChild(
+                    DOM.parseHTML(
+                        `<div title="${i.tooltip || ""}" data-index="${index}" class="${this.cssClasses.item}">
+                            <span ${image} class="${i.icon || catHandler.icon}"></span>
+                            <span class="text">${this.formatResultItem(i, options, catHandler)}</span>
+                            <span class="category">${i.category || ""}</span></div>`
+                    )
+                );
+            }
+            else {
+                console.error("Missing text property in autocomplete search result", i)
+            }
             index++;
         });
         if (r.length) {

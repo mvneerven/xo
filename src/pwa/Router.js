@@ -1,16 +1,14 @@
 const ROUTER_TYPES = {
     hash: "hash", history: "history"
-}
+}, defer = x => { setTimeout(() => x(), 10); }
+
 /**
  * SPA Router - replacement for Framework Routers (history and hash).
 */
 class Router {
     constructor(options = {}) {
         this.events = new xo.core.Events(this);
-        this.options = {
-            type: ROUTER_TYPES.hash,
-            ...options
-        }
+        this.options = { type: ROUTER_TYPES.hash, ...options };
     }
 
     /**
@@ -18,27 +16,9 @@ class Router {
      * @returns {Router} reference to itself.
      */
     listen() {
-        // sort descending by key length
-        this.routeHash = Object.keys(this.options.routes).sort((a, b) => {
-            if (a.length < b.length)
-                return 1;
-            if (a.length > b.length)
-                return -1
-            return 0;
-        }).map(i => {
-            if (!i.startsWith("/"))
-                throw TypeError("Malformed route")
-            return i
-        })
-
-        if (this.routeHash.length === 0)
-            throw TypeError("No routes defined")
-
-        if (this.routeHash.at(-1) !== "/")
+        this.routeHash = Object.keys(this.options.routes);
+        if (!this.routeHash.includes("/"))
             throw TypeError("No home route found");
-
-
-        const defer = x => { setTimeout(() => x(), 10); }
 
         if (this.isHashRouter) {
             window.addEventListener('hashchange', this._hashChanged.bind(this));
@@ -66,21 +46,13 @@ class Router {
 
     _triggerRouteChange(path, url) {
         this.events.trigger("route", {
-            route: this.options.routes[path],
-            path: path,
-            url: url
+            route: this.options.routes[path], path: path, url: url
         })
     }
 
-    _findRoute(url) { // routeHash is sorted on string length, descending
-        let key = null;
-        for (key of this.routeHash) {
-            if (url.startsWith(key)) break;
-        }
-        if (key === "/" && url.split("?")[0].length > 1) {
-            return null;
-        }
-        return key;
+    _findRoute(url) {
+        var test = "/" + url.match(/([A-Za-z_0-9.]*)/gm, (match, token) => { return token })[1];
+        return this.routeHash.includes(test) ? test : null;
     }
 
     _tryNav(href) {
@@ -105,10 +77,8 @@ class Router {
 
     _onNavClick(e) { // handle click in document
         const href = e.target?.closest("[href]")?.href;
-        if (href) {
-            if (this._tryNav(href))
-                e.preventDefault();
-        }
+        if (href && this._tryNav(href))
+            e.preventDefault();
     };
 
     /**
