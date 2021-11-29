@@ -136,6 +136,19 @@ __*return*__ | `promise` | *- A promise with the typed rendered element*
 
 ---
 
+### `getInstance(name) ► Object`
+
+![modifier: private](images/badges/modifier-private.svg)
+
+Shortcut to instance in databinding models
+
+Parameters | Type | Description
+--- | --- | ---
+__name__ | `*` | **
+__*return*__ | `Object` | **
+
+---
+
 ## Members
 
 Name | Type | Description

@@ -128,8 +128,6 @@ class PWA {
 
         this._router = new PWA_Router(this, this.config.routes, {
             onRoute: (mod, path) => {
-                console.log("PWA Executes Route", mod, path);
-
                 if (!this.events.trigger("pwa.route", {
                     module: mod,
                     path: path

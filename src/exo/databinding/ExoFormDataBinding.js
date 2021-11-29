@@ -287,10 +287,7 @@ class ExoFormDataBinding {
         }
 
         return proxify(instanceName, obj, (object, property, oldValue, newValue, subPath) => {
-
-
             const path = property ?  `#/${instanceName}${subPath}/${property}` : `#/${instanceName}${subPath}`;
-            console.log("proxify path: " , path)
             
             console.debug(`DataModel: '${path}' changed from ${oldValue} to ${newValue}`);
 

@@ -1182,4 +1182,19 @@ The new router can also be used outside the [PWA](./md/pwa/index.md) component s
 # New in 1.5.13 
 
 - Autocomplete search results can now return a complete HTML element, using the ```element``` property of the returned object array.
-- 
+
+# New in 1.5.14 
+
+A new function ```getInstance()```, is in fact a shortcut to get the data of any bound model instance.
+
+```js
+ return await xo.form.run(schema, {
+      on: {
+        post: e => {
+          let contact = e.detail.host.getInstance("contact")
+          // work with contact instance data
+        }
+      }
+    });
+```
+

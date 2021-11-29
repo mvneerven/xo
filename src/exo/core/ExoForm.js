@@ -692,6 +692,15 @@ class ExoForm {
         });
 
     }
+
+    /**
+     * Shortcut to instance in databinding models
+     * @param {*} name 
+     * @returns {Object}
+     */
+    getInstance(name) {
+        return Core.clone(this.dataBinding?.model?.instance[name]);
+    }
 }
 
 export default ExoForm;
