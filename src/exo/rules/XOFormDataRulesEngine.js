@@ -273,7 +273,7 @@ class XOFormDataRulesEngine extends ExoRuleEngineBase {
                 calc(a, b, (c, d) => { return c ** d })
             },
             trigger: (a, b) => {
-                this.exo.trigger(this.var(a))
+                this.exo.events.trigger(this.var(a))
             },
             ...this.options.rules?.actions
         }

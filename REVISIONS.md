@@ -1198,3 +1198,9 @@ A new function ```getInstance()```, is in fact a shortcut to get the data of any
     });
 ```
 
+# New in 1.5.14 
+
+## Fixes
+
+- Fixed ```trigger``` action in rules engine.
+  
