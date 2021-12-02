@@ -41,13 +41,19 @@ class Router {
     }
 
     _triggerPopState(e) {
-        this._triggerRouteChange(e.state.path, e.target.location.href);
+        this._triggerRouteChange(e.state?.path, e.target.location.href);
     }
 
     _triggerRouteChange(path, url) {
-        this.events.trigger("route", {
-            route: this.options.routes[path], path: path, url: url
-        })
+
+        path = path || this._findRoute(url);
+
+        if (path) {
+
+            this.events.trigger("route", {
+                route: this.options.routes[path], path: path, url: url
+            })
+        }
     }
 
     _findRoute(url) {
