@@ -214,7 +214,7 @@ class XOFormDataRulesEngine extends ExoRuleEngineBase {
                 if (elm.classList.contains("exf-page")) {
                     this._setPageRelevant(elm, on)
                 }
-                else {
+                else {                    
                     xo.dom[on ? "show" : "hide"](elm);
                 }
             },
@@ -273,7 +273,9 @@ class XOFormDataRulesEngine extends ExoRuleEngineBase {
                 calc(a, b, (c, d) => { return c ** d })
             },
             trigger: (a, b) => {
-                this.exo.events.trigger(this.var(a))
+                this.exo.events.trigger(this.var(a), {
+                    ...b || {}
+                })
             },
             ...this.options.rules?.actions
         }

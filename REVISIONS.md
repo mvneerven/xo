@@ -1211,4 +1211,33 @@ A new function ```getInstance()```, is in fact a shortcut to get the data of any
 - Fixed bug in PWA Router ```route``` method
   
 
+# New in 1.5.17
+
+- You can now pass details when calling ```trigger``` action to trigger an event in the second parameter:
+
+```js
+{
+  type: "button",
+  caption: "Log in",
+  value: "clicked",
+  bind: "#/temp/loginbutton",
+  actions: [
+    {
+      if: {
+          is: "clicked"
+      },
+      do: {
+          trigger: ["signed-in", {
+              account: "#/temp/userName"
+          }]
+      }
+    }
+  ]
+}
+```
+
+## Fixes
+
+- Error handling in ```getInstance()``` method on form improved
+- 
   

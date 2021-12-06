@@ -699,7 +699,10 @@ class ExoForm {
      * @returns {Object}
      */
     getInstance(name) {
-        return Core.clone(this.dataBinding?.model?.instance[name]);
+        const obj = this.dataBinding?.model?.instance[name];
+        if(typeof(obj)==="object")  
+            return Core.clone(obj);
+        throw TypeError("Instance not found")
     }
 }
 
