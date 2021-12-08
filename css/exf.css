@@ -2378,6 +2378,7 @@ html.theme-dark .exf-ctl-cnt.exf-switch input[type="range"] {
 
 .exf-ctl-cnt.autocomplete .exf-ac-rs {
   font-size: 0.9rem;
+  text-align: left;
   background-color: #f0f0f0;
   position: fixed;
   -webkit-box-shadow: 0 5px 10px 2px rgba(0, 0, 0, 0.1);

@@ -553,7 +553,7 @@ class ExoListViewControl extends ExoDivControl {
     this.views.reduce((a, b) => {
       const exists = Object.keys(this.mappings).includes(b);
       // log error when no mapping is available for certain view
-      if (!exists) console.error(`No mapping found for view "${b}"`);
+      if (!exists) console.debug(`No mapping found for view "${b}"`);
       return exists ? a : false;
     }, true);
 

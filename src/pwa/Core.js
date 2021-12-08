@@ -85,12 +85,13 @@ class Core {
 
     /**
      * Clone an object.
-     * @param {*} obj 
+     * @param {Object} obj 
+     * @param {Function} replacer
      * @returns cloned object.
      */
-    static clone(obj) {
+    static clone(obj, replacer) {
         // https://stackoverflow.com/questions/53102700/how-do-i-turn-an-es6-proxy-back-into-a-plain-object-pojo
-        return JSON.parse(JSON.stringify(obj));
+        return JSON.parse(JSON.stringify(obj, replacer));
     }
 
     /**

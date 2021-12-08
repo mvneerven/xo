@@ -125,7 +125,7 @@ class ExoFileDropControl extends ExoBaseControls.controls.input.type {
                     fileName: data.file.name,
                     type: data.file.type,
                     size: data.file.size,
-                    date: data.file.lastModifiedDate
+                    date: data.file.lastModifiedDate?.toISOString()
                 }
                 if (me.field.max) {
                     if (me._value.length >= me.field.max) {
