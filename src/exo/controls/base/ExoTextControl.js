@@ -104,7 +104,8 @@ class ExoTextControl extends ExoInputControl {
         let span = document.createElement("span");
         span.classList.add("exf-txt-psx-span", type);
         if (obj.icon) {
-            span.classList.add(obj.icon);
+            const list = obj.icon.split(" ");
+            span.classList.add(...list);
             span.classList.add("icon");
         }
         else if (obj.field) { // field
