@@ -13,17 +13,24 @@ class ExoInputListControl extends ExoListControl {
     constructor(context) {
         super(context);
 
-        this.acceptProperties({
-            name: "items",
-            description: "Array of entries to select from",
-            type: Array
-        },
+        this.acceptProperties(
+            {
+                name: "items",
+                description: "Array of entries to select from",
+                type: Array
+            },
             {
                 name: "columns",
                 type: Number,
                 description: "Defines the number of columns to display the items in (default: 1)",
                 defaultValue: 1
-            })
+            },
+            {
+                name: "addcaption",
+                description: "If set to a string, will allow you to append new items to the list",
+                type: String
+            }
+        )
 
         this.htmlElement = DOM.parseHTML(
             /*html*/`<div data-evtarget="true" class="${this.context.field.class || ""}" ></div>`
@@ -48,9 +55,61 @@ class ExoInputListControl extends ExoListControl {
         this.container.classList.add("exf-input-group", "exf-std-lbl");
 
         if (this._columns)
-            this.htmlElement.style = `column-count: ${this.columns}; column-gap: 40px;`
+            this.htmlElement.style = `column-count: ${this.columns}; column-gap: 1rem;`
+
+        if (this.addcaption) {
+            if (!Array.isArray(this.items))
+                throw TypeError("Must have an array as items for adding items to work");
+            this.setupAdd()
+        }
+
 
         return this.container;
+    }
+
+    setupAdd() {
+        this.container.addEventListener("click", e => {
+            let elm = e.target.closest(".exf-ilc-cnt");
+            if (elm && !elm.nextElementSibling) {
+                let label = elm.querySelector("label");
+                e.preventDefault();
+                setTimeout(() => {
+                    label.contentEditable = true;
+                    label.classList.add("single-line");
+                    label.focus();
+                    label.addEventListener("keydown", e => {
+                        let text = label.textContent.trim();
+                        if (text !== this.addcaption && (e.key == "Enter" || e.key === "Tab"))
+                            this.add(text)
+                    });
+                    label.addEventListener("blur", e => {
+                        label.textContent = this.addcaption;
+                    })
+
+                    label.style.outline = "none";
+                    document.execCommand('selectAll', false, null)
+
+                }, 10);
+
+
+            }
+        })
+    }
+
+    async populateList(containerElm, tpl) {
+        await super.populateList(containerElm, tpl);
+        if (this.addcaption)
+            this.addListItem(this.context.field, { value: "___new", name: this.addcaption }, tpl, containerElm, 0);
+    }
+
+    add(text) {
+        if (text.trim() && Array.isArray(this.items)) {
+            let index = this.items.findIndex(i=>{
+                return i===text || typeof(i)==="object" && i.value === text;
+            })
+            if(index === -1)
+                this.items.push(text);
+        }
     }
 
     get valid() {
@@ -116,15 +175,16 @@ class ExoInputListControl extends ExoListControl {
 
     set items(value) {
 
-        this._items = value;
+
 
         if (!this._updating) {
+            this._items = value;
             //if (this.rendered) {
-                this._updating = true
-                this.htmlElement.innerHTML = "";
-                this.populateList(this.htmlElement, tpl).then(() => {
-                    this._updating = false;
-                });
+            this._updating = true
+            this.htmlElement.innerHTML = "";
+            this.populateList(this.htmlElement, tpl).then(() => {
+                this._updating = false;
+            });
             //}
         }
 

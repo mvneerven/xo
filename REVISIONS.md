@@ -1234,3 +1234,42 @@ return await xo.form.run(schema, {
 
 - Validation checking didn't take disabled and invisible controls out of the equasion
 - Rules engine didn't change visible and disabled state on control, but instead directly modified DOM state.
+
+
+# New in 1.5.23
+
+## addcaption property on list inputs 
+
+List inputs (radiobuttonlist, checkboxlist) now allow adding entries to the underlying array of ```items```.
+
+```js
+const schema = {
+  model: {
+    instance: {
+      data: {
+        who: "",
+        people: [
+          "John",
+          "Pete",
+          "Harry"
+        ]
+      },
+      
+    }
+  },
+  pages: [
+    {
+      legend: "Welcome to XO",
+      intro: "This is a generated web form",
+      fields: [
+        {
+          type: "radiobuttonlist",
+          bind: "#/data/who",
+          items: "#/data/people",
+          addcaption: "Other person"
+        }
+      ]
+    }
+  ]
+};
+```

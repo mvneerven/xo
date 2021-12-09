@@ -1332,6 +1332,21 @@ html:not(.pwa-signed-in) .if-signed-out {
   display: none;
 }
 
+.exf-container [contenteditable="true"].single-line {
+  white-space: nowrap;
+  width: 200px;
+  overflow: hidden;
+}
+
+.exf-container [contenteditable="true"].single-line br {
+  display: none;
+}
+
+.exf-container [contenteditable="true"].single-line * {
+  display: inline;
+  white-space: nowrap;
+}
+
 .exf-container .exf-hidden {
   display: none !important;
 }
@@ -1349,6 +1364,10 @@ html:not(.pwa-signed-in) .if-signed-out {
   display: grid;
   -ms-grid-columns: 30px 1fr;
       grid-template-columns: 30px 1fr;
+}
+
+.exf-container .exf-input-group:not(.tiles) .exf-ilc-cnt input[value="___new"] + label:not(:focus) {
+  opacity: 0.6;
 }
 
 .exf-container .exf-page {
