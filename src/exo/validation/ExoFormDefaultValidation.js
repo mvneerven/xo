@@ -20,7 +20,18 @@ class ExoFormDefaultValidation {
         }
 
         let numInvalid = this.exo.query(f => {
-            return !f._control.valid;
+            const control = f._control;
+
+            console.log(ExoFormFactory.fieldToString(f), "visible: ", control.visible , "disabled: ", control.disabled )
+
+            
+            
+            if(!control.visible || control.disabled){
+                
+                return false;
+            }
+
+            return !control.valid;
 
         }, settings).length;
 

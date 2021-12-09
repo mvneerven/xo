@@ -151,18 +151,17 @@ class XOFormDataRulesEngine extends ExoRuleEngineBase {
     }
 
     _run(c, act) {
-        const elm = c.field._control.container;
-
+        
         let key = Object.keys(act)[0];
 
         if (key === "sequence" && Array.isArray(act.sequence)) {
             act.sequence.forEach(f => {
                 key = Object.keys(f)[0];
-                this._callAction(c, elm, key, f[key])
+                this._callAction(c, c.field._control, key, f[key])
             })
         }
         else {
-            this._callAction(c, elm, key, act[key])
+            this._callAction(c, c.field._control, key, act[key])
         }
     }
 
@@ -182,7 +181,7 @@ class XOFormDataRulesEngine extends ExoRuleEngineBase {
         }
     };
 
-    _callAction(c, elm, key, b) {
+    _callAction(c, control, key, b) {
         if (!key)
             return;
 
@@ -211,19 +210,19 @@ class XOFormDataRulesEngine extends ExoRuleEngineBase {
 
             show: a => {
                 let on = this.var(a);
-                if (elm.classList.contains("exf-page")) {
-                    this._setPageRelevant(elm, on)
+                if (control.container.classList.contains("exf-page")) {
+                    this._setPageRelevant(control.container, on)
                 }
                 else {                    
-                    xo.dom[on ? "show" : "hide"](elm);
+                    control.visible = on;
                 }
             },
             setclass: e => {
-                elm.classList.add(this.var(e));
+                control.container.classList.add(this.var(e));
             },
             enable: a => {
-                let on = this.var(a);
-                xo.dom[on ? "enable" : "disable"](elm);
+                let on = this.var(a);                
+                control.disabled = !on;
             },
             fetch: async (url, type, variable) => {
                 let result = await fetch(url);

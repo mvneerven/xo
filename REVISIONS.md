@@ -21,6 +21,7 @@ Show inline validation messages to be shown instead of the default HTML5 validat
 See [Validation](./md/exo/validation.md)
 
 ## Progress
+
 Show the progress within a multi-page form.
 
 ```json
@@ -32,6 +33,7 @@ Show the progress within a multi-page form.
 ![Steps](https://xo-js.dev/assets/img/progress-steps.png?raw=true "Adding step indicator using progress='steps'")
 
 ## Material Theme
+
 A new theme, inspired by Material Design, was added.
 
 ```json
@@ -39,11 +41,13 @@ A new theme, inspired by Material Design, was added.
   "theme": "material"
 }
 ```
+
 ![Material Theme](https://xo-js.dev/assets/img/theme-material.png?raw=true "Setting theme to 'material'")
 
 ## Control Additions
 
 ### Multiline: autogrow (Boolean)
+
 Let a textarea grow automatically when the user adds more lines.
 
 ```json
@@ -66,7 +70,8 @@ Let a textarea grow automatically when the user adds more lines.
 ```
 
 ### Range: showoutput (Boolean)
-Show the value of a range control 
+
+Show the value of a range control
 
 ```json
 {
@@ -88,6 +93,7 @@ Show the value of a range control
 ```
 
 ### Captcha: invisible (Boolean)
+
 Make the Google ReCaptcha control act invisibly.
 
 ```json
@@ -108,31 +114,31 @@ Make the Google ReCaptcha control act invisibly.
 }
 ```
 
-
 # New in 1.0.32
 
 ## Fixes
--	Step is now taken into account in the number control with 'buttons' property set to true
-- Required fields' labels are suffixed with a '*' (using CSS ::after), based on the container class *exf-required*
 
+- Step is now taken into account in the number control with 'buttons' property set to true
+- Required fields' labels are suffixed with a '*' (using CSS ::after), based on the container class *exf-required\*
 
 ## Additions
 
-- When building an ExoFormContext object (using the factory method *ExoFormFactory.build()*, defaults for form settings can now be passed in:
+- When building an ExoFormContext object (using the factory method _ExoFormFactory.build()_, defaults for form settings can now be passed in:
 
 ```javascript
 // set default validation to be 'inline' for all forms
 const context = await window.xo.form.factory.build({
-    defaults: {
-        validation: "inline"
-    }
+  defaults: {
+    validation: "inline",
+  },
 });
 ```
 
 See [Validation](./md/exo/validation.md)
 
 ## Changes:
--	Custom controls must now implement a value getter and setter, instead of setting functions on the field object
+
+- Custom controls must now implement a value getter and setter, instead of setting functions on the field object
 
 ```javascript
 set value(data){
@@ -146,15 +152,14 @@ get value() {
 
 ## XO Portal
 
--	The current workspace is now saved, so if you're working on a form, it will be reloaded next time you open the Explorer.
--	The dark mode switch now immediately switches Ace Editor themes
-
+- The current workspace is now saved, so if you're working on a form, it will be reloaded next time you open the Explorer.
+- The dark mode switch now immediately switches Ace Editor themes
 
 # New in 1.0.33
 
 ## Changes
-- containerClass removed. Use 'class' on schema fields to set class names. All classes are added to the containing div (div.exf-ctl-cnt), except when *useContainer* is false, such as in *button*.
 
+- containerClass removed. Use 'class' on schema fields to set class names. All classes are added to the containing div (div.exf-ctl-cnt), except when _useContainer_ is false, such as in _button_.
 
 ## Model Binding
 
@@ -184,7 +189,7 @@ CDN link: https://xo-js.dev/v1.2/xo.js
 
 ## Form controls in Schema
 
-You can now specify a *controls* array in the XO form schema.
+You can now specify a _controls_ array in the XO form schema.
 
 See [Navigation](./md/exo/navigation.md)
 
@@ -198,11 +203,10 @@ See [Getting Started with XO forms](./md/exo/getting-started.md)
 
 ## Changes
 
-- Removed 
-  - ExoWizardRouteModule (obsolete), 
+- Removed
+  - ExoWizardRouteModule (obsolete),
   - ExoSchemaGenerator (to be replaced with a full fledged schema generator based on JSON Schemas)
   - ExoRouteModule (obsolete)
-  
 
 # New in 1.3.0
 
@@ -214,9 +218,9 @@ Support for JSON Schema (V7) references in the model.
 
 See [JSON Schema Support](./md/exo/json-schema.md)
 
-# New in 1.3.5 
+# New in 1.3.5
 
-## Events 
+## Events
 
 ### Binding to dom events using 'on'
 
@@ -224,21 +228,21 @@ Apart from handling XO form events using the 'on' property of the optuons provid
 
 ```js
 let container = await xo.form.run("/data/forms/account.json", {
-    context: this.xoContext,
-    on: {
-        post: e=>{
-          // handle post
-        },
-        page: e=>{
-          // react on form paging
-        },
-        dom: {
-          change: e => {
-            // react to DOM change on rendered form element
-          }
-        }
-    }
-})
+  context: this.xoContext,
+  on: {
+    post: (e) => {
+      // handle post
+    },
+    page: (e) => {
+      // react on form paging
+    },
+    dom: {
+      change: (e) => {
+        // react to DOM change on rendered form element
+      },
+    },
+  },
+});
 ```
 
 ## Controls
@@ -248,8 +252,6 @@ let container = await xo.form.run("/data/forms/account.json", {
 # New in 1.3.6
 
 - Generic tooltip property added on all controls
-
-
 
 # New in 1.3.12
 
@@ -274,38 +276,37 @@ document.body.appendChild(DOM.parseHTML(html));
 
 ## XO form Schema
 
-The *mappings* property for JSON Schema Bound forms.
+The _mappings_ property for JSON Schema Bound forms.
 
 See [JSON Schema](./md/exo/json-schema.md)
 
-
-# New in 1.3.22 
-
+# New in 1.3.22
 
 ## Router menu display
 
- *router.generateMenu()* now points to generic router menu generation 
-  - *pwa.router.listModules()* is called to get loaded route module properties
-  - *pwa.UI.createMenu()* creates an instance *PWA_RouterMenu* class
-  - These routines can now be called separately to have full control.
+_router.generateMenu()_ now points to generic router menu generation
+
+- _pwa.router.listModules()_ is called to get loaded route module properties
+- _pwa.UI.createMenu()_ creates an instance _PWA_RouterMenu_ class
+- These routines can now be called separately to have full control.
 
 ```js
-  const menu = pwa.UI.createMenu();
-  let nav = menu.renderRouteMenu( m=>{
-      return m.name !== "MySpecialRoute"
-  });
+const menu = pwa.UI.createMenu();
+let nav = menu.renderRouteMenu((m) => {
+  return m.name !== "MySpecialRoute";
+});
 ```
 
-# New in 1.3.24 
+# New in 1.3.24
 
 ## OmniBox options
 
-Apart from passing in *useRoutes: true* in the OmniBox options, you can now also use a function to filter routes to be included.
+Apart from passing in _useRoutes: true_ in the OmniBox options, you can now also use a function to filter routes to be included.
 
 ```js
 this.omniBox = new PWA.OmniBox({
       useRoutes: i => {
-        return this.routeValid(i.module) 
+        return this.routeValid(i.module)
       },
       categories: {
         ...
@@ -313,16 +314,15 @@ this.omniBox = new PWA.OmniBox({
 });
 ```
 
-
 # New in 1.3.26
 
-- dropdownbutton DEPRECATED: use button with 'dropdown' property instead of dropdownbutton. 
+- dropdownbutton DEPRECATED: use button with 'dropdown' property instead of dropdownbutton.
 
 # New in 1.3.29
 
 ## Distributed Settings Handling
 
-In a large scale SaaS product, many configuration settings will exist, with storage on several parts of the SaaS account, each module having a scope on what settings it needs, what scope  settings have and where it wants to read and write them.
+In a large scale SaaS product, many configuration settings will exist, with storage on several parts of the SaaS account, each module having a scope on what settings it needs, what scope settings have and where it wants to read and write them.
 
 For end-users, it doesn't matter. The user simply wants to use the settings to configure the SaaS system as he/she likes, preferably in an intuitive way, and preferably in one central location: settings.
 
@@ -353,12 +353,13 @@ get settings() {
 ... then add them to the PWA's settings container:
 
 ```js
- pwa.settings.add(this.settings)
-  .on("read", e => {
-      e.detail.instance.data = this.accountSettings
+pwa.settings
+  .add(this.settings)
+  .on("read", (e) => {
+    e.detail.instance.data = this.accountSettings;
   })
-  .on("write", e => {
-      this.accountSettings = e.detail.instance.data
+  .on("write", (e) => {
+    this.accountSettings = e.detail.instance.data;
   });
 ```
 
@@ -368,7 +369,7 @@ See [TextBox Control](./md/exo/controls/textcontrol.md)
 
 ### List controls
 
-Items in the *items* array in list controls can now have a *disabled* property.
+Items in the _items_ array in list controls can now have a _disabled_ property.
 
 ```js
 {
@@ -408,7 +409,7 @@ See [ListView Control](./md/exo/controls/listview-control.md)
 
 # New in 1.4.0
 
-- XO Portal rewrite 
+- XO Portal rewrite
 - week (input[type=week]) wrapper
 - Listview improvements
 
@@ -416,7 +417,7 @@ See [ListView Control](./md/exo/controls/listview-control.md)
 
 ## Model binding proxies
 
-Model instances are now wrapped in ECMAScript *Proxy* objects, so object state can be monitored, and state can be shared with hosting environments such as Vue, React or Angular.
+Model instances are now wrapped in ECMAScript _Proxy_ objects, so object state can be monitored, and state can be shared with hosting environments such as Vue, React or Angular.
 
 Sharing data
 
@@ -424,7 +425,7 @@ You can now add an id to your form instance:
 
 ```js
 let form = await xo.form.run(schema, {
-  id: "my-form"
+  id: "my-form",
 });
 ```
 
@@ -432,18 +433,17 @@ Using the events XO now emits, you can then hook into the form runtime:
 
 ```js
 let data = null;
-xo.on("new-form", e => {
-    if (e.detail.id === "my-form") {
-        e.detail.exoForm.on("schemaLoaded", ev => {
-            const exo = ev.detail.host;
-            const model = exo.dataBinding.model;
-            // set data to the instance managed within the form
-            data = model.instance.data; 
-        })
-    }
-})
+xo.on("new-form", (e) => {
+  if (e.detail.id === "my-form") {
+    e.detail.exoForm.on("schemaLoaded", (ev) => {
+      const exo = ev.detail.host;
+      const model = exo.dataBinding.model;
+      // set data to the instance managed within the form
+      data = model.instance.data;
+    });
+  }
+});
 ```
-
 
 ## Other changes
 
@@ -457,8 +457,7 @@ xo.on("new-form", e => {
 
 See [Button Control](./md/exo/controls/buttoncontrol.md)
 
-
-### Dropdown parameters alignment 
+### Dropdown parameters alignment
 
 You can now use caption, icon, class and action.
 
@@ -466,38 +465,35 @@ Dropdown action and click parameters now aligns with button action and click.
 
 See above example.
 
-
 # New in 1.4.59
 
 ## Simplified Model Sharing for reactive frameworks (two-way model binding).
 
 XO now has a simple way to share model data with your reactive framework (Vue, Angular, React, Svelte, etc.).
 
-Simply pass a function to ```xo.form.bind()``` and wait for the state property to be ```ready```. You can then get the instance as mounted in XO and read from and write to it.
+Simply pass a function to `xo.form.bind()` and wait for the state property to be `ready`. You can then get the instance as mounted in XO and read from and write to it.
 
 ```js
 let sharedData = null;
 
-xo.form.bind(e=>{
-    if(e.state ==="ready" && e.instances.data)
-        sharedData = e.instances.data
-
+xo.form.bind((e) => {
+  if (e.state === "ready" && e.instances.data) sharedData = e.instances.data;
 }, true); // bind to all data model events, with verbose=true
 ```
 
-The ```verbose``` parameter can be used to watch all binding events in the console.
+The `verbose` parameter can be used to watch all binding events in the console.
 
 ## DOMChange option
 
-You can now specify the ```DOMChange``` event name XO will use to signal changes. 
+You can now specify the `DOMChange` event name XO will use to signal changes.
 
 ```js
 await xo.form.run(schema, {
-    DOMChange: "change"
-})
+  DOMChange: "change",
+});
 ```
 
-You can also provide a default in your ```ExoFormContext``` instance"
+You can also provide a default in your `ExoFormContext` instance"
 
 ```js
 async createContext(config) {
@@ -515,14 +511,13 @@ async createContext(config) {
 }
 ```
 
-
-XO now defaults to ```input``` to allow for a more realtime feel. 
+XO now defaults to `input` to allow for a more realtime feel.
 
 # New in 1.4.68
 
 ## New method: xo.form.from()
 
-You can now use ```xo.form.from(htmlElement)``` to get access to the XO form instance controlling it.
+You can now use `xo.form.from(htmlElement)` to get access to the XO form instance controlling it.
 
 You can pass it any element within an XO form container, including the container itself:
 
@@ -531,15 +526,14 @@ const form = document.querySelector("form.exf-form");
 const exo = xo.form.from(form);
 ```
 
+## New method: xo.form.data()
 
-## New method: xo.form.data() 
-
-In scenarios where XO form model data is shared with reactive environments such as Vue, react, Angular or Svelte (or just plain Vanilla JS), there is now an extremely simple way to get a reference to an XO form  controlled model data instance.
+In scenarios where XO form model data is shared with reactive environments such as Vue, react, Angular or Svelte (or just plain Vanilla JS), there is now an extremely simple way to get a reference to an XO form controlled model data instance.
 
 For instance, you can use this code anywhere in your page:
 
 ```js
-let sharedData = xo.form.data("person-form", "data", o => sharedData = o);
+let sharedData = xo.form.data("person-form", "data", (o) => (sharedData = o));
 ```
 
 ... if you bind your form using a JSON Schema:
@@ -547,26 +541,24 @@ let sharedData = xo.form.data("person-form", "data", o => sharedData = o);
 ```js
 const schema = {
   model: {
-    schema: "https://myserver.com/json-schema/person.json"    
-  }
-}
+    schema: "https://myserver.com/json-schema/person.json",
+  },
+};
 
 xo.form.run(schema, {
-    id: "person-form"
+  id: "person-form",
 });
 ```
 
-If, instead of binding to a single named instance, you want a reference to the instance root node in an XO form model, just omit the ```instanceName``` parameter:
+If, instead of binding to a single named instance, you want a reference to the instance root node in an XO form model, just omit the `instanceName` parameter:
 
 ```js
-let sharedData = xo.form.data("person-form", o => sharedData = o);
+let sharedData = xo.form.data("person-form", (o) => (sharedData = o));
 ```
 
-
-The ```sharedData``` variable will then be a direct reference to the instance inside the form, and reactivity will be both ways as you wish.
+The `sharedData` variable will then be a direct reference to the instance inside the form, and reactivity will be both ways as you wish.
 
 > See [an example using Vue](https://github.com/inbarazulay1997/xo-examples/tree/main/vue.js).
-
 
 ## TreeView control
 
@@ -574,37 +566,36 @@ The TreeView control can be used to display hierarchical data structures.
 
 ```js
 const schema = {
-    model: {
-        instance: {
-            data: {
-                selectedNodes: null
-            }
-        }
+  model: {
+    instance: {
+      data: {
+        selectedNodes: null,
+      },
     },
-    pages: [
+  },
+  pages: [
+    {
+      legend: "My Form",
+      intro: "Selected: @instance.data.selectedNodes",
+      fields: [
         {
-            legend: "My Form",
-            intro: "Selected: @instance.data.selectedNodes",
-            fields: [
-                {
-                    type: "treeview",
-                    name: "treeview",
-                    bind: "#/data/selectedNodes",
-                    singleSelect: false,
-                    minimum: 2,
-                    caption: "Treeview!!",
-                    mappings: {
-                        title: "name",
-                        tooltip: "description",
-                        id: "nr"
-                    },
-                    items: "/data/treedata.json"
-
-                }
-            ]
-        }
-    ]
-}
+          type: "treeview",
+          name: "treeview",
+          bind: "#/data/selectedNodes",
+          singleSelect: false,
+          minimum: 2,
+          caption: "Treeview!!",
+          mappings: {
+            title: "name",
+            tooltip: "description",
+            id: "nr",
+          },
+          items: "/data/treedata.json",
+        },
+      ],
+    },
+  ],
+};
 xo.form.run(schema);
 ```
 
@@ -637,7 +628,7 @@ xo.form.run(schema);
 }
 ```
 
-The ```items``` property accepts both a URL and an inline object defining the tree structure.
+The `items` property accepts both a URL and an inline object defining the tree structure.
 
 ## XO Studio Improvements
 
@@ -645,24 +636,21 @@ The ```items``` property accepts both a URL and an inline object defining the tr
 - Generate a Form from a JSON Schema file/url
 - Included autogenerated XO-JS reference documents in the [documentation](https://www.xo-js.dev/#/docs)
 
-
 # New in 1.4.73
 
 ## Automcomplete improvements
 
 See [Textbox](./md/exo/controls/textcontrol.md)
 
-
 ## Fixes
 
 - Fixed logic runninmg inside JSON declared forms (worked in JS declared forms)
-
 
 # New in 1.4.76
 
 ## Dialog showing & binding
 
-You can now trigger showing a dialog from a button directly, using ```action: "dialog:<name>"```.
+You can now trigger showing a dialog from a button directly, using `action: "dialog:<name>"`.
 
 Also, a dialog now can behave like any other form control in that its value is the button the user selects, it sends a change event when the user does, and the value can be bound to a model.
 
@@ -671,16 +659,16 @@ In the example below, we use all these features:
 ```js
 const schema = {
   model: {
-      logic: e=>{
-          if(e.changed.property === "button"){
-              // e.changed.newValue 
-          }
-      },
+    logic: (e) => {
+      if (e.changed.property === "button") {
+        // e.changed.newValue
+      }
+    },
     instance: {
       control: {
-        button: null
-      }
-    }
+        button: null,
+      },
+    },
   },
   pages: [
     {
@@ -689,22 +677,22 @@ const schema = {
           type: "button",
           name: "show",
           caption: "Show dialog!",
-          action: "dialog:dlg1"
-        },{
+          action: "dialog:dlg1",
+        },
+        {
           name: "dlg1",
           body: "Test dialog!",
           caption: "Test Field",
           type: "dialog",
-          bind: "instance.control.button"
-        }
-      ]
-    }
-  ]
-}
+          bind: "instance.control.button",
+        },
+      ],
+    },
+  ],
+};
 ```
 
-> UPDATE: ```action``` is now deprecated - see actions in 1.5.0 [Rules Engine](./md/exo/rules.md)
-
+> UPDATE: `action` is now deprecated - see actions in 1.5.0 [Rules Engine](./md/exo/rules.md)
 
 # New in 1.4.78
 
@@ -712,14 +700,14 @@ New actions for [button control](./md/exo/controls/buttoncontrol.md)
 
 # New in 1.4.83
 
-## New navigation type: ```tabstrip```
+## New navigation type: `tabstrip`
 
 See [navigation](./md/exo/navigation.md)
 
 # New in 1.4.88
 
-- New control: ```starrating```
-- Fixed ```range``` control databinding
+- New control: `starrating`
+- Fixed `range` control databinding
 
 # New in 1.4.92
 
@@ -734,40 +722,40 @@ The Live Edit feature supports drag & drop sorting, deleting fields and editing 
 # New in 1.4.100
 
 - You can now link a model instance via a URL instead of declaring it inline
-- Listview control now has a static mode, in which it just renders the data but adds no interactivity 
+- Listview control now has a static mode, in which it just renders the data but adds no interactivity
 - Clicking on a selected item in a singleSelect Listview doesn't deselect the item (unless CTRL is pressed)
 
 # New in 1.4.110
 
-- ```columns``` property in list controls (checkboxlist, radionuttonlist), which makes long option lists flow in multiple columns.
+- `columns` property in list controls (checkboxlist, radionuttonlist), which makes long option lists flow in multiple columns.
 
-# New in 1.4.116 
+# New in 1.4.116
 
 ## Listview Control
 
-Listview now has ```checkboxes``` property to set behavior to use checkboxes for selection. Clicking an item in the listview will trigger the first action in the contextmenu, if any.
-
+Listview now has `checkboxes` property to set behavior to use checkboxes for selection. Clicking an item in the listview will trigger the first action in the contextmenu, if any.
 
 ## Autocomplete images
-Autocomplete feature on textboxes now allows for images to be displayed. Use ```image: "/image-path"``` to use them in the items returned.
 
+Autocomplete feature on textboxes now allows for images to be displayed. Use `image: "/image-path"` to use them in the items returned.
 
 ## Dialog as sidepanel
-The dialog control now supports a ```mode``` parameter to switch to sidepanel behavior.
+
+The dialog control now supports a `mode` parameter to switch to sidepanel behavior.
 
 ```js
 const schema = {
   model: {
-    logic: context => {
-		if (context.changed.property === "button") {
-		// e.changed.newValue
-		}
-},
+    logic: (context) => {
+      if (context.changed.property === "button") {
+        // e.changed.newValue
+      }
+    },
     instance: {
       control: {
-        button: ""
-      }
-    }
+        button: "",
+      },
+    },
   },
   pages: [
     {
@@ -776,7 +764,7 @@ const schema = {
           type: "button",
           name: "show",
           caption: "Show dialog! @instance.control.button",
-          action: "dialog:dlg1"
+          action: "dialog:dlg1",
         },
         {
           name: "dlg1",
@@ -784,20 +772,20 @@ const schema = {
           caption: "Test Field",
           type: "dialog",
           mode: "side",
-          bind: "instance.control.button"
-        }
-      ]
-    }
-  ]
-}
+          bind: "instance.control.button",
+        },
+      ],
+    },
+  ],
+};
 ```
 
 # New in 1.4.130
 
 ## Sandbox: using subforms.
 
-The new ```sandbox``` control allows you to embed subforms in an isolated way, using an ```iframe``` tag.
-All communication between main form and subform is done using ```postMessage```.
+The new `sandbox` control allows you to embed subforms in an isolated way, using an `iframe` tag.
+All communication between main form and subform is done using `postMessage`.
 
 ```js
 const schema = {
@@ -806,10 +794,10 @@ const schema = {
       data: {
         test: "My Data",
         sub: {
-          text: "Subform Control Data"
-        }
-      }
-    }
+          text: "Subform Control Data",
+        },
+      },
+    },
   },
   pages: [
     {
@@ -818,7 +806,7 @@ const schema = {
           name: "testField",
           caption: "Test Field",
           type: "text",
-          bind: "#/data/test"
+          bind: "#/data/test",
         },
         {
           type: "sandbox",
@@ -832,50 +820,49 @@ const schema = {
                       type: "text",
                       caption: "Subform Textbox",
                       name: "cc",
-                      bind: "#/data/text"
-                    }
-                  ]
-                }
-              ]
-            }
-          }
-        }
-      ]
-    }
-  ]
-}
+                      bind: "#/data/text",
+                    },
+                  ],
+                },
+              ],
+            },
+          },
+        },
+      ],
+    },
+  ],
+};
 ```
 
-## ```textconfirm``` control added
+## `textconfirm` control added
+
 This text control fires a change event only when confirmed using a confirmation button (or pressing enter)
 
-## ```imageselector``` control added
-This control uses autocompletion to find and select an image and shows a preview of the selected image.
+## `imageselector` control added
 
+This control uses autocompletion to find and select an image and shows a preview of the selected image.
 
 ## Other
 
 - xo.isDebug
 - xo.path
-- ```remark``` property added to all controls for general commenting
-- ```break``` property added to all controls, to force debug break in rendering of a control
-- ```listview``` control ```tilewidth``` property added
-
+- `remark` property added to all controls for general commenting
+- `break` property added to all controls, to force debug break in rendering of a control
+- `listview` control `tilewidth` property added
 
 # New in 1.4.132
 
-- Generic ```css``` property (all controls)
-
+- Generic `css` property (all controls)
 
 # New in 1.5.0
 
 ## Breaking Change in Model Binding and Rules
-> XO 1.5 has a breaking change in its Model Binding principles
-> 
-> Binding syntax is now: ```#/instancename/property``` instead of 
-> ```instance.instancename.property```
-> Also, the binding syntax is globally the same, so you no longer need to use a '@' outside the ```bind``` property.
 
+> XO 1.5 has a breaking change in its Model Binding principles
+>
+> Binding syntax is now: `#/instancename/property` instead of
+> `instance.instancename.property`
+> Also, the binding syntax is globally the same, so you no longer need to use a '@' outside the `bind` property.
 
 ## Model Binding shortcutting syntax
 
@@ -885,18 +872,19 @@ So if your model looks like this:
 model: {
   instance: {
     data: {
-      email: "john@doe.com"
+      email: "john@doe.com";
     }
   }
 }
 ```
+
 ... You can bind the email property using this syntax:
 
 ```js
 {
     type: "email",
-    caption: "Email address",    
-    bind: "#/data/email"      
+    caption: "Email address",
+    bind: "#/data/email"
 }
 ```
 
@@ -904,63 +892,63 @@ model: {
 
 We added a [rules engine](./md/exo/rules.md) that model based. Rules can be triggered based on [state in your model](./md/exo/data-binding.md).
 
-## Default ```xo.form.run()``` options
+## Default `xo.form.run()` options
 
-You can now add defaults for the options passed to each form ```xo.form.run()``` when creating the xo form context:
+You can now add defaults for the options passed to each form `xo.form.run()` when creating the xo form context:
 
 ```js
 const context = await window.xo.form.factory.build({
-    defaults: {
-        validation: "inline"                
+  defaults: {
+    validation: "inline",
+  },
+  runOptions: {
+    rules: {
+      actions: {
+        myCustomAction: (a, b) => {
+          // my custom implementation
+        },
+      },
     },
-    runOptions: {
-        rules: {
-            actions: {
-                myCustomAction: (a, b) => {
-                    // my custom implementation
-                }
-            }
-        }
-    }
+  },
 });
 ```
 
-In the example above, the [Rules Engine](./md/exo/rules.md) is being instructed that, apart from the internal actions the XO Rules Engine provides, a ```myCustomAction``` action exists, and all forms that are run can use it.
+In the example above, the [Rules Engine](./md/exo/rules.md) is being instructed that, apart from the internal actions the XO Rules Engine provides, a `myCustomAction` action exists, and all forms that are run can use it.
 
 Just don't forget to pass the context created to the form runner:
 
 ```js
 let fr = await xo.form.run(schema, {
-    context: context
+  context: context,
 });
 ```
 
 ### Event ruleContextReady
 
-The ```ruleContextReady``` is dispatched when the Rules Engine is ready to execute rules.
-Use it to get access to the ```context``` of the rules engine:
+The `ruleContextReady` is dispatched when the Rules Engine is ready to execute rules.
+Use it to get access to the `context` of the rules engine:
 
 ```js
 let fr = await xo.form.run(schema, {
-    on: {
-        ruleContextReady: e => {
-            this.ruleContext = e.detail.context
-        }
+  on: {
+    ruleContextReady: (e) => {
+      this.ruleContext = e.detail.context;
     },
-    rules: {
-        actions: {
-            myCustomAction: (a, b) => {
-                alert(this.ruleContext.var(a))
-            }
-        }
-    }
+  },
+  rules: {
+    actions: {
+      myCustomAction: (a, b) => {
+        alert(this.ruleContext.var(a));
+      },
+    },
+  },
 });
 ```
 
-## Sandbox ```subform``` property
+## Sandbox `subform` property
 
-The sandbox control now has a ```subform``` property (boolean).
-Setting ```subform``` to ```true``` will make the form loaded in the sandbox bind to a node in the master model.
+The sandbox control now has a `subform` property (boolean).
+Setting `subform` to `true` will make the form loaded in the sandbox bind to a node in the master model.
 
 ```js
 const schema = {
@@ -969,10 +957,10 @@ const schema = {
       data: {
         test: "My Data",
         sub: {
-          text: "Subform Control Data"
-        }
-      }
-    }
+          text: "Subform Control Data",
+        },
+      },
+    },
   },
   pages: [
     {
@@ -980,7 +968,7 @@ const schema = {
         {
           caption: "Test Field",
           type: "text",
-          bind: "#/data/test"
+          bind: "#/data/test",
         },
         {
           type: "sandbox",
@@ -993,27 +981,27 @@ const schema = {
                     {
                       type: "text",
                       caption: "Subform Textbox",
-                      bind: "#/data/text"
-                    }
-                  ]
-                }
-              ]
-            }
-          }
-        }
-      ]
-    }
-  ]
-}
+                      bind: "#/data/text",
+                    },
+                  ],
+                },
+              ],
+            },
+          },
+        },
+      ],
+    },
+  ],
+};
 ```
 
-> Note the bind: "#/data/text" in the subform: the subform cannot have a model of itself in this case, and the node used in the ```bind``` property translates to an instance in the subform called 'data'. 
+> Note the bind: "#/data/text" in the subform: the subform cannot have a model of itself in this case, and the node used in the `bind` property translates to an instance in the subform called 'data'.
 
 ## Other changes and additions
 
-### Command: ```submit: false```
+### Command: `submit: false`
 
-With the new command ```submit: false```, you can suppress the automatically generated submit button.
+With the new command `submit: false`, you can suppress the automatically generated submit button.
 
 The command needs to be placed at the top level of your schema.
 
@@ -1027,20 +1015,19 @@ const schema = {
           type: "text",
           name: "name",
           caption: "Your name",
-          placeholder: "John Doe"
-        }
-      ]
-    }
-  ]
-}
+          placeholder: "John Doe",
+        },
+      ],
+    },
+  ],
+};
 ```
-
-
 
 # New in 1.5.2
 
 ## Tags control supports autocompletion
-The ```tags``` control now also supports ```autocomplete```, like all text controls.
+
+The `tags` control now also supports `autocomplete`, like all text controls.
 
 ```js
 const schema = {
@@ -1048,11 +1035,9 @@ const schema = {
   model: {
     instance: {
       you: {
-        pets: [
-          "Cat"
-        ]
-      }
-    }
+        pets: ["Cat"],
+      },
+    },
   },
   pages: [
     {
@@ -1071,36 +1056,40 @@ const schema = {
               "Pig",
               "Snake",
               "Turtle",
-              "Other"
-            ]
+              "Other",
+            ],
           },
-          info: "You can select multiple pets"
-        }
-      ]
-    }
-  ]
-}
+          info: "You can select multiple pets",
+        },
+      ],
+    },
+  ],
+};
 ```
 
 ## Autocomplete settings (all text controls)
-- The ```autocomplete``` settings now include a ```strict``` boolean setting, to allow only values from the autocomplete ```items```.
+
+- The `autocomplete` settings now include a `strict` boolean setting, to allow only values from the autocomplete `items`.
 
 ## Rules Engine
-- The action ```navigate``` was added to the list of available actions in the Rules Engine.
+
+- The action `navigate` was added to the list of available actions in the Rules Engine.
 
 # New in 1.5.4
 
-## Listview ```edit``` 
+## Listview `edit`
 
-You can now turn a ```listview``` control into a master-detail editor. 
+You can now turn a `listview` control into a master-detail editor.
 See [ListView Control](./md/exo/controls/listview-control.md)
 
 ## Model Binding
+
 You can now point an instance to a URL.
 See [Data Binding](./md/exo/data-binding.md)
 
 ## Other changes
-- Progress mode ```steps```: fix in navigating to shown page headers
+
+- Progress mode `steps`: fix in navigating to shown page headers
 
 # New in 1.5.5
 
@@ -1108,45 +1097,49 @@ See [Data Binding](./md/exo/data-binding.md)
 
 # New in 1.5.8
 
-The XO Form LiveEditor can now be automatically started, using the ```auto: true``` setting.
+The XO Form LiveEditor can now be automatically started, using the `auto: true` setting.
 
 ```js
 const schema = {
-    model: {
-        instance: {
-            data: {
-                name: ""
-            }
-        }
+  model: {
+    instance: {
+      data: {
+        name: "",
+      },
     },
-    pages: [{
-        fields: [
-            {
-                type: "text",
-                bind: "#/data/name",
-                caption: "Enter your name"
-            }
-        ]
-    }]
-}
-document.getElementById("form").appendChild(await xo.form.run(schema, {
-    on: {
-        post: e => {
-            alert(JSON.stringify(e.detail.postData, null, 2))
+  },
+  pages: [
+    {
+      fields: [
+        {
+          type: "text",
+          bind: "#/data/name",
+          caption: "Enter your name",
         },
-        interactive: e=>{
-            let exo = e.detail.host;
-            new xo.form.factory.LiveEditor(exo, {
-                auto: true
-            }).on("schema-change", e => {
-                debugger
-            })
-        }
-    }
-}));
+      ],
+    },
+  ],
+};
+document.getElementById("form").appendChild(
+  await xo.form.run(schema, {
+    on: {
+      post: (e) => {
+        alert(JSON.stringify(e.detail.postData, null, 2));
+      },
+      interactive: (e) => {
+        let exo = e.detail.host;
+        new xo.form.factory.LiveEditor(exo, {
+          auto: true,
+        }).on("schema-change", (e) => {
+          debugger;
+        });
+      },
+    },
+  })
+);
 ```
 
-# New in 1.5.9 
+# New in 1.5.9
 
 ## Revamped Studio
 
@@ -1164,8 +1157,6 @@ We have done a lot to improve the error handling & debugging experience. Errors 
 
 XO now has better support for OpenAPI. For instance, when selecting OpenAPI in the Start wizard, you will now be able to select a schema to work with in the OpenAPI definition.
 
-
-
 # New in 1.5.11
 
 ## New Router with history and hash support
@@ -1175,45 +1166,42 @@ The new router can also be used outside the [PWA](./md/pwa/index.md) component s
 
 ## Other changes
 
-- Fixed scrolling in ```autocomplete``` controls
+- Fixed scrolling in `autocomplete` controls
 
+# New in 1.5.13
 
+- Autocomplete search results can now return a complete HTML element, using the `element` property of the returned object array.
 
-# New in 1.5.13 
+# New in 1.5.14
 
-- Autocomplete search results can now return a complete HTML element, using the ```element``` property of the returned object array.
-
-# New in 1.5.14 
-
-A new function ```getInstance()```, is in fact a shortcut to get the data of any bound model instance.
+A new function `getInstance()`, is in fact a shortcut to get the data of any bound model instance.
 
 ```js
- return await xo.form.run(schema, {
-      on: {
-        post: e => {
-          let contact = e.detail.host.getInstance("contact")
-          // work with contact instance data
-        }
-      }
-    });
+return await xo.form.run(schema, {
+  on: {
+    post: (e) => {
+      let contact = e.detail.host.getInstance("contact");
+      // work with contact instance data
+    },
+  },
+});
 ```
 
-# New in 1.5.15 
+# New in 1.5.15
 
 ## Fixes
 
-- Fixed ```trigger``` action in rules engine.
-  
+- Fixed `trigger` action in rules engine.
+
 # New in 1.5.16
 
 ## Fixes
 
-- Fixed bug in PWA Router ```route``` method
-  
+- Fixed bug in PWA Router `route` method
 
 # New in 1.5.17
 
-- You can now pass details when calling ```trigger``` action to trigger an event in the second parameter:
+- You can now pass details when calling `trigger` action to trigger an event in the second parameter:
 
 ```js
 {
@@ -1238,6 +1226,11 @@ A new function ```getInstance()```, is in fact a shortcut to get the data of any
 
 ## Fixes
 
-- Error handling in ```getInstance()``` method on form improved
-- 
-  
+- Error handling in `getInstance()` method on form improved
+
+# New in 1.5.21
+
+## Fixes
+
+- Validation checking didn't take disabled and invisible controls out of the equasion
+- Rules engine didn't change visible and disabled state on control, but instead directly modified DOM state.
