@@ -77,7 +77,13 @@ class ExoInputListControl extends ExoListControl {
                     label.contentEditable = true;
                     label.classList.add("single-line");
                     label.focus();
+                    label.addEventListener("input", e => {
+                        e.stopPropagation();
+                        e.stopImmediatePropagation();
+                    });
                     label.addEventListener("keydown", e => {
+                        e.stopPropagation();
+                        e.stopImmediatePropagation();
                         let text = label.textContent.trim();
                         if (text !== this.addcaption && (e.key == "Enter" || e.key === "Tab"))
                             this.add(text)
