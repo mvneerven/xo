@@ -12,18 +12,15 @@ class ExoFormDataBindingResolver {
     }
 
     addBoundControl(settings) {
+        let h = `${ExoFormFactory.fieldToString(settings.field)}.${settings.propertyName}.${settings.field._index}`;
 
-        
-        let h = `${ExoFormFactory.fieldToString(settings.field)}.${settings.propertyName}`;
         if(!this._hash[h]){
             this._hash[h] = 1;
             this._boundControlState.push(settings);
         }
-        
     }
 
     resolve(changedData) {
-
         try {
             this.dataBinding.noProxy = true;
             this._checkSchemaLogic(changedData);

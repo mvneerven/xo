@@ -1273,3 +1273,7 @@ const schema = {
   ]
 };
 ```
+
+# New in 1.5.25
+
+- Fix in databinding: multiple fields binding to single value in model.
