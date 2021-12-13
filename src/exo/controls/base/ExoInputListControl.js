@@ -118,7 +118,12 @@ class ExoInputListControl extends ExoListControl {
             if(index === -1){
                 this.items.push(text);
             }
-            this.value = this.isMultiSelect ? [text] : text;
+            setTimeout(() => {
+                this.value = this.isMultiSelect ? [text] : text;
+                var evt = new Event("change", {bubbles: true, cancelable: true})
+                this.htmlElement.dispatchEvent(evt); 
+            }, 10);
+            
         }
     }
 
