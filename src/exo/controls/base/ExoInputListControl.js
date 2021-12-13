@@ -85,8 +85,9 @@ class ExoInputListControl extends ExoListControl {
                         e.stopPropagation();
                         e.stopImmediatePropagation();
                         let text = label.textContent.trim();
-                        if (text !== this.addcaption && (e.key == "Enter" || e.key === "Tab"))
-                            this.add(text)
+                        if (text !== this.addcaption && (e.key == "Enter" || e.key === "Tab")){
+                            this.add(text, elm)
+                        }
                     });
                     label.addEventListener("blur", e => {
                         label.textContent = this.addcaption;
@@ -108,13 +109,16 @@ class ExoInputListControl extends ExoListControl {
             this.addListItem(this.context.field, { value: "___new", name: this.addcaption }, tpl, containerElm, 0);
     }
 
-    add(text) {
-        if (text.trim() && Array.isArray(this.items)) {
+    add(text, elm) {
+        text= text?.trim();
+        if (text && Array.isArray(this.items)) {
             let index = this.items.findIndex(i=>{
                 return i===text || typeof(i)==="object" && i.value === text;
             })
-            if(index === -1)
+            if(index === -1){
                 this.items.push(text);
+            }
+            this.value = this.isMultiSelect ? [text] : text;
         }
     }
 
