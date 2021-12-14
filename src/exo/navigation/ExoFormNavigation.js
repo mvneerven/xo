@@ -17,7 +17,7 @@ class ExoFormNavigation {
     }
 
     static getType(exo) {
-        let type = exo.schema.navigation;
+        let type = exo.schema.navigation || exo.context?.config?.defaults?.navigation;
         if (typeof (type) === "undefined" || type === "auto")
             type = ExoFormNavigation.matchNavigationType(exo);
 

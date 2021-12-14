@@ -9,7 +9,7 @@ class ExoFormValidation {
     }
 
     static getType(exo) {
-        let type = exo.schema.validation;
+        let type = exo.schema.validation  || exo.context?.config?.defaults?.validation;
         if (type === "auto" || typeof (type) === "undefined")
             type = ExoFormValidation.matchValidationType(exo);
 

@@ -15,7 +15,7 @@ class ExoFormProgress {
     }
 
     static getType(exo) {
-        let type = exo.schema.progress;
+        let type = exo.schema.progress || exo.context?.config?.defaults?.progress;
         if (typeof (type) === "undefined" || type === "auto")
             type = ExoFormProgress.matchProgressType(exo);
 

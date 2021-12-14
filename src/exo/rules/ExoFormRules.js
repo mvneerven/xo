@@ -11,7 +11,7 @@ class ExoFormRules {
     }
 
     static getType(exo) {
-        let type = exo.schema.rules;
+        let type = exo.schema.rules || exo.context?.config?.defaults?.rules;
         if (typeof (type) === "undefined" || type === "auto")
             type = ExoFormRules.matchRuleEngineType(exo);
 
