@@ -91,6 +91,8 @@ class Core {
      */
     static clone(obj, replacer) {
         // https://stackoverflow.com/questions/53102700/how-do-i-turn-an-es6-proxy-back-into-a-plain-object-pojo
+        if(typeof(obj) !== "object")
+            return obj;
         return JSON.parse(JSON.stringify(obj, replacer));
     }
 

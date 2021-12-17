@@ -18,7 +18,7 @@ class ExoFormDataBinding {
 
     constructor(exo) {
         this.exo = exo;
-        
+
         this.events = new Core.Events(this);
     }
 
@@ -100,7 +100,6 @@ class ExoFormDataBinding {
                 let eventName = this.exo.options.DOMChange || "input";
 
                 const handle = e => {
-
                     if (this.noProxy) {
                         console.debug("ExoFormDataBinding", "DOMChange event SKIPPED BECAUSE NO-PROXY")
                         return
@@ -143,7 +142,6 @@ class ExoFormDataBinding {
         }
         catch (ex) {
             throw TypeError(`${path} not set`)
-            //this._signalDataBindingError(ex);
         }
         return returnValue;
     }
@@ -159,11 +157,10 @@ class ExoFormDataBinding {
 
             throw TypeError(`Could not set ${path}: ${ex.message}`);// to ${value}: ${ex.message}`)
         }
-
     }
 
     async _init(exo) {
-        
+
         return new Promise(resolve => {
 
             if (exo.schema.model) {
@@ -234,61 +231,45 @@ class ExoFormDataBinding {
     proxy(instanceName, obj) {
         const me = this;
 
-        const equals = (x,y) => {
-            if(typeof(x)==="object")
-                return Core.objectEquals(x,y)
+        const equals = (x, y) => {
+            if (Array.isArray(x))
+                return arrayEquals(x, y);
+            if (typeof (x) === "object")
+                return Core.objectEquals(x, y)
             return x === y;
         }
-        const proxify = (instanceName, object, change, subPath) => {
 
-            if (object?.__proxy__) {
-                return object;
-            }           
+        const arrayEquals = (a, b) => {
+            return Array.isArray(a) &&
+                Array.isArray(b) &&
+                a.length === b.length &&
+                a.every((val, index) => val === b[index]);
+        }
 
+        const proxify = (instanceName, object, changeHandler, subPath) => {
             const pxy = new Proxy(object, {
-                get: function (object, name) {
-                    if (name === '__proxy__') {
-                        return true;
+                get: function (target, key) {
+                    if (typeof target[key] === 'object' && target[key] !== null) {
+                        return proxify(instanceName, target[key], changeHandler, subPath + "/" + key)
+                    } else {
+                        return target[key];
                     }
-                    return object[name];
                 },
-                set: function (object, name, value, receiver) {
-                    var old = object[name];
-                    if (value ){
-                        if( typeof value === 'object') {
-                            // new object needs to be proxified as well
-                            value = proxify(instanceName, value, change, subPath + "/" + name);
-                        }
-                    }
-                    
-                    if(old === undefined && Array.isArray(receiver)){
-                        object.push(value);
-                        change(object, null, old, value, subPath);
-                        return true;
-                    }
-                    else{
-                        object[name] = value;
-                    }
-                    
-                    if (!equals(old, value)) {
-                        change(object, name, old, value, subPath);
-                    }
+                set: function (target, key, value) {
+                    var old = Core.clone(target[key]);
+                    target[key] = value;
+                    changeHandler(target, key, old, value, subPath);
                     return true;
                 }
             });
-            for (var prop in object) {
-                if (object.hasOwnProperty(prop) && object[prop]){
-                    if(typeof object[prop] === 'object') { // proxify all child objects
-                        object[prop] = proxify(instanceName, object[prop], change, subPath + "/" + prop);
-                    }
-                }
-            }
             return pxy;
         }
 
-        return proxify(instanceName, obj, (object, property, oldValue, newValue, subPath) => {
-            const path = property ?  `#/${instanceName}${subPath}/${property}` : `#/${instanceName}${subPath}`;
-            
+        const changeHandler = (object, property, oldValue, newValue, subPath) => {
+            if (equals(oldValue, newValue)) return
+
+            const path = property ? `#/${instanceName}${subPath}/${property}` : `#/${instanceName}${subPath}`;
+
             console.debug(`DataModel: '${path}' changed from ${oldValue} to ${newValue}`);
 
             if (!me.noProxy) {
@@ -312,7 +293,9 @@ class ExoFormDataBinding {
                 });
                 me.resolver.resolve(change);
             }
-        }, "");
+        };
+
+        return proxify(instanceName, obj, changeHandler, "", 0);
     }
 
     verboseLog(change) {

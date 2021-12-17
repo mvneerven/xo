@@ -176,7 +176,6 @@ class ExoSandboxControl extends ExoEmbedControl {
 
     set form(value) {
         this._form = value
-        console.log("Form set in sandbox", value);
         this.setSource();
     }
 

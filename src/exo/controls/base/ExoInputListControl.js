@@ -63,6 +63,15 @@ class ExoInputListControl extends ExoListControl {
             this.setupAdd()
         }
 
+        // this.context.exo.on("dataModelChange", e=>{
+            
+        //     console.log("changed: ", e.detail);
+
+        //     if(e.detail.changeData?.path.startsWith(this.context.field.items)){
+        //         debugger
+        //     }
+        // })
+
 
         return this.container;
     }
@@ -131,11 +140,12 @@ class ExoInputListControl extends ExoListControl {
         if (this.context.field.required) {
             let numChecked = this.container.querySelectorAll("input:checked").length;
             if (numChecked === 0) {
-                let inp = this.container.querySelector("input");
-                try {
-                    inp.setCustomValidity(this.getValidationMessage());
-                    inp.reportValidity()
-                } catch { };
+                //let inp = this.container.querySelector("input");
+                //try {
+                    //inp.setCustomValidity(this.getValidationMessage());
+                    //inp.reportValidity()
+
+                //} catch { };
 
                 return false;
             }
@@ -189,9 +199,6 @@ class ExoInputListControl extends ExoListControl {
     }
 
     set items(value) {
-
-
-
         if (!this._updating) {
             this._items = value;
             //if (this.rendered) {
@@ -202,9 +209,7 @@ class ExoInputListControl extends ExoListControl {
             });
             //}
         }
-
     }
-
 }
 
 export default ExoInputListControl;
