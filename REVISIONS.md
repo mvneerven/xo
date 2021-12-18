@@ -1235,12 +1235,11 @@ return await xo.form.run(schema, {
 - Validation checking didn't take disabled and invisible controls out of the equasion
 - Rules engine didn't change visible and disabled state on control, but instead directly modified DOM state.
 
-
 # New in 1.5.23
 
-## addcaption property on list inputs 
+## addcaption property on list inputs
 
-List inputs (radiobuttonlist, checkboxlist) now allow adding entries to the underlying array of ```items```.
+List inputs (radiobuttonlist, checkboxlist) now allow adding entries to the underlying array of `items`.
 
 ```js
 const schema = {
@@ -1248,14 +1247,9 @@ const schema = {
     instance: {
       data: {
         who: "",
-        people: [
-          "John",
-          "Pete",
-          "Harry"
-        ]
+        people: ["John", "Pete", "Harry"],
       },
-      
-    }
+    },
   },
   pages: [
     {
@@ -1266,14 +1260,94 @@ const schema = {
           type: "radiobuttonlist",
           bind: "#/data/who",
           items: "#/data/people",
-          addcaption: "Other person"
-        }
-      ]
-    }
-  ]
+          addcaption: "Other person",
+        },
+      ],
+    },
+  ],
 };
 ```
 
 # New in 1.5.25
 
 - Fix in databinding: multiple fields binding to single value in model.
+
+# New in 1.5.30
+
+List inputs with `addcaption` now dispath events on the adding behavior:
+
+```js
+const schema = {
+  model: {
+    instance: {
+      data: {
+        who: "",
+        selected: {},
+        people: ["John", "Pete", "Harry"],
+      },
+    },
+  },
+  pages: [
+    {
+      legend: "Using 'addcaption'",
+      intro: "This radiobuttonlist allows you to add options",
+      fields: [
+        {
+          type: "radiobuttonlist",
+          bind: "#/data/who",
+          items: "#/data/people",
+          addcaption: "Other person",
+        },
+        {
+          type: "multiinput",
+          name: "editor",
+          disabled: true,
+          bind: "#/data/selected",
+          caption: "Edit",
+          fields: {
+            name: {
+              type: "text",
+              caption: "First name",
+              disabled: true,
+            },
+            fullname: {
+              type: "text",
+              caption: "Full name",
+            },
+            email: {
+              type: "email",
+              caption: "Email address",
+            },
+          },
+        },
+      ],
+    },
+  ],
+};
+
+const fr = await xo.form.run(schema, {
+  on: {
+    dataModelChange: (e) => {
+      this.exo = e.detail.host;
+
+      if (e.detail.changeData?.path === "#/data/who") {
+        let person = {
+          fullname: e.detail.changeData?.newValue + " Doe",
+        };
+        e.detail.model.instance.data.selected = person;
+        e.detail.host.get("editor")._control.disabled = false;
+      }
+    },
+    dom: {
+      "add-item": (e) => {
+        debugger;
+      },
+      "select-add": (e) => {
+        this.exo.get("editor")._control.disabled = true;
+      },
+    },
+  },
+});
+
+this.app.UI.areas.main.add(fr);
+```

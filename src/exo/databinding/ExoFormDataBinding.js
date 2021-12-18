@@ -249,6 +249,7 @@ class ExoFormDataBinding {
         const proxify = (instanceName, object, changeHandler, subPath) => {
             const pxy = new Proxy(object, {
                 get: function (target, key) {
+                    //console.log("Proxy.get", "target:", target, "key:", key);
                     if (typeof target[key] === 'object' && target[key] !== null) {
                         return proxify(instanceName, target[key], changeHandler, subPath + "/" + key)
                     } else {
@@ -256,6 +257,7 @@ class ExoFormDataBinding {
                     }
                 },
                 set: function (target, key, value) {
+                    //console.log("Proxy.set", "target:", target, "key:", key, "value:", value);
                     var old = Core.clone(target[key]);
                     target[key] = value;
                     changeHandler(target, key, old, value, subPath);
@@ -268,9 +270,19 @@ class ExoFormDataBinding {
         const changeHandler = (object, property, oldValue, newValue, subPath) => {
             if (equals(oldValue, newValue)) return
 
-            const path = property ? `#/${instanceName}${subPath}/${property}` : `#/${instanceName}${subPath}`;
+            const isArray = Array.isArray(object);
 
-            console.debug(`DataModel: '${path}' changed from ${oldValue} to ${newValue}`);
+            // set change path for binding
+            const path = !isArray && property 
+                ? `#/${instanceName}${subPath}/${property}` 
+                : `#/${instanceName}${subPath}`;
+
+            if(isArray){
+                console.debug(`DataModel: array '${path}' changed`);
+            }
+            else{
+                console.debug(`DataModel: '${path}' changed from`, oldValue, 'to', newValue === "" ? '""': newValue);
+            }
 
             if (!me.noProxy) {
                 const change = {

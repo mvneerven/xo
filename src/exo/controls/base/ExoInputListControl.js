@@ -51,7 +51,6 @@ class ExoInputListControl extends ExoListControl {
             this._updating = false
         }
 
-        //await super.render();
         this.container.classList.add("exf-input-group", "exf-std-lbl");
 
         if (this._columns)
@@ -62,17 +61,6 @@ class ExoInputListControl extends ExoListControl {
                 throw TypeError("Must have an array as items for adding items to work");
             this.setupAdd()
         }
-
-        // this.context.exo.on("dataModelChange", e=>{
-            
-        //     console.log("changed: ", e.detail);
-
-        //     if(e.detail.changeData?.path.startsWith(this.context.field.items)){
-        //         debugger
-        //     }
-        // })
-
-
         return this.container;
     }
 
@@ -83,6 +71,7 @@ class ExoInputListControl extends ExoListControl {
                 let label = elm.querySelector("label");
                 e.preventDefault();
                 setTimeout(() => {
+                    this.dispatch("select-add");
                     label.contentEditable = true;
                     label.classList.add("single-line");
                     label.focus();
@@ -94,12 +83,13 @@ class ExoInputListControl extends ExoListControl {
                         e.stopPropagation();
                         e.stopImmediatePropagation();
                         let text = label.textContent.trim();
-                        if (text !== this.addcaption && (e.key == "Enter" || e.key === "Tab")){
+                        if (text !== this.addcaption && (e.key == "Enter" || e.key === "Tab")) {
                             this.add(text, elm)
                         }
                     });
                     label.addEventListener("blur", e => {
                         label.textContent = this.addcaption;
+                        this.dispatch("deselect-add")
                     })
 
                     label.style.outline = "none";
@@ -119,21 +109,33 @@ class ExoInputListControl extends ExoListControl {
     }
 
     add(text, elm) {
-        text= text?.trim();
+        text = text?.trim();
         if (text && Array.isArray(this.items)) {
-            let index = this.items.findIndex(i=>{
-                return i===text || typeof(i)==="object" && i.value === text;
+            let index = this.items.findIndex(i => {
+                return i === text || typeof (i) === "object" && i.value === text;
             })
-            if(index === -1){
+            if (index === -1) {
                 this.items.push(text);
             }
             setTimeout(() => {
                 this.value = this.isMultiSelect ? [text] : text;
-                var evt = new Event("change", {bubbles: true, cancelable: true})
-                this.htmlElement.dispatchEvent(evt); 
+                let evt = new Event("change", { bubbles: true, cancelable: true })
+                this.htmlElement.dispatchEvent(evt);
+
+                
+                this.dispatch("add-item", {
+                    text: text
+                })
             }, 10);
-            
+
         }
+    }
+
+    dispatch(name, details){
+        this.htmlElement.dispatchEvent(new CustomEvent(name, { 
+            bubbles: true, cancelable: false ,
+            detail: details
+        }));        
     }
 
     get valid() {
@@ -142,8 +144,8 @@ class ExoInputListControl extends ExoListControl {
             if (numChecked === 0) {
                 //let inp = this.container.querySelector("input");
                 //try {
-                    //inp.setCustomValidity(this.getValidationMessage());
-                    //inp.reportValidity()
+                //inp.setCustomValidity(this.getValidationMessage());
+                //inp.reportValidity()
 
                 //} catch { };
 
