@@ -19,8 +19,9 @@ class ExoButtonControl extends ExoElementControl {
     // if no binding is set up, add one to make clicking the button change a value in the model
     // for conditionless RuleEngine actions to fire then.
     if (!context.field.bind) {
-      if (context.exo.dataBinding) {
-        context.exo.dataBinding.setupDefaultButtonBinding(this)
+      
+      if (this.dataBinding) {
+        this.dataBinding.setupDefaultButtonBinding(this)
       }
     }
 
@@ -62,6 +63,8 @@ class ExoButtonControl extends ExoElementControl {
       }
     );
   }
+
+  
 
   async render() {
     let me = this;

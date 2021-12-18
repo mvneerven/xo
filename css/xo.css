@@ -653,6 +653,17 @@ html:not(.pwa-signed-in) .if-signed-out {
   width: auto !important;
 }
 
+.exf-container [data-field-type="group"] {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  gap: 1rem;
+}
+
 .exf-container .exf-required:not(.exf-lbl-empty) > .exf-ctl > label::after {
   position: absolute;
   margin-left: 0.2rem;

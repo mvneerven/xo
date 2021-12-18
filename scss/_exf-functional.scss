@@ -13,6 +13,13 @@
         }
     }
 
+
+    [data-field-type="group"] {
+        display: flex;
+        flex-direction: row;
+        gap: 1rem;
+    }
+
     .exf-required:not(.exf-lbl-empty) > .exf-ctl > label::after {
         position: absolute;
         margin-left: 0.2rem;

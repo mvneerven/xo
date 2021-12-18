@@ -44,3 +44,6 @@ __useContainer__ | `undefined` | *Specifies whether XO form should use a contain
 __caption__ | `undefined` | *The control&#x27;s caption/label*
 __schema__ | `undefined` | *Gets the current field schema*
 __caption__ | `undefined` | *The control&#x27;s caption/label*
+__dataBinding__ | `undefined` | *Returns a reference to the data binding context. Can be the parent control&#x27;s databinding context.*
+__rulesEngine__ | `undefined` | *Gets the attached rules engine*
+__parentControl__ | `undefined` | *Returns the parent control, when rendered as a single field in a context of another control, such as a group.*

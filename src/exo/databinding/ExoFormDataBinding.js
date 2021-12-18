@@ -159,6 +159,12 @@ class ExoFormDataBinding {
         }
     }
 
+    remove(path, index, count){
+        let array = xo.core.clone(Core.getObjectValue(this._model, path));
+        array.splice(index, count);
+        Core.setObjectValue(this._model, path, array)
+    }
+
     async _init(exo) {
 
         return new Promise(resolve => {
@@ -257,6 +263,7 @@ class ExoFormDataBinding {
                     }
                 },
                 set: function (target, key, value) {
+                    if (target[key] === value) return true;
                     //console.log("Proxy.set", "target:", target, "key:", key, "value:", value);
                     var old = Core.clone(target[key]);
                     target[key] = value;

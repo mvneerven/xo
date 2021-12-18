@@ -23,6 +23,7 @@ import ExoEmailControl from './ExoEmailControl';
 import ExoSeparatorControl from './ExoSeparatorControl';
 import ExoFileUploadControl from './ExoFileUploadControl';
 import ExoDateControl from './ExoDateControl';
+import ExoGroupControl from './ExoGroupControl';
 
 class ExoBaseControls { 
 
@@ -63,7 +64,8 @@ class ExoBaseControls {
         time: { base: "text", note: "A time input control (input[type=time]) wrapper" },
         progressbar: { type: ExoProgressControl, alias: "progress", note: "A progress indicator control (progress) wrapper" },
         link: { type: ExoLinkControl, note: "HTML Anchor element", demo: {url: "http://blacknegative.com/", html: "Visit http://blacknegative.com/", external: true} },
-        separator: {type: ExoSeparatorControl, note: "Separator" }
+        separator: {type: ExoSeparatorControl, note: "Separator" },
+        group: {type: ExoGroupControl, note: "Group control" }
     }
 }
 

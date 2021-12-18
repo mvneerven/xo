@@ -14,6 +14,7 @@ class ExoControlBase {
     _rendered = false;
     _useContainer = true;
     _cssVariables = {};
+    _actions = [];
     acceptedProperties = [];
 
     dataProps = {};
@@ -34,24 +35,20 @@ class ExoControlBase {
             { name: "type", type: String, required: true, group: "General", description: "Type of the control. Required" },
             { name: "name", type: String, required: true, group: "General", description: "Name of the control. Required and must be unique" },
             { name: "caption", type: String, group: "UI", description: "Caption/label to display" },
-
             { name: "hidden", type: Boolean, group: "UI", default: false, description: "Determines control visibility" },
             { name: "disabled", type: Boolean, group: "UI", description: "Determines whether the control can be interacted with by the user" },
             { name: "tooltip", type: String, group: "UI", description: "Tooltip to show over the element" },
             { name: "info", type: String, group: "UI", description: "Informational text to show to help the user" },
-            //{ name: "class", type: String, group: "General", description: "Class name(s) to add to container element" },
             { name: "placeholder", type: String, group: "UI", description: "Placeholder text to show when the field is empty" },
             { name: "useContainer", type: Boolean, group: "Advanced", default: true, description: "Specifies whether the control should render within the standard control container. Default depends on control." },
             { name: "bind", type: String, group: "Data", description: "Specifies a path to bind the control to one of the instances in the model, if any. Syntax: 'instance.[instancename].[propertyname]'" },
             { name: "invalidmessage", type: String, group: "Data", description: "Message text to show when the control doesn't validate" },
-
             { name: "value", type: String, group: "Data", description: "Value of the control" },
-
             { name: "remark", type: String, description: "Generic comment/remark - use like HTML or JavaScript comments" },
-
             { name: "break", type: Object, description: "Set breakpoint" },
+            { name: "css", type: Object },
+            { name: "actions", type: Array, description: "List of actions to (conditionally) perform" }
 
-            { name: "css", type: Object }
         );
     }
 
@@ -153,7 +150,7 @@ class ExoControlBase {
     }
 
     renderStyleSheet() {
-        
+
         const keys = this.cssVariables ? Object.keys(this.cssVariables) : null;
         if (keys?.length) {
             const cid = this.context.field.id;
@@ -275,6 +272,17 @@ class ExoControlBase {
 
     typeConvert(value) {
         return ExoFormFactory.checkTypeConversion(this.context.field.type, value)
+    }
+
+    set actions(data) {
+        this._actions = data;
+
+
+
+    }
+
+    get actions() {
+        return this._actions;
     }
 
     /**
@@ -515,6 +523,8 @@ class ExoControlBase {
     }
 
     async render() {
+        this._registerActions()
+
         this.setProperties();
         if (this.break) {
             debugger // LEAVE THIS HERE!
@@ -554,7 +564,7 @@ class ExoControlBase {
                 DOM.replace(toReplace, this.htmlElement);
         }
 
-        this.addEventListeners();
+        this._addEventListeners();
 
         if (this.context.field.required) {
             this.container.classList.add("exf-required");
@@ -581,8 +591,6 @@ class ExoControlBase {
             this.htmlElement.setAttribute("placeholder", this.placeholder)
         }
 
-
-
         this._rendered = true;
 
         if (this.css) {
@@ -598,7 +606,35 @@ class ExoControlBase {
         return this.container
     }
 
-    addEventListeners() {
+    _registerActions() {
+        if (this.actions?.length) {
+            this.rulesEngine.addActions(this, this.actions);
+        }
+    }
+
+    /**
+     * Returns a reference to the data binding context. Can be the parent control's databinding context.
+     */
+    get dataBinding() {
+        return (this.parentControl || this).context.exo.dataBinding;
+    }
+
+    /** 
+     * Gets the attached rules engine 
+    */
+    get rulesEngine() {
+        // if this is a single-rendered control, take parentControl context
+        return (this.parentControl || this).context.exo.addins.rules
+    }
+
+    /**
+     * Returns the parent control, when rendered as a single field in a context of another control, such as a group.
+     */
+    get parentControl() {
+        return this.context.exo.options.parentControl;
+    }
+
+    _addEventListeners() {
         const exo = this.context.exo;
         const f = this.context.field;
 

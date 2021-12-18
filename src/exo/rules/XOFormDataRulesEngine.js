@@ -27,30 +27,32 @@ class Rule {
 
 class XOFormDataRulesEngine extends ExoRuleEngineBase {
     rules = [];
+    //fields = [];
 
     checkRules(context, options) {
 
         this.context = context;
         this.options = options;
 
-        let fields = this.exo.query(field => {
-            return Array.isArray(field.actions)
-        })
-        this.exo.schema.pages.forEach(p => {
-            if (Array.isArray(p.actions)) {
-                fields.push(p)
-            }
-        })
+        
+        // let fields = this.exo.query(field => {
+        //     return Array.isArray(field.actions)
+        // })
+        // this.exo.schema.pages.forEach(p => {
+        //     if (Array.isArray(p.actions)) {
+        //         fields.push(p)
+        //     }
+        // })
 
-        fields.forEach(field => {
-            field.actions.forEach(r => {
+        // fields.forEach(field => {
+        //     field.actions.forEach(r => {
 
-                this.rules.push(new Rule({
-                    field: field,
-                    rule: r
-                }))
-            })
-        });
+        //         this.rules.push(new Rule({
+        //             field: field,
+        //             rule: r
+        //         }))
+        //     })
+        // });
 
         this.exo.events.trigger(ExoFormFactory.events.ruleContextReady, {
             context: this
@@ -59,6 +61,18 @@ class XOFormDataRulesEngine extends ExoRuleEngineBase {
         this.exo.on("dataModelChange", this._checkState.bind(this));
 
         this._checkState(true)
+    }
+
+    // add actions registers
+    addActions(control, actions){
+        if(actions?.length){
+            actions.forEach(r => {
+                this.rules.push(new Rule({
+                    field: control.context.field,
+                    rule: r
+                }))
+            })
+        }
     }
 
     _checkState(mode) {
@@ -106,10 +120,10 @@ class XOFormDataRulesEngine extends ExoRuleEngineBase {
                 }
                 if (on)
                     this._run(c, c.rule.do)
-                else if (c.rule.else){
-                    if(te)
+                else if (c.rule.else) {
+                    if (te)
                         this._run(c, c.rule.else)
-                    else 
+                    else
                         throw TypeError(`Can't execute else clause: missing if rule ${c}`)
                 }
             }
@@ -151,7 +165,7 @@ class XOFormDataRulesEngine extends ExoRuleEngineBase {
     }
 
     _run(c, act) {
-        
+
         let key = Object.keys(act)[0];
 
         if (key === "sequence" && Array.isArray(act.sequence)) {
@@ -199,21 +213,21 @@ class XOFormDataRulesEngine extends ExoRuleEngineBase {
                 dlg._control.show();
             },
             set: (a, b) => {
-                this.exo.dataBinding.set(a, b)
+                this.exo.dataBinding.set(a, b);
+            },
+            remove: (a, b, c) => {
+                this.exo.dataBinding.remove(a, b, c);
             },
             submit: (a, b) => {
-
                 const result = this.exo.getFormValues();
                 console.log("submit: ", result);
-
             },
-
             show: a => {
                 let on = this.var(a);
                 if (control.container.classList.contains("exf-page")) {
-                    this._setPageRelevant(control.container, on)
+                    this._setPageRelevant(control.container, on);
                 }
-                else {                    
+                else {
                     control.visible = on;
                 }
             },
@@ -221,7 +235,7 @@ class XOFormDataRulesEngine extends ExoRuleEngineBase {
                 control.container.classList.add(this.var(e));
             },
             enable: a => {
-                let on = this.var(a);                
+                let on = this.var(a);
                 control.disabled = !on;
             },
             fetch: async (url, type, variable) => {
