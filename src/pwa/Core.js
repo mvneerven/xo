@@ -275,7 +275,7 @@ class Core {
     /**
      * Returns appropriate use of the given key for identifiers
      * @param {*} key 
-     * @returns 
+     * @returns The adequately quoted or non-quoted identifier name
      */
     static quoteKeyIfNeeded(key) {
         return Core.isValidVarName(key) ? key : `"${key}"`;
@@ -284,7 +284,7 @@ class Core {
     /**
      * Returns true if the given name is valid as variable name
      * @param {*} name 
-     * @returns 
+     * @returns Boolean value indicating whether the given name is a valid variable name
      */
     static isValidVarName(name) {
         try {

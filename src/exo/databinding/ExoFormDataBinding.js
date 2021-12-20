@@ -263,7 +263,10 @@ class ExoFormDataBinding {
                     }
                 },
                 set: function (target, key, value) {
-                    if (target[key] === value) return true;
+                    if (target[key] === value && typeof(target) !== "object") {
+                        console.log("Proxy.set EQUALS!!!!!!!!", "target:", target, "key:", key, "value:", value);  
+                        return true;
+                    }
                     //console.log("Proxy.set", "target:", target, "key:", key, "value:", value);
                     var old = Core.clone(target[key]);
                     target[key] = value;

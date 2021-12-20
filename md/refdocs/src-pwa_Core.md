@@ -94,6 +94,32 @@ __*return*__ | `undefined` | *String*
 
 ---
 
+### `quoteKeyIfNeeded(key) ► `
+
+![modifier: private](images/badges/modifier-private.svg) ![modifier: static](images/badges/modifier-static.svg)
+
+Returns appropriate use of the given key for identifiers
+
+Parameters | Type | Description
+--- | --- | ---
+__key__ | `*` | **
+__*return*__ | `undefined` | *The adequately quoted or non-quoted identifier name*
+
+---
+
+### `isValidVarName(name) ► `
+
+![modifier: private](images/badges/modifier-private.svg) ![modifier: static](images/badges/modifier-static.svg)
+
+Returns true if the given name is valid as variable name
+
+Parameters | Type | Description
+--- | --- | ---
+__name__ | `*` | **
+__*return*__ | `undefined` | *Boolean value indicating whether the given name is a valid variable name*
+
+---
+
 ### `scopeEval(scope, script) ► `
 
 ![modifier: private](images/badges/modifier-private.svg) ![modifier: static](images/badges/modifier-static.svg)
