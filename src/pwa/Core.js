@@ -91,7 +91,7 @@ class Core {
      */
     static clone(obj, replacer) {
         // https://stackoverflow.com/questions/53102700/how-do-i-turn-an-es6-proxy-back-into-a-plain-object-pojo
-        if(typeof(obj) !== "object")
+        if (typeof (obj) !== "object")
             return obj;
         return JSON.parse(JSON.stringify(obj, replacer));
     }
@@ -256,7 +256,7 @@ class Core {
                     return !key.startsWith("_")
                 })
                 .map((key) => {
-                    return `${key}: ${sfy(o[key], replacer, indent, level)}`;
+                    return `${Core.quoteKeyIfNeeded(key)}: ${sfy(o[key], replacer, indent, level)}`;
                 })
 
                 .join(',\n' + tab(level));
@@ -270,6 +270,29 @@ class Core {
 
         let level = 0;
         return sfy(jsLiteral, replacer, indent, level);
+    }
+
+    /**
+     * Returns appropriate use of the given key for identifiers
+     * @param {*} key 
+     * @returns 
+     */
+    static quoteKeyIfNeeded(key) {
+        return Core.isValidVarName(key) ? key : `"${key}"`;
+    }
+
+    /**
+     * Returns true if the given name is valid as variable name
+     * @param {*} name 
+     * @returns 
+     */
+    static isValidVarName(name) {
+        try {
+            Function('var ' + name);
+        } catch (e) {
+            return false;
+        }
+        return true;
     }
 
     /**

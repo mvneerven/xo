@@ -13,11 +13,22 @@
         }
     }
 
-
     [data-field-type="group"] {
-        display: flex;
-        flex-direction: row;
-        gap: 1rem;
+        .exf-ctl {
+            > div {
+                margin-top: 0.5rem;
+                display: flex;
+                flex-direction: var(--flex-direction, row);
+                flex-wrap: var(--flex-wrap, wrap);
+                justify-content: var(--justify-content, flex-start);
+                align-items: var(--align-items, stretch);
+                align-content: var(--align-content, stretch);
+                gap: 1.5rem;
+            }
+        }
+        .exf-label {
+            position: relative;
+        }
     }
 
     .exf-required:not(.exf-lbl-empty) > .exf-ctl > label::after {
@@ -160,10 +171,12 @@
             position: relative;
             margin-bottom: 2em;
 
-            .exf-label {
-                overflow: hidden;
-                text-overflow: ellipsis;
-                width: 100%;
+            > .exf-ctl {
+                > .exf-label {
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    width: 100%;
+                }
             }
 
             // nested
@@ -172,8 +185,10 @@
             }
 
             &.exf-lbl-empty {
-                .exf-label {
-                    display: none !important;
+                > .exf-ctl {
+                    > .exf-label {
+                        display: none !important;
+                    }
                 }
             }
 

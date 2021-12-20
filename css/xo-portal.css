@@ -1245,15 +1245,30 @@ html:not(.pwa-signed-in) .if-signed-out {
   width: auto !important;
 }
 
-.exf-container [data-field-type="group"] {
+.exf-container [data-field-type="group"] .exf-ctl > div {
+  margin-top: 0.5rem;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
   -webkit-box-orient: horizontal;
   -webkit-box-direction: normal;
-      -ms-flex-direction: row;
-          flex-direction: row;
-  gap: 1rem;
+      -ms-flex-direction: var(--flex-direction, row);
+          flex-direction: var(--flex-direction, row);
+  -ms-flex-wrap: var(--flex-wrap, wrap);
+      flex-wrap: var(--flex-wrap, wrap);
+  -webkit-box-pack: var(--justify-content, flex-start);
+      -ms-flex-pack: var(--justify-content, flex-start);
+          justify-content: var(--justify-content, flex-start);
+  -webkit-box-align: var(--align-items, stretch);
+      -ms-flex-align: var(--align-items, stretch);
+          align-items: var(--align-items, stretch);
+  -ms-flex-line-pack: var(--align-content, stretch);
+      align-content: var(--align-content, stretch);
+  gap: 1.5rem;
+}
+
+.exf-container [data-field-type="group"] .exf-label {
+  position: relative;
 }
 
 .exf-container .exf-required:not(.exf-lbl-empty) > .exf-ctl > label::after {
@@ -1390,7 +1405,7 @@ html:not(.pwa-signed-in) .if-signed-out {
   margin-bottom: 2em;
 }
 
-.exf-container .exf-page > .exf-ctl-cnt .exf-label {
+.exf-container .exf-page > .exf-ctl-cnt > .exf-ctl > .exf-label {
   overflow: hidden;
   text-overflow: ellipsis;
   width: 100%;
@@ -1400,7 +1415,7 @@ html:not(.pwa-signed-in) .if-signed-out {
   margin-bottom: 1em;
 }
 
-.exf-container .exf-page > .exf-ctl-cnt.exf-lbl-empty .exf-label {
+.exf-container .exf-page > .exf-ctl-cnt.exf-lbl-empty > .exf-ctl > .exf-label {
   display: none !important;
 }
 
@@ -3226,27 +3241,27 @@ html.theme-dark .exf-ctl-cnt.exf-switch input[type="range"] {
   padding: 0;
 }
 
-.exf-container.exf-theme-material .exf-ctl-cnt.exf-focus > .exf-ctl input::-webkit-input-placeholder,
-.exf-container.exf-theme-material .exf-ctl-cnt.exf-focus > .exf-ctl textarea::-webkit-input-placeholder, .exf-container.exf-theme-material .exf-ctl-cnt.exf-std-lbl > .exf-ctl input::-webkit-input-placeholder,
-.exf-container.exf-theme-material .exf-ctl-cnt.exf-std-lbl > .exf-ctl textarea::-webkit-input-placeholder {
+.exf-container.exf-theme-material .exf-ctl-cnt.exf-focus > .exf-ctl > input::-webkit-input-placeholder,
+.exf-container.exf-theme-material .exf-ctl-cnt.exf-focus > .exf-ctl > textarea::-webkit-input-placeholder, .exf-container.exf-theme-material .exf-ctl-cnt.exf-std-lbl > .exf-ctl > input::-webkit-input-placeholder,
+.exf-container.exf-theme-material .exf-ctl-cnt.exf-std-lbl > .exf-ctl > textarea::-webkit-input-placeholder {
   opacity: 1;
 }
 
-.exf-container.exf-theme-material .exf-ctl-cnt.exf-focus > .exf-ctl input:-ms-input-placeholder,
-.exf-container.exf-theme-material .exf-ctl-cnt.exf-focus > .exf-ctl textarea:-ms-input-placeholder, .exf-container.exf-theme-material .exf-ctl-cnt.exf-std-lbl > .exf-ctl input:-ms-input-placeholder,
-.exf-container.exf-theme-material .exf-ctl-cnt.exf-std-lbl > .exf-ctl textarea:-ms-input-placeholder {
+.exf-container.exf-theme-material .exf-ctl-cnt.exf-focus > .exf-ctl > input:-ms-input-placeholder,
+.exf-container.exf-theme-material .exf-ctl-cnt.exf-focus > .exf-ctl > textarea:-ms-input-placeholder, .exf-container.exf-theme-material .exf-ctl-cnt.exf-std-lbl > .exf-ctl > input:-ms-input-placeholder,
+.exf-container.exf-theme-material .exf-ctl-cnt.exf-std-lbl > .exf-ctl > textarea:-ms-input-placeholder {
   opacity: 1;
 }
 
-.exf-container.exf-theme-material .exf-ctl-cnt.exf-focus > .exf-ctl input::-ms-input-placeholder,
-.exf-container.exf-theme-material .exf-ctl-cnt.exf-focus > .exf-ctl textarea::-ms-input-placeholder, .exf-container.exf-theme-material .exf-ctl-cnt.exf-std-lbl > .exf-ctl input::-ms-input-placeholder,
-.exf-container.exf-theme-material .exf-ctl-cnt.exf-std-lbl > .exf-ctl textarea::-ms-input-placeholder {
+.exf-container.exf-theme-material .exf-ctl-cnt.exf-focus > .exf-ctl > input::-ms-input-placeholder,
+.exf-container.exf-theme-material .exf-ctl-cnt.exf-focus > .exf-ctl > textarea::-ms-input-placeholder, .exf-container.exf-theme-material .exf-ctl-cnt.exf-std-lbl > .exf-ctl > input::-ms-input-placeholder,
+.exf-container.exf-theme-material .exf-ctl-cnt.exf-std-lbl > .exf-ctl > textarea::-ms-input-placeholder {
   opacity: 1;
 }
 
-.exf-container.exf-theme-material .exf-ctl-cnt.exf-focus > .exf-ctl input::placeholder,
-.exf-container.exf-theme-material .exf-ctl-cnt.exf-focus > .exf-ctl textarea::placeholder, .exf-container.exf-theme-material .exf-ctl-cnt.exf-std-lbl > .exf-ctl input::placeholder,
-.exf-container.exf-theme-material .exf-ctl-cnt.exf-std-lbl > .exf-ctl textarea::placeholder {
+.exf-container.exf-theme-material .exf-ctl-cnt.exf-focus > .exf-ctl > input::placeholder,
+.exf-container.exf-theme-material .exf-ctl-cnt.exf-focus > .exf-ctl > textarea::placeholder, .exf-container.exf-theme-material .exf-ctl-cnt.exf-std-lbl > .exf-ctl > input::placeholder,
+.exf-container.exf-theme-material .exf-ctl-cnt.exf-std-lbl > .exf-ctl > textarea::placeholder {
   opacity: 1;
 }
 

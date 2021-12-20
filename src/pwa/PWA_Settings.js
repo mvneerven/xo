@@ -76,8 +76,6 @@ class PWA_Settings {
                     }
                 },
                 dataModelChange: e => {
-                    console.log("dm change")
-                    
                     let b = e.detail.changed;
                     if (b) {
                         

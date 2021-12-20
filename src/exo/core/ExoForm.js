@@ -595,7 +595,7 @@ class ExoForm {
      * @return {promise} - A promise with the typed rendered element
      */
     async renderSingleControl(field) {
-        const _ = this;
+        //const _ = this;
         let c = await this.createControl(field);
         field._control = c;
         let element = await c.render();

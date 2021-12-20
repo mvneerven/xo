@@ -350,11 +350,11 @@ class ExoFormDataBinding {
                 }
             }
         }
-        else if (typeof (value) === 'object') {
-            for (var p in value) {
-                returnValue[p] = this._processFieldProperty(control, p, returnValue[p])
-            }
-        }
+        // else if (typeof (value) === 'object') {
+        //     for (var p in value) {
+        //         returnValue[p] = this._processFieldProperty(control, p, returnValue[p])
+        //     }
+        // }
         return returnValue;
     }
 }

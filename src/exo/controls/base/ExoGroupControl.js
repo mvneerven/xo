@@ -1,15 +1,16 @@
+import xo from "../../../../js/xo";
 import ExoDivControl from "./ExoDivControl";
 
 class ExoGroupControl extends ExoDivControl {
 
-    _controls = [];
+    _fields = [];
 
     constructor() {
         super(...arguments);
 
         this.acceptProperties(
             {
-                name: "controls",
+                name: "fields",
                 type: Array
             }
         );
@@ -17,23 +18,28 @@ class ExoGroupControl extends ExoDivControl {
 
     async render() {
         await super.render();
-
-        this.controls.forEach(async control => {
-            this.container.appendChild(await xo.form.run(control, {
+        this.container.classList.add("exf-std-lbl");
+        let div = document.createElement("div");
+        this.container.querySelector(".exf-ctl").appendChild(div);
+        this.fields.forEach(control => {
+            let dummy = document.createElement("span");
+            div.appendChild(dummy);
+            xo.form.run(control, {
                 parentControl: this,
                 context: this.context.context
-            }))
-
+            }).then(ctl => {
+                xo.dom.replace(dummy, ctl)
+            })
         })
         return this.container
     }
 
-    get controls() {
-        return this._controls;
+    get fields() {
+        return this._fields;
     }
 
-    set controls(data) {
-        this._controls = data;
+    set fields(data) {
+        this._fields = data;
     }
 }
 

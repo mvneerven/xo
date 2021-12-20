@@ -172,7 +172,7 @@ class ExoControlBase {
 
     getBindings() {
         let ar = [];
-        let m = this.context.exo.dataBinding.model;
+        let m = this.dataBinding.model;
         Object.keys(m.instance).forEach(i => {
             Object.keys(m.instance[i]).forEach(d => {
 
@@ -716,7 +716,11 @@ class ExoControlBase {
     // dataBinding with '@bindingpath'
     _processProp(name, value) {
         // resolve bound state 
-        let db = this.context.exo.dataBinding;
+        let db = this.dataBinding;
+
+        // if(this.context.field.name == "child"  )
+        //     debugger;
+
         if (db) {
             try {
                 let result = db._processFieldProperty(this, name, value);
@@ -726,6 +730,7 @@ class ExoControlBase {
                 throw TypeError(`Databinding error in ${this.name}.${name}: ${ex.toString()}`)
             }
         }
+
         return value;
     }
 

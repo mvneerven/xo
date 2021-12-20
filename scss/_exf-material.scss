@@ -68,6 +68,7 @@
             }
 
             &:not(.exf-std-lbl) {
+                
                 > .exf-ctl {
                     > .exf-label {
                         position: absolute;
@@ -145,7 +146,6 @@
                     background-color: transparent;
 
                     &::placeholder {
-                        //visibility: hidden;
                         opacity: 0;
                         color: var(--placeholder-color, #aaa);
                     }
@@ -160,10 +160,9 @@
             &.exf-focus,
             &.exf-std-lbl {
                 > .exf-ctl {
-                    input,
-                    textarea {
+                    > input,
+                    > textarea {
                         &::placeholder {
-                            //visibility: visible;
                             opacity: 1;
                         }
                     }
