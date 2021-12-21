@@ -11,10 +11,7 @@ class ExoFormDataBinding {
         none: "none"
     }
 
-    _model = {
-        //instance: {} //,
-        //bindings: {}
-    };
+    _model = {};
 
     constructor(exo) {
         this.exo = exo;
@@ -154,8 +151,7 @@ class ExoFormDataBinding {
             Core.setObjectValue(this._model, path, value);
         }
         catch (ex) {
-
-            throw TypeError(`Could not set ${path}: ${ex.message}`);// to ${value}: ${ex.message}`)
+            throw TypeError(`Could not set ${path}: ${ex.message}`);
         }
     }
 
@@ -263,28 +259,27 @@ class ExoFormDataBinding {
                     }
                 },
                 set: function (target, key, value) {
-                    if (target[key] === value && typeof(target) !== "object") {
-                        console.log("Proxy.set EQUALS!!!!!!!!", "target:", target, "key:", key, "value:", value);  
-                        return true;
-                    }
+                    if (equals(target[key], value)) return true
                     //console.log("Proxy.set", "target:", target, "key:", key, "value:", value);
                     var old = Core.clone(target[key]);
                     target[key] = value;
+                                        
                     changeHandler(target, key, old, value, subPath);
+                    
                     return true;
                 }
             });
             return pxy;
         }
 
-        const changeHandler = (object, property, oldValue, newValue, subPath) => {
+        const changeHandler = (target, key, oldValue, newValue, subPath) => {
             if (equals(oldValue, newValue)) return
 
-            const isArray = Array.isArray(object);
+            const isArray = Array.isArray(target);
 
             // set change path for binding
-            const path = !isArray && property 
-                ? `#/${instanceName}${subPath}/${property}` 
+            const path = !isArray && key 
+                ? `#/${instanceName}${subPath}/${key}` 
                 : `#/${instanceName}${subPath}`;
 
             if(isArray){
@@ -299,8 +294,8 @@ class ExoFormDataBinding {
                     path: path,
                     model: me._model,
                     instanceName: instanceName,
-                    object: object,
-                    property: property,
+                    object: target,
+                    property: key,
                     oldValue: oldValue,
                     newValue: newValue,
                 }
@@ -308,7 +303,7 @@ class ExoFormDataBinding {
                 change.log = me.verboseLog(change);
                 me.events.trigger("change", {
                     model: me._model,
-                    changed: property,
+                    changed: key,
                     value: newValue,
                     changeData: change
 

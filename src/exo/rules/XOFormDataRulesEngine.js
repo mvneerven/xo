@@ -30,30 +30,8 @@ class XOFormDataRulesEngine extends ExoRuleEngineBase {
     //fields = [];
 
     checkRules(context, options) {
-
         this.context = context;
         this.options = options;
-
-        
-        // let fields = this.exo.query(field => {
-        //     return Array.isArray(field.actions)
-        // })
-        // this.exo.schema.pages.forEach(p => {
-        //     if (Array.isArray(p.actions)) {
-        //         fields.push(p)
-        //     }
-        // })
-
-        // fields.forEach(field => {
-        //     field.actions.forEach(r => {
-
-        //         this.rules.push(new Rule({
-        //             field: field,
-        //             rule: r
-        //         }))
-        //     })
-        // });
-
         this.exo.events.trigger(ExoFormFactory.events.ruleContextReady, {
             context: this
         })
@@ -74,8 +52,22 @@ class XOFormDataRulesEngine extends ExoRuleEngineBase {
             })
         }
     }
-
     _checkState(mode) {
+        try{
+
+            if(this.checking)
+                return;
+
+            this.checking = true;
+            return this._checkState_internal(mode)
+        }
+        finally{
+            this.checking = false;
+        }
+    }
+
+    _checkState_internal(mode) {
+        
 
         const TESTS = {
             is: (e, v) => { return e == v },
