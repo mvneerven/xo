@@ -267,8 +267,8 @@ class ExoListViewControl extends ExoDivControl {
     return this.container;
   }
 
-  trySetupEdit(){
-    if(typeof(this.edit) === "object"){
+  trySetupEdit() {
+    if (typeof (this.edit) === "object") {
       new ExoListViewEditExtension(this, this.edit)
     }
   }

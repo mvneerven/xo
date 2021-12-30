@@ -1351,3 +1351,44 @@ const fr = await xo.form.run(schema, {
 
 this.app.UI.areas.main.add(fr);
 ```
+
+# New in 1.6.0
+
+## Themes upgrade
+
+We have completely rewritten XO theming, for easier use and extension.
+
+A new theme, ```thin``` has been added, and default form layout has been improved so that custom styling is a lot easier. 
+
+### Available themes:
+
+Material (default)
+
+![Material Theme](https://xo-js.dev/assets/img/material.png "Material Theme")
+
+Fluent
+
+![Fluent Theme](https://xo-js.dev/assets/img/fluent.png "Fluent Theme")
+
+Thin (new)
+
+![Thin Theme](https://xo-js.dev/assets/img/thin.png "Thin Theme")
+
+### Using a theme:
+
+```js
+const schema = {
+  theme: "thin",
+  pages: [
+    {
+      fields: [
+        {
+          type: "text"
+        },
+      ],
+    },
+  ],
+};
+```
+
+

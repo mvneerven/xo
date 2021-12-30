@@ -252,16 +252,15 @@ class ExoFormFactory {
                     }
                 }
 
-                schema.pages[0].fields.push({
-                    type: "separator"
+                // schema.pages[0].fields.push({
+                //     type: "separator"
 
-                })
+                // })
 
                 let name = (p + "1").replace('-', '');
                 schema.pages[0].fields.push({
                     type: p,
                     name: name,
-                    //bind: `instance.data.${name}`,
                     caption: Core.toWords(p),
                     ...props.demo || {}
                 })
@@ -401,9 +400,7 @@ class ExoFormFactory {
                     case "ReferenceError":
                         break;
                 }
-                //console.error("XO JS Literal Parser error:", ex, scriptLiteral)
-
-                result.error = ex;//msg
+                result.error = ex;
             }
             finally {
                 return result;

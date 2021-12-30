@@ -42,7 +42,7 @@ class ExoTextConfirm extends ExoTextControl {
             
         });
         this.htmlElement.addEventListener("change", e => {
-            if (!e.detail || !e.detail.fromClick) { // only propagate change when it comes from confirm (button or Enter)
+            if (!e.detail?.fromClick) { // only propagate change when it comes from confirm (button or Enter)
                 e.preventDefault();
                 e.stopPropagation();
                 e.stopImmediatePropagation();
@@ -50,7 +50,14 @@ class ExoTextConfirm extends ExoTextControl {
             this.container.classList[this.htmlElement.value ? "add" : "remove"]("exf-std-lbl")
         });
 
-        this.container.querySelector(".exf-ctl").appendChild(this.button);
+        this.htmlElement.name = this.id;
+
+        this.div = document.createElement("div");
+        this.div.appendChild(this.htmlElement);
+
+        this.div.appendChild(this.button);
+        this.container.querySelector(".exf-ctl").appendChild(this.div);
+
         this.button.addEventListener("click", e => {
             var evt = new Event("change", {bubbles: true, cancelable: true})
             evt.detail = { fromClick: true };

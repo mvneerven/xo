@@ -3,11 +3,27 @@ import DOM from '../../pwa/DOM';
 class ExoFormTheme {
     constructor(exo) {
         this.exo = exo;
+
+        this.exo.on("interactive", this.correctPrefixAndSuffixPositions.bind(this))
+        this.exo.on("page", this.correctPrefixAndSuffixPositions.bind(this))
+
+    }
+
+    correctPrefixAndSuffixPositions(e) {
+        this.exo.container.querySelectorAll(".exf-txt-psx-span").forEach(span => {
+            const container = span.closest(".exf-ctl")
+            const input = container?.querySelector("input");
+            if (input) {
+                const containerRect = container.getBoundingClientRect();
+                const presufRect = span.getBoundingClientRect();
+                let inputRect = input.getBoundingClientRect();
+                let top = (inputRect.top - containerRect.top) + (inputRect.height / 2 - presufRect.height / 2);
+                span.style.top = top + "px";
+            }
+        })
     }
 
     apply() {
-        //this.exo.container.classList.add("exf-theme-none")
-
         this.exo.form.addEventListener("focusin", e => {
             let cnt = e.target.closest(".exf-ctl-cnt");
             if (cnt) cnt.classList.add("exf-focus");
@@ -32,35 +48,25 @@ class ExoFormTheme {
 }
 
 class ExoFormFluentTheme extends ExoFormTheme {
-    apply() {
-        super.apply();
-        this.exo.container.classList.add("exf-theme-fluent")
-    }
+    // apply() {
+    //     super.apply();
+    //     this.exo.container.classList.add("exf-theme-fluent")
+    // }
 }
 
+class ExoFormThinTheme extends ExoFormTheme {
+    // apply() {
+    //     super.apply();
+    //     this.exo.container.classList.add("exf-theme-rounded")
+    // }
+}
+
+
 class ExoFormMaterialTheme extends ExoFormTheme {
-    apply() {
-        super.apply();
-        this.exo.container.classList.add("exf-theme-material");
-
-        // this.exo.form.querySelectorAll(".exf-ctl-cnt:not(.exf-std-lbl) > .exf-ctl > [name][placeholder]").forEach(elm => {
-        //     elm.setAttribute("data-mt-placeholder", elm.getAttribute("placeholder") || "");
-        //     elm.removeAttribute("placeholder")
-        // });
-
-        // this.exo.form.addEventListener("focusin", e => {
-        //     let mtp = e.target.getAttribute("data-mt-placeholder");
-        //     if (mtp) {
-        //         e.target.setAttribute("placeholder", mtp);
-        //     }
-        // })
-        // this.exo.form.addEventListener("focusout", e => {
-        //     let mtp = e.target.getAttribute("data-mt-placeholder");
-        //     if (mtp) {
-        //         e.target.removeAttribute("placeholder")
-        //     }
-        // })
-    }
+    // apply() {
+    //     super.apply();
+    //     this.exo.container.classList.add("exf-theme-material");
+    // }
 }
 
 class ExoFormThemes {
@@ -68,12 +74,13 @@ class ExoFormThemes {
         auto: undefined,
         none: ExoFormTheme,
         fluent: ExoFormFluentTheme,
-        material: ExoFormMaterialTheme
+        material: ExoFormMaterialTheme,
+        thin: ExoFormThinTheme
     }
 
     static getType(exo) {
         let type = exo.schema.theme || exo.context?.config?.defaults?.theme;
-        
+
         if (typeof (type) === "undefined" || type === "auto")
             type = ExoFormThemes.matchTheme(exo);
 

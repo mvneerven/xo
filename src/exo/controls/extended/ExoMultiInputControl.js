@@ -6,7 +6,7 @@ class ExoMultiInputControl extends ExoBaseControls.controls.div.type {
 
     _areas = "";
 
-    gap = "1rem";
+    gap = "0rem 1rem;";
 
     static returnValueType = Object;
 

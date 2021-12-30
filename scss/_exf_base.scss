@@ -1,4 +1,15 @@
 .exf-container {
+    box-sizing: border-box;
+
+    *,
+    *:before,
+    *:after {
+        box-sizing: inherit;
+    }
+
+    --accent: var(--color-accent, #e63f4d);
+    accent-color: var(--accent);
+
     [class^="exf-cols-"],
     [class*=" exf-cols-"] {
         display: grid;
@@ -6,9 +17,112 @@
 
         .exf-ctl-cnt {
             &.exf-base-text {
-                > input[name] {
+                input[name] {
                     width: auto !important;
                 }
+            }
+        }
+    }
+
+    button {
+        transition: all 0.1s;
+        &:active {
+            transform: translateY(2px);
+            transition: all 0.1s ease-out;
+        }
+    }
+
+    fieldset {
+        border: 0;
+
+        &.exf-page {
+            border: 0;
+
+            legend {
+                font-size: 2rem;
+                color: var(--color-label);
+            }
+
+            .exf-page-intro {
+                margin-top: -1rem;
+                opacity: 0.8;
+                font-size: 0.95rem;
+            }
+        }
+    }
+
+    .exf-page-intro {
+        margin-top: -0.5rem;
+        margin-bottom: 1.5rem;
+    }
+
+    input,
+    textarea,
+    select,
+    button {
+        outline: none;
+        padding: 0.3rem 0.6rem;
+    }
+
+    textarea {
+        resize: vertical;
+        font-family: inherit;
+    }
+
+    .horizontal {
+        &.exf-input-group {
+            .exf-ctl {
+                > div {
+                    width: 100%;
+                    margin-top: 0;
+                    display: flex;
+                    flex-direction: row;
+
+                    flex-wrap: var(--flex-wrap, wrap);
+                    justify-content: var(--justify-content, flex-start);
+                    align-items: var(--align-items, stretch);
+                    align-content: var(--align-content, stretch);
+                    gap: 1rem;
+
+                    .exf-ilc-cnt {
+                        width: fit-content;
+                        display: inline-block;
+
+                        .exf-caption-description {
+                            display: none;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    .exf-ctl {
+        label:not(:empty) {
+            display: block;
+            color: var(--color-label);
+        }
+
+        .exf-ctl {
+            // nested
+            > label:not(:empty) {
+                color: var(--color-text);
+                font-size: 0.8rem !important;
+            }
+        }
+
+        &.autogrow {
+            // needs fix because autogrow creates grid
+            > .exf-label {
+                position: absolute !important;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+
+            > textarea[name],
+            &::after {
+                margin-top: 1.6rem;
             }
         }
     }
@@ -17,11 +131,11 @@
         .exf-ctl {
             > div {
                 margin-top: 0.5rem;
-                display: flex;
+                display: inline-flex;
                 flex-direction: var(--flex-direction, row);
                 flex-wrap: var(--flex-wrap, wrap);
-                justify-content: var(--justify-content, flex-start);
-                align-items: var(--align-items, stretch);
+                justify-content: var(--justify-content, center);
+                align-items: var(--align-items, center);
                 align-content: var(--align-content, stretch);
                 gap: 1.5rem;
             }
@@ -42,13 +156,18 @@
     }
 
     // make sure multi-input grid inputs fill out
-    .exf-cnt.exf-ctl-group.grid .exf-ctl-cnt > [name] {
-        width: 100%;
+    .exf-cnt.exf-ctl-group.grid {
+        .exf-ctl-cnt {
+            // margin-top: 0!important;
+            // margin-bottom: 0!important;
+
+            [name] {
+                width: 100%;
+            }
+        }
     }
 
     .exf-wrapper {
-        //   height: 100%;
-
         .exf-page {
             display: none;
 
@@ -77,9 +196,10 @@
         }
     }
 
-    .exf-info {
-        box-shadow: -3px 3px 10px -2px rgba(255, 255, 255, 0.1);
-        padding: 1em;
+    .exf-help-wrapper {
+        font-size: 0.8rem;
+        color: var(--color-text);
+        opacity: 0.6;
     }
 
     .exf-disabled {
@@ -99,15 +219,27 @@
 
     [data-field-type="textconfirm"] {
         .exf-ctl {
-            position: relative;
+            > div {
+                > input {
+                    margin: 0 !important;
+                    border-right: 0 !important;
+                }
 
-            .exf-btn-cnt {
-                position: absolute !important;
-                top: -1.7rem;
-                right: 0;
+                width: 100%;
+                display: grid;
+                grid-template-columns: 1fr 7rem;
 
-                button.exf-btn {
-                    padding: 0.2rem 0.5rem !important;
+                > .exf-ctl-cnt {
+                    position: relative !important;
+                    top: 0 !important;
+                    padding: 0 !important;
+                    margin: 0 !important;
+                    height: 100%;
+                    button.exf-btn {
+                        padding: 0.1rem 1rem;
+                        height: 100%;
+                        margin: 0 !important;
+                    }
                 }
             }
         }
@@ -143,12 +275,18 @@
         display: none !important;
     }
 
+    .exf-btn,
+    button,
+    input[type="range"] {
+        cursor: pointer;
+    }
+
     .exf-error {
         display: inline-block;
         padding: 0.2em;
         margin-top: 2rem;
-        color: red;
-        border: 1px solid red;
+        color: rgb(209, 15, 15);
+        border: 1px solid rgb(209, 15, 15);
     }
 
     .exf-input-group {
@@ -156,6 +294,11 @@
             .exf-ilc-cnt {
                 display: grid;
                 grid-template-columns: 30px 1fr;
+                font-size: 0.9rem;
+
+                .exf-caption {
+                    color: var(--color-text);
+                }
 
                 input[value="___new"] + label:not(:focus) {
                     opacity: 0.6;
@@ -231,12 +374,12 @@
             &.exf-input-group {
                 margin-top: 1rem;
                 > .exf-ctl > div {
-                    padding-top: 1rem;
+                    padding-top: 0.5rem;
 
                     .exf-ilc-cnt {
-                        margin-bottom: 1rem;
+                        margin-bottom: 0.5rem;
                         display: block;
-                        width: 100%;
+                        //width: 100%;
 
                         > input {
                             float: left;
@@ -244,7 +387,10 @@
 
                         .exf-caption {
                             padding-left: 1rem;
-                            display: inline-block;
+                            //display: inline-block;
+
+                            display: flex !important;
+                            align-items: center;
 
                             .exf-caption-description {
                                 font-size: 0.8rem;
@@ -307,27 +453,6 @@
                                 display: inline-block;
                                 width: auto;
                                 min-width: 5rem;
-                            }
-                        }
-                    }
-                }
-
-                &[data-field-type="checkbox"] {
-                    padding: 0 !important;
-                    margin: 0 !important;
-                    margin-top: -1rem !important;
-
-                    .exf-ctl {
-                        padding: 0;
-                        margin: 0;
-
-                        > div {
-                            padding: 0 !important;
-                            margin: 0 !important;
-
-                            .exf-ilc-cnt {
-                                padding: 0 !important;
-                                margin: 0 !important;
                             }
                         }
                     }
@@ -446,12 +571,13 @@
         }
 
         .exf-txt-psx-span {
+            height: fit-content;
+            top: 1.5rem;
             position: absolute;
-
-            top: 0.45rem;
+            overflow: hidden !important;
+            bottom: 0.5rem;
 
             &.icon {
-                top: 0.65rem;
                 left: 0.5rem;
             }
 
@@ -471,10 +597,6 @@
             > .exf-ctl-cnt {
                 padding: 0;
                 margin: 0;
-
-                .exf-btn {
-                    padding: 0.1rem 0.2rem;
-                }
             }
         }
     }
@@ -544,5 +666,53 @@
         left: 0;
         width: 100%;
         text-align: center;
+    }
+}
+
+[data-field-type="checkbox"] {
+    padding: 0 !important;
+    margin: 0 !important;
+    margin-top: -1rem !important;
+
+    .exf-ctl {
+        padding: 0;
+        margin: 0;
+
+        > div {
+            padding: 0 !important;
+            margin: 0 !important;
+
+            .exf-ilc-cnt {
+                padding: 0 !important;
+                margin: 0 !important;
+            }
+        }
+    }
+}
+
+[data-field-type="switch"],
+[data-field-type="starrating"] {
+    output {
+        display: none !important;
+    }
+}
+
+[data-field-type="color"] {
+    input[type="color"] {
+        min-height: 3rem;
+        min-width: 5rem;
+    }
+}
+
+[data-field-type="progressbar"] {
+    progress {
+        min-height: 2rem;
+        min-width: 10rem;
+    }
+}
+
+.exf-ctl-cnt {
+    hr {
+        border: 1px solid var(--input-box-shadow, #999);
     }
 }

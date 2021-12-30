@@ -119,7 +119,7 @@ class ExoTextControl extends ExoInputControl {
             span.style = `${(obj.font ? "font-family: "
                 + obj.font : "")}; ${(obj.size ? "font-size: " + obj.size + "; line-height: " + obj.size : "")}`;
         }
-        this.container.appendChild(span);
+        this.container.querySelector(".exf-ctl").appendChild(span);
     }
 
     get prefix() {

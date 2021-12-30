@@ -3,7 +3,7 @@ import ExoMultiInputControl from './ExoMultiInputControl';
 
 class ExoNameControl extends ExoMultiInputControl {
 
-    columns = "10em 1fr";
+    columns = "14rem 1fr";
 
     areas = `"first last"`;
 

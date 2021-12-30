@@ -1,7 +1,7 @@
 @import "pwa";
 @import "xo";
 @import "xo-brand";
-@import "xo-theme";
+@import "xo-portal-theme";
 @import "exf-scrollbar";
 @import "markdown";
 
@@ -22,6 +22,7 @@
     overflow-y: auto;
     border-bottom: 3px solid var(--color-background);
     margin-bottom: 1rem;
+    max-height: 55vh;
 }
 
 #start-wiz {
@@ -37,12 +38,12 @@
     padding: 1rem;
 }
 
-main{
+main {
     border-top: 1px solid #999;
 }
 
-#xo-portal [data-pwa-area] .ul-tabs.full-height .exf-page.full-height{
-   margin-bottom: 35px;
+#xo-portal [data-pwa-area] .ul-tabs.full-height .exf-page.full-height {
+    margin-bottom: 35px;
 }
 
 #xo-portal {
@@ -53,24 +54,26 @@ main{
             display: none;
         }
 
-        article.exf-lv-item {
-            background-color: var(--color-background-variation);
-            border-radius: 1rem;
-            padding: 1rem;
+        [data-view="tiles"] {
+            article.exf-lv-item {
+                background-color: var(--color-background-variation);
+                border-radius: 1rem;
+                padding: 1rem;
 
-            .small {
-                font-size: smaller;
-                opacity: 0.7;
+                .small {
+                    font-size: smaller;
+                    opacity: 0.7;
+                }
             }
         }
 
-        .exf-btn {
-            padding: 0.2rem 0.4rem;
-            border-radius: 0.3rem;
-            outline: none;
-            background-color: var(--color-button);
-            color: var(--color-button-text);
-        }
+        // .exf-btn {
+        //     padding: 0.2rem 0.4rem;
+        //     border-radius: 0.3rem;
+        //     outline: none;
+        //     background-color: var(--color-button);
+        //     color: var(--color-button-text);
+        // }
     }
 
     nav.main-menu {
@@ -210,18 +213,15 @@ html:not([data-pwa-route="/"]) {
         &.pwa-omnibox {
             border-color: rgba(220, 0, 0, 0.8);
 
-            input{
-                background-color: #222!important;
+            input {
+                background-color: #222 !important;
             }
         }
 
         .exf-ctl-cnt .exf-help-info {
-            color:rgba(255, 255, 255, 0.5)
+            color: rgba(255, 255, 255, 0.5);
         }
     }
-
-    
-    
 }
 
 .hidden {
@@ -255,20 +255,17 @@ html:not([data-pwa-route="/"]) {
 }
 
 .nsp-grid.nsp-grid-3rc {
-    [data-pwa-area]{
+    [data-pwa-area] {
         //overflow-y: auto;
         display: flex;
         flex-flow: column;
         height: 100%;
         flex: 1 1 auto;
-
     }
-
 
     [data-pwa-area="menu"],
     [data-pwa-area="panel"] {
         background-color: var(--color-panel-background);
-        
 
         z-index: 1500;
     }
@@ -340,21 +337,21 @@ html:not([data-pwa-route="/"]) {
             }
         }
 
-        textarea {
-            &.code {
-                min-height: 350px;
-                padding: 0.5em;
-                display: block;
-                overflow: scroll !important;
-                border: 1px inset;
-                height: 100%;
-                border: 1px solid #bbb;
-                white-space: pre;
-                color: #444;
-                resize: vertical;
-                //background-color: white;
-            }
-        }
+        // textarea {
+        //     &.code {
+        //         min-height: 350px;
+        //         padding: 0.5em;
+        //         display: block;
+        //         overflow: scroll !important;
+        //         border: 1px inset;
+        //         height: 100%;
+        //         border: 1px solid #bbb;
+        //         white-space: pre;
+        //         color: #444;
+        //         resize: vertical;
+        //         //background-color: white;
+        //     }
+        // }
 
         &:not(.nsp-xs):not(.nsp-xxs) {
             main {
@@ -847,7 +844,7 @@ ul.meta {
             }
 
             .btn-cnt {
-                text-align: center;
+                text-align: center; 
                 visibility: hidden;
 
                 .exf-btn {

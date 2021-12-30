@@ -37,7 +37,7 @@
 
             span.text {
                 display: inline-block;
-                
+
                 min-width: 100px;
 
                 small {
@@ -59,15 +59,25 @@
             }
 
             &.selected {
-                background-color: rgba(255, 0, 0, 0.15);
+                background-color: rgba(0, 0, 0, 0.1);
             }
 
             &.active {
-                background-color: rgba(255, 0, 0, 0.25);
+                background-color: rgba(0, 0, 0, 0.05);
                 transition: all 0.1s;
             }
         }
     }
+
+    &.simple {
+
+        .exf-ac-rs {
+            .exf-ac-itm {
+                grid-template-columns: var(--exf-ac-itm-grid, 1px 1fr 7rem);
+            }
+        }
+    }
+
 }
 
 html.theme-dark {
@@ -75,28 +85,30 @@ html.theme-dark {
         .exf-ac-rs {
             background-color: rgb(40, 40, 40);
 
-            box-shadow : 0 5px 10px 2px rgba(255, 255, 255, 0.1);
+            box-shadow: 0 5px 10px 2px rgba(0, 0, 0, 0.5);
             border-color: rgba(255, 2555, 255, 0.1);
 
             .exf-ac-itm {
                 &:hover {
                     background-color: rgba(255, 255, 255, 0.05);
                 }
+
                 span.text {
                     small {
                         color: rgba(255, 255, 255, 0.5);
                     }
                 }
+
                 span.category {
                     color: rgba(255, 255, 255, 0.5);
                 }
 
                 &.selected {
-                    background-color: rgba(255, 0, 0, 0.5);
+                    background-color: rgba(255, 255, 255, 0.5);
                 }
 
                 &.active {
-                    background-color: rgba(255, 0, 0, 0.65);
+                    background-color: rgba(255, 255, 255, 0.65);
                 }
             }
         }

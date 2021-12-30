@@ -29,6 +29,7 @@ class Router {
             if (this._findRoute(document.location.pathname)) {
                 href += document.location.pathname;
             }
+            href+=document.location.search;
             document.addEventListener("click", this._onNavClick.bind(this));
             window.onpopstate = this._triggerPopState.bind(this)
             defer(() => this._tryNav(href));
@@ -68,7 +69,7 @@ class Router {
 
             if (routePath && this.options.routes[routePath]) {
                 if (this.options.type === "history") {
-                    window.history.pushState({ path: routePath }, routePath, url.origin + url.pathname);
+                    window.history.pushState({ path: routePath }, routePath, url.origin + url.pathname + url.search);
                 }
                 this._triggerRouteChange(routePath, url);
                 return true;
@@ -93,7 +94,7 @@ class Router {
      * Makes the router navigate to the given route
      * @param {String} path 
      */
-    setRoute(path) {
+    setRoute(path) {        
         if (!this._findRoute(path))
             throw TypeError("Invalid route");
 

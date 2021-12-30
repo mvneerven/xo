@@ -2,7 +2,7 @@ import ExoMultiInputControl from './ExoMultiInputControl';
 
 class ExoCreditCardControl extends ExoMultiInputControl {
 
-    columns = "4em 4em 4em 1fr";
+    columns = "8rem 8rem 8rem 1fr";
 
     areas = `
         "name name number number"

@@ -44,11 +44,14 @@ class ExoTextControlAutoCompleteExtension {
         this.resultsDiv.addEventListener("mousedown", this.resultClick.bind(this))
 
         //this.container.appendChild(this.resultsDiv)
-        this.container.insertBefore(this.resultsDiv, this.container.querySelector(".exf-fld-details"))
+        //this.container.insertBefore(this.resultsDiv, this.container.querySelector(".exf-fld-details"))
+        this.container.querySelector(".exf-ctl").appendChild(this.resultsDiv)
 
         this.clear();
 
         this.container.classList.add("autocomplete")
+
+        
 
     }
 
@@ -363,12 +366,17 @@ class ExoTextControlAutoCompleteExtension {
                 })
             }
             else if (Array.isArray(this.items)) {
+                let simple=true;
                 this.items = this.items.map(i => {
                     if (typeof (i) === "string") {
                         return { text: i }
                     }
+                    simple=false;
                     return i;
                 })
+                if(simple){
+                    this.container.classList.add("simple")
+                }
                 resolve(max(map(this.items.filter(i => {
                     return this.isMatch(options, i)
                 }))));
@@ -381,6 +389,8 @@ class ExoTextControlAutoCompleteExtension {
             }
         });
     }
+
+    
 
     formatSearch(url, options) {
         if (url.indexOf("%search%")) {

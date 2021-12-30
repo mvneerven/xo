@@ -85,7 +85,7 @@
   &.on {
     input[type="range"] {
       &::-webkit-slider-thumb {
-        background-color: var(--color-button);
+        background-color: var(--color-accent);
       }
     }
   }

@@ -43,6 +43,10 @@
   display: block;
 }
 
+.pwa-omnibox .exf-txt-psx .exf-txt-psx-span {
+  top: 0.8rem !important;
+}
+
 html.no-user-select {
   -webkit-touch-callout: none;
   -webkit-user-select: none;
@@ -138,6 +142,10 @@ html:not(.pwa-signed-in) .if-signed-out {
 
 .pwa-env-debug .if-debug {
   display: block;
+}
+
+.pwa-omnibox .exf-txt-psx .exf-txt-psx-span {
+  top: 0.8rem !important;
 }
 
 html.no-user-select {

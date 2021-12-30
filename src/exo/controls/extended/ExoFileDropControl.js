@@ -38,7 +38,8 @@ class ExoFileDropControl extends ExoBaseControls.controls.input.type {
         this.previewDiv.style.height = `${this.height}px`;
 
         this.container.querySelector(".exf-ctl").appendChild(this.previewDiv);
-        this.container.classList.add("exf-filedrop");
+        this.container.classList.add("exf-filedrop", "exf-std-lbl");
+        
 
         this.bindEvents(
             data => {

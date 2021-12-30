@@ -55,7 +55,7 @@
             user-select: none; /* Prevent text selection */
             transition: all 0.2s;
             margin-right: 0.3rem;
-            color: var(--color-button)
+            color: var(--color-accent)
         }
 
         & li:not(.leaf):before {

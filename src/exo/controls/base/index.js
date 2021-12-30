@@ -62,7 +62,7 @@ class ExoBaseControls {
         custom: { hidden: true, base: "div", note: "A custom control that is used to render your own ExoFormControl classes" },
         button: { type: ExoButtonControl, note: "A button control", demo: { caption: "Click me" } },
         time: { base: "text", note: "A time input control (input[type=time]) wrapper" },
-        progressbar: { type: ExoProgressControl, alias: "progress", note: "A progress indicator control (progress) wrapper" },
+        progressbar: { type: ExoProgressControl, alias: "progress", note: "A progress indicator control (progress) wrapper", demo: {value: "72", max: "100"}},
         link: { type: ExoLinkControl, note: "HTML Anchor element", demo: {url: "http://blacknegative.com/", html: "Visit http://blacknegative.com/", external: true} },
         separator: {type: ExoSeparatorControl, note: "Separator" },
         group: {type: ExoGroupControl, note: "Group control" }

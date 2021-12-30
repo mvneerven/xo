@@ -1,11 +1,15 @@
 .exf-filedrop {
     //overflow: hidden;
-    label {
-        padding-left: 1rem;
-    }
+    // label {
+    //     padding-left: 1rem;
+    // }
 
     .file-preview {
         border: 5px dashed rgba(0, 0, 0, 0.2);
+
+        .theme-dark & {
+            border-color: rgba(255, 255, 255, 0.2);
+        }
     }
 
     &.drag-over {

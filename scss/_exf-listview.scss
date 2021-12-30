@@ -131,14 +131,15 @@
     top: -3rem;
     z-index: 3;
     .exf-dropdown-cnt {
-      margin: 1em 0.2em 1em 0;
+     // margin: 1em 0.2em 1em 0;
     }
     &.pull-left {
       left: 10px;
       right: unset;
     }
     .exf-btn {
-      padding: 0.3rem 0.6rem;
+      margin: 0;
+      padding: 0.3rem 0.6rem!important;
       height: 2rem;
       line-height: 1rem;
       overflow: hidden;
@@ -156,7 +157,7 @@
         box-shadow: none !important;
         input[type="search"] {
           width: 8rem !important;
-          margin-top: 1rem !important;
+          margin-top: 0!important;
           padding: 0.2rem 0.4rem !important;
           line-height: 1.5rem !important;
         }
@@ -417,10 +418,10 @@
     &:not(.exf-lv-check):not(.static) {
       .exf-lv-item {
         &:hover { 
-          border-left-color: var(--color-tile-hover);
+          border-left-color: var(--color-accent);
         }
         &.selected {
-          border-left-color: var(--color-tile-active);
+          border-left-color: var(--color-tile-active, var(--color-accent));
         }
       }
     }
@@ -432,7 +433,7 @@
     }
     .exf-listview-list {
       padding: 1rem 0;
-      grid-template-columns: var(--lv-tile-template);
+      grid-template-columns: var(--lv-tile-template); 
       grid-auto-rows: minmax(50px, auto);
       grid-gap: 2em;
       .exf-lv-headers,
@@ -503,7 +504,7 @@
       .exf-listview-list {
         .exf-lv-item {
           &:hover {
-            border-color: var(--color-tile-hover);
+            border-color: var(--color-accent);
             transform: scale(1.05);
             transition: all 0.1s;
             .action-button {
@@ -511,7 +512,7 @@
             }
           }
           &.selected {
-            border-color: var(--color-tile-active);
+            border-color: var(--color-tile-active, var(--color-accent));
           }
         }
       }

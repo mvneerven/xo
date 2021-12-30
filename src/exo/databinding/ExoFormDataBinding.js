@@ -155,7 +155,7 @@ class ExoFormDataBinding {
         }
     }
 
-    remove(path, index, count){
+    remove(path, index, count) {
         let array = xo.core.clone(Core.getObjectValue(this._model, path));
         array.splice(index, count);
         Core.setObjectValue(this._model, path, array)
@@ -248,12 +248,12 @@ class ExoFormDataBinding {
                 a.every((val, index) => val === b[index]);
         }
 
-        const proxify = (instanceName, object, changeHandler, subPath) => {
+        const proxify = (instanceName, object, changeHandler, subPath, stackCount) => {
             const pxy = new Proxy(object, {
                 get: function (target, key) {
                     //console.log("Proxy.get", "target:", target, "key:", key);
                     if (typeof target[key] === 'object' && target[key] !== null) {
-                        return proxify(instanceName, target[key], changeHandler, subPath + "/" + key)
+                        return proxify(instanceName, target[key], changeHandler, subPath + "/" + key, stackCount++)
                     } else {
                         return target[key];
                     }
@@ -263,30 +263,35 @@ class ExoFormDataBinding {
                     //console.log("Proxy.set", "target:", target, "key:", key, "value:", value);
                     var old = Core.clone(target[key]);
                     target[key] = value;
-                                        
-                    changeHandler(target, key, old, value, subPath);
-                    
+
+                    changeHandler(target, key, old, value, subPath, stackCount);
+
                     return true;
                 }
             });
             return pxy;
         }
 
-        const changeHandler = (target, key, oldValue, newValue, subPath) => {
+        const changeHandler = (target, key, oldValue, newValue, subPath, stackCount) => {
             if (equals(oldValue, newValue)) return
-
+            
             const isArray = Array.isArray(target);
 
             // set change path for binding
-            const path = !isArray && key 
-                ? `#/${instanceName}${subPath}/${key}` 
+            const path = !isArray && key
+                ? `#/${instanceName}${subPath}/${key}`
                 : `#/${instanceName}${subPath}`;
 
-            if(isArray){
+            if (path === "#/data/fields") {
+                console.log("DataModel -->>", target, key, oldValue, newValue, subPath, "stackCount:", stackCount)
+            }
+
+
+            if (isArray) {
                 console.debug(`DataModel: array '${path}' changed`);
             }
-            else{
-                console.debug(`DataModel: '${path}' changed from`, oldValue, 'to', newValue === "" ? '""': newValue);
+            else {
+                console.debug(`DataModel: '${path}' changed from`, oldValue, 'to', newValue === "" ? '""' : newValue);
             }
 
             if (!me.noProxy) {

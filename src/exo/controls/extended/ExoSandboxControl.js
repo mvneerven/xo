@@ -1,5 +1,6 @@
 import ExoEmbedControl from './ExoEmbedControl';
 import Core from '../../../pwa/Core';
+import xo from '../../../../js/xo';
 
 class ExoSandboxControl extends ExoEmbedControl {
     constructor() {
@@ -88,10 +89,9 @@ class ExoSandboxControl extends ExoEmbedControl {
         if (!form.schema)
             form.schema = {}
 
-        
-
         if(this.subform){
             const schema = await xo.form.read(form.schema);
+           
             if (schema.raw.model?.instance)
                 throw TypeError("Subform must use binding to parent model")
 
@@ -99,7 +99,7 @@ class ExoSandboxControl extends ExoEmbedControl {
             form.schema.model.instance = {
                 data: Core.clone(this.value)
             }
-        }
+        }      
 
         const html = /*html*/`<!DOCTYPE html>
         <html>
@@ -112,7 +112,10 @@ class ExoSandboxControl extends ExoEmbedControl {
             <script type="module">
                 
             window.xoMFId = "${this.htmlElement.id}";
-                window.xoPayload = {
+            window.xoPayload = {
+                parent: {
+                    theme: this.context.exo.schema.theme;
+                }
                 schema: ${JSON.stringify(form.schema || {})}
             } ; 
             
@@ -230,7 +233,12 @@ class ExoSandboxControl extends ExoEmbedControl {
                 })
             }
 
-            document.body.appendChild(await xo.form.run(payload.schema, {
+            const schema = await xo.core.acquireState(payload.schema);
+            if(payload.parent){
+                schema.theme = schema.theme || payload.parent.theme
+            }
+
+            document.body.appendChild(await xo.form.run(schema, {
                 on: {
                     schemaLoaded: e => {
                         e.detail.host.schema.data.navigation = "none"

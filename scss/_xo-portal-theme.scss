@@ -15,7 +15,7 @@ html.theme-light {
         --color-readonly: #fcfcfc;
         --color-text: #333;
         --color-highlighttext: #fff455;
-        --color-highlighttext-bg: #666;        
+        --color-highlighttext-bg: #666;
         --color-button: #31bf65;
         --color-tile-hover: #ccc;
         --color-tile-active: var(--color-button, #444);
@@ -43,7 +43,7 @@ html.theme-light {
 
         --color-heading: rgb(173, 58, 4);
         --color-highlight: rgb(195, 97, 51);
-        --placeholder-color: #ccc;
+        --color-placeholder: #ccc;
         --shadow-color: var(--color-primary-lighter);
         // --color-button: var(--color-primary);
         --color-button-text: black;
@@ -57,6 +57,41 @@ html.theme-light {
         --color-input-shade-focus: rgb(173, 58, 4);
     }
 }
+
+:root {
+    // light theme settings:
+    --color-accent: rgb(223, 108, 14);
+    --font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    --color-label: black;
+    --color-text: black;
+    --color-input-background: transparent;
+    --color-input-background-focus: #fff;
+    --color-placeholder: rgba(0, 0, 0, 0.3);
+    --color-input-border: #ccc;
+    --input-box-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.3);
+    --color-button-border: #56b4fe;
+    --color-button-background: transparent;
+    --color-button-background-hover: #fefefe;
+    --color-button-shadow: #56b4fe;
+    --color-button-text: #1b99fa;
+
+    &.theme-dark {
+        --color-accent: rgb(223, 108, 14);
+        --color-label: #ddd;
+        --color-input-background: transparent;
+        --color-input-background-focus: #565656;
+        --color-placeholder: rgba(255, 255, 255, 0.5);
+        --color-input-border: #777;
+        --color-text: white;
+        --input-box-shadow: 0 0 0.5rem rgba(255, 255, 255, 0.3);
+        --color-button-border: var(--color-accent);// #309df0;
+        --color-button-background: transparent;
+        --color-button-background-hover: #454545;
+        --color-button-text: #fff;
+        --color-highlight: rgb(223, 108, 14);
+    }
+}
+
 html.theme-dark {
     &:root {
         --scrollbar-bg: rgba(255, 255, 255, 0.15);
@@ -78,7 +113,7 @@ html.theme-dark {
         --color-highlight: rgb(173, 58, 4);
         --color-highlighttext: #fff455;
         --color-highlighttext-bg: #666;
-        --color-button-primary: #2eb4cc;
+        //--color-button-primary: #2eb4cc;
         --color-button-text: #ffffff;
         --color-label-active: #efefef;
 
@@ -95,7 +130,7 @@ html.theme-dark {
         --color-secondary: var(--color-primary-darker);
         --color-shade: #333;
         --color-heading: rgb(223, 108, 14);
-        --placeholder-color: #777;
+        --color-placeholder: #777;
         --shadow-color: var(--color-primary-darker);
         --color-button: var(--color-heading); // var(--color-primary-darkest);
         --color-tile-hover: rgba(223, 108, 14, 0.5);
@@ -108,14 +143,13 @@ html.theme-dark {
         --label-color: #aaa;
 
         --color-input-shade: #666;
-        --color-input-shade-focus: rgba(255, 255, 0, 0.87);
+        --color-input-shade-focus: var(--color-accent);
     }
 }
 
 header {
     background-color: #bbb;
 }
-
 
 body {
     background-color: #eee;
@@ -126,6 +160,18 @@ body {
         &:active,
         &:visited {
             color: var(--color-text);
+        }
+    }
+}
+
+html.theme-light {
+    [data-pwa-area="menu"] {
+        nav.main-menu {
+            ul {
+                li {
+                    border: 1px solid #ccc;
+                }
+            }
         }
     }
 }
@@ -142,7 +188,6 @@ html.theme-dark {
 
     [data-pwa-area="main"] {
         background-color: #1e1e1e;
-        
     }
 
     [data-pwa-area="panel"] {

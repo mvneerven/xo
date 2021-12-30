@@ -29,19 +29,14 @@
         $mf-active-color: #666;
         $mf-focus-color: #fff;
 
-        font-family: "Roboto", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-
-        .exf-label,
-        .exf-caption {
-            color: var(--color-label);
-        }
+        //font-family: "Roboto", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 
         .exf-cnt {
             border: 0;
 
             > legend {
-                font-size: 1.2rem;
-                font-weight: 600;
+                font-size: 2rem;
+                color: var(--color-label);
             }
         }
 
@@ -68,7 +63,6 @@
             }
 
             &:not(.exf-std-lbl) {
-                
                 > .exf-ctl {
                     > .exf-label {
                         position: absolute;
@@ -103,12 +97,13 @@
                     left: 50%;
                     bottom: -2px;
                     position: absolute;
-                    background: var(--color-input-shade, #aaa);
+                    background: var(--color-input-shade, var(--accent));
                     transition: left 0.5s ease, width 0.5s ease;
                     z-index: 2;
                 }
 
-                > [name] {
+                > [name],
+                progress {
                     width: 100%;
                 }
 
@@ -128,26 +123,25 @@
                     border: 0;
                 }
 
-                > input,
-                > label {
+                input,
+                label {
                     -webkit-transition: all 0.2s;
                     transition: all 0.2s;
                     font-weight: 400;
                 }
-                > input,
-                > textarea {
+                input,
+                textarea {
                     font-size: 1rem;
                     padding: 0.5em 0.5em 0.5em 0.5em;
                     border: 0;
                     outline: none;
                     border-radius: 0;
-                    appearance: none;
                     box-sizing: border-box;
                     background-color: transparent;
 
                     &::placeholder {
                         opacity: 0;
-                        color: var(--placeholder-color, #aaa);
+                        color: var(--color-placeholder, #aaa);
                     }
                 }
 
@@ -168,7 +162,7 @@
                     }
 
                     > .exf-label {
-                        color: var(--color-label-active);
+                        color: var(--color-label-active, var(--color-label));
                     }
                 }
             }
@@ -228,7 +222,15 @@
                             position: absolute;
                             top: -1.2em;
                             left: 0;
-                            font-size: 0.8rem;
+                            //font-size: 0.8rem;
+                        }
+                    }
+                }
+
+                &[data-field-type="textconfirm"] {
+                    .exf-ctl {
+                        .exf-btn-cnt {
+                            top: -1.7rem;
                         }
                     }
                 }
@@ -321,17 +323,228 @@
                     }
                 }
             }
+
+            &[data-field-type="group"] {
+                padding-top: 0rem;
+            }
+
+            &[data-field-type="range"] {
+                &.exf-focus {
+                    .exf-ctl {
+                        border: 1px solid var(--color-input-shade);
+                    }
+                }
+                input[type="range"] {
+                    appearance: none;
+                    height: 2rem;
+
+                    /* thumb */
+                    &::-webkit-slider-thumb {
+                        -webkit-appearance: none;
+
+                        height: 1rem;
+                        width: 1rem;
+                        border-radius: 99rem;
+                        background: var(--accent);
+                        cursor: grab;
+                        transition: all 0.2s ease-in-out;
+                    }
+
+                    &::-moz-range-thumb {
+                        -moz-appearance: none;
+                        height: 1rem;
+                        width: 1rem;
+                        border-radius: 99rem;
+                        background: var(--color-label);
+                        cursor: grab;
+                        transition: all 0.2s ease-in-out;
+                    }
+
+                    &::-ms-thumb {
+                        -ms-appearance: none;
+                        height: 1rem;
+                        width: 1rem;
+                        border-radius: 99rem;
+                        background: var(--color-label);
+                        cursor: grab;
+                        transition: all 0.2s ease-in-out;
+                    }
+
+                    &:hover,
+                    &:active {
+                        &::-webkit-slider-thumb {
+                            width: 2rem;
+                            height: 2rem;
+                            transition: all 0.2s ease-in-out;
+                        }
+
+                        &::-moz-range-thumb {
+                            width: 2rem;
+                            height: 2rem;
+                            transition: all 0.2s ease-in-out;
+                        }
+
+                        &::-ms-thumb {
+                            width: 2rem;
+                            height: 2rem;
+                            transition: all 0.2s ease-in-out;
+                        }
+                    }
+                }
+            }
+
+            &[data-field-type="progressbar"] {
+                progress {
+                    appearance: none;
+
+                    background-color: transparent;
+
+                    &[value]::-webkit-progress-bar {
+                        height: 0.3rem;
+                        background-color: transparent;
+                        border-radius: var(--radius);
+                    }
+
+                    &[value]::-webkit-progress-value {
+                        border-radius: var(--radius);
+                        background-color: var(--accent);
+                    }
+                }
+            }
+        }
+
+        .exf-filedrop {
+            > .exf-ctl {
+                > .file-preview {
+                    border: 1px solid transparent !important;
+                }
+            }
+        }
+
+        [data-field-type="radiobuttonlist"],
+        [data-field-type="checkboxlist"],
+        [data-field-type="checkbox"] {
+            .exf-ilc-cnt {
+                display: inline-block;
+                position: relative;
+                margin: 0 0 10px;
+                font-size: 16px;
+                line-height: 24px;
+
+                [type="checkbox"],
+                [type="radio"] {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 1.4rem;
+                    height: 1.4rem;
+                    opacity: 0;
+                    z-index: 0;
+                }
+
+                // Unchecked
+                > label.exf-caption {
+                    margin-left: 0.8rem;
+                    display: block;
+                    cursor: pointer;
+                }
+
+                // Checked
+                input:checked + label {
+                    &:before {
+                        border-color: var(--accent);
+                    }
+
+                    &:after {
+                        border-color: #fff;
+                    }
+                }
+            }
+        }
+
+        [data-field-type="checkboxlist"],
+        [data-field-type="checkbox"] {
+            .exf-ilc-cnt {
+                > label.exf-caption {
+                    &:before {
+                        content: "";
+                        position: absolute;
+                        //background-color: var(--accent);
+                        top: 0;
+                        left: 0;
+                        width: 1.4rem;
+                        height: 1.4rem;
+                        background-color: transparent;
+                        border: 2px solid var(--color-input-border);
+                        border-radius: 2px;
+                        z-index: 1;
+                        transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+                        transition-property: background-color, border-color;
+                    }
+
+                    &:after {
+                        content: "";
+                        position: absolute;
+                        top: 0.2rem;
+                        left: 0.4rem;
+                        width: 0.6rem;
+                        height: 0.8rem;
+                        border-bottom: 2px solid transparent;
+                        border-right: 2px solid transparent;
+                        transform: rotate(35deg);
+                        z-index: 2;
+                        transition: border-color 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+                    }
+                }
+
+                // Checked
+                input:checked + label {
+                    &:before {
+                        transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+                        background-color: var(--accent);
+                    }
+                }
+            }
+        }
+
+        [data-field-type="radiobuttonlist"] {
+            .exf-ilc-cnt {
+                > label.exf-caption {
+                    &:before {
+                        content: "";
+                        position: absolute;
+                        top: 0;
+                        left: 0;
+                        width: 1.4rem;
+                        height: 1.4rem;
+                        background-color: transparent;
+                        border: 2px solid var(--color-input-border);
+                        border-radius: 99rem;
+                        z-index: 1;
+                        transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+                        transition-property: background-color, border-color;
+                    }
+                }
+
+                // Checked
+                input:checked + label {
+                    &:before {
+                        transition: all 0.28s ease-in;
+                        border-width: 6px;
+                    }
+                }
+            }
         }
 
         .exf-input-group {
             > .exf-ctl {
                 .exf-caption-main {
                     color: var(--color-text);
-                    margin-bottom: 0.8rem;
+                    //margin-bottom: 0.8rem;
                 }
                 .exf-caption-description {
                     font-size: 0.8rem;
-                    color: var(--color-label);
+                    opacity: 0.7;
                 }
             }
 
@@ -363,20 +576,16 @@
                         > .exf-caption {
                             padding: 1rem;
 
-                            > .exf-caption-main {
-                                color: var(--color-text);
-                            }
-
                             > .exf-caption-description {
                                 font-size: 0.8rem;
-                                color: var(--color-label);
+
                                 text-overflow: ellipsis;
                                 white-space: nowrap;
                             }
                         }
 
                         > input:checked + .exf-caption {
-                            border: 2px solid var(--color-button);
+                            border: 2px solid var(--color-accent);
                             transform: scale(1, 1);
                             > label {
                                 color: white;
@@ -429,7 +638,7 @@
 
         .exf-btn {
             position: relative;
-            background: var(--color-button, #c46);
+            background: var(--color-button-background, #c46);
             border: 0;
             font-size: ($mf-font-size * 1.1);
             color: lighten($mf-focus-color, 10%);
@@ -486,6 +695,12 @@
 
             &:disabled {
                 background-color: var(--color-button-disabled);
+            }
+        }
+
+        .exf-txt-psx {
+            .exf-txt-psx-span {
+                top: 0.2rem;
             }
         }
     }
