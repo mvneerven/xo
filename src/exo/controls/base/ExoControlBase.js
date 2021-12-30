@@ -722,10 +722,6 @@ class ExoControlBase {
     _processProp(name, value) {
         // resolve bound state 
         let db = this.dataBinding;
-
-        // if(this.context.field.name == "child"  )
-        //     debugger;
-
         if (db) {
             try {
                 let result = db._processFieldProperty(this, name, value);
