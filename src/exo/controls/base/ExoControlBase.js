@@ -522,7 +522,7 @@ class ExoControlBase {
 
     async render() {
         this._registerActions()
-        
+
         this.setProperties();
         if (this.break) {
             debugger // LEAVE THIS HERE!
@@ -679,15 +679,10 @@ class ExoControlBase {
     setProperties() {
         let f = this.context.field;
 
-        //const modelSetup = [ExoFormDataBinding.origins.bind, ExoFormDataBinding.origins.schema].includes(this._origin);
-
-        if(f.bind){
+        if (f.bind) {
             f.name = f.name || ExoFormSchema.getPathFromBind(f.bind);
             this.name = f.name;
-            f.defaultValue = f.value;
-            //f.value = (modelSetup ? this.get(f.bind) : f.value) || "";
-            //data[f.name] = f.value
-            }
+        }
 
         for (var prop in f) {
 
@@ -720,7 +715,7 @@ class ExoControlBase {
             }
         }
 
-        
+
     }
 
     // dataBinding with '@bindingpath'

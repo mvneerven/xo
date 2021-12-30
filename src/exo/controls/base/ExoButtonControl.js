@@ -100,6 +100,7 @@ class ExoButtonControl extends ExoElementControl {
   }
 
   handleClick(e) {
+    debugger;
     e.preventDefault();
 
     const me = this;
