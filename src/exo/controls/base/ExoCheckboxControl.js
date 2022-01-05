@@ -14,7 +14,7 @@ class ExoCheckboxControl extends ExoCheckboxListControl {
             description: "Text to display on checkbox label"
         });
 
-        this.items = [{ name: this.text || context.field.caption, value: true, checked: context.field.value, tooltip: context.field.tooltip || "" }]
+        this.items = [{ name: this.text || context.field.caption || "Checkbox", value: true, checked: context.field.value, tooltip: context.field.tooltip || "" }]
     }
 
     async render() {
@@ -36,6 +36,10 @@ class ExoCheckboxControl extends ExoCheckboxListControl {
     set value(data) {
         if (this.rendered)
             this.htmlElement.querySelector("[name]").checked = data;
+    }
+
+    get baseType(){
+        return "bool"
     }
 }
 

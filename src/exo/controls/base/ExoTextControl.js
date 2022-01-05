@@ -69,6 +69,10 @@ class ExoTextControl extends ExoInputControl {
             });
     }
 
+    get baseType(){
+        return "text";
+    }
+
     async render() {
         var f = this.context.field;
 

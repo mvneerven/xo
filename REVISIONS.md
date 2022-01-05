@@ -375,7 +375,6 @@ Items in the _items_ array in list controls can now have a _disabled_ property.
 {
   name: "shoptype",
   type: "radiobuttonlist",
-  view: "tiles",
   required: true,
   caption: "Pricing Tiers",
   items: [
@@ -1358,37 +1357,34 @@ this.app.UI.areas.main.add(fr);
 
 We have completely rewritten XO theming, for easier use and extension.
 
-A new theme, ```thin``` has been added, and default form layout has been improved so that custom styling is a lot easier. 
+A new theme, `thin` has been added, and default form layout has been improved so that custom styling is a lot easier.
 
-### Available themes:
+See [Themes & Styling](./md/exo/theming.md)
 
-Material (default)
+# New in 1.6.3
 
-![Material Theme](https://xo-js.dev/assets/img/material.png "Material Theme")
+## Monaco Editor
 
-Fluent
+See [XO Studio](./md/exo/studio.md) now uses the Microsoft [Monaco Editor](https://microsoft.github.io/monaco-editor/) (yes, the one that powers #VSCode), complete with custom XO Form intellisense!
 
-![Fluent Theme](https://xo-js.dev/assets/img/fluent.png "Fluent Theme")
+![Monaco](https://xo-js.dev/assets/img/monaco-autocomplete.png "Monaco Editor with autocomplete")
 
-Thin (new)
-
-![Thin Theme](https://xo-js.dev/assets/img/thin.png "Thin Theme")
-
-### Using a theme:
+The underlying XO Form Control is `xoformeditor`, which is a wrapper around the new `monacoeditor`, which is more generic.
 
 ```js
-const schema = {
-  theme: "thin",
-  pages: [
-    {
-      fields: [
-        {
-          type: "text"
-        },
-      ],
-    },
-  ],
-};
+{
+  type: "monacoeditor",
+  caption: "Monacoeditor",
+  bind: "#/data/html",
+  language: "html",
+  class: "full-height",
+  options: {
+    minimap: {
+      enabled: false
+    }
+  }
+}
 ```
 
+> Note: See [Monaco documentation for IEditorConstructionOptions](https://microsoft.github.io/monaco-editor/api/interfaces/monaco.editor.IEditorConstructionOptions.html) for the ```options``` property.
 

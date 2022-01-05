@@ -8,6 +8,9 @@ class ExoFileUploadControl extends ExoInputControl{
         return this.container
     }
 
+    get baseType(){
+        return "file"
+    }
 }
 
 export default ExoFileUploadControl;

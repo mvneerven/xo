@@ -14,7 +14,7 @@ class HomeRoute extends xo.route {
                 title: "Dark Mode",
                 ui: {
                     type: "radiobuttonlist",
-                    view: "tiles",
+                    view: "inline",
                     items: ["Off","On" ]
                 }
             },
@@ -25,7 +25,7 @@ class HomeRoute extends xo.route {
                 description: "Switching on Advanced UI gives experienced XO form developers access to advanced features like datamodel state change monitoring, live CSS changes and JS hooks",
                 ui: {
                     type: "radiobuttonlist",
-                    view: "tiles",
+                    view: "inline",
                     items: ["Off" , "On" ]
                     
                 }

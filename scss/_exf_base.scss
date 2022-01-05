@@ -290,21 +290,21 @@
     }
 
     .exf-input-group {
-        &:not(.tiles) {
-            .exf-ilc-cnt {
-                display: grid;
-                grid-template-columns: 30px 1fr;
-                font-size: 0.9rem;
+        
+        .exf-ilc-cnt {
+            display: grid;
+            grid-template-columns: 30px 1fr;
+            font-size: 0.9rem;
 
-                .exf-caption {
-                    color: var(--color-text);
-                }
+            .exf-caption {
+                color: var(--color-text);
+            }
 
-                input[value="___new"] + label:not(:focus) {
-                    opacity: 0.6;
-                }
+            input[value="___new"] + label:not(:focus) {
+                opacity: 0.6;
             }
         }
+    
     }
 
     .exf-page {
@@ -630,6 +630,18 @@
             opacity: 0;
             pointer-events: none;
             transition: opacity 1s;
+        }
+    }
+}
+
+[data-field-type]{
+    &.full-height {
+        display: flex;
+        flex-flow: column;
+        height: 100%;
+
+        .exf-ctl {
+            flex: 1 1 auto;
         }
     }
 }

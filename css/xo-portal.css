@@ -1538,7 +1538,7 @@ html:not(.pwa-signed-in) .if-signed-out {
   border: 1px solid #d10f0f;
 }
 
-.exf-container .exf-input-group:not(.tiles) .exf-ilc-cnt {
+.exf-container .exf-input-group .exf-ilc-cnt {
   display: -ms-grid;
   display: grid;
   -ms-grid-columns: 30px 1fr;
@@ -1546,11 +1546,11 @@ html:not(.pwa-signed-in) .if-signed-out {
   font-size: 0.9rem;
 }
 
-.exf-container .exf-input-group:not(.tiles) .exf-ilc-cnt .exf-caption {
+.exf-container .exf-input-group .exf-ilc-cnt .exf-caption {
   color: var(--color-text);
 }
 
-.exf-container .exf-input-group:not(.tiles) .exf-ilc-cnt input[value="___new"] + label:not(:focus) {
+.exf-container .exf-input-group .exf-ilc-cnt input[value="___new"] + label:not(:focus) {
   opacity: 0.6;
 }
 
@@ -1862,6 +1862,23 @@ html:not(.pwa-signed-in) .if-signed-out {
   pointer-events: none;
   -webkit-transition: opacity 1s;
   transition: opacity 1s;
+}
+
+[data-field-type].full-height {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-flow: column;
+          flex-flow: column;
+  height: 100%;
+}
+
+[data-field-type].full-height .exf-ctl {
+  -webkit-box-flex: 1;
+      -ms-flex: 1 1 auto;
+          flex: 1 1 auto;
 }
 
 [data-field-type="image"] img {
@@ -4797,7 +4814,7 @@ html:not(.pwa-touch) .exf-lv-item:hover .exf-lv-chk {
   color: var(--color-label-active, var(--color-label));
 }
 
-.exf-container.exf-theme-material .exf-ctl-cnt.exf-focus.exf-input > .exf-ctl::before {
+.exf-container.exf-theme-material .exf-ctl-cnt.exf-focus.exf-base-text > .exf-ctl::before {
   width: 100%;
   background: #c46;
   background: var(--color-input-shade-focus, #ccc);
@@ -4806,40 +4823,40 @@ html:not(.pwa-touch) .exf-lv-item:hover .exf-lv-chk {
   transition: left 0.5s ease, width 0.5s ease;
 }
 
-.exf-container.exf-theme-material .exf-ctl-cnt.exf-input > .exf-ctl, .exf-container.exf-theme-material .exf-ctl-cnt[data-field-type="dropdown"] > .exf-ctl {
+.exf-container.exf-theme-material .exf-ctl-cnt.exf-base-text > .exf-ctl, .exf-container.exf-theme-material .exf-ctl-cnt[data-field-type="dropdown"] > .exf-ctl {
   border-bottom: 1px solid #666;
   border-bottom: 1px solid var(--color-input-shade, #ccc);
   padding-bottom: 0;
 }
 
-.exf-container.exf-theme-material .exf-ctl-cnt.exf-input:not(.exf-std-lbl).exf-filled > .exf-ctl input,
-.exf-container.exf-theme-material .exf-ctl-cnt.exf-input:not(.exf-std-lbl).exf-filled > .exf-ctl textarea, .exf-container.exf-theme-material .exf-ctl-cnt.exf-input:not(.exf-std-lbl).exf-focus > .exf-ctl input,
-.exf-container.exf-theme-material .exf-ctl-cnt.exf-input:not(.exf-std-lbl).exf-focus > .exf-ctl textarea, .exf-container.exf-theme-material .exf-ctl-cnt[data-field-type="dropdown"]:not(.exf-std-lbl).exf-filled > .exf-ctl input,
+.exf-container.exf-theme-material .exf-ctl-cnt.exf-base-text:not(.exf-std-lbl).exf-filled > .exf-ctl input,
+.exf-container.exf-theme-material .exf-ctl-cnt.exf-base-text:not(.exf-std-lbl).exf-filled > .exf-ctl textarea, .exf-container.exf-theme-material .exf-ctl-cnt.exf-base-text:not(.exf-std-lbl).exf-focus > .exf-ctl input,
+.exf-container.exf-theme-material .exf-ctl-cnt.exf-base-text:not(.exf-std-lbl).exf-focus > .exf-ctl textarea, .exf-container.exf-theme-material .exf-ctl-cnt[data-field-type="dropdown"]:not(.exf-std-lbl).exf-filled > .exf-ctl input,
 .exf-container.exf-theme-material .exf-ctl-cnt[data-field-type="dropdown"]:not(.exf-std-lbl).exf-filled > .exf-ctl textarea, .exf-container.exf-theme-material .exf-ctl-cnt[data-field-type="dropdown"]:not(.exf-std-lbl).exf-focus > .exf-ctl input,
 .exf-container.exf-theme-material .exf-ctl-cnt[data-field-type="dropdown"]:not(.exf-std-lbl).exf-focus > .exf-ctl textarea {
   color: initial;
 }
 
-.exf-container.exf-theme-material .exf-ctl-cnt.exf-input:not(.exf-std-lbl).exf-filled > .exf-ctl > .exf-label, .exf-container.exf-theme-material .exf-ctl-cnt.exf-input:not(.exf-std-lbl).exf-focus > .exf-ctl > .exf-label, .exf-container.exf-theme-material .exf-ctl-cnt[data-field-type="dropdown"]:not(.exf-std-lbl).exf-filled > .exf-ctl > .exf-label, .exf-container.exf-theme-material .exf-ctl-cnt[data-field-type="dropdown"]:not(.exf-std-lbl).exf-focus > .exf-ctl > .exf-label {
+.exf-container.exf-theme-material .exf-ctl-cnt.exf-base-text:not(.exf-std-lbl).exf-filled > .exf-ctl > .exf-label, .exf-container.exf-theme-material .exf-ctl-cnt.exf-base-text:not(.exf-std-lbl).exf-focus > .exf-ctl > .exf-label, .exf-container.exf-theme-material .exf-ctl-cnt[data-field-type="dropdown"]:not(.exf-std-lbl).exf-filled > .exf-ctl > .exf-label, .exf-container.exf-theme-material .exf-ctl-cnt[data-field-type="dropdown"]:not(.exf-std-lbl).exf-focus > .exf-ctl > .exf-label {
   top: -1.2em;
   left: 0;
   font-size: 0.8rem;
 }
 
-.exf-container.exf-theme-material .exf-ctl-cnt.exf-input.exf-rng-output output, .exf-container.exf-theme-material .exf-ctl-cnt[data-field-type="dropdown"].exf-rng-output output {
+.exf-container.exf-theme-material .exf-ctl-cnt.exf-base-text.exf-rng-output output, .exf-container.exf-theme-material .exf-ctl-cnt[data-field-type="dropdown"].exf-rng-output output {
   position: absolute;
   top: -1.2em;
   font-size: 0.8rem;
   right: 1rem;
 }
 
-.exf-container.exf-theme-material .exf-ctl-cnt.exf-input.exf-std-lbl > .exf-ctl > .exf-label, .exf-container.exf-theme-material .exf-ctl-cnt[data-field-type="dropdown"].exf-std-lbl > .exf-ctl > .exf-label {
+.exf-container.exf-theme-material .exf-ctl-cnt.exf-base-text.exf-std-lbl > .exf-ctl > .exf-label, .exf-container.exf-theme-material .exf-ctl-cnt[data-field-type="dropdown"].exf-std-lbl > .exf-ctl > .exf-label {
   position: absolute;
   top: -1.2em;
   left: 0;
 }
 
-.exf-container.exf-theme-material .exf-ctl-cnt.exf-input[data-field-type="textconfirm"] .exf-ctl .exf-btn-cnt, .exf-container.exf-theme-material .exf-ctl-cnt[data-field-type="dropdown"][data-field-type="textconfirm"] .exf-ctl .exf-btn-cnt {
+.exf-container.exf-theme-material .exf-ctl-cnt.exf-base-text[data-field-type="textconfirm"] .exf-ctl .exf-btn-cnt, .exf-container.exf-theme-material .exf-ctl-cnt[data-field-type="dropdown"][data-field-type="textconfirm"] .exf-ctl .exf-btn-cnt {
   top: -1.7rem;
 }
 
@@ -5120,81 +5137,6 @@ html:not(.pwa-touch) .exf-lv-item:hover .exf-lv-chk {
 .exf-container.exf-theme-material .exf-input-group > .exf-ctl .exf-caption-description {
   font-size: 0.8rem;
   opacity: 0.7;
-}
-
-.exf-container.exf-theme-material .exf-input-group.tiles > .exf-ctl > div {
-  display: -ms-grid;
-  display: grid;
-  grid-gap: 2rem;
-  -ms-grid-columns: 1fr 1fr 1fr;
-      grid-template-columns: 1fr 1fr 1fr;
-}
-
-.exf-container.exf-theme-material .exf-input-group.tiles > .exf-ctl > div .exf-ilc-cnt {
-  opacity: 0.8;
-  -webkit-transition: all 0.2s;
-  transition: all 0.2s;
-  position: relative;
-}
-
-.exf-container.exf-theme-material .exf-input-group.tiles > .exf-ctl > div .exf-ilc-cnt:hover {
-  opacity: 1;
-  -webkit-transition: all 0.2s;
-  transition: all 0.2s;
-}
-
-.exf-container.exf-theme-material .exf-input-group.tiles > .exf-ctl > div .exf-ilc-cnt > input {
-  opacity: 0;
-  position: absolute;
-  top: 0;
-  left: 0;
-  margin: 0;
-  cursor: pointer;
-}
-
-.exf-container.exf-theme-material .exf-input-group.tiles > .exf-ctl > div .exf-ilc-cnt > .exf-caption {
-  padding: 1rem;
-}
-
-.exf-container.exf-theme-material .exf-input-group.tiles > .exf-ctl > div .exf-ilc-cnt > .exf-caption > .exf-caption-description {
-  font-size: 0.8rem;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.exf-container.exf-theme-material .exf-input-group.tiles > .exf-ctl > div .exf-ilc-cnt > input:checked + .exf-caption {
-  border: 2px solid var(--color-accent);
-  -webkit-transform: scale(1, 1);
-          transform: scale(1, 1);
-}
-
-.exf-container.exf-theme-material .exf-input-group.tiles > .exf-ctl > div .exf-ilc-cnt > input:checked + .exf-caption > label {
-  color: white;
-  background-color: #fff;
-}
-
-.exf-container.exf-theme-material .exf-input-group.tiles.big > .exf-ctl > div .exf-ilc-cnt > .exf-caption > .exf-caption-description {
-  white-space: normal;
-}
-
-.exf-container.exf-theme-material .exf-input-group.tiles.small > .exf-ctl > div {
-  -ms-flex-wrap: wrap;
-      flex-wrap: wrap;
-  display: -ms-grid;
-  display: grid;
-  -ms-grid-columns: minmax(200px, 1fr) [auto-fill];
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  grid-auto-rows: minmax(70px, auto);
-  grid-gap: 2em;
-}
-
-.exf-container.exf-theme-material .exf-input-group.tiles.small > .exf-ctl > div .exf-ilc-cnt > .exf-caption {
-  padding: 0.2rem;
-  width: auto;
-}
-
-.exf-container.exf-theme-material .exf-input-group.tiles.small > .exf-ctl > div .exf-ilc-cnt > .exf-caption > .exf-caption-description {
-  display: none;
 }
 
 .exf-container.exf-theme-material .exf-btn-cnt {

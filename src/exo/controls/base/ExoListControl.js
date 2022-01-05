@@ -17,7 +17,7 @@ class ExoListControl extends ExoElementControl {
             {
                 name: "view",
                 type: String,
-                description: "Set the view mode (list, tiles)"
+                description: "Set the view mode (inline, block)"
             },
             {
                 name: "items",
@@ -37,6 +37,10 @@ class ExoListControl extends ExoElementControl {
                 index++;
             });
         }
+    }
+
+    get baseType(){
+        return "multi";
     }
 
     addListItem(f, i, tpl, container, index) {
@@ -110,12 +114,9 @@ class ExoListControl extends ExoElementControl {
         let elm = await super.render();
 
         switch (this.view) {
-            case "tiles":
-                elm.classList.add("tiles");
 
-                break;
-            case "list":
-                elm.classList.add("list");
+            case "inline":
+                elm.classList.add("horizontal");
                 break;
             default:
                 elm.classList.add("block");

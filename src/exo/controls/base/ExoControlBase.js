@@ -37,7 +37,8 @@ class ExoControlBase {
             { name: "name", type: String, required: true, group: "General", description: "Name of the control. Required and must be unique" },
             { name: "caption", type: String, group: "UI", description: "Caption/label to display" },
             { name: "hidden", type: Boolean, group: "UI", default: false, description: "Determines control visibility" },
-            { name: "disabled", type: Boolean, group: "UI", description: "Determines whether the control can be interacted with by the user" },
+            { name: "disabled", type: Boolean, group: "UI", description: "Specifies whether the control can be interacted with by the user" },
+            { name: "required", type: Boolean, group: "Data", description: "Specifies whether the field is required" },
             { name: "tooltip", type: String, group: "UI", description: "Tooltip to show over the element" },
             { name: "info", type: String, group: "UI", description: "Informational text to show to help the user" },
             { name: "placeholder", type: String, group: "UI", description: "Placeholder text to show when the field is empty" },
@@ -46,7 +47,7 @@ class ExoControlBase {
             { name: "invalidmessage", type: String, group: "Data", description: "Message text to show when the control doesn't validate" },
             { name: "value", type: String, group: "Data", description: "Value of the control" },
             { name: "remark", type: String, description: "Generic comment/remark - use like HTML or JavaScript comments" },
-            { name: "break", type: Object, description: "Set breakpoint" },
+            { name: "break", type: Boolean, description: "Set breakpoint" },
             { name: "css", type: Object },
             { name: "actions", type: Array, description: "List of actions to (conditionally) perform" }
 
@@ -328,7 +329,6 @@ class ExoControlBase {
                 context: this.context
             })
 
-            //newElm.classList.add("exf-le-active");
             let exCntNew = newElm.querySelector("[data-exf]");
             let ctl = exCntNew.data.field._control;
             let fld = this.context.field;
@@ -490,10 +490,7 @@ class ExoControlBase {
         if (!this.isPage)
             ar.push("exf-ctl-cnt")
 
-        ar.push("exf-base-" + this._getBaseType())
-
-        if (this.htmlElement.tagName === "INPUT" || this.htmlElement.tagName === "TEXTAREA")
-            ar.push("exf-input");
+        ar.push("exf-base-" + this.baseType)
 
         if (this.context.field.readOnly)
             ar.push("exf-readonly");
@@ -504,19 +501,7 @@ class ExoControlBase {
         return ar;
     }
 
-    _getBaseType() {
-
-        let returns = this.context.field.returnValueType ? this.context.field.returnValueType.name : "String";
-
-        if (this.isTextInput)
-            return "text";
-
-        if (returns === "Boolean")
-            return "bool";
-
-        if (returns === "Array")
-            return "multi";
-
+    get baseType() {
         return "default";
     }
 
@@ -536,7 +521,8 @@ class ExoControlBase {
             this._htmlElement.setAttribute(a, this.attributes[a]);
         }
         for (var a in this.dataProps) {
-            this._htmlElement.setAttribute("data-" + a, this.dataProps[a]);
+            if (this.dataProps[a])
+                this._htmlElement.setAttribute("data-" + a, this.dataProps[a]);
         }
 
         let obj = this._scope();
@@ -544,9 +530,12 @@ class ExoControlBase {
             this._getContainerTemplate(obj)
         );
 
-        if (this.name && DOM.isPropertyAttr(this.htmlElement, "name"))
+        // make sure all (form) elements that require 'name' have one.
+        if (DOM.isPropertyAttr(this.htmlElement, "name")) {
+            if (!this.name)
+                this.name = obj.id; 
             this.htmlElement.setAttribute("name", this.name);
-
+        }
 
         if (!obj.caption || obj.caption.length === 0) {
             this.container.classList.add("exf-lbl-empty");
@@ -588,6 +577,9 @@ class ExoControlBase {
         if (this.placeholder) {
             this.htmlElement.setAttribute("placeholder", this.placeholder)
         }
+
+        if (this.caption)
+            this.htmlElement.setAttribute("aria-label", this.caption)
 
         this._rendered = true;
 
@@ -669,12 +661,9 @@ class ExoControlBase {
         return {
             ...f,
             caption: f.caption || "",
-            //caption: this._processProp("caption", f.caption) || "",
-            tooltip: f.tooltip || "",
-            id: obj.id + "-container"
+            tooltip: f.tooltip || ""
         }
     }
-
 
     setProperties() {
         let f = this.context.field;

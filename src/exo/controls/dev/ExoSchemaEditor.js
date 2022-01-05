@@ -1,36 +1,62 @@
 import DOM from '../../../pwa/DOM';
 import Core from '../../../pwa/Core';
-import ExoAceCodeEditor from './ExoAceCodeEditor';
+import ExoMonacoCodeEditor from './ExoMonacoEditor';
+import xo from '../../../../js/xo';
 
-class ExoSchemaEditor extends ExoAceCodeEditor {
+class ExoSchemaEditor extends ExoMonacoCodeEditor {
 
     interval = null;
     focused = 0;
     throttleInterval = 400;
-    events = new Core.Events(this);
+
+    constructor() {
+        super(...arguments);
+
+        this.on("init", e => {
+            /* 
+                Prevent default JavaScript autocompletion
+                see https://microsoft.github.io/monaco-editor/playground.html#extending-language-services-configure-javascript-defaults
+                and https://stackoverflow.com/questions/41581570/how-to-remove-autocompletions-for-monaco-editor-using-javascript
+
+                It does the trick, but...
+                    TODO: Make sure this error disappears:
+                     >> Uncaught (in promise) Error: Could not find source file: 'inmemory://model/1'.
+            */
+             let options = monaco.languages.typescript.javascriptDefaults.getCompilerOptions();
+             options.allowNonTsExtensions = false; 
+            monaco.languages.typescript.javascriptDefaults.setCompilerOptions(options);
+
+            monaco.languages.typescript.javascriptDefaults.setDiagnosticsOptions({
+                noSemanticValidation: true,
+                noSyntaxValidation: false
+            })
+        })
+    }
 
     async render() {
-        await super.render();
         const me = this;
+        await super.render();
+
         this.modeSwitch = DOM.parseHTML('<div title="Switch js/json" style="cursor: pointer; position:absolute; top: 10px; right: 30px">' + this.mode + '</div>');
         this.modeSwitch.addEventListener("click", e => {
-            this.mode = this.mode === "javascript" ? "json" : "javascript";
 
-            let contentType = this.checkAceMode(this.value);
+            me.mode = me.mode === "javascript" ? "json" : "javascript";
+            me.language = me.mode;
 
-            if (this.mode !== contentType) {
-                this.convertValue(this.mode);
+            let contentType = me.checkMode(me.value);
+
+            if (me.mode !== contentType) {
+                me.convertValue(me.mode);
             }
-            this.modeSwitch.innerText = this.mode;
+            me.modeSwitch.innerText = me.mode;
         });
 
         this.container.appendChild(this.modeSwitch)
 
-        this.ace.on("focus", e => {
-            this.focused++;
-        });
+        this.on("ready", this.initAutocomplete.bind(this));
 
-        this.ace.on("change", e => {
+        this.on("change", e => {
+
             this.hasChanged = true;
             clearInterval(this.interval);
             this.interval = setInterval(() => {
@@ -38,11 +64,13 @@ class ExoSchemaEditor extends ExoAceCodeEditor {
                     me.events.trigger("SchemaReady");
                     me.hasChanged = false;
 
-                    let data = me.ace.getValue();
+                    let data = me.value;
                     if (data.length > 10) {
-                        let contentType = me.checkAceMode(data);
-                        if (contentType !== this.mode)
-                            me.mode = contentType;
+                        let contentType = me.checkMode(data);
+                        if (contentType !== this.mode) {
+                            me.language = contentType
+                        }
+                        me.mode = contentType;
                     }
                 }
             }, this.throttleInterval);
@@ -55,7 +83,11 @@ class ExoSchemaEditor extends ExoAceCodeEditor {
         try {
             let sch = this.context.exo.context.createSchema();
             sch.parse(value);
-            this.mode = sch.type;
+            me.mode = sch.type;
+
+            if (me.modeSwitch)
+                me.modeSwitch.innerText = me.mode;
+
             super.value = sch.toString(this.mode);
 
             if (me.events)
@@ -71,18 +103,19 @@ class ExoSchemaEditor extends ExoAceCodeEditor {
         return super.value;
     }
 
-    set mode(value) {
-        super.mode = value;
+    set language(name) {
+        this.mode = name;
+        monaco.editor.setModelLanguage(this.editor.getModel(), "jaja");
 
         if (this.modeSwitch)
-            this.modeSwitch.innerText = value;
+            this.modeSwitch.innerText = name;
     }
 
-    get mode() {
-        return super.mode;
+    get language() {
+        return this.mode;
     }
 
-    checkAceMode(value) {
+    checkMode(value) {
         if (typeof (value) == "string") {
             if (value.length > 6 && value.startsWith("const ")) {
                 return "javascript"
@@ -103,6 +136,209 @@ class ExoSchemaEditor extends ExoAceCodeEditor {
     convertValue(targetMode) {
         const xs = xo.form.factory.Schema.read(this.value)
         this.value = xs.toString(targetMode);
+    }
+
+
+    async initAutocomplete() {
+        if (ExoSchemaEditor.autocompleteReady)
+            return;
+
+        const me = this;
+        const acProvider = {
+            triggerCharacters: ['"'],
+            provideCompletionItems: async (model, position) => {
+                let context = me.getSuggestionContext(model, position);
+                return {
+                    suggestions: await me.getSuggestions(context)
+                }
+            }
+        }
+
+        monaco.languages.registerCompletionItemProvider('javascript', acProvider);
+        monaco.languages.registerCompletionItemProvider('json', acProvider);
+
+        ExoSchemaEditor.autocompleteReady = true;
+    }
+
+    getSuggestionContext(model, position) {
+
+        let last_chars = model.getValueInRange({ startLineNumber: 1, startColumn: 0, endLineNumber: position.lineNumber, endColumn: position.column });
+        //let path = this.getObjectPath(last_chars)
+        let text = last_chars.replace(/\s\s+/g, ' ').trim();
+
+        let lastObjStart = last_chars.lastIndexOf("{");
+        last_chars = lastObjStart !== -1 ? last_chars.substring(lastObjStart) : last_chars;
+        let type;
+        let typeDef = last_chars.match(/\s*type\s*:\s*"(\S*)"\s*/gi);
+        if (typeDef) {
+
+            const f = new Function("function s(){return c={" + typeDef + "}};return s()");
+            type = f().type;
+        }
+
+        let words = last_chars.replace("\t", "").replace('"', '').split(" ");
+        let active_typing = words[words.length - 1]; // What the user is currently typing (everything after the last space)
+        let prev = words[words.length - 2]
+
+        const context = {
+            type: type,
+            text: text,
+            path: this.getPath(text),
+            active: active_typing,
+            before: prev
+        }
+
+        return context;
+    }
+
+    getPath(text) {
+        text = text.replace(/\s\s+/g, ' ').trim();
+        const ar = [];
+        const up = (text) => {
+            let key;
+            let i = text.lastIndexOf('{');
+            let j = text.lastIndexOf('[');
+            let k = text.lastIndexOf(':');
+            let l = text.lastIndexOf(',');
+            let m = text.lastIndexOf('}');
+            let n = text.lastIndexOf(']');
+
+            if (l > -1) {
+                l = Math.max(i, l);
+                key = text.substring(l + 2, k).trim();
+            }
+            if (l !== -1) {
+
+                if (key && key.indexOf(" ")===-1) {
+                    //if(key.indexOf(" ")===-1)
+                        ar.push(key)
+                }
+                else {
+                    if (i > m) {
+                        let fType = /\s*type\s*:\s*"(\S*)"\s*/gi.exec(text.substring(i));
+                        if (fType) {
+                            ar.push("field:" + fType[1]);
+                        }
+                    }
+                }
+
+                text = text.substring(0, Math.min(i, j))
+                up(text)
+            }
+        }
+        up(text)
+        return ar.reverse();
+    }
+
+    async getSuggestions(options = {}) {
+        const ar = [];
+        console.log("PATH", options.path);
+
+        if (options.path.pop() === "fields") {
+
+            Object.entries(this.context.exo.context.library).forEach(i => {
+                let key = i[0], data = i[1];
+                ar.push({
+                    label: key,
+                    kind: monaco.languages.CompletionItemKind.Snippet,
+                    insertText: this.createFieldSnippet(key, data),
+                    insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+                    documentation: data.description || key
+                })
+            })
+
+            return ar;
+        }
+
+        else if (options.type) {
+            const div = await xo.form.run({
+                type: options.type
+            });
+            let control = xo.form.factory.getFieldFromElement(div)._control;
+            Object.entries(control.jsonSchema.properties).forEach(i => {
+                let propEnclosure = '""';
+                switch (i[1].type) {
+                    case "string":
+                        propEnclosure = '"${1:string}"';
+                        break;
+                    case "array":
+                        propEnclosure = "[${1:}]";
+                        break;
+                    case "boolean":
+                        propEnclosure = "${1:true}";
+                        break;
+                    case "object":
+                    case "number":
+                        propEnclosure = "${1:}";
+                        break;
+                }
+                ar.push({
+                    label: i[0],
+                    kind: monaco.languages.CompletionItemKind.Property,
+                    insertText: `${i[0]}: ${propEnclosure}`,
+                    insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+                    documentation: i[1].description
+                })
+            })
+
+            return ar;
+        }
+
+        if (options.active === "" || options.active === '"') {
+            switch (options.before) {
+                case "type:":
+                    Object.keys(this.context.exo.context.library).forEach(i => {
+                        ar.push({
+                            label: i,
+                            kind: monaco.languages.CompletionItemKind.Snippet,
+                            insertText: i,
+                            insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+                            documentation: i
+                        })
+                    })
+                    break;
+                case "theme:":
+                    Object.keys(xo.form.factory.meta.theme.type.types).forEach(i => {
+                        ar.push({
+                            label: i,
+                            insertText: i,
+                        })
+                    });
+                    break;
+                case "validation:":
+                    Object.keys(xo.form.factory.meta.validation.type.types).forEach(i => {
+                        ar.push({
+                            label: i,
+                            insertText: i,
+                        })
+                    });
+                    break;
+                case "navigation:":
+                    Object.keys(xo.form.factory.meta.navigation.type.types).forEach(i => {
+                        ar.push({
+                            label: i,
+                            insertText: i,
+                        })
+                    });
+                    break;
+                default:
+                    console.log(options)
+            }
+        }
+        return ar;
+    }
+
+
+    createFieldSnippet(key, data) {
+        let f = JSON.stringify;
+        if(this.mode === "javascript")
+            f = Core.stringifyJs;
+
+        return f({
+            type: key,
+            caption: xo.core.toWords(key),
+            ...data.demo || {}
+        }, null, 2)
     }
 
 

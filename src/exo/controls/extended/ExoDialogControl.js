@@ -18,7 +18,7 @@ class ExoDialogControl extends ExoBaseControls.controls.div.type {
 
     constructor(context) {
         super(context);
-        
+
         this.events = new xo.core.Events(this);
 
         this.acceptProperties("title", "cancelText", "body", "confirmText",
@@ -41,7 +41,7 @@ class ExoDialogControl extends ExoBaseControls.controls.div.type {
             }
 
         );
-        this.id = `dlg_${Core.guid().split('-').pop()}`;
+        this.id = Core.guid({ compact: true, prefix: "dlg" });
         this.useContainer = false;
     }
 
@@ -98,16 +98,16 @@ class ExoDialogControl extends ExoBaseControls.controls.div.type {
                 body = await xo.form.run(this.body);
             }
         }
-        else if(Core.isUrl(this.body)){
+        else if (Core.isUrl(this.body)) {
             body = await xo.form.run(this.body);
-            this.body="";
+            this.body = "";
         }
         this.dlg = DOM.parseHTML(this.getTemplate());
 
         if (body)
             this.dialogBody.appendChild(body);
 
-        if(!this.cancelVisible){
+        if (!this.cancelVisible) {
             this.dlg.querySelector(".exf-dlg-f .dismiss")?.remove();
         }
         document.body.appendChild(this.dlg);
@@ -173,7 +173,7 @@ class ExoDialogControl extends ExoBaseControls.controls.div.type {
     hide(button, e) {
         this.value = button;
 
-        var evt = new Event("change", {bubbles: true, cancelable: true})
+        var evt = new Event("change", { bubbles: true, cancelable: true })
         this.htmlElement.dispatchEvent(evt);
 
         if (typeof (this.click) === "function") {

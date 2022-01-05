@@ -15,6 +15,10 @@ class ExoDateControl extends ExoInputControl {
     get value() {
         return super.value;
     }
+
+    get baseType(){
+        return "text";
+    }
 }
 
 export default ExoDateControl;

@@ -7,7 +7,7 @@ const TYPES = {
 
 class SimpleCache {
     constructor(dataAccessor, durationMs, type) {
-        this.id = 'xo_sc_' + Core.guid().split('-').pop()
+        this.id = Core.guid({ compact: true, prefix: "sci" })
         this.dataAccessor = dataAccessor;
         this.duration = durationMs;
         this.type = type || TYPES.MEMORY;

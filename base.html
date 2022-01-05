@@ -3,19 +3,16 @@
 
 <head>
     <title>Starting with XO Forms</title>
-    <style>
-        @import url(https://xo-js.dev/v1.5/xo.css);
-    </style>
-</head>
+    <!-- <style>
+        @import url(https://xo-js.dev/v1.6/xo.css);
+    </style> -->
 
-<body>
-    <h1>Starting with XO Forms</h1>
-    <section id="form"></section>
-    <!-- <script type="module" src="https://xo-js.dev/v1.5/xo.min.js"></script> -->
-    <script type="module" src="/dist/xo.js"></script>
-    <script type="module">
-        
+    <link rel="stylesheet" href="/css/xo.css" />
+    <script type="module" src="/dist/xo.js" defer></script>
+    <script type="module" defer>
+
         const schema = {
+            theme: "material",
             model: {
                 instance: {
                     data: {
@@ -29,6 +26,16 @@
                         type: "text",
                         bind: "#/data/name",
                         caption: "Enter your name"
+                    },
+                    {
+                        type: "multiline",
+                        bind: "#/data/msg",
+                        caption: "Enter your message"
+                    },
+                    {
+                        type: "filedrop",
+                        bind: "#/data/msg",
+                        caption: "Files"
                     }
                 ]
             }]
@@ -38,7 +45,7 @@
                 post: e => {
                     alert(JSON.stringify(e.detail.postData, null, 2))
                 },
-                interactive: e=>{
+                interactive: e => {
                     let exo = e.detail.host;
                     // new xo.form.factory.LiveEditor(exo, {
                     //     auto: true
@@ -50,6 +57,13 @@
         });
         document.getElementById("form").appendChild(frm);
     </script>
+</head>
+
+<body>
+    <h1>Starting with XO Forms</h1>
+    <section id="form"></section>
+    <!-- <script type="module" src="https://xo-js.dev/v1.5/xo.min.js"></script> -->
+
 </body>
 
 </html>

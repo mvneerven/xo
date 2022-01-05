@@ -27,33 +27,33 @@ class StudioRoute extends xo.route {
         this.renderer = new ExoSchemaRenderer(this);
 
         this.renderer
-        .on("created", e => {
-            this.applyJSLogic(e.detail.exo);
-        })
-        .on("ready", e => { // form rendered using current schema tab contents
-            this.rendered(e.detail);
-        })
-        .on("schemaloaded", e => {
-            if (this.renderer.model.fieldCount === 0) {
-                this.showFormNotRendered({
-                    title: "Nothing to render",
-                    body: "Empty schema/no fields rendered",
-                    icon: "ti-na"
-                });
+            .on("created", e => {
+                this.applyJSLogic(e.detail.exo);
+            })
+            .on("ready", e => { // form rendered using current schema tab contents
+                this.rendered(e.detail);
+            })
+            .on("schemaloaded", e => {
+                if (this.renderer.model.fieldCount === 0) {
+                    this.showFormNotRendered({
+                        title: "Nothing to render",
+                        body: "Empty schema/no fields rendered",
+                        icon: "ti-na"
+                    });
 
 
-            }
-        })
-        .on("error", e => {
-            this.setError(e)
-            //this.app.UI.notifications.add("Error " + e.detail.error.toString(), { type: "error" })
-        })
-        .on("dataChange", e => {
-            this.sidePanel.tabStrip.tabs.dataTab.select()
-            this.formDataViewer.value = JSON.stringify(
-                this.renderer.data
-                , null, 2);
-        });
+                }
+            })
+            .on("error", e => {
+                this.setError(e)
+                //this.app.UI.notifications.add("Error " + e.detail.error.toString(), { type: "error" })
+            })
+            .on("dataChange", e => {
+                this.sidePanel.tabStrip.tabs.dataTab.select()
+                this.formDataViewer.value = JSON.stringify(
+                    this.renderer.data
+                    , null, 2);
+            });
 
         this.renderer.model.on("change", e => {
 
@@ -65,13 +65,13 @@ class StudioRoute extends xo.route {
         })
 
         window.onunhandledrejection = function (error) {
-            
+
             studioRoute.showFormNotRendered({
                 title: "Nothing to render",
                 body: error?.reason || "Empty schema/no fields rendered",
                 icon: "ti-na"
             });
-          };
+        };
     }
 
 
@@ -167,10 +167,10 @@ class StudioRoute extends xo.route {
     async rendered(o) {
         let x = o.exo;
 
-        if(!o.form){
+        if (!o.form) {
             throw TypeError("Form not rendered")
         }
-            
+
 
         if (this.sidePanel.tabStrip.tabs.css)
             this.sidePanel.tabStrip.tabs.css.enabled = true;
@@ -304,7 +304,7 @@ class StudioRoute extends xo.route {
 
     async renderCodeEditor(options) {
         let elm = await this.exoContext.renderSingleControl({
-            type: "aceeditor",
+            type: "monacoeditor",
             class: "full-height",
             ...options
         });
@@ -331,7 +331,7 @@ class StudioRoute extends xo.route {
         }
         catch (ex) {
 
-            
+
             let friendlyError = xo.form.err(ex, this.renderer.exo)
 
             this.showFormNotRendered({
@@ -428,7 +428,12 @@ class StudioRoute extends xo.route {
                             name: "schema",
                             type: "xoformeditor",
                             class: "code full-height",
-                            mode: "json"
+                            mode: "javascript",
+                            options: {
+                                minimap: {
+                                    enabled: false
+                                }
+                            }
                         }
                     ]
                 }
@@ -478,7 +483,7 @@ class StudioRoute extends xo.route {
 
         this.renderCodeEditor({ mode: "css", value: this.styleSheetHelper.buildCssFromClasses() }).then(e => {
 
-            e.querySelector("[data-exf]").data.editor.on("change", ev => {
+            e.querySelector("[data-exf]").data?.editor.on("change", ev => {
                 this.styleSheetHelper.applyCSS();
             })
             this.sidePanel.tabStrip.tabs.css.replaceWith(e);

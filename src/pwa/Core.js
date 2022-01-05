@@ -548,11 +548,13 @@ class Core {
      * Returns a random GUID
      * @returns string (36 characters)
      */
-    static guid() {
-        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+    static guid(options) {
+        options = { ...options || {} }
+        let g = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
             var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
             return v.toString(16);
         });
+        return `${options.prefix || ''}${options.compact ? g.split('-').pop() : g}`;
     }
 
     /**

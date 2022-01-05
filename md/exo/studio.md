@@ -13,7 +13,7 @@ XO form Studio is an environment that helps you discover XO form functionality a
 - Data Model visualization
 - Etc.
 
-> See [https://www.xo-js.dev/#/studio](https://www.xo-js.dev/#/studio)
+> See [https://www.xo-js.dev/studio](https://www.xo-js.dev/studio)
 
 
 # Videos

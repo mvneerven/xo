@@ -9,12 +9,12 @@ class ExoFileDropControl extends ExoBaseControls.controls.input.type {
     constructor(context) {
         super(context);
         this.field = this.context.field;
-        this.field.type = "file";
+        //this.field.type = "file";
 
         this.acceptProperties(
             { name: "maxSize" },
             { name: "max", type: Number, description: "Max number of files accepted" },
-            { name: "fileTypes", type: String | Array, description: 'Array of strings - example: ["image/"]' },
+            { name: "fileTypes", type: Array, description: 'Array of strings - example: ["image/"]' },
             { name: "maxSize", type: Number, description: "Maximum filesize of files to be uploaded (in bytes) - example: 4096000" },
             { name: "height", type: Number, description: "Height of drop area" }
         )
@@ -79,6 +79,10 @@ class ExoFileDropControl extends ExoBaseControls.controls.input.type {
             }
         )
         return this.container;
+    }
+
+    get baseType(){
+        return "file"
     }
 
     stopLoading() {

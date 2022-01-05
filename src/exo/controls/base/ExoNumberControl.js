@@ -1,7 +1,7 @@
 import ExoTextControl from './ExoTextControl';
 import DOM from '../../../pwa/DOM';
 
-class ExoNumberControl extends ExoTextControl { // ExoInputControl
+class ExoNumberControl extends ExoTextControl { 
 
     buttons = false;
 

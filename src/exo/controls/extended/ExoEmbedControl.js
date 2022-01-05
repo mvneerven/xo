@@ -36,9 +36,13 @@ class ExoEmbedControl extends ExoBaseControls.controls.element.type {
         wrapper.appendChild(this.htmlElement);
         this.container.querySelector(".exf-ctl").appendChild(wrapper);
 
-        this.container.classList.add("exf-base-embed");
+        //this.container.classList.add("exf-base-embed");
 
         return this.container
+    }
+
+    get baseType(){
+        return "embed"
     }
 
     get width() {

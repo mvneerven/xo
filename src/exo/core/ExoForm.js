@@ -60,7 +60,7 @@ class ExoForm {
             ...opts
         };
 
-        this.id = this.options.id || Core.guid();
+        this.id = this.options.id || Core.guid({ compact: true, prefix: "frm" });
         this.events = new Core.Events(this);
 
         this.form = document.createElement("form");
@@ -626,7 +626,7 @@ class ExoForm {
                     f.type = "text";
             }
 
-            f.id = f.id || me._generateUniqueElementId();
+            f.id = f.id || Core.guid({ compact: true, prefix: "exf" });
 
             let field = me.context.get(f.type);
             if (!field)
@@ -677,13 +677,7 @@ class ExoForm {
     }
 
 
-    _generateUniqueElementId() {
-        let gid = 'xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-            var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
-            return v.toString(16);
-        });
-        return "exf" + gid;
-    }
+
 
     clear() {
         this.form.reset();
@@ -700,7 +694,7 @@ class ExoForm {
      */
     getInstance(name) {
         const obj = this.dataBinding?.model?.instance[name];
-        if(typeof(obj)==="object")  
+        if (typeof (obj) === "object")
             return Core.clone(obj);
         throw TypeError("Instance not found")
     }

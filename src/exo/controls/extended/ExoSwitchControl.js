@@ -58,6 +58,10 @@ class ExoSwitchControl extends ExoBaseControls.controls.range.type {
     set value(data){
         this.htmlElement.value = data ? 1: 0;
     }
+
+    get baseType(){
+        return "bool"
+    }
 }
 
 export default ExoSwitchControl;
