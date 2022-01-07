@@ -130,9 +130,8 @@
             textarea[name],
             select[name] {
                 outline: none;
-                padding: var(--pady) var(--padx); // 0.6rem 1rem
-                outline: 0;
-                //box-shadow: 0 0 0.5rem transparent;
+                padding: var(--pady) var(--padx); 
+                outline: 0;                
                 margin-top: 0.5rem;
                 margin-bottom: 0.5rem;
                 border-radius: var(--radius);
@@ -181,7 +180,6 @@
                 input[name],
                 textarea[name] {
                     background-color: var(--color-input-background-focus) !important;
-                    //box-shadow: var(--input-box-shadow) !important;
                     border-color: var(--color-label);
                     transition: all 0.3s;
                 }
@@ -309,7 +307,7 @@
                 cursor: pointer;
                 display: flex !important;
                 align-items: center;
-                padding: calc(var(--pady) * 0.6) var(--padx); //0.3rem 1rem 0.3rem 1rem;
+                padding: calc(var(--pady) * 0.6) var(--padx); 
                 border-radius: 99em; // or something higher...
                 transition: 0.25s ease;
 
@@ -431,7 +429,6 @@
                 font-size: 0.8rem;
                 position: absolute;
                 top: 0rem;
-                //right: 2rem;
                 margin-left: -1.5rem;
                 background-color: var(--button-shadow-color);
                 padding: calc(var(--pady) * 0.5) calc(var(--padx) * 0.5);

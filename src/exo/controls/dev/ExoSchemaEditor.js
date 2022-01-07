@@ -12,24 +12,11 @@ class ExoSchemaEditor extends ExoMonacoCodeEditor {
     constructor() {
         super(...arguments);
 
-        this.on("init", e => {
-            /* 
-                Prevent default JavaScript autocompletion
-                see https://microsoft.github.io/monaco-editor/playground.html#extending-language-services-configure-javascript-defaults
-                and https://stackoverflow.com/questions/41581570/how-to-remove-autocompletions-for-monaco-editor-using-javascript
+        this.on("createEditor", e => {
+            //console.log(e.detail)
+            //e.detail.editorOptions.minimap.enabled = true
 
-                It does the trick, but...
-                    TODO: Make sure this error disappears:
-                     >> Uncaught (in promise) Error: Could not find source file: 'inmemory://model/1'.
-            */
-             let options = monaco.languages.typescript.javascriptDefaults.getCompilerOptions();
-             options.allowNonTsExtensions = false; 
-            monaco.languages.typescript.javascriptDefaults.setCompilerOptions(options);
-
-            monaco.languages.typescript.javascriptDefaults.setDiagnosticsOptions({
-                noSemanticValidation: true,
-                noSyntaxValidation: false
-            })
+            
         })
     }
 
@@ -144,6 +131,8 @@ class ExoSchemaEditor extends ExoMonacoCodeEditor {
             return;
 
         const me = this;
+
+        // Code completion provider
         const acProvider = {
             triggerCharacters: ['"'],
             provideCompletionItems: async (model, position) => {
@@ -157,7 +146,37 @@ class ExoSchemaEditor extends ExoMonacoCodeEditor {
         monaco.languages.registerCompletionItemProvider('javascript', acProvider);
         monaco.languages.registerCompletionItemProvider('json', acProvider);
 
+        // Hover provider
+        const hoverProvider = {
+            provideHover: function (model, position) {
+                // Log the current word in the console, you probably want to do something else here.
+                console.log(model.getWordAtPosition(position));
+            }
+        }
+
+        monaco.languages.registerHoverProvider('javascript', hoverProvider);
+        monaco.languages.registerHoverProvider('json', hoverProvider);
+
+        me.preventDefaultJavascriptAutocomplete()
+
         ExoSchemaEditor.autocompleteReady = true;
+    }
+
+    preventDefaultJavascriptAutocomplete() {
+        /* 
+            Prevent default JavaScript autocompletion
+            see https://microsoft.github.io/monaco-editor/playground.html#extending-language-services-configure-javascript-defaults
+            and https://stackoverflow.com/questions/41581570/how-to-remove-autocompletions-for-monaco-editor-using-javascript
+
+            It does the trick, but...
+                TODO: Make sure this error disappears:
+                    >> Uncaught (in promise) Error: Could not find source file: 'inmemory://model/1'.
+        */
+
+        monaco.languages.typescript.javascriptDefaults.setCompilerOptions(
+            { noLib: true, allowNonTsExtensions: false}
+        )
+
     }
 
     getSuggestionContext(model, position) {
@@ -209,9 +228,9 @@ class ExoSchemaEditor extends ExoMonacoCodeEditor {
             }
             if (l !== -1) {
 
-                if (key && key.indexOf(" ")===-1) {
+                if (key && key.indexOf(" ") === -1) {
                     //if(key.indexOf(" ")===-1)
-                        ar.push(key)
+                    ar.push(key)
                 }
                 else {
                     if (i > m) {
@@ -331,7 +350,7 @@ class ExoSchemaEditor extends ExoMonacoCodeEditor {
 
     createFieldSnippet(key, data) {
         let f = JSON.stringify;
-        if(this.mode === "javascript")
+        if (this.mode === "javascript")
             f = Core.stringifyJs;
 
         return f({

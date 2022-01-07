@@ -143,15 +143,18 @@ class ExoMonacoCodeEditor extends ExoDivControl {
 
             require(["vs/editor/editor.main"], () => {
 
-                me.events.trigger("init")
+                const detail = {
+                    editorOptions: {
+                        value: me.value || "",
+                        language: me.mode,
+                        theme: me.theme,
+                        ...me.options || {}
+                    }
+                }
 
+                me.events.trigger("createEditor", detail)
 
-                me.editor = monaco.editor.create(me.htmlElement, {
-                    value: me.value || "",
-                    language: me.mode,
-                    theme: me.theme,
-                    ...me.options || {}
-                });
+                me.editor = monaco.editor.create(me.htmlElement, detail.editorOptions);
 
                 me.events.trigger("ready");
 

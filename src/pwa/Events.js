@@ -33,10 +33,14 @@ class Events {
             ev = new Event(event, { bubbles: false, cancelable: true });
         }
 
-        ev.detail = {            
-            ...(detail || {}),
-            host: this.host
-        };
+        
+        ev.detail = detail || {}
+        ev.detail.host = this.host        
+        
+        // ev.detail = {            
+        //     ...(detail || {}),
+        //     host: this.host
+        // };
 
         if (event === "fetch") {
             return new Promise((resolve, reject) => {

@@ -6,6 +6,7 @@
   * [exo/controls/base/ExoButtonControl](src-exo-controls-base_ExoButtonControl.md) - _Module exo/controls/base/ExoButtonControl_
   * [exo/controls/base/ExoControlBase](src-exo-controls-base_ExoControlBase.md) - _Abstract base class for XO form controls_
   * [exo/controls/base/ExoTextControlAutoCompleteExtension](src-exo-controls-base_ExoTextControlAutoCompleteExtension.md) - _Module exo/controls/base/ExoTextControlAutoCompleteExtension_
+  * [exo/controls/dev/ExoMonacoEditor](src-exo-controls-dev_ExoMonacoEditor.md) - _Module exo/controls/dev/ExoMonacoEditor_
   * [exo/controls/extended/ExoSandboxControl](src-exo-controls-extended_ExoSandboxControl.md) - _Module exo/controls/extended/ExoSandboxControl_
   * [exo/controls/extended/ExoTextConfirm](src-exo-controls-extended_ExoTextConfirm.md) - _Extends textbox and shows button to confirm value_
   * [exo/core/ExoForm](src-exo-core_ExoForm.md) - _XO form class. Created using ExoFormContext create() method_
