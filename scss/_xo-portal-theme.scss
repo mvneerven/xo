@@ -13,7 +13,7 @@ html.theme-light {
         --color-panel-background: #ddd;
         --color-disabled: #ebebe4;
         --color-readonly: #fcfcfc;
-        --color-text: #333;
+        --color-input-text: #333;
         --color-highlighttext: #fff455;
         --color-highlighttext-bg: #666;
         --color-button: #31bf65;
@@ -30,7 +30,7 @@ html.theme-light {
         --color-base: 352; /*the base color*/
         --l: 53%; /*the initial lightness*/
 
-        --color-text-lessbright: hsl(var(--color-text), 78%, calc(var(--l), -20%));
+        --color-input-text-lessbright: hsl(var(--color-input-text), 78%, calc(var(--l), -20%));
         --color-primary: hsl(var(--color-base), 78%, var(--l));
         --color-primary-dark: hsl(var(--color-base), 78%, calc(var(--l) - 5%));
         --color-primary-darker: hsl(var(--color-base), 78%, calc(var(--l) - 10%));
@@ -63,7 +63,7 @@ html.theme-light {
     --color-accent: rgb(223, 108, 14);
     --font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
     --color-label: black;
-    --color-text: black;
+    --color-input-text: black;
     --color-input-background: transparent;
     --color-input-background-focus: #fff;
     --color-placeholder: rgba(0, 0, 0, 0.3);
@@ -82,7 +82,7 @@ html.theme-light {
         --color-input-background-focus: #565656;
         --color-placeholder: rgba(255, 255, 255, 0.5);
         --color-input-border: #777;
-        --color-text: white;
+        --color-input-text: white;
         --input-box-shadow: 0 0 0.5rem rgba(255, 255, 255, 0.3);
         --color-button-border: var(--color-accent);// #309df0;
         --color-button-background: transparent;
@@ -108,7 +108,7 @@ html.theme-dark {
         --color-dropdown-hover: #444;
 
         //--scrollbar-bg: #444;
-        --color-text: #ddd;
+        --color-input-text: #ddd;
         --color-button: #bbb;
         --color-highlight: rgb(173, 58, 4);
         --color-highlighttext: #fff455;
@@ -119,7 +119,7 @@ html.theme-dark {
 
         --color-base: 96; /*the base color*/
         --l: 23%; /*the initial lightness*/
-        --color-text-lessbright: hsl(var(--color-text), 78%, calc(var(--l), -20%));
+        --color-input-text-lessbright: hsl(var(--color-input-text), 78%, calc(var(--l), -20%));
         --color-primary: hsl(var(--color-base), 78%, var(--l));
         --color-primary-dark: hsl(var(--color-base), 78%, calc(var(--l) - 5%));
         --color-primary-darker: hsl(var(--color-base), 78%, calc(var(--l) - 10%));
@@ -159,7 +159,7 @@ body {
         &:link,
         &:active,
         &:visited {
-            color: var(--color-text);
+            color: var(--color-input-text);
         }
     }
 }

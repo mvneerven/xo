@@ -510,7 +510,7 @@ html:not(.pwa-signed-in) .if-signed-out {
   right: 10px;
   left: auto;
   top: 10px;
-  color: var(--color-text);
+  color: var(--color-input-text);
   font-weight: 800;
   -webkit-transition: all 0.2s;
   transition: all 0.2s;
@@ -542,7 +542,7 @@ html:not(.pwa-signed-in) .if-signed-out {
 }
 
 .nsp-grid.nsp-grid-3rc.nsp-xs body main [data-pwa-area].pwa-pinnable.pinned:hover::before, .nsp-grid.nsp-grid-3rc.nsp-xxs body main [data-pwa-area].pwa-pinnable.pinned:hover::before, .nsp-grid.nsp-grid-3r.nsp-xs body main [data-pwa-area].pwa-pinnable.pinned:hover::before, .nsp-grid.nsp-grid-3r.nsp-xxs body main [data-pwa-area].pwa-pinnable.pinned:hover::before {
-  color: var(--color-text);
+  color: var(--color-input-text);
   -webkit-transition: all 0.2s;
   transition: all 0.2s;
 }
@@ -584,7 +584,7 @@ html:not(.pwa-signed-in) .if-signed-out {
   height: auto;
   right: -4px;
   top: 50%;
-  color: var(--color-text);
+  color: var(--color-input-text);
   font-weight: 800;
 }
 
@@ -1109,7 +1109,7 @@ html:not(.pwa-signed-in) .if-signed-out {
   right: 10px;
   left: auto;
   top: 10px;
-  color: var(--color-text);
+  color: var(--color-input-text);
   font-weight: 800;
   -webkit-transition: all 0.2s;
   transition: all 0.2s;
@@ -1141,7 +1141,7 @@ html:not(.pwa-signed-in) .if-signed-out {
 }
 
 .nsp-grid.nsp-grid-3rc.nsp-xs body main [data-pwa-area].pwa-pinnable.pinned:hover::before, .nsp-grid.nsp-grid-3rc.nsp-xxs body main [data-pwa-area].pwa-pinnable.pinned:hover::before, .nsp-grid.nsp-grid-3r.nsp-xs body main [data-pwa-area].pwa-pinnable.pinned:hover::before, .nsp-grid.nsp-grid-3r.nsp-xxs body main [data-pwa-area].pwa-pinnable.pinned:hover::before {
-  color: var(--color-text);
+  color: var(--color-input-text);
   -webkit-transition: all 0.2s;
   transition: all 0.2s;
 }
@@ -1183,7 +1183,7 @@ html:not(.pwa-signed-in) .if-signed-out {
   height: auto;
   right: -4px;
   top: 50%;
-  color: var(--color-text);
+  color: var(--color-input-text);
   font-weight: 800;
 }
 
@@ -1364,7 +1364,7 @@ html:not(.pwa-signed-in) .if-signed-out {
 }
 
 .exf-container .exf-ctl .exf-ctl > label:not(:empty) {
-  color: var(--color-text);
+  color: var(--color-input-text);
   font-size: 0.8rem !important;
 }
 
@@ -1450,7 +1450,7 @@ html:not(.pwa-signed-in) .if-signed-out {
 
 .exf-container .exf-help-wrapper {
   font-size: 0.8rem;
-  color: var(--color-text);
+  color: var(--color-input-text);
   opacity: 0.6;
 }
 
@@ -1547,7 +1547,7 @@ html:not(.pwa-signed-in) .if-signed-out {
 }
 
 .exf-container .exf-input-group .exf-ilc-cnt .exf-caption {
-  color: var(--color-text);
+  color: var(--color-input-text);
 }
 
 .exf-container .exf-input-group .exf-ilc-cnt input[value="___new"] + label:not(:focus) {
@@ -2733,7 +2733,7 @@ html.theme-light nav.ul-drop ul li > ul {
   height: 1.2rem;
   border: none;
   border-radius: 1.2rem;
-  background-color: var(--color-text);
+  background-color: var(--color-input-text);
 }
 
 .exf-ctl-cnt.exf-switch input[type="range"]::-moz-range-thumb {
@@ -2741,7 +2741,7 @@ html.theme-light nav.ul-drop ul li > ul {
   height: 1.2rem;
   border: none;
   border-radius: 1.2rem;
-  background-color: var(--color-text);
+  background-color: var(--color-input-text);
 }
 
 .exf-ctl-cnt.exf-switch input[type="range"]::-ms-thumb {
@@ -2749,7 +2749,7 @@ html.theme-light nav.ul-drop ul li > ul {
   height: 1.2rem;
   border-radius: 1.2rem;
   border: 0;
-  background-color: var(--color-text);
+  background-color: var(--color-input-text);
 }
 
 .exf-ctl-cnt.exf-switch input[type="range"] .switch.on::-webkit-slider-thumb {
@@ -2999,7 +2999,7 @@ html.theme-dark .exf-ctl-cnt.exf-switch input[type="range"] {
   border: 3px solid;
   border-color: #d0d0d0;
   background: var(--color-background-variation);
-  color: var(--color-text);
+  color: var(--color-input-text);
   -webkit-transition: background-color 0.6s ease, border-color 0.6s ease;
   transition: background-color 0.6s ease, border-color 0.6s ease;
 }
@@ -4862,7 +4862,7 @@ html:not(.pwa-touch) .exf-lv-item:hover .exf-lv-chk {
 
 .exf-container.exf-theme-material .exf-ctl-cnt .exf-help {
   margin-top: 0.2rem;
-  color: var(--color-text);
+  color: var(--color-input-text);
   font-size: 0.8rem;
 }
 
@@ -4885,7 +4885,7 @@ html:not(.pwa-touch) .exf-lv-item:hover .exf-lv-chk {
 
 .exf-container.exf-theme-material .exf-ctl-cnt.exf-invalid .exf-help {
   margin-top: 0.2rem;
-  color: var(--color-text);
+  color: var(--color-input-text);
   font-size: 0.8rem;
 }
 
@@ -5131,7 +5131,7 @@ html:not(.pwa-touch) .exf-lv-item:hover .exf-lv-chk {
 }
 
 .exf-container.exf-theme-material .exf-input-group > .exf-ctl .exf-caption-main {
-  color: var(--color-text);
+  color: var(--color-input-text);
 }
 
 .exf-container.exf-theme-material .exf-input-group > .exf-ctl .exf-caption-description {
@@ -5232,7 +5232,7 @@ html:not(.pwa-touch) .exf-lv-item:hover .exf-lv-chk {
 .exf-container.exf-theme-thin .exf-ctl input[name],
 .exf-container.exf-theme-thin .exf-ctl textarea[name],
 .exf-container.exf-theme-thin .exf-ctl select[name] {
-  color: var(--color-text, black) !important;
+  color: var(--color-input-text, black) !important;
   background-color: var(--color-input-background, #efefef) !important;
   border: 1px solid var(--color-input-border);
   outline: none;
@@ -5301,7 +5301,7 @@ html:not(.pwa-touch) .exf-lv-item:hover .exf-lv-chk {
   display: inline-block;
   font-size: 1.5rem;
   padding: 0.5rem;
-  color: var(--color-text);
+  color: var(--color-input-text);
 }
 
 .exf-container.exf-theme-thin .exf-btn.icon-only .text {
@@ -5769,7 +5769,7 @@ html.theme-light:root {
   --color-panel-background: #ddd;
   --color-disabled: #ebebe4;
   --color-readonly: #fcfcfc;
-  --color-text: #333;
+  --color-input-text: #333;
   --color-highlighttext: #fff455;
   --color-highlighttext-bg: #666;
   --color-button: #31bf65;
@@ -5784,7 +5784,7 @@ html.theme-light:root {
   /*the base color*/
   --l: 53%;
   /*the initial lightness*/
-  --color-text-lessbright: hsl(var(--color-text), 78%, calc(var(--l), -20%));
+  --color-input-text-lessbright: hsl(var(--color-input-text), 78%, calc(var(--l), -20%));
   --color-primary: hsl(var(--color-base), 78%, var(--l));
   --color-primary-dark: hsl(var(--color-base), 78%, calc(var(--l) - 5%));
   --color-primary-darker: hsl(var(--color-base), 78%, calc(var(--l) - 10%));
@@ -5811,7 +5811,7 @@ html.theme-light:root {
   --color-accent: rgb(223, 108, 14);
   --font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   --color-label: black;
-  --color-text: black;
+  --color-input-text: black;
   --color-input-background: transparent;
   --color-input-background-focus: #fff;
   --color-placeholder: rgba(0, 0, 0, 0.3);
@@ -5831,7 +5831,7 @@ html.theme-light:root {
   --color-input-background-focus: #565656;
   --color-placeholder: rgba(255, 255, 255, 0.5);
   --color-input-border: #777;
-  --color-text: white;
+  --color-input-text: white;
   --input-box-shadow: 0 0 0.5rem rgba(255, 255, 255, 0.3);
   --color-button-border: var(--color-accent);
   --color-button-background: transparent;
@@ -5852,7 +5852,7 @@ html.theme-dark:root {
   --color-readonly: #333;
   --color-dropdown-bg: #333;
   --color-dropdown-hover: #444;
-  --color-text: #ddd;
+  --color-input-text: #ddd;
   --color-button: #bbb;
   --color-highlight: rgb(173, 58, 4);
   --color-highlighttext: #fff455;
@@ -5863,7 +5863,7 @@ html.theme-dark:root {
   /*the base color*/
   --l: 23%;
   /*the initial lightness*/
-  --color-text-lessbright: hsl(var(--color-text), 78%, calc(var(--l), -20%));
+  --color-input-text-lessbright: hsl(var(--color-input-text), 78%, calc(var(--l), -20%));
   --color-primary: hsl(var(--color-base), 78%, var(--l));
   --color-primary-dark: hsl(var(--color-base), 78%, calc(var(--l) - 5%));
   --color-primary-darker: hsl(var(--color-base), 78%, calc(var(--l) - 10%));
@@ -5898,7 +5898,7 @@ body {
 }
 
 body a:link, body a:active, body a:visited {
-  color: var(--color-text);
+  color: var(--color-input-text);
 }
 
 html.theme-light [data-pwa-area="menu"] nav.main-menu ul li {
@@ -6659,7 +6659,7 @@ footer {
   text-align: center;
   font-size: smaller;
   padding-top: 0.3em;
-  color: var(--color-text);
+  color: var(--color-input-text);
 }
 
 footer a:link {
@@ -6966,7 +6966,7 @@ ul.meta > li .field .example::after {
   background-color: var(--color-background);
   padding: 0.2em;
   border-radius: 0.2em;
-  color: var(--color-text);
+  color: var(--color-input-text);
   top: 2em;
   left: 45%;
 }

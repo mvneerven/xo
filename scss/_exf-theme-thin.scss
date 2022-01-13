@@ -12,7 +12,7 @@
         input[name],
         textarea[name],
         select[name] {
-            color: var(--color-text, black) !important;
+            color: var(--color-input-text, black) !important;
             background-color: var(--color-input-background, #efefef) !important;
             border: 1px solid var(--color-input-border);
             outline: none;
@@ -81,7 +81,7 @@
             display: inline-block;
             font-size: 1.5rem;
             padding: 0.5rem;
-            color: var(--color-text);
+            color: var(--color-input-text);
         }
 
         &.icon-only {

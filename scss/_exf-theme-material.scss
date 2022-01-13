@@ -238,7 +238,7 @@
 
             .exf-help {
                 margin-top: 0.2rem;
-                color: var(--color-text);
+                color: var(--color-input-text);
                 font-size: 0.8rem;
 
                 &:before {
@@ -266,7 +266,7 @@
             &.exf-invalid {
                 .exf-help {
                     margin-top: 0.2rem;
-                    color: var(--color-text);
+                    color: var(--color-input-text);
                     font-size: 0.8rem;
 
                     &:before {
@@ -539,7 +539,7 @@
         .exf-input-group {
             > .exf-ctl {
                 .exf-caption-main {
-                    color: var(--color-text);
+                    color: var(--color-input-text);
                     //margin-bottom: 0.8rem;
                 }
                 .exf-caption-description {

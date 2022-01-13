@@ -148,6 +148,7 @@ class ExoMonacoCodeEditor extends ExoDivControl {
                         value: me.value || "",
                         language: me.mode,
                         theme: me.theme,
+                        automaticLayout: true,
                         ...me.options || {}
                     }
                 }

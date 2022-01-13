@@ -45,14 +45,14 @@
       height: 1.2rem;
       border: none;
       border-radius: 1.2rem;
-      background-color: var(--color-text);
+      background-color: var(--color-input-text);
     }
     &::-moz-range-thumb {
       width: 1.2rem;
       height: 1.2rem;
       border: none;
       border-radius: 1.2rem;
-      background-color: var(--color-text);
+      background-color: var(--color-input-text);
     }
 
     &::-ms-thumb {
@@ -60,7 +60,7 @@
       height: 1.2rem;
       border-radius: 1.2rem;
       border: 0;
-      background-color: var(--color-text);
+      background-color: var(--color-input-text);
     }
 
     .switch.on {

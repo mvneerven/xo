@@ -106,7 +106,7 @@
         .exf-ctl {
             // nested
             > label:not(:empty) {
-                color: var(--color-text);
+                color: var(--color-input-text);
                 font-size: 0.8rem !important;
             }
         }
@@ -198,7 +198,7 @@
 
     .exf-help-wrapper {
         font-size: 0.8rem;
-        color: var(--color-text);
+        color: var(--color-input-text);
         opacity: 0.6;
     }
 
@@ -297,7 +297,7 @@
             font-size: 0.9rem;
 
             .exf-caption {
-                color: var(--color-text);
+                color: var(--color-input-text);
             }
 
             input[value="___new"] + label:not(:focus) {

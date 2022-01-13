@@ -1,3 +1,4 @@
+//@import "normalize";
 @import "xo";
 //@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap");
 @import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,wght@0,200;0,300;0,400;0,600;0,700;0,800;1,200;1,300;1,400&display=swap');
@@ -6,18 +7,18 @@
 :root {
     //font-family: roboto;
     --color-background: #efefef;
-    --color-text: black;
+    --color-input-text: black;
 
     &.theme-dark {
         --color-background: #333;
-        --color-text: #ddd;
+        --color-input-text: #ddd;
     }
 
     --scrollbar-bg: rgba(0, 0, 0, 0.25);
     --scrollbar-bg-hover: rgba(0, 0, 0, 0.15);
     --scrollbar-bg-active: rgba(0, 0, 0, 0.1);
     --color: #333;
-    --color-text: #333;
+    --color-input-text: #333;
     --color-shade: #ccc;
     --field-box-shadow-subtle: #dedede;
     --color-dropdown-bg: #e1e1e1;
@@ -53,7 +54,7 @@
     --font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
     --color-accent: #ce0d0d;
     --color-label: #b10000;
-    --color-text: black;
+    --color-input-text: black;
     --color-input-background: transparent;
     --color-input-background-focus: #fff;
     --color-placeholder: rgba(0, 0, 0, 0.3);
@@ -72,7 +73,7 @@
         --color-input-background-focus: #2c2c2c;
         --color-placeholder: rgba(255, 255, 255, 0.3);
         --color-input-border: #777;
-        --color-text: white;
+        --color-input-text: white;
         --input-box-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.3);
         --color-button-border: #309df0;
         --color-button-background: transparent;
@@ -151,7 +152,7 @@ body {
     display: grid;
     grid-template-rows: 50px 1fr 30px;
 
-    color: var(--color-text);
+    color: var(--color-input-text);
     background-color: var(--color-background);
     margin: 0;
     padding: 0;

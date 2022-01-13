@@ -114,7 +114,7 @@
 }
 
 .exf-container .exf-ctl .exf-ctl > label:not(:empty) {
-  color: var(--color-text);
+  color: var(--color-input-text);
   font-size: 0.8rem !important;
 }
 
@@ -200,7 +200,7 @@
 
 .exf-container .exf-help-wrapper {
   font-size: 0.8rem;
-  color: var(--color-text);
+  color: var(--color-input-text);
   opacity: 0.6;
 }
 
@@ -297,7 +297,7 @@
 }
 
 .exf-container .exf-input-group .exf-ilc-cnt .exf-caption {
-  color: var(--color-text);
+  color: var(--color-input-text);
 }
 
 .exf-container .exf-input-group .exf-ilc-cnt input[value="___new"] + label:not(:focus) {
@@ -1483,7 +1483,7 @@ html.theme-light nav.ul-drop ul li > ul {
   height: 1.2rem;
   border: none;
   border-radius: 1.2rem;
-  background-color: var(--color-text);
+  background-color: var(--color-input-text);
 }
 
 .exf-ctl-cnt.exf-switch input[type="range"]::-moz-range-thumb {
@@ -1491,7 +1491,7 @@ html.theme-light nav.ul-drop ul li > ul {
   height: 1.2rem;
   border: none;
   border-radius: 1.2rem;
-  background-color: var(--color-text);
+  background-color: var(--color-input-text);
 }
 
 .exf-ctl-cnt.exf-switch input[type="range"]::-ms-thumb {
@@ -1499,7 +1499,7 @@ html.theme-light nav.ul-drop ul li > ul {
   height: 1.2rem;
   border-radius: 1.2rem;
   border: 0;
-  background-color: var(--color-text);
+  background-color: var(--color-input-text);
 }
 
 .exf-ctl-cnt.exf-switch input[type="range"] .switch.on::-webkit-slider-thumb {
@@ -1749,7 +1749,7 @@ html.theme-dark .exf-ctl-cnt.exf-switch input[type="range"] {
   border: 3px solid;
   border-color: #d0d0d0;
   background: var(--color-background-variation);
-  color: var(--color-text);
+  color: var(--color-input-text);
   -webkit-transition: background-color 0.6s ease, border-color 0.6s ease;
   transition: background-color 0.6s ease, border-color 0.6s ease;
 }
@@ -3630,7 +3630,7 @@ html:not(.pwa-touch) .exf-lv-item:hover .exf-lv-chk {
 
 .exf-container.exf-theme-material .exf-ctl-cnt .exf-help {
   margin-top: 0.2rem;
-  color: var(--color-text);
+  color: var(--color-input-text);
   font-size: 0.8rem;
 }
 
@@ -3653,7 +3653,7 @@ html:not(.pwa-touch) .exf-lv-item:hover .exf-lv-chk {
 
 .exf-container.exf-theme-material .exf-ctl-cnt.exf-invalid .exf-help {
   margin-top: 0.2rem;
-  color: var(--color-text);
+  color: var(--color-input-text);
   font-size: 0.8rem;
 }
 
@@ -3899,7 +3899,7 @@ html:not(.pwa-touch) .exf-lv-item:hover .exf-lv-chk {
 }
 
 .exf-container.exf-theme-material .exf-input-group > .exf-ctl .exf-caption-main {
-  color: var(--color-text);
+  color: var(--color-input-text);
 }
 
 .exf-container.exf-theme-material .exf-input-group > .exf-ctl .exf-caption-description {
@@ -4000,7 +4000,7 @@ html:not(.pwa-touch) .exf-lv-item:hover .exf-lv-chk {
 .exf-container.exf-theme-thin .exf-ctl input[name],
 .exf-container.exf-theme-thin .exf-ctl textarea[name],
 .exf-container.exf-theme-thin .exf-ctl select[name] {
-  color: var(--color-text, black) !important;
+  color: var(--color-input-text, black) !important;
   background-color: var(--color-input-background, #efefef) !important;
   border: 1px solid var(--color-input-border);
   outline: none;
@@ -4069,7 +4069,7 @@ html:not(.pwa-touch) .exf-lv-item:hover .exf-lv-chk {
   display: inline-block;
   font-size: 1.5rem;
   padding: 0.5rem;
-  color: var(--color-text);
+  color: var(--color-input-text);
 }
 
 .exf-container.exf-theme-thin .exf-btn.icon-only .text {

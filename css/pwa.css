@@ -508,7 +508,7 @@ html:not(.pwa-signed-in) .if-signed-out {
   right: 10px;
   left: auto;
   top: 10px;
-  color: var(--color-text);
+  color: var(--color-input-text);
   font-weight: 800;
   -webkit-transition: all 0.2s;
   transition: all 0.2s;
@@ -540,7 +540,7 @@ html:not(.pwa-signed-in) .if-signed-out {
 }
 
 .nsp-grid.nsp-grid-3rc.nsp-xs body main [data-pwa-area].pwa-pinnable.pinned:hover::before, .nsp-grid.nsp-grid-3rc.nsp-xxs body main [data-pwa-area].pwa-pinnable.pinned:hover::before, .nsp-grid.nsp-grid-3r.nsp-xs body main [data-pwa-area].pwa-pinnable.pinned:hover::before, .nsp-grid.nsp-grid-3r.nsp-xxs body main [data-pwa-area].pwa-pinnable.pinned:hover::before {
-  color: var(--color-text);
+  color: var(--color-input-text);
   -webkit-transition: all 0.2s;
   transition: all 0.2s;
 }
@@ -582,7 +582,7 @@ html:not(.pwa-signed-in) .if-signed-out {
   height: auto;
   right: -4px;
   top: 50%;
-  color: var(--color-text);
+  color: var(--color-input-text);
   font-weight: 800;
 }
 

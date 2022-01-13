@@ -52,7 +52,7 @@
                                 right: 10px;
                                 left: auto;
                                 top: 10px;
-                                color: var(--color-text);
+                                color: var(--color-input-text);
 
                                 font-weight: 800;
                                 transition: all 0.2s;
@@ -85,7 +85,7 @@
 
                                 &:hover {
                                     &::before {
-                                        color: var(--color-text);
+                                        color: var(--color-input-text);
                                         transition: all 0.2s;
                                     }
                                 }
@@ -124,7 +124,7 @@
                             height: auto;
                             right: -4px;
                             top: 50%;
-                            color: var(--color-text);
+                            color: var(--color-input-text);
                             font-weight: 800;
                         }
                     }

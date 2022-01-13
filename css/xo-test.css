@@ -510,7 +510,7 @@ html:not(.pwa-signed-in) .if-signed-out {
   right: 10px;
   left: auto;
   top: 10px;
-  color: var(--color-text);
+  color: var(--color-input-text);
   font-weight: 800;
   -webkit-transition: all 0.2s;
   transition: all 0.2s;
@@ -542,7 +542,7 @@ html:not(.pwa-signed-in) .if-signed-out {
 }
 
 .nsp-grid.nsp-grid-3rc.nsp-xs body main [data-pwa-area].pwa-pinnable.pinned:hover::before, .nsp-grid.nsp-grid-3rc.nsp-xxs body main [data-pwa-area].pwa-pinnable.pinned:hover::before, .nsp-grid.nsp-grid-3r.nsp-xs body main [data-pwa-area].pwa-pinnable.pinned:hover::before, .nsp-grid.nsp-grid-3r.nsp-xxs body main [data-pwa-area].pwa-pinnable.pinned:hover::before {
-  color: var(--color-text);
+  color: var(--color-input-text);
   -webkit-transition: all 0.2s;
   transition: all 0.2s;
 }
@@ -584,7 +584,7 @@ html:not(.pwa-signed-in) .if-signed-out {
   height: auto;
   right: -4px;
   top: 50%;
-  color: var(--color-text);
+  color: var(--color-input-text);
   font-weight: 800;
 }
 
@@ -765,7 +765,7 @@ html:not(.pwa-signed-in) .if-signed-out {
 }
 
 .exf-container .exf-ctl .exf-ctl > label:not(:empty) {
-  color: var(--color-text);
+  color: var(--color-input-text);
   font-size: 0.8rem !important;
 }
 
@@ -851,7 +851,7 @@ html:not(.pwa-signed-in) .if-signed-out {
 
 .exf-container .exf-help-wrapper {
   font-size: 0.8rem;
-  color: var(--color-text);
+  color: var(--color-input-text);
   opacity: 0.6;
 }
 
@@ -948,7 +948,7 @@ html:not(.pwa-signed-in) .if-signed-out {
 }
 
 .exf-container .exf-input-group .exf-ilc-cnt .exf-caption {
-  color: var(--color-text);
+  color: var(--color-input-text);
 }
 
 .exf-container .exf-input-group .exf-ilc-cnt input[value="___new"] + label:not(:focus) {
@@ -2134,7 +2134,7 @@ html.theme-light nav.ul-drop ul li > ul {
   height: 1.2rem;
   border: none;
   border-radius: 1.2rem;
-  background-color: var(--color-text);
+  background-color: var(--color-input-text);
 }
 
 .exf-ctl-cnt.exf-switch input[type="range"]::-moz-range-thumb {
@@ -2142,7 +2142,7 @@ html.theme-light nav.ul-drop ul li > ul {
   height: 1.2rem;
   border: none;
   border-radius: 1.2rem;
-  background-color: var(--color-text);
+  background-color: var(--color-input-text);
 }
 
 .exf-ctl-cnt.exf-switch input[type="range"]::-ms-thumb {
@@ -2150,7 +2150,7 @@ html.theme-light nav.ul-drop ul li > ul {
   height: 1.2rem;
   border-radius: 1.2rem;
   border: 0;
-  background-color: var(--color-text);
+  background-color: var(--color-input-text);
 }
 
 .exf-ctl-cnt.exf-switch input[type="range"] .switch.on::-webkit-slider-thumb {
@@ -2400,7 +2400,7 @@ html.theme-dark .exf-ctl-cnt.exf-switch input[type="range"] {
   border: 3px solid;
   border-color: #d0d0d0;
   background: var(--color-background-variation);
-  color: var(--color-text);
+  color: var(--color-input-text);
   -webkit-transition: background-color 0.6s ease, border-color 0.6s ease;
   transition: background-color 0.6s ease, border-color 0.6s ease;
 }
@@ -4263,7 +4263,7 @@ html:not(.pwa-touch) .exf-lv-item:hover .exf-lv-chk {
 
 .exf-container.exf-theme-material .exf-ctl-cnt .exf-help {
   margin-top: 0.2rem;
-  color: var(--color-text);
+  color: var(--color-input-text);
   font-size: 0.8rem;
 }
 
@@ -4286,7 +4286,7 @@ html:not(.pwa-touch) .exf-lv-item:hover .exf-lv-chk {
 
 .exf-container.exf-theme-material .exf-ctl-cnt.exf-invalid .exf-help {
   margin-top: 0.2rem;
-  color: var(--color-text);
+  color: var(--color-input-text);
   font-size: 0.8rem;
 }
 
@@ -4532,7 +4532,7 @@ html:not(.pwa-touch) .exf-lv-item:hover .exf-lv-chk {
 }
 
 .exf-container.exf-theme-material .exf-input-group > .exf-ctl .exf-caption-main {
-  color: var(--color-text);
+  color: var(--color-input-text);
 }
 
 .exf-container.exf-theme-material .exf-input-group > .exf-ctl .exf-caption-description {
@@ -4633,7 +4633,7 @@ html:not(.pwa-touch) .exf-lv-item:hover .exf-lv-chk {
 .exf-container.exf-theme-thin .exf-ctl input[name],
 .exf-container.exf-theme-thin .exf-ctl textarea[name],
 .exf-container.exf-theme-thin .exf-ctl select[name] {
-  color: var(--color-text, black) !important;
+  color: var(--color-input-text, black) !important;
   background-color: var(--color-input-background, #efefef) !important;
   border: 1px solid var(--color-input-border);
   outline: none;
@@ -4702,7 +4702,7 @@ html:not(.pwa-touch) .exf-lv-item:hover .exf-lv-chk {
   display: inline-block;
   font-size: 1.5rem;
   padding: 0.5rem;
-  color: var(--color-text);
+  color: var(--color-input-text);
 }
 
 .exf-container.exf-theme-thin .exf-btn.icon-only .text {
@@ -5174,12 +5174,12 @@ html:not(.pwa-touch) .exf-lv-item:hover .exf-lv-chk {
 
 :root {
   --color-background: #efefef;
-  --color-text: black;
+  --color-input-text: black;
   --scrollbar-bg: rgba(0, 0, 0, 0.25);
   --scrollbar-bg-hover: rgba(0, 0, 0, 0.15);
   --scrollbar-bg-active: rgba(0, 0, 0, 0.1);
   --color: #333;
-  --color-text: #333;
+  --color-input-text: #333;
   --color-shade: #ccc;
   --field-box-shadow-subtle: #dedede;
   --color-dropdown-bg: #e1e1e1;
@@ -5209,7 +5209,7 @@ html:not(.pwa-touch) .exf-lv-item:hover .exf-lv-chk {
   --font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   --color-accent: #ce0d0d;
   --color-label: #b10000;
-  --color-text: black;
+  --color-input-text: black;
   --color-input-background: transparent;
   --color-input-background-focus: #fff;
   --color-placeholder: rgba(0, 0, 0, 0.3);
@@ -5226,7 +5226,7 @@ html:not(.pwa-touch) .exf-lv-item:hover .exf-lv-chk {
 
 :root.theme-dark {
   --color-background: #333;
-  --color-text: #ddd;
+  --color-input-text: #ddd;
 }
 
 :root.theme-dark {
@@ -5236,7 +5236,7 @@ html:not(.pwa-touch) .exf-lv-item:hover .exf-lv-chk {
   --color-input-background-focus: #2c2c2c;
   --color-placeholder: rgba(255, 255, 255, 0.3);
   --color-input-border: #777;
-  --color-text: white;
+  --color-input-text: white;
   --input-box-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.3);
   --color-button-border: #309df0;
   --color-button-background: transparent;
@@ -5299,7 +5299,7 @@ body {
   display: grid;
   -ms-grid-rows: 50px 1fr 30px;
       grid-template-rows: 50px 1fr 30px;
-  color: var(--color-text);
+  color: var(--color-input-text);
   background-color: var(--color-background);
   margin: 0;
   padding: 0;
