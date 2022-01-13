@@ -142,23 +142,6 @@ class ExoTextControl extends ExoInputControl {
         this._suffix = value;
     }
 
-    // get valid() {
-    //     let numInvalid = 0;
-    //     const rv = el => {
-    //         if (el.reportValidity) {
-    //             try {
-    //                 if (!el.reportValidity()) {
-    //                     numInvalid++;
-    //                 }
-    //             }
-    //             catch { }
-    //         }
-    //     };
-    //     rv(this.htmlElement);
-    //     console.debug("ExoTextControl valid", DOM.elementToString(this.htmlElement), numInvalid === 0)
-    //     return numInvalid === 0;
-    // }
-
     set autocomplete(obj) {
         this._autoComplete = new ExoTextControlAutoCompleteExtension(this, obj);
     }

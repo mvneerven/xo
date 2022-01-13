@@ -38,7 +38,7 @@ class ExoControlBase {
             { name: "caption", type: String, group: "UI", description: "Caption/label to display" },
             { name: "hidden", type: Boolean, group: "UI", default: false, description: "Determines control visibility" },
             { name: "disabled", type: Boolean, group: "UI", description: "Specifies whether the control can be interacted with by the user" },
-            { name: "required", type: Boolean, group: "Data", description: "Specifies whether the field is required" },
+            //{ name: "required", type: Boolean, group: "Data", description: "Specifies whether the field is required" },
             { name: "tooltip", type: String, group: "UI", description: "Tooltip to show over the element" },
             { name: "info", type: String, group: "UI", description: "Informational text to show to help the user" },
             { name: "placeholder", type: String, group: "UI", description: "Placeholder text to show when the field is empty" },
