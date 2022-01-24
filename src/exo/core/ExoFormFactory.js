@@ -340,7 +340,15 @@ class ExoFormFactory {
     }
 
     static listNativeProps(ctl) {
-        let type = ctl.__proto__;
+        const type = ctl.__proto__, tag = ctl.tagName;
+
+        ExoFormFactory.elementPropCache = ExoFormFactory.elementPropCache || {};
+
+        if(ExoFormFactory.elementPropCache[tag]){
+            //console.log("Return cache for ", type)
+            return ExoFormFactory.elementPropCache[tag];
+        }
+
         let list = Object.getOwnPropertyNames(type);
         let ar = /* id added 26 Apr 2021*/
             ["id", "style", "class", "accesskey", "contenteditable",
@@ -355,6 +363,8 @@ class ExoFormFactory {
                 ar.push(p.toLowerCase())
             }
         });
+
+        ExoFormFactory.elementPropCache[tag]=ar;
         
         return ar;
     }

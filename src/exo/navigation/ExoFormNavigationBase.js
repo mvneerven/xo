@@ -158,8 +158,8 @@ class ExoFormNavigationBase {
         }
         let btn = await this.exo.renderSingleControl(options);
 
-        //if (btn.querySelector("button").name !== "send" || this.exo.schema.submit !== false)
-        this.container.appendChild(btn);
+        if (btn.querySelector("button").name !== "send" || this.exo.schema.submit !== false)
+            this.container.appendChild(btn);
         
 
         return btn;
