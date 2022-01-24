@@ -8,17 +8,26 @@ class ExoSchemaViewer extends ExoMultiInputControl {
     columns = ".5fr .5fr";
     areas = `"code view"`;
 
-    async render() {
 
-        this.fields = {
-            code: { caption: "Code", type: "xoformeditor", bind: this.bind, value: this.value, class: "full-height" },
+    get fields() {
+        return {
+            code: { caption: "Code", type: "xoformeditor", bind: "inherit", value: "inherit", class: "full-height" },
             view: { caption: "View", type: "sandbox" }
         }
+    }
 
+
+    set fields(value){
+        // NA
+    }
+
+
+
+    async render() {
         await super.render();
 
-        this.editor = ExoFormFactory.getFieldFromElement(this.inputs["code"])._control;
-        this.sandbox = ExoFormFactory.getFieldFromElement(this.inputs["view"])._control;
+        this.editor = this.controls["code"];
+        this.sandbox = this.controls["view"];
 
         this.editor.on("SchemaReady", this.renderForm.bind(this));
         this.renderForm();

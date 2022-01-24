@@ -9,19 +9,14 @@ class ExoInfoControl extends ExoBaseControls.controls.div.type {
 
     icon = "ti-info";
 
-    constructor(context) {
-        super(context);
+    constructor() {
+        super(...arguments);
         this.acceptProperties("title", "icon", "body", "class");
     }
 
     async render() {
-        
-
-        //let html = DOM.format(_.template, { ...this })
-
         this.htmlElement.appendChild(
             DOM.parseHTML(this.getTemplate(this)));
-
 
         return this.htmlElement;
     }

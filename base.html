@@ -44,14 +44,6 @@
             on: {
                 post: e => {
                     alert(JSON.stringify(e.detail.postData, null, 2))
-                },
-                interactive: e => {
-                    let exo = e.detail.host;
-                    // new xo.form.factory.LiveEditor(exo, {
-                    //     auto: true
-                    // }).on("schema-change", e => {
-                    //     debugger
-                    // })
                 }
             }
         });

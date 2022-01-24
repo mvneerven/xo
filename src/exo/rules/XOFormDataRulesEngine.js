@@ -3,10 +3,10 @@ import ExoFormFactory from '../core/ExoFormFactory';
 
 class Rule {
     constructor(o) {
-        this.field = o.field;
+        this.control = o.control;
         this.rule = o.rule;
         this.if = o.rule?.if;
-        this.scope = this.if?.property || o.field.bind;
+        this.scope = this.if?.property || o.control.context.field.bind;
 
         if (typeof (this.if) === "object") {
             let keys = Object.keys(this.if);
@@ -20,14 +20,13 @@ class Rule {
     }
 
     toString() {
-        return `${JSON.stringify(this.if || this.rule).substr(0, 25)}... on ${ExoFormFactory.fieldToString(this.field)}`;
+        return `${JSON.stringify(this.if || this.rule).substr(0, 25)}... on ${this.control.toString()}`;
     }
 }
 
 
 class XOFormDataRulesEngine extends ExoRuleEngineBase {
     rules = [];
-    //fields = [];
 
     checkRules(context, options) {
         this.context = context;
@@ -46,7 +45,7 @@ class XOFormDataRulesEngine extends ExoRuleEngineBase {
         if(actions?.length){
             actions.forEach(r => {
                 this.rules.push(new Rule({
-                    field: control.context.field,
+                    control: control,
                     rule: r
                 }))
             })
@@ -95,8 +94,8 @@ class XOFormDataRulesEngine extends ExoRuleEngineBase {
                 let on = true;
                 let test = c.rule.if;
                 let te;
-                if (!test && c.field.type === "button") {
-                    on = this.var(c.scope) === c.field._control.value
+                if (!test && c.control.type === "button") {
+                    on = this.var(c.scope) === c.control.value
                 }
 
                 if (test) {
@@ -163,11 +162,11 @@ class XOFormDataRulesEngine extends ExoRuleEngineBase {
         if (key === "sequence" && Array.isArray(act.sequence)) {
             act.sequence.forEach(f => {
                 key = Object.keys(f)[0];
-                this._callAction(c, c.field._control, key, f[key])
+                this._callAction(c, c.control, key, f[key])
             })
         }
         else {
-            this._callAction(c, c.field._control, key, act[key])
+            this._callAction(c, c.control, key, act[key])
         }
     }
 
@@ -202,7 +201,7 @@ class XOFormDataRulesEngine extends ExoRuleEngineBase {
             alert: e => alert(this.var(e)),
             dialog: e => {
                 let dlg = this.exo.get(this.var(e));
-                dlg._control.show();
+                dlg.show();
             },
             set: (a, b) => {
                 this.exo.dataBinding.set(a, b);
@@ -236,7 +235,7 @@ class XOFormDataRulesEngine extends ExoRuleEngineBase {
             },
             focus: a => {
                 a = this.var(a);
-                this.exo.get(a)?._control.focus();
+                this.exo.get(a)?.focus();
             },
             convert: (a, b) => {
                 const cvt = (value, type) => {
@@ -302,7 +301,7 @@ class XOFormDataRulesEngine extends ExoRuleEngineBase {
     _setPageRelevant(pageElm, on) {
         pageElm[on ? "removeAttribute" : "setAttribute"]("data-skip", "true")
 
-        const page = pageElm.data.field._control;
+        const page = xo.control.get(pageElm);
 
         this.exo.events.trigger(ExoFormFactory.events.pageRelevancyChange, {
             index: page.index,

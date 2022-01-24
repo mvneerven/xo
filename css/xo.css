@@ -44,10 +44,6 @@
   display: block;
 }
 
-.pwa-omnibox .exf-txt-psx .exf-txt-psx-span {
-  top: 0.8rem !important;
-}
-
 html.no-user-select {
   -webkit-touch-callout: none;
   -webkit-user-select: none;
@@ -143,10 +139,6 @@ html:not(.pwa-signed-in) .if-signed-out {
 
 .pwa-env-debug .if-debug {
   display: block;
-}
-
-.pwa-omnibox .exf-txt-psx .exf-txt-psx-span {
-  top: 0.8rem !important;
 }
 
 html.no-user-select {
@@ -724,7 +716,7 @@ html:not(.pwa-signed-in) .if-signed-out {
   font-family: inherit;
 }
 
-.exf-container .horizontal.exf-input-group .exf-ctl > div {
+.exf-container .horizontal.exf-input-group .exf-ctl .exf-inp > div {
   width: 100%;
   margin-top: 0;
   display: -webkit-box;
@@ -747,14 +739,14 @@ html:not(.pwa-signed-in) .if-signed-out {
   gap: 1rem;
 }
 
-.exf-container .horizontal.exf-input-group .exf-ctl > div .exf-ilc-cnt {
+.exf-container .horizontal.exf-input-group .exf-ctl .exf-inp > div .exf-ilc-cnt {
   width: -webkit-fit-content;
   width: -moz-fit-content;
   width: fit-content;
   display: inline-block;
 }
 
-.exf-container .horizontal.exf-input-group .exf-ctl > div .exf-ilc-cnt .exf-caption-description {
+.exf-container .horizontal.exf-input-group .exf-ctl .exf-inp > div .exf-ilc-cnt .exf-caption-description {
   display: none;
 }
 
@@ -1186,7 +1178,7 @@ html:not(.pwa-signed-in) .if-signed-out {
       grid-template-columns: 20em 20em 1fr;
 }
 
-.exf-container .exf-txt-psx {
+.exf-container .exf-txt-psx .exf-inp {
   position: relative;
 }
 
@@ -1202,18 +1194,15 @@ html:not(.pwa-signed-in) .if-signed-out {
   height: -webkit-fit-content;
   height: -moz-fit-content;
   height: fit-content;
-  top: 1.5rem;
   position: absolute;
   overflow: hidden !important;
-  bottom: 0.5rem;
+  top: 50%;
+  -webkit-transform: translateY(-50%);
+          transform: translateY(-50%);
 }
 
 .exf-container .exf-txt-psx .exf-txt-psx-span.icon {
   left: 0.5rem;
-}
-
-.exf-container .exf-txt-psx .exf-txt-psx-span.field {
-  top: -0.2rem;
 }
 
 .exf-container .exf-txt-psx .exf-txt-psx-span.prefix {
@@ -1240,6 +1229,14 @@ html:not(.pwa-signed-in) .if-signed-out {
 
 .exf-container .exf-img-lg {
   max-width: 1024x;
+}
+
+.exf-container .ck-voice-label {
+  display: none !important;
+}
+
+.exf-container .ck-editor__editable_inline {
+  min-height: 400px;
 }
 
 .exf-sandbox {
@@ -2549,8 +2546,11 @@ html.theme-dark .exf-ctl-cnt.exf-switch input[type="range"] {
 }
 
 .exf-ctl-cnt.autocomplete {
-  position: relative;
   margin: auto;
+}
+
+.exf-ctl-cnt.autocomplete .exf-inp {
+  position: relative;
 }
 
 .exf-ctl-cnt.autocomplete .exf-ac-rs {
@@ -4040,7 +4040,6 @@ html:not(.pwa-touch) .exf-lv-item:hover .exf-lv-chk {
 }
 
 .exf-container.exf-theme-fluent .exf-txt-psx > .exf-ctl .exf-txt-psx-span {
-  top: 2.3rem;
   left: 0.7rem;
   color: var(--label);
 }
@@ -4087,7 +4086,7 @@ html:not(.pwa-touch) .exf-lv-item:hover .exf-lv-chk {
   line-height: 1.3;
 }
 
-.exf-container.exf-theme-material .exf-ctl-cnt:not(.exf-std-lbl) > .exf-ctl > input {
+.exf-container.exf-theme-material .exf-ctl-cnt:not(.exf-std-lbl) > .exf-ctl > .exf-inp > input {
   color: transparent;
 }
 
@@ -4116,12 +4115,18 @@ html:not(.pwa-touch) .exf-lv-item:hover .exf-lv-chk {
   z-index: 2;
 }
 
-.exf-container.exf-theme-material .exf-ctl-cnt > .exf-ctl > [name],
-.exf-container.exf-theme-material .exf-ctl-cnt > .exf-ctl progress {
+.exf-container.exf-theme-material .exf-ctl-cnt > .exf-ctl label {
+  -webkit-transition: all 0.2s;
+  transition: all 0.2s;
+  font-weight: 400;
+}
+
+.exf-container.exf-theme-material .exf-ctl-cnt > .exf-ctl > .exf-inp > [name],
+.exf-container.exf-theme-material .exf-ctl-cnt > .exf-ctl > .exf-inp progress {
   width: 100%;
 }
 
-.exf-container.exf-theme-material .exf-ctl-cnt > .exf-ctl > select {
+.exf-container.exf-theme-material .exf-ctl-cnt > .exf-ctl > .exf-inp > select {
   font-size: 1rem;
   height: 1.6rem;
   padding: 0.125rem 0.125rem 0.0625rem;
@@ -4133,20 +4138,20 @@ html:not(.pwa-touch) .exf-lv-item:hover .exf-lv-chk {
           box-shadow: none;
 }
 
-.exf-container.exf-theme-material .exf-ctl-cnt > .exf-ctl > [name]:focus {
+.exf-container.exf-theme-material .exf-ctl-cnt > .exf-ctl > .exf-inp > [name]:focus {
   outline: none;
   border: 0;
 }
 
-.exf-container.exf-theme-material .exf-ctl-cnt > .exf-ctl input,
-.exf-container.exf-theme-material .exf-ctl-cnt > .exf-ctl label {
+.exf-container.exf-theme-material .exf-ctl-cnt > .exf-ctl > .exf-inp input,
+.exf-container.exf-theme-material .exf-ctl-cnt > .exf-ctl > .exf-inp label {
   -webkit-transition: all 0.2s;
   transition: all 0.2s;
   font-weight: 400;
 }
 
-.exf-container.exf-theme-material .exf-ctl-cnt > .exf-ctl input,
-.exf-container.exf-theme-material .exf-ctl-cnt > .exf-ctl textarea {
+.exf-container.exf-theme-material .exf-ctl-cnt > .exf-ctl > .exf-inp input,
+.exf-container.exf-theme-material .exf-ctl-cnt > .exf-ctl > .exf-inp textarea {
   font-size: 1rem;
   padding: 0.5em 0.5em 0.5em 0.5em;
   border: 0;
@@ -4157,56 +4162,56 @@ html:not(.pwa-touch) .exf-lv-item:hover .exf-lv-chk {
   background-color: transparent;
 }
 
-.exf-container.exf-theme-material .exf-ctl-cnt > .exf-ctl input::-webkit-input-placeholder,
-.exf-container.exf-theme-material .exf-ctl-cnt > .exf-ctl textarea::-webkit-input-placeholder {
+.exf-container.exf-theme-material .exf-ctl-cnt > .exf-ctl > .exf-inp input::-webkit-input-placeholder,
+.exf-container.exf-theme-material .exf-ctl-cnt > .exf-ctl > .exf-inp textarea::-webkit-input-placeholder {
   opacity: 0;
   color: var(--color-placeholder, #aaa);
 }
 
-.exf-container.exf-theme-material .exf-ctl-cnt > .exf-ctl input:-ms-input-placeholder,
-.exf-container.exf-theme-material .exf-ctl-cnt > .exf-ctl textarea:-ms-input-placeholder {
+.exf-container.exf-theme-material .exf-ctl-cnt > .exf-ctl > .exf-inp input:-ms-input-placeholder,
+.exf-container.exf-theme-material .exf-ctl-cnt > .exf-ctl > .exf-inp textarea:-ms-input-placeholder {
   opacity: 0;
   color: var(--color-placeholder, #aaa);
 }
 
-.exf-container.exf-theme-material .exf-ctl-cnt > .exf-ctl input::-ms-input-placeholder,
-.exf-container.exf-theme-material .exf-ctl-cnt > .exf-ctl textarea::-ms-input-placeholder {
+.exf-container.exf-theme-material .exf-ctl-cnt > .exf-ctl > .exf-inp input::-ms-input-placeholder,
+.exf-container.exf-theme-material .exf-ctl-cnt > .exf-ctl > .exf-inp textarea::-ms-input-placeholder {
   opacity: 0;
   color: var(--color-placeholder, #aaa);
 }
 
-.exf-container.exf-theme-material .exf-ctl-cnt > .exf-ctl input::placeholder,
-.exf-container.exf-theme-material .exf-ctl-cnt > .exf-ctl textarea::placeholder {
+.exf-container.exf-theme-material .exf-ctl-cnt > .exf-ctl > .exf-inp input::placeholder,
+.exf-container.exf-theme-material .exf-ctl-cnt > .exf-ctl > .exf-inp textarea::placeholder {
   opacity: 0;
   color: var(--color-placeholder, #aaa);
 }
 
-.exf-container.exf-theme-material .exf-ctl-cnt > .exf-ctl input[type="color"] {
+.exf-container.exf-theme-material .exf-ctl-cnt > .exf-ctl > .exf-inp input[type="color"] {
   min-height: 1rem;
   padding: 0;
 }
 
-.exf-container.exf-theme-material .exf-ctl-cnt.exf-focus > .exf-ctl > input::-webkit-input-placeholder,
-.exf-container.exf-theme-material .exf-ctl-cnt.exf-focus > .exf-ctl > textarea::-webkit-input-placeholder, .exf-container.exf-theme-material .exf-ctl-cnt.exf-std-lbl > .exf-ctl > input::-webkit-input-placeholder,
-.exf-container.exf-theme-material .exf-ctl-cnt.exf-std-lbl > .exf-ctl > textarea::-webkit-input-placeholder {
+.exf-container.exf-theme-material .exf-ctl-cnt.exf-focus > .exf-ctl > .exf-inp > input::-webkit-input-placeholder,
+.exf-container.exf-theme-material .exf-ctl-cnt.exf-focus > .exf-ctl > .exf-inp > textarea::-webkit-input-placeholder, .exf-container.exf-theme-material .exf-ctl-cnt.exf-std-lbl > .exf-ctl > .exf-inp > input::-webkit-input-placeholder,
+.exf-container.exf-theme-material .exf-ctl-cnt.exf-std-lbl > .exf-ctl > .exf-inp > textarea::-webkit-input-placeholder {
   opacity: 1;
 }
 
-.exf-container.exf-theme-material .exf-ctl-cnt.exf-focus > .exf-ctl > input:-ms-input-placeholder,
-.exf-container.exf-theme-material .exf-ctl-cnt.exf-focus > .exf-ctl > textarea:-ms-input-placeholder, .exf-container.exf-theme-material .exf-ctl-cnt.exf-std-lbl > .exf-ctl > input:-ms-input-placeholder,
-.exf-container.exf-theme-material .exf-ctl-cnt.exf-std-lbl > .exf-ctl > textarea:-ms-input-placeholder {
+.exf-container.exf-theme-material .exf-ctl-cnt.exf-focus > .exf-ctl > .exf-inp > input:-ms-input-placeholder,
+.exf-container.exf-theme-material .exf-ctl-cnt.exf-focus > .exf-ctl > .exf-inp > textarea:-ms-input-placeholder, .exf-container.exf-theme-material .exf-ctl-cnt.exf-std-lbl > .exf-ctl > .exf-inp > input:-ms-input-placeholder,
+.exf-container.exf-theme-material .exf-ctl-cnt.exf-std-lbl > .exf-ctl > .exf-inp > textarea:-ms-input-placeholder {
   opacity: 1;
 }
 
-.exf-container.exf-theme-material .exf-ctl-cnt.exf-focus > .exf-ctl > input::-ms-input-placeholder,
-.exf-container.exf-theme-material .exf-ctl-cnt.exf-focus > .exf-ctl > textarea::-ms-input-placeholder, .exf-container.exf-theme-material .exf-ctl-cnt.exf-std-lbl > .exf-ctl > input::-ms-input-placeholder,
-.exf-container.exf-theme-material .exf-ctl-cnt.exf-std-lbl > .exf-ctl > textarea::-ms-input-placeholder {
+.exf-container.exf-theme-material .exf-ctl-cnt.exf-focus > .exf-ctl > .exf-inp > input::-ms-input-placeholder,
+.exf-container.exf-theme-material .exf-ctl-cnt.exf-focus > .exf-ctl > .exf-inp > textarea::-ms-input-placeholder, .exf-container.exf-theme-material .exf-ctl-cnt.exf-std-lbl > .exf-ctl > .exf-inp > input::-ms-input-placeholder,
+.exf-container.exf-theme-material .exf-ctl-cnt.exf-std-lbl > .exf-ctl > .exf-inp > textarea::-ms-input-placeholder {
   opacity: 1;
 }
 
-.exf-container.exf-theme-material .exf-ctl-cnt.exf-focus > .exf-ctl > input::placeholder,
-.exf-container.exf-theme-material .exf-ctl-cnt.exf-focus > .exf-ctl > textarea::placeholder, .exf-container.exf-theme-material .exf-ctl-cnt.exf-std-lbl > .exf-ctl > input::placeholder,
-.exf-container.exf-theme-material .exf-ctl-cnt.exf-std-lbl > .exf-ctl > textarea::placeholder {
+.exf-container.exf-theme-material .exf-ctl-cnt.exf-focus > .exf-ctl > .exf-inp > input::placeholder,
+.exf-container.exf-theme-material .exf-ctl-cnt.exf-focus > .exf-ctl > .exf-inp > textarea::placeholder, .exf-container.exf-theme-material .exf-ctl-cnt.exf-std-lbl > .exf-ctl > .exf-inp > input::placeholder,
+.exf-container.exf-theme-material .exf-ctl-cnt.exf-std-lbl > .exf-ctl > .exf-inp > textarea::placeholder {
   opacity: 1;
 }
 
@@ -4229,11 +4234,11 @@ html:not(.pwa-touch) .exf-lv-item:hover .exf-lv-chk {
   padding-bottom: 0;
 }
 
-.exf-container.exf-theme-material .exf-ctl-cnt.exf-base-text:not(.exf-std-lbl).exf-filled > .exf-ctl input,
-.exf-container.exf-theme-material .exf-ctl-cnt.exf-base-text:not(.exf-std-lbl).exf-filled > .exf-ctl textarea, .exf-container.exf-theme-material .exf-ctl-cnt.exf-base-text:not(.exf-std-lbl).exf-focus > .exf-ctl input,
-.exf-container.exf-theme-material .exf-ctl-cnt.exf-base-text:not(.exf-std-lbl).exf-focus > .exf-ctl textarea, .exf-container.exf-theme-material .exf-ctl-cnt[data-field-type="dropdown"]:not(.exf-std-lbl).exf-filled > .exf-ctl input,
-.exf-container.exf-theme-material .exf-ctl-cnt[data-field-type="dropdown"]:not(.exf-std-lbl).exf-filled > .exf-ctl textarea, .exf-container.exf-theme-material .exf-ctl-cnt[data-field-type="dropdown"]:not(.exf-std-lbl).exf-focus > .exf-ctl input,
-.exf-container.exf-theme-material .exf-ctl-cnt[data-field-type="dropdown"]:not(.exf-std-lbl).exf-focus > .exf-ctl textarea {
+.exf-container.exf-theme-material .exf-ctl-cnt.exf-base-text:not(.exf-std-lbl).exf-filled > .exf-ctl > .exf-inp input,
+.exf-container.exf-theme-material .exf-ctl-cnt.exf-base-text:not(.exf-std-lbl).exf-filled > .exf-ctl > .exf-inp textarea, .exf-container.exf-theme-material .exf-ctl-cnt.exf-base-text:not(.exf-std-lbl).exf-focus > .exf-ctl > .exf-inp input,
+.exf-container.exf-theme-material .exf-ctl-cnt.exf-base-text:not(.exf-std-lbl).exf-focus > .exf-ctl > .exf-inp textarea, .exf-container.exf-theme-material .exf-ctl-cnt[data-field-type="dropdown"]:not(.exf-std-lbl).exf-filled > .exf-ctl > .exf-inp input,
+.exf-container.exf-theme-material .exf-ctl-cnt[data-field-type="dropdown"]:not(.exf-std-lbl).exf-filled > .exf-ctl > .exf-inp textarea, .exf-container.exf-theme-material .exf-ctl-cnt[data-field-type="dropdown"]:not(.exf-std-lbl).exf-focus > .exf-ctl > .exf-inp input,
+.exf-container.exf-theme-material .exf-ctl-cnt[data-field-type="dropdown"]:not(.exf-std-lbl).exf-focus > .exf-ctl > .exf-inp textarea {
   color: initial;
 }
 
@@ -4612,10 +4617,6 @@ html:not(.pwa-touch) .exf-lv-item:hover .exf-lv-chk {
   background-color: var(--color-button-disabled);
 }
 
-.exf-container.exf-theme-material .exf-txt-psx .exf-txt-psx-span {
-  top: 0.2rem;
-}
-
 .exf-container.exf-theme-thin {
   --radius: var(--radius-size, 0.5rem);
   --padx: calc(var(--padding, 0.6rem) * 2);
@@ -4868,7 +4869,6 @@ html:not(.pwa-touch) .exf-lv-item:hover .exf-lv-chk {
 }
 
 .exf-container.exf-theme-thin .exf-txt-psx .exf-ctl .exf-txt-psx-span {
-  top: 2.1rem;
   left: 0.7rem;
   color: var(--label);
 }

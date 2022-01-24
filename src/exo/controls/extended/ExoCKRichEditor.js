@@ -1,12 +1,11 @@
 import ExoBaseControls from '../base';
 import DOM from '../../../pwa/DOM';
+import Core from '../../../pwa/Core';
 
 class ExoCKRichEditor extends ExoBaseControls.controls.div.type {
-    constructor(context) {
-        super(context);
-
+    constructor() {
+        super(...arguments);
         this.htmlElement.data = {};
-
     }
 
     get value() {
@@ -23,21 +22,26 @@ class ExoCKRichEditor extends ExoBaseControls.controls.div.type {
     }
 
     async render() {
-        const _ = this;
+        const me = this;
 
         await super.render();
-        const me = _.htmlElement;
+        //const me = me.htmlElement;
         return new Promise((resolve, reject) => {
             DOM.require("https://cdn.ckeditor.com/ckeditor5/17.0.0/classic/ckeditor.js", () => {
-                ClassicEditor
-                    .create(_.htmlElement)
-                    .catch(error => {
-                        console.error(error);
-                    }).then(ck => {
-                        _.htmlElement.data["editor"] = ck;
+                Core.waitFor(() => {
+                    return typeof (ClassicEditor) !== "undefined";
 
-                    });
-                resolve(_.container);
+                }, 200).then(() => {
+                    ClassicEditor
+                        .create(me.htmlElement)
+                        .catch(error => {
+                            console.error(error);
+                        }).then(ck => {
+                            me.htmlElement.data["editor"] = ck;
+                        });
+                    resolve(me.container);
+                });
+
             });
 
         })

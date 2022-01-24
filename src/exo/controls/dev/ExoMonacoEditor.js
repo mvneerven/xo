@@ -5,18 +5,16 @@ import ExoDivControl from "../base/ExoDivControl";
 const MONACO_VERSION = "0.31.1";
 
 class ExoMonacoCodeEditor extends ExoDivControl {
-    mode = "html";
+    mode = "html";    
     theme = document.documentElement.classList.contains("theme-dark") ? "vs-dark" : "vs-light";
     events = new Core.Events(this);
     _version = MONACO_VERSION;
 
     static returnValueType = String;
 
-    constructor(context) {
-        super(context);
-        this.useContainer = true;
-        this.htmlElement = document.createElement("div");
-        this.htmlElement.data = { editor: this };
+    constructor() {
+        super(...arguments);
+        
 
         this.acceptProperties(
             {
@@ -41,6 +39,15 @@ class ExoMonacoCodeEditor extends ExoDivControl {
                 type: Object
             }
         );
+    }
+
+    mapAcceptedProperties(){
+        super.mapAcceptedProperties();
+        
+        this._hasValue = true;
+        this.useContainer = true;
+        this.htmlElement = document.createElement("div");
+        this.htmlElement.data = { editor: this };
     }
 
     set version(data) {
@@ -97,7 +104,6 @@ class ExoMonacoCodeEditor extends ExoDivControl {
      */
     set mode(name) {
         this._mode = name;
-        console.log("language: ", name)
         monaco.editor.setModelLanguage(this.editor.getModel(), name);        
     }
 
@@ -167,7 +173,7 @@ class ExoMonacoCodeEditor extends ExoDivControl {
         );
     }
 
-    setProperties() {
+    applyNonMappedFieldSchemaProperties() {
         if (this.context.field.mode) {
             this.mode = this.context.field.mode;
             delete this.context.field.mode;
@@ -183,7 +189,7 @@ class ExoMonacoCodeEditor extends ExoDivControl {
             delete this.context.field.value;
         }
 
-        super.setProperties();
+        super.applyNonMappedFieldSchemaProperties();
     }
 }
 

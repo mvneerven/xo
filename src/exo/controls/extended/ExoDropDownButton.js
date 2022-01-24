@@ -5,8 +5,8 @@ import ExoListControl from "../base/ExoListControl";
 class ExoDropDownButton extends ExoListControl {
   icon = "ti-user";
 
-  constructor(context) {
-    super(context);
+  constructor() {
+    super(...arguments);
     
     this.events = new Core.Events(this);
 

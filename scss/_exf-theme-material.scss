@@ -71,9 +71,12 @@
                         line-height: 1.3;
                     }
 
-                    > input {
-                        color: transparent;
+                    > .exf-inp {
+                        > input {
+                            color: transparent;
+                        }
                     }
+                    
                 }
             }
 
@@ -102,64 +105,78 @@
                     z-index: 2;
                 }
 
-                > [name],
-                progress {
-                    width: 100%;
-                }
-
-                > select {
-                    font-size: 1rem;
-                    height: 1.6rem;
-                    padding: 0.125rem 0.125rem 0.0625rem;
-                    margin-top: 0.15rem;
-                    background: none;
-                    border: none;
-                    line-height: 1.6;
-                    box-shadow: none;
-                }
-
-                > [name]:focus {
-                    outline: none;
-                    border: 0;
-                }
-
-                input,
+                
                 label {
                     -webkit-transition: all 0.2s;
                     transition: all 0.2s;
                     font-weight: 400;
                 }
-                input,
-                textarea {
-                    font-size: 1rem;
-                    padding: 0.5em 0.5em 0.5em 0.5em;
-                    border: 0;
-                    outline: none;
-                    border-radius: 0;
-                    box-sizing: border-box;
-                    background-color: transparent;
 
-                    &::placeholder {
-                        opacity: 0;
-                        color: var(--color-placeholder, #aaa);
+                > .exf-inp {
+                    > [name],
+                    progress {
+                        width: 100%;
                     }
-                }
 
-                input[type="color"] {
-                    min-height: 1rem;
-                    padding: 0;
+                    > select {
+                        font-size: 1rem;
+                        height: 1.6rem;
+                        padding: 0.125rem 0.125rem 0.0625rem;
+                        margin-top: 0.15rem;
+                        background: none;
+                        border: none;
+                        line-height: 1.6;
+                        box-shadow: none;
+                    }
+
+                    > [name]:focus {
+                        outline: none;
+                        border: 0;
+                    }
+
+                    input,
+                    label {
+                        -webkit-transition: all 0.2s;
+                        transition: all 0.2s;
+                        font-weight: 400;
+                    }
+                    input,
+                    textarea {
+                        font-size: 1rem;
+                        padding: 0.5em 0.5em 0.5em 0.5em;
+                        border: 0;
+                        outline: none;
+                        border-radius: 0;
+                        box-sizing: border-box;
+                        background-color: transparent;
+
+                        &::placeholder {
+                            opacity: 0;
+                            color: var(--color-placeholder, #aaa);
+                        }
+                    }
+
+                    input[type="color"] {
+                        min-height: 1rem;
+                        padding: 0;
+                    }
                 }
             }
 
             &.exf-focus,
             &.exf-std-lbl {
                 > .exf-ctl {
-                    > input,
-                    > textarea {
-                        &::placeholder {
-                            opacity: 1;
+
+                    > .exf-inp {
+                        > input,
+                        > textarea {
+                            &::placeholder {
+                                opacity: 1;
+                            }
                         }
                     }
+
+                    
 
                     > .exf-label {
                         color: var(--color-label-active, var(--color-label));
@@ -193,11 +210,12 @@
                     &.exf-filled,
                     &.exf-focus {
                         > .exf-ctl {
-                            input,
-                            textarea {
-                                color: initial;
+                            > .exf-inp {
+                                input,
+                                textarea {
+                                    color: initial;
+                                }
                             }
-
                             > .exf-label {
                                 top: -1.2em;
                                 left: 0;
@@ -547,8 +565,6 @@
                     opacity: 0.7;
                 }
             }
-
-            
         }
 
         .exf-btn-cnt {
@@ -619,7 +635,7 @@
 
         .exf-txt-psx {
             .exf-txt-psx-span {
-                top: 0.2rem;
+                //    top: 0.2rem;
             }
         }
     }

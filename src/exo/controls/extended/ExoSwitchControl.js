@@ -4,11 +4,11 @@ class ExoSwitchControl extends ExoBaseControls.controls.range.type {
 
     static returnValueType = Boolean;
 
-    setProperties() {
+    applyNonMappedFieldSchemaProperties() {
         this.context.field.min = 0;
         this.context.field.max = 1;
         this.context.field.value = this.context.field.value || 0;
-        super.setProperties();
+        super.applyNonMappedFieldSchemaProperties();
 
         this.context.field.type = "switch"
     }

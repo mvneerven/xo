@@ -82,10 +82,8 @@ class ExoEntityEditor {
                 } else {
                     await this.host.entitySettings.api.post("", editData);
                 }
-            } catch (err) {
-                // grid._control.events.trigger(trigger, { success: false });
-
-                console.error(err);
+            } catch (ex) {
+                console.error(ex);
 
             } finally {
                 this.editing = false;

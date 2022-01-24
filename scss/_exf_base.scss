@@ -72,27 +72,30 @@
     .horizontal {
         &.exf-input-group {
             .exf-ctl {
-                > div {
-                    width: 100%;
-                    margin-top: 0;
-                    display: flex;
-                    flex-direction: row;
-
-                    flex-wrap: var(--flex-wrap, wrap);
-                    justify-content: var(--justify-content, flex-start);
-                    align-items: var(--align-items, stretch);
-                    align-content: var(--align-content, stretch);
-                    gap: 1rem;
-
-                    .exf-ilc-cnt {
-                        width: fit-content;
-                        display: inline-block;
-
-                        .exf-caption-description {
-                            display: none;
+                .exf-inp{
+                    > div {
+                        width: 100%;
+                        margin-top: 0;
+                        display: flex;
+                        flex-direction: row;
+    
+                        flex-wrap: var(--flex-wrap, wrap);
+                        justify-content: var(--justify-content, flex-start);
+                        align-items: var(--align-items, stretch);
+                        align-content: var(--align-content, stretch);
+                        gap: 1rem;
+    
+                        .exf-ilc-cnt {
+                            width: fit-content;
+                            display: inline-block;
+    
+                            .exf-caption-description {
+                                display: none;
+                            }
                         }
                     }
                 }
+                
             }
         }
     }
@@ -290,7 +293,6 @@
     }
 
     .exf-input-group {
-        
         .exf-ilc-cnt {
             display: grid;
             grid-template-columns: 30px 1fr;
@@ -304,7 +306,6 @@
                 opacity: 0.6;
             }
         }
-    
     }
 
     .exf-page {
@@ -556,7 +557,9 @@
     }
 
     .exf-txt-psx {
-        position: relative;
+        .exf-inp {
+            position: relative;
+        }
 
         &.prefix {
             input {
@@ -572,17 +575,20 @@
 
         .exf-txt-psx-span {
             height: fit-content;
-            top: 1.5rem;
+            //top: 1.5rem;
             position: absolute;
             overflow: hidden !important;
-            bottom: 0.5rem;
+            //bottom: 0.5rem;
+
+            top: 50%;
+            transform: translateY(-50%);
 
             &.icon {
                 left: 0.5rem;
             }
 
             &.field {
-                top: -0.2rem;
+                //    top: -0.2rem;
             }
 
             &.prefix {
@@ -610,6 +616,14 @@
     .exf-img-lg {
         max-width: 1024x;
     }
+
+    .ck-voice-label {
+        display: none!important;
+    }
+
+    .ck-editor__editable_inline {
+        min-height: 400px;
+    }
 }
 
 .exf-sandbox {
@@ -634,7 +648,7 @@
     }
 }
 
-[data-field-type]{
+[data-field-type] {
     &.full-height {
         display: flex;
         flex-flow: column;
@@ -700,6 +714,8 @@
             }
         }
     }
+
+    
 }
 
 [data-field-type="switch"],

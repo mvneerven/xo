@@ -47,7 +47,6 @@ class JSONSchema {
 
             let props = this.schema.properties[path] // todo deep path
            
-
             if (!field.name) {
                 field.name = path;
             }
@@ -67,21 +66,13 @@ class JSONSchema {
                 field.caption = (props ? props.title : null) || Core.toWords(path);
             }
 
-            // if (props?.description) { // https://json-schema.org/draft/2020-12/json-schema-validation.html#rfc.section.9.1
-            //     //field.info = props.description;
-            // }
-
             if (props?.enum && !field.items) {
                 field.type = "dropdown";
                 field.items = props.enum
             }
-
         }
-
-        
         catch (ex) {
             console.error(`Error applying JSON Schema for field ${ExoFormFactory.fieldToString(field)}`, ex)
-
         }
 
     }

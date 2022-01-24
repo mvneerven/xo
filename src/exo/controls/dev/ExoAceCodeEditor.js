@@ -2,8 +2,7 @@ import ExoBaseControls from '../base';
 import DOM from '../../../pwa/DOM';
 
 class ExoAceCodeEditor extends ExoBaseControls.controls.div.type {
-    _mode = "html";
-
+    _mode = "html";    
     defaultThemes = {
         dark: "ambiance",
         light: "chrome"
@@ -13,10 +12,11 @@ class ExoAceCodeEditor extends ExoBaseControls.controls.div.type {
 
     static returnValueType = String;
 
-    constructor(context) {
-        super(context);
+    constructor() {
+        super(...arguments);
+        
         this.htmlElement.data = {};
-
+        this._hasValue = true;
         this.acceptProperties(
             { name: "mode", type: String, description: "Ace Editor mode - refer to Ace documentation" },
             { name: "theme", type: String, description: "Ace Editor theme - refer to Ace documentation" },
@@ -113,8 +113,7 @@ class ExoAceCodeEditor extends ExoBaseControls.controls.div.type {
         return null;
     }
 
-    setProperties() {
-
+    applyNonMappedFieldSchemaProperties() {
         if (this.context.field.mode) {
             this.mode = this.context.field.mode;
             delete this.context.field.mode;
@@ -124,13 +123,7 @@ class ExoAceCodeEditor extends ExoBaseControls.controls.div.type {
             this.theme = this.context.field.theme;
             delete this.context.field.theme;
         }
-
-        // if (this.context.field.value) {
-        //     this.value = this.context.field.value;
-        //     delete this.context.field.value;
-        // }
-
-        super.setProperties();
+        super.applyNonMappedFieldSchemaProperties();
     }
 }
 

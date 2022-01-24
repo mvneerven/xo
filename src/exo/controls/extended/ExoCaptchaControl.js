@@ -4,9 +4,9 @@ import xo from '../../../../js/xo';
 
 class ExoCaptchaControl extends ExoBaseControls.controls.div.type {
 
-    constructor(context) {
-        super(context);
-
+    constructor() {
+        super(...arguments);
+        this._hasValue = true;
         this.acceptProperties(
             {
                 name: "sitekey",

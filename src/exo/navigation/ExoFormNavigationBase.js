@@ -110,10 +110,15 @@ class ExoFormNavigationBase {
             }
             this.controls.forEach(b => {
                 this.addButton(b).then(btn => {
-
+                    
                     let field = ExoFormFactory.getFieldFromElement(btn);
                     b._control = field._control;
                     b._control._rendered = true;
+                    
+                    //let control = xo.control.get(btn);
+                    // xo.control.register(btn, control)
+                    //  b._control = control;
+                    //  b._control._rendered = true;
                     rendered++;
                     if (rendered === count)
                         resolve();
@@ -152,9 +157,11 @@ class ExoFormNavigationBase {
             ...options || {}
         }
         let btn = await this.exo.renderSingleControl(options);
+
+        //if (btn.querySelector("button").name !== "send" || this.exo.schema.submit !== false)
+        this.container.appendChild(btn);
         
-        if(btn.querySelector("button").name !== "send" || this.exo.schema.submit !== false)
-            this.container.appendChild(btn);
+
         return btn;
     }
 
@@ -163,6 +170,8 @@ class ExoFormNavigationBase {
     }
 
     _updateView(add, page) {
+        if (!page && add === 0)
+            return;
 
         let current = this.currentPage;
 
@@ -183,7 +192,7 @@ class ExoFormNavigationBase {
         this._currentPage = page;
 
         if (current > 0) {
-            if (!this.canMove(current, page))
+            if (page && current !== page && !this.canMove(current, page))
                 return;
 
             let returnValue = this.exo.events.trigger(ExoFormFactory.events.beforePage, {
@@ -326,21 +335,18 @@ class ExoFormNavigationBase {
         if (this._noUpdatecontrolstates)
             return;
 
-
-
         let prev = this.getControl("prev");
         if (prev)
             prev.disabled = this.currentPage < 2;
 
         let nxt = this.getControl("next");
         if (nxt) {
-
             if (this.currentPage === this.pageCount) {
                 nxt.visible = false;
             }
             else {
                 nxt.visible = true;
-                nxt.disabled = !this.canMoveNext(); // this.currentPage === this.pageCount;
+                nxt.disabled = !this.canMoveNext()
             }
         }
 

@@ -1,0 +1,32 @@
+.ui-test-results {
+    list-style: none;
+    margin: 0;
+
+    max-height: 70%;
+    max-height: -webkit-fill-available;
+    overflow-y: auto;
+
+    li {
+        padding: .5rem;
+        
+
+        .reason {
+            display: block;
+            padding-left: 1.2rem;
+            opacity: .7;
+        }
+
+        .failed {
+            color: red;
+        }
+        
+        .passed{
+            color: #00ff33;
+        }
+
+        ul {
+            list-style: inherit
+        }
+    }
+    
+}

@@ -3,11 +3,8 @@ import ExoForm from '../../core/ExoForm';
 import DOM from '../../../pwa/DOM';
 
 class ExoFieldSetControl extends ExoFormPageControl {
-    constructor(context) {
-        super(context);
-
-
-        this._index = context.field.index;
+    constructor() {
+        super(...arguments);
 
         this.acceptProperties(
             {
@@ -26,6 +23,10 @@ class ExoFieldSetControl extends ExoFormPageControl {
                 type: Number
             }
         )
+    }
+
+    mapAcceptedProperties(){
+        super.mapAcceptedProperties();
 
         this.htmlElement = DOM.parseHTML(`<fieldset class="exf-cnt exf-page"></fieldset>`);
 
@@ -62,15 +63,10 @@ class ExoFieldSetControl extends ExoFormPageControl {
 
     async render() {
         await super.render();
-
-
-
         if (this.index === this.context.exo.addins.navigation.currentPage) {
             this.htmlElement.classList.add("active");
         }
-
         this.htmlElement.setAttribute("data-page", this.index)
-
         return this.container;
     }
 }

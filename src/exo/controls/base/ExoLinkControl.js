@@ -3,12 +3,11 @@ import ExoFormFactory from '../../core/ExoFormFactory';
 
 class ExoLinkControl extends ExoElementControl {
 
-    constructor(context) {
-        super(context);
+    constructor() {
+        super(...arguments);
 
-        this.useContainer = false,
-
-            this.htmlElement = document.createElement("a");
+        this.useContainer = false;
+        this.htmlElement = document.createElement("a");
         this.htmlElement.innerHTML = this.caption
 
         this.acceptProperties(
@@ -32,8 +31,6 @@ class ExoLinkControl extends ExoElementControl {
                 name: "dropdown",
                 type: Array
             }
-
-
         );
     }
 

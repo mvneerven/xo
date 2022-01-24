@@ -2,11 +2,7 @@ import ExoInputListControl from './ExoInputListControl';
 
 class ExoRadioButtonListControl extends ExoInputListControl {
     optionType = "radio";
-
-    constructor(context) {
-        super(context);
-    }
-
+    
     set value(data) {
         this._value = data;
         this.htmlElement.querySelectorAll("[name]").forEach(el => {
@@ -16,6 +12,9 @@ class ExoRadioButtonListControl extends ExoInputListControl {
     }
 
     get value() {
+        if(!this._rendered)
+            return this._value;
+
         let inp = this.htmlElement.querySelector("[name]:checked");
         this._value = inp ? inp.value : "";
         return this._value;

@@ -63,7 +63,7 @@ class ExoFormBuilderSidePanel {
 
         if (this.tabStrip.tabs.dataTab) {
             this.builder.renderCodeEditor({ mode: "json", readOnly: true, id: "exo-datamodel", value: "" }).then(elm => {
-                this.builder.formDataViewer = xo.form.factory.getFieldFromElement(elm)._control;
+                this.builder.formDataViewer = xo.control.get(elm);
                 this.tabStrip.tabs.dataTab.panel.appendChild(elm);
             })
         }
@@ -82,7 +82,10 @@ class ExoFormBuilderSidePanel {
             let form = _.tabStrip.tabs.settings.panel.querySelector("form");
 
             const bindMax = e => {
-                form.querySelector("[name='page']").setAttribute("max", form.querySelector("[name='pages']").value);
+                let pageInput = form.querySelector("[name='page']");
+                if (!pageInput)
+                    return;
+                pageInput.setAttribute("max", form.querySelector("[name='pages']").value);
 
                 if (parseInt(form.querySelector("[name='page']").value) > parseInt(form.querySelector("[name='pages']").value)) {
                     form.querySelector("[name='pages']").value = form.querySelector("[name='page']").getAttribute("max");
@@ -123,43 +126,31 @@ class ExoFormBuilderSidePanel {
     mapSettingsToModel() {
         let model = this.builder.renderer.model;
 
-        this.settingsForm.map(f => {
-
-            if (f.name.startsWith("setting.")) {
-                let name = f.name.substring(8)
+        this.settingsForm.all().forEach(control=>{
+            if (control.name?.startsWith("setting.")) {
+                let name = control.name.substring(8)
                 let v = model.get(name);
                 if (v != null)
-                    return v;
+                    control.value = v;
             }
             else {
-                switch (f.name) {
+                switch (control.name) {
                     case "pages":
                         let count = model.pageCount;
-                        return count;
+                        control.value = count;
                     case "page":
 
-                        f._control.htmlElement.max = model.pageCount;
-                        return 1;
+                        control.htmlElement.max = model.pageCount;
+                        control.value = 1;
                 }
             }
-        })
+        });
+
+        
     }
 
-    // showDataChange() {
-    //     let elm = document.getElementById("exo-datamodel");
-    //     if (elm) {
-    //         let f = window.xo.form.factory.getFieldFromElement(elm)
-    //         if (f) {
-    //             f._control.value = JSON.stringify(
-    //                 this.builder.renderer.data    
-    //             , null, 2);
-
-    //         }
-    //     }
-    // }
-
     updateCurrentFormPage(index) {
-        this.settingsForm.get("page")._control.value = index;
+        this.settingsForm.get("page").value = index;
     }
 
     getFieldMeta() {
@@ -240,11 +231,8 @@ class ExoFormBuilderSidePanel {
 
     async getSettings() {
         this.settingsForm = this.builder.exoContext.createForm({ host: this });
-
         await this.settingsForm.load(this.createFormSettingsForm());
-
         return this.settingsForm.renderForm();
-
     }
 
     getFields() {

@@ -6,11 +6,12 @@ import Core from '../../../pwa/Core';
 class ExoListControl extends ExoElementControl {
 
     isMultiSelect = false;
-
+    
     view = "block";
 
-    constructor(context) {
-        super(context);
+    constructor() {
+        super(...arguments);
+        this._hasValue = true;
         this.htmlElement = document.createElement('select');
 
         this.acceptProperties(

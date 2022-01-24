@@ -4,8 +4,8 @@ import ExoTextControlAutoCompleteExtension from './ExoTextControlAutoCompleteExt
 
 // Textbox control (input[type=text])
 class ExoTextControl extends ExoInputControl {
-    constructor(context) {
-        super(context);
+    constructor() {
+        super(...arguments);
 
         this.isTextInput = true;
         this.htmlElement = DOM.parseHTML('<input type="text"/>');
@@ -85,17 +85,14 @@ class ExoTextControl extends ExoInputControl {
             })
         }
 
-
-
         for (const x of ["prefix", "suffix"]) {
             if (this[x]) {
-                //this.htmlElement.closest(".exf-ctl").setAttribute("data-prefix", this.prefix)
                 this.container.classList.add("exf-std-lbl");
                 await this.addPreOrSuffix(x, this[x])
             }
         }
 
-        if (this.autocomplete) {
+        if (this.autocomplete) { 
             this.autocomplete.attach();
         }
 
@@ -123,7 +120,15 @@ class ExoTextControl extends ExoInputControl {
             span.style = `${(obj.font ? "font-family: "
                 + obj.font : "")}; ${(obj.size ? "font-size: " + obj.size + "; line-height: " + obj.size : "")}`;
         }
-        this.container.querySelector(".exf-ctl").appendChild(span);
+        if(obj.click){
+            span.style.cursor = "pointer";
+            span.addEventListener("click", e=>{
+                obj.click(e);
+            })
+        }
+        //let div = DOM.wrap(this.htmlElement);
+        //div.classList.add("")
+        this.container.querySelector(".exf-inp").appendChild(span);
     }
 
     get prefix() {
@@ -137,7 +142,7 @@ class ExoTextControl extends ExoInputControl {
     get suffix() {
         return this._suffix;
     }
-
+ 
     set suffix(value) {
         this._suffix = value;
     }

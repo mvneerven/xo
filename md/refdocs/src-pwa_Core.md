@@ -243,6 +243,19 @@ __*return*__ | `undefined` | *string (36 characters)*
 
 ---
 
+### `hashFromString(s) ► `
+
+![modifier: private](images/badges/modifier-private.svg) ![modifier: static](images/badges/modifier-static.svg)
+
+Returns a hash code from the given string
+
+Parameters | Type | Description
+--- | --- | ---
+__s__ | `String` | **
+__*return*__ | `undefined` | *hash code*
+
+---
+
 ### `waitFor(f, timeoutMs, intervalMs) ► `
 
 ![modifier: private](images/badges/modifier-private.svg) ![modifier: static](images/badges/modifier-static.svg)

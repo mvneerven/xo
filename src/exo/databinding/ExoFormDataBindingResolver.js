@@ -12,11 +12,14 @@ class ExoFormDataBindingResolver {
     }
 
     addBoundControl(settings) {
-        let h = `${ExoFormFactory.fieldToString(settings.field)}.${settings.propertyName}.${settings.field._index}`;
+        let h = `${settings.field.type}.${settings.propertyName}.${Core.hashFromString(settings.callback.toString())}`;
 
-        if(!this._hash[h]){
+        if (!this._hash[h]) {
             this._hash[h] = 1;
             this._boundControlState.push(settings);
+        }
+        else{
+            debugger;
         }
     }
 
@@ -24,7 +27,9 @@ class ExoFormDataBindingResolver {
         try {
             this.dataBinding.noProxy = true;
             this._checkSchemaLogic(changedData);
-            this._replaceVars(this.exo.container, changedData);
+            if (this.exo.container)
+                this._replaceVars(this.exo.container, changedData);
+
             this._bindControlStateToUpdatedModel(changedData)
         }
         finally {
@@ -100,7 +105,7 @@ class ExoFormDataBindingResolver {
                 model.logic.bind(this.exo)(context);
             }
             else {
-                
+
                 Core.scopeEval(context, js)
             }
         }
@@ -113,21 +118,25 @@ class ExoFormDataBindingResolver {
         }
     }
 
-    _bindControlStateToUpdatedModel(changedData) {
-
+    _bindControlStateToUpdatedModel() {
         this._boundControlState.forEach(obj => {
+            let value = this.dataBinding.get(obj.path);
 
-            if(!changedData?.path || obj.path === changedData?.path){
+            if (obj.callback) {
+                obj.callback(obj.propertyName, value)
+            }
+            else {
+                obj.control[obj.propertyName] = value;
+            }
 
-                let value = this.dataBinding.get(obj.path);
-                if (obj.propertyName === "bind") {
+            if (obj.propertyName === "bind") {
+                if (obj.control.value != value) {
+                    console.log("Updating ", obj.control.toString(), value)
                     obj.control.value = value;
                 }
-
-                obj.control[obj.propertyName] = value;
-
-                obj.updatedValue = value
             }
+
+            obj.updatedValue = value
         });
     }
 }

@@ -1,4 +1,3 @@
-import ExoFormFactory from '../core/ExoFormFactory';
 
 class ExoFormProgressBase {
     constructor(exo) {

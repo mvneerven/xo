@@ -81,11 +81,11 @@ class PWA_OmniBox {
         }, {
             on: {
                 renderReady: e => {
-                    this.autoCompleteControl = e.detail.host.get("autocomplete")._control;
+                    this.autoCompleteControl = e.detail.host.get("autocomplete");
                 }
             }
         });
-        this.elm.classList.add("pwa-omnibox");
+        this.elm?.classList.add("pwa-omnibox");
         document.addEventListener("keydown", e => {
 
             if (e.key === "/") {

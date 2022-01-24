@@ -345,7 +345,7 @@ class ExoFormFactory {
         let ar = /* id added 26 Apr 2021*/
             ["id", "style", "class", "accesskey", "contenteditable",
                 "dir", "disabled", "hidefocus", "lang", "language", "tabindex", "title", "unselectable",
-                " xml:lang"];
+                "xml:lang"];
 
 
         list.forEach(p => {
@@ -355,6 +355,7 @@ class ExoFormFactory {
                 ar.push(p.toLowerCase())
             }
         });
+        
         return ar;
     }
 
@@ -449,32 +450,37 @@ class ExoFormFactory {
         return parseInt(value) > 0 || value === "1" || value === "true" || value === "on";
     }
 
-    static getFieldFromElement(e, options) {
+    static getFieldFromElement(element, options) {
         options = {
             master: false,
             ...(options || {})
         }
         let field = null;
 
-        if (e && options.master) {
-            let masterElement = e.closest("[exf-data-master]");
+        if (element && options.master) {
+            let masterElement = element?.closest("[exf-data-master]");
             if (masterElement) {
-                e = masterElement;
-                field = e.data["field"];
+                element = masterElement;
+                field = element.data.field;
             }
         }
 
         if (!field) {
-            let cnt = e.closest(".exf-ctl-cnt:not(.exf-page)");
+            let cnt = element?.closest(".exf-ctl-cnt:not(.exf-page)");
             if (cnt) {
                 let el = cnt.querySelector("[data-exf]");
                 if (el && el.data)
-                    field = el.data["field"];
+                    field = el.data.field;
             }
         }
 
         return field;
     }
+
+    static getControlFromElement(e, options) {
+        return ExoFormFactory.getFieldFromElement(e, options)?._control;
+    }
+
 
     static async createDropDown(control) {
         const dex = new ExoDropdownExtension(control);
@@ -483,18 +489,19 @@ class ExoFormFactory {
     }
 
     static fieldToString(f) {
-        if (f) {
-            let type = f.type || "unknown type";
-            if (f.isPage)
-                return `Page ${f.index} (${type})`;
-            else if (f.bind)
-                return `Field '${f.bind}' (${type})`;
-            else if (f.name || (f.id && f.elm))
-                return `Field '${f.name || f.id}' (${type})`;
+        
+        let type = f?.type || "unknown type";
 
+        if (f) {
+            if (f.isPage)
+                return `${type}.${f.index}`;
+            else if (f.bind)
+                return `${type}${f.bind}`;
+            else if (f.name || (f.id && f.elm))
+                return `${type}:${f.name || f.id}`;
         }
 
-        return "Unknown field";
+        return type || "unknown-field";
     }
 
     /**
@@ -532,13 +539,18 @@ class ExoFormFactory {
         options.context = options.context || await ExoFormFactory.build()
         let type = ExoFormFactory.determineSchemaType(value), x, result;
 
-        const applyOptions = (x, dom) => {
+        const applyOptions = x => {
+
             if (options.on) {
                 for (var o in options.on) {
-                    if (o === "dom" && dom) {
-                        for (var p in options.on.dom) {
-                            dom.addEventListener(p, options.on.dom[p])
-                        }
+                    if (o === "dom") {
+                        x.on("interactive", e => {
+                            let dom = e.detail.host.root.htmlElement; // form
+                            for (var p in options.on.dom) {
+                                dom.addEventListener(p, options.on.dom[p])
+                            }
+                        })
+
                     }
                     else if (x) {
                         x.on(o, options.on[o])
@@ -553,7 +565,7 @@ class ExoFormFactory {
                     x = options.context.createForm({
                         ...options
                     });
-                    applyOptions(x, x.form)
+                    applyOptions(x)
                     await x.load(value);
                     if (options.returnSchema) {
                         return x.schema;

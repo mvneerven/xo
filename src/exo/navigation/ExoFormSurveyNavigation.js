@@ -7,9 +7,9 @@ class ExoFormSurveyNavigation extends ExoFormWizardNavigation {
 
     async render() {
         const check = e => {
-            let exf = e.target.closest("[data-exf]");
-            if (exf?.data?.field) {
-                this.checkForward(exf.data.field, "change", e)
+            let ctl = xo.control.get(e.target);
+            if (ctl) {
+                this.checkForward(ctl, "change", e)
             }
         };
 
@@ -26,8 +26,8 @@ class ExoFormSurveyNavigation extends ExoFormWizardNavigation {
             else if (e.keyCode === 13) { // enter
                 if (e.target.type !== "textarea") {
                     let exf = e.target.closest("[data-exf]");
-                    let field = ExoFormFactory.getFieldFromElement(exf)
-                    this.checkForward(field, "enter", e);
+                    let ctl = xo.control.get(exf)
+                    this.checkForward(ctl, "enter", e);
                     e.preventDefault();
                     e.returnValue = false;
                 }
@@ -65,7 +65,7 @@ class ExoFormSurveyNavigation extends ExoFormWizardNavigation {
         }
     }
 
-    checkForward(f, eventName, e) {
+    checkForward(control, eventName, e) {
         if (!this.exo.container) {
             return;
         }
@@ -73,8 +73,8 @@ class ExoFormSurveyNavigation extends ExoFormWizardNavigation {
         this.exo.container.classList.remove("end-reached");
         this.exo.container.classList.remove("step-ready");
 
-        //var isValid = f._control.htmlElement.reportValidity ? f._control.htmlElement.reportValidity() : true;
-        var isValid = f._control.valid;
+        
+        var isValid = control.valid;
         if (isValid || !this.multiValueFieldTypes.includes(f.type)) {
             if (this._currentPage == this.getLastPage()) {
                 this.exo.container.classList.add("end-reached");
@@ -84,7 +84,7 @@ class ExoFormSurveyNavigation extends ExoFormWizardNavigation {
             }
             else {
                 // special case: detail.field included - workaround 
-                let type = f.type;
+                let type = control.type;
                 if (e.detail?.field)
                     type = e.detail.field;
 
@@ -96,9 +96,12 @@ class ExoFormSurveyNavigation extends ExoFormWizardNavigation {
                     this.exo.container.classList.add("step-ready");
                 }
 
-                f._control.container.appendChild(
-                    this.exo.container.querySelector(".exf-nav-cnt")
-                );
+                try{
+                 control.container?.appendChild(
+                     this.exo.container.querySelector(".exf-nav-cnt")
+                 );
+                }
+                catch{}
             }
         }
     }

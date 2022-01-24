@@ -7,10 +7,17 @@ class ExoNameControl extends ExoMultiInputControl {
 
     areas = `"first last"`;
 
-    fields = {
-        first: { caption: "First", type: "text", maxlength: 30, required: "inherit" },
-        last: { caption: "Last", type: "text", maxlength: 50, required: "inherit" }
+    get fields() {
+        return {
+            first: { caption: "First", type: "text", maxlength: 30, required: "inherit" },
+            last: { caption: "Last", type: "text", maxlength: 50, required: "inherit" }
+        }
     }
+
+    set fields(value){
+        // NA
+    }
+
 
 }
 

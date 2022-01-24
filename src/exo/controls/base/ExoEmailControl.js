@@ -23,30 +23,20 @@ class ExoEmailControl extends ExoTextControl {
     }
 
     createEmailLookup() {
-        const _ = this;
+        this.htmlElement.addEventListener("input", e => {
+            let data = [];
 
-        _.htmlElement.addEventListener("input", e => {
-            //if (e.key !== "Enter") {
-                let data = [];
+            ["@gmail.com", "@outlook.com", "@live.nl", "@yahoo.com", "@hotmail.com"].forEach(a => {
+                data.push(e.target.value.split('@')[0] + a);
+            });
 
-                ["@gmail.com", "@outlook.com", "@live.nl", "@yahoo.com", "@hotmail.com"].forEach(a => {
-                    data.push(e.target.value.split('@')[0] + a);
-                });
-
-                if (data.length > 1) {
-                    _.createDataList(_.context.field, data);
-                }
-                else {
-                    _.destroyDataList()
-                }
-            //}
-            // else {
-            //     let dl = _.container.querySelector("datalist");
-            //     if (dl) {
-            //         dl.remove();
-            //     }
-            //     e.preventDefault();
-            // }
+            if (data.length > 1) {
+                this.createDataList(data);
+            }
+            else {
+                this.destroyDataList()
+            }
+            
         })
     }
 }

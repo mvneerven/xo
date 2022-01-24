@@ -1,6 +1,12 @@
 .exf-ctl-cnt.autocomplete {
-    position: relative;
+    //position: relative;
     margin: auto;
+
+    .exf-inp{
+        position: relative;
+    }
+    
+    
 
     .exf-ac-rs {
         font-size: 0.9rem;

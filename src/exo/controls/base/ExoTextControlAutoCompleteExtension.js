@@ -20,7 +20,7 @@ class ExoTextControlAutoCompleteExtension {
             throw TypeError("Must pass items array, function or promise in autocomplete settings");
 
 
-        this.items = settings.items;
+        this.items =  settings.items;
     }
 
     attach() {
@@ -45,14 +45,11 @@ class ExoTextControlAutoCompleteExtension {
 
         //this.container.appendChild(this.resultsDiv)
         //this.container.insertBefore(this.resultsDiv, this.container.querySelector(".exf-fld-details"))
-        this.container.querySelector(".exf-ctl").appendChild(this.resultsDiv)
+        this.container.querySelector(".exf-inp").appendChild(this.resultsDiv)
 
         this.clear();
 
         this.container.classList.add("autocomplete")
-
-        
-
     }
 
     moveResult(add) {
@@ -271,7 +268,8 @@ class ExoTextControlAutoCompleteExtension {
             if (i.element) {
                 this.resultsDiv.appendChild(i.element);
             }
-            else if (i.text) {
+            else {
+                i = typeof (i) === "string" ? { text: i } : i;
                 this.resultsDiv.appendChild(
                     DOM.parseHTML(
                         `<div title="${i.tooltip || ""}" data-index="${index}" class="${this.cssClasses.item}">
@@ -281,9 +279,7 @@ class ExoTextControlAutoCompleteExtension {
                     )
                 );
             }
-            else {
-                console.error("Missing text property in autocomplete search result", i)
-            }
+
             index++;
         });
         if (r.length) {
@@ -292,6 +288,7 @@ class ExoTextControlAutoCompleteExtension {
     }
 
     formatResultItem(i, options, catHandler) {
+        i = typeof (i) === "string" ? { text: i } : i;
         let result = i.text;
 
         if (options.search) {
@@ -366,15 +363,16 @@ class ExoTextControlAutoCompleteExtension {
                 })
             }
             else if (Array.isArray(this.items)) {
-                let simple=true;
+                let simple = true;
+                
                 this.items = this.items.map(i => {
                     if (typeof (i) === "string") {
                         return { text: i }
                     }
-                    simple=false;
+                    simple = false;
                     return i;
                 })
-                if(simple){
+                if (simple) {
                     this.container.classList.add("simple")
                 }
                 resolve(max(map(this.items.filter(i => {
@@ -390,7 +388,7 @@ class ExoTextControlAutoCompleteExtension {
         });
     }
 
-    
+
 
     formatSearch(url, options) {
         if (url.indexOf("%search%")) {

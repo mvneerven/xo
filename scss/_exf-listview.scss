@@ -131,7 +131,7 @@
     top: -3rem;
     z-index: 3;
     .exf-dropdown-cnt {
-     // margin: 1em 0.2em 1em 0;
+      // margin: 1em 0.2em 1em 0;
     }
     &.pull-left {
       left: 10px;
@@ -139,7 +139,7 @@
     }
     .exf-btn {
       margin: 0;
-      padding: 0.3rem 0.6rem!important;
+      padding: 0.3rem 0.6rem !important;
       height: 2rem;
       line-height: 1rem;
       overflow: hidden;
@@ -157,7 +157,7 @@
         box-shadow: none !important;
         input[type="search"] {
           width: 8rem !important;
-          margin-top: 0!important;
+          margin-top: 0 !important;
           padding: 0.2rem 0.4rem !important;
           line-height: 1.5rem !important;
         }
@@ -417,7 +417,7 @@
 
     &:not(.exf-lv-check):not(.static) {
       .exf-lv-item {
-        &:hover { 
+        &:hover {
           border-left-color: var(--color-accent);
         }
         &.selected {
@@ -433,7 +433,7 @@
     }
     .exf-listview-list {
       padding: 1rem 0;
-      grid-template-columns: var(--lv-tile-template); 
+      grid-template-columns: var(--lv-tile-template);
       grid-auto-rows: minmax(50px, auto);
       grid-gap: 2em;
       .exf-lv-headers,
@@ -551,17 +551,6 @@
       }
     }
   }
-
-  // &.static {
-  //   .exf-listview-list {
-  //     .exf-lv-item {
-  //       &:hover {
-  //         border-color: transparent!important;
-  //         transform: none!important;
-  //       }
-  //     }
-  //   }
-  // }
 }
 
 @keyframes borealisBar {

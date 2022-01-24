@@ -21,8 +21,8 @@ class ExoVideoControl extends ExoEmbedControl {
         }
     }
 
-    constructor(context) {
-        super(context);
+    constructor() {
+        super(...arguments);
 
         this.acceptProperties(
             { name: "code", description: "Code of the video to embed", demoValue: "oR_e9y-bka0" },

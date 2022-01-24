@@ -2,8 +2,8 @@ import DOM from '../../../pwa/DOM';
 import ExoElementControl from './ExoElementControl';
 
 class ExoSeparatorControl extends ExoElementControl {
-    constructor(context) {
-        super(context);
+    constructor() {
+        super(...arguments);
         this.useContainer = false;
         this.htmlElement = document.createElement('hr');
     }

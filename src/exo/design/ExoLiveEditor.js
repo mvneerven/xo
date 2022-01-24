@@ -46,10 +46,11 @@ class ExoLiveEditor {
 
     renderActiveState() {
         if (this.enabled) {
-            this.exo.query().forEach(f => {
-                const ctl = f._control;
-                this.addLiveEditToControl(ctl)
-            });
+
+            this.exo.all().forEach(control=>{
+                if(control!==this.exo.root && !control.isPage)
+                    this.addLiveEditToControl(control)
+            })
 
             this.sorter = new DOM.DragDropSorter(
                 this.exo.form.querySelectorAll(".exf-page"),
@@ -86,8 +87,6 @@ class ExoLiveEditor {
 
         let wrapper = DOM.wrap(cnt);
         wrapper.classList.add("exf-le-cnt")
-
-        //let info = document.createElement("div");
 
         let info = await xo.form.run({
             type: "button",
@@ -176,7 +175,7 @@ class ExoLiveEditor {
             click: async (btn, e) => {
                 if (btn === "confirm") {
                     if (raw) {
-                        let code = me.fieldEditorForm.get("code")._control;
+                        let code = me.fieldEditorForm.get("code");
                         me.activeControl = await me.activeControl.updateSchema(code.value)
                     }
                     else {
@@ -249,19 +248,17 @@ class ExoLiveEditor {
     }
 
     getControl(elm) {
-        let field = ExoFormFactory.getFieldFromElement(elm, {
+        
+        let ctl = xo.control.get(elm, {
             master: true // lookup master if nested
         });
 
-        if (field) {
-            let ctl = field._control;
-            if (ctl) {
-                if (ctl.context.exo !== this.exo) {
-                    return;
-                }
+        if (ctl) {
+            if (ctl.context.exo !== this.exo) {
+                return;
             }
-            return ctl;
         }
+        return ctl;
     }
 
     set enabled(value) {

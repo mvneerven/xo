@@ -10,8 +10,8 @@ const tpl = /*html*/`<div class="exf-ilc-cnt" title="{{tooltip}}">
 </div>`;
 
 class ExoInputListControl extends ExoListControl {
-    constructor(context) {
-        super(context);
+    constructor() {
+        super(...arguments);
 
         this.acceptProperties(
             {
@@ -23,7 +23,7 @@ class ExoInputListControl extends ExoListControl {
                 name: "columns",
                 type: Number,
                 description: "Defines the number of columns to display the items in (default: 1)",
-                defaultValue: 1
+                default: 1
             },
             {
                 name: "addcaption",
@@ -39,29 +39,28 @@ class ExoInputListControl extends ExoListControl {
 
     async render() {
         await super.render();
+        
         this._rendered = false;
-        let f = this.context.field;
 
-        this._updating = true
-        try {
+        return new Promise(resolve => {
+            this._rendered = false;
+            
             this.htmlElement.innerHTML = "";
-            await this.populateList(this.htmlElement, tpl);
-        }
-        finally {
-            this._updating = false
-        }
+            this.populateList(this.htmlElement, tpl).then(() => {
+                this.container.classList.add("exf-input-group", "exf-std-lbl");
 
-        this.container.classList.add("exf-input-group", "exf-std-lbl");
+                if (this._columns)
+                    this.htmlElement.style = `column-count: ${this.columns}; column-gap: 1rem;`
 
-        if (this._columns)
-            this.htmlElement.style = `column-count: ${this.columns}; column-gap: 1rem;`
-
-        if (this.addcaption) {
-            if (!Array.isArray(this.items))
-                throw TypeError("Must have an array as items for adding items to work");
-            this.setupAdd()
-        }
-        return this.container;
+                if (this.addcaption) {
+                    if (!Array.isArray(this.items))
+                        throw TypeError("Must have an array as items for adding items to work");
+                    this.setupAdd()
+                }
+                this._rendered = true;
+                resolve(this.container);
+            });
+        });
     }
 
     setupAdd() {
@@ -122,7 +121,7 @@ class ExoInputListControl extends ExoListControl {
                 let evt = new Event("change", { bubbles: true, cancelable: true })
                 this.htmlElement.dispatchEvent(evt);
 
-                
+
                 this.dispatch("add-item", {
                     text: text
                 })
@@ -131,24 +130,17 @@ class ExoInputListControl extends ExoListControl {
         }
     }
 
-    dispatch(name, details){
-        this.htmlElement.dispatchEvent(new CustomEvent(name, { 
-            bubbles: true, cancelable: false ,
+    dispatch(name, details) {
+        this.htmlElement.dispatchEvent(new CustomEvent(name, {
+            bubbles: true, cancelable: false,
             detail: details
-        }));        
+        }));
     }
 
     get valid() {
         if (this.context.field.required) {
             let numChecked = this.container.querySelectorAll("input:checked").length;
             if (numChecked === 0) {
-                //let inp = this.container.querySelector("input");
-                //try {
-                //inp.setCustomValidity(this.getValidationMessage());
-                //inp.reportValidity()
-
-                //} catch { };
-
                 return false;
             }
         }
@@ -201,15 +193,15 @@ class ExoInputListControl extends ExoListControl {
     }
 
     set items(value) {
+        console.log("InputList Items " , value );
+        
         if (!this._updating) {
             this._items = value;
-            //if (this.rendered) {
             this._updating = true
             this.htmlElement.innerHTML = "";
             this.populateList(this.htmlElement, tpl).then(() => {
                 this._updating = false;
             });
-            //}
         }
     }
 }

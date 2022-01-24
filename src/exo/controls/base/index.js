@@ -1,4 +1,4 @@
-import ExoControlBase from './ExoControlBase';
+import ExoControlBase from '../ExoControlBase';
 import ExoElementControl from './ExoElementControl';
 import ExoInputControl from './ExoInputControl';
 import ExoDivControl from './ExoDivControl';
@@ -24,6 +24,8 @@ import ExoSeparatorControl from './ExoSeparatorControl';
 import ExoFileUploadControl from './ExoFileUploadControl';
 import ExoDateControl from './ExoDateControl';
 import ExoGroupControl from './ExoGroupControl';
+import ExoRootControl from '../ExoRootControl';
+import ExoPasswordControl from './ExoPasswordControl';
 
 class ExoBaseControls { 
 
@@ -51,7 +53,7 @@ class ExoBaseControls {
         month: { base: "text", note: "A month selector input wrapper" },
         "datetime-local": { base: "text", note: "A date input that is used to input local date/time" },
         search: { base: "text", note: "A search text input with a clear button" },
-        password: { base: "text", note: "A text input for password masking" },
+        password: { type: ExoPasswordControl, note: "A text input for password masking" },
         file: { type: ExoFileUploadControl, note: "A standard file upload control wrapper (input[type=file])" },
         multiline: { type: ExoTextAreaControl, alias: "textarea", note: "A multi-line text input (textarea) wrapper" },
         list: { hidden: true, type: ExoListControl },
@@ -65,7 +67,8 @@ class ExoBaseControls {
         progressbar: { type: ExoProgressControl, alias: "progress", note: "A progress indicator control (progress) wrapper", demo: {value: "72", max: "100"}},
         link: { type: ExoLinkControl, note: "HTML Anchor element", demo: {url: "http://blacknegative.com/", html: "Visit http://blacknegative.com/", external: true} },
         separator: {type: ExoSeparatorControl, note: "Separator" },
-        group: {type: ExoGroupControl, note: "Group control" }
+        group: {type: ExoGroupControl, note: "Group control" },
+        formcontainer: {type: ExoRootControl, hidden: true}
     }
 }
 

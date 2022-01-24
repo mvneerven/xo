@@ -46,20 +46,6 @@ Render ExoForm schema into a formReturns a Promise
 
 ---
 
-### `query(matcher, options) ► array`
-
-![modifier: private](images/badges/modifier-private.svg)
-
-query all fields using matcher and return matches
-
-Parameters | Type | Description
---- | --- | ---
-__matcher__ | `function` | *function to use to filter*
-__options__ | `object` | *query options. e.g. {inScope: true} for querying only fields that are currenttly in scope.*
-__*return*__ | `array` | *- All matched fields in the current ExoForm schema*
-
----
-
 ### `isPageInScope(p) ► boolean`
 
 ![modifier: private](images/badges/modifier-private.svg)
@@ -77,25 +63,12 @@ __*return*__ | `boolean` | *- true if page is in scope*
 
 ![modifier: private](images/badges/modifier-private.svg)
 
-Get field with given name
+Get control with given name
 
 Parameters | Type | Description
 --- | --- | ---
 __name__ | `string` | *name of field to get*
-__*return*__ | `Object` | *- Field*
-
----
-
-### `map(mapper) ► object`
-
-![modifier: private](images/badges/modifier-private.svg)
-
-Map data to form, once schema is loaded
-
-Parameters | Type | Description
---- | --- | ---
-__mapper__ | `function` | *a function that will return a value per field*
-__*return*__ | `object` | *- the current ExoForm instance*
+__*return*__ | `Object` | *- Control*
 
 ---
 

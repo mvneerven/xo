@@ -175,13 +175,16 @@ class Core {
         path = Core.stringToPath(path);
         // Cache the current object
         var current = obj;
-
+        
         // For each item in the path, dig into the object
         for (var i = 0; i < path.length; i++) {
             // If the item isn't found, return the default (or null)
-            if (typeof (current[path[i]]) === undefined) return def;
+            if (!current || typeof (current[path[i]]) === undefined) return def;
             // Otherwise, update the current  value
             current = current[path[i]];
+    
+            
+            
         }
         return current;
     }
@@ -555,6 +558,15 @@ class Core {
             return v.toString(16);
         });
         return `${options.prefix || ''}${options.compact ? g.split('-').pop() : g}`;
+    }
+
+    /**
+     * Returns a hash code from the given string
+     * @param {String} s 
+     * @returns hash code
+     */
+    static hashFromString(s){
+        return s.split("").reduce(function(a,b){a=((a<<5)-a)+b.charCodeAt(0);return a&a},0);    
     }
 
     /**

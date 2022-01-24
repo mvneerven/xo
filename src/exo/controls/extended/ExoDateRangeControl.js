@@ -1,21 +1,28 @@
 import ExoMultiInputControl from './ExoMultiInputControl';
 
 class ExoDateRangeControl extends ExoMultiInputControl {
-    
+
     columns = "14rem 14rem "
 
     areas = "'from to'"
 
-    fields = {
-        from: { caption: "From", type: "date" },
-        to: { caption: "To", type: "date" }
+    
+    get fields ()  {
+        return {
+            from: { caption: "From", type: "date" },
+            to: { caption: "To", type: "date" }
+        }
+    }
+
+    set fields(value){
+        // NA
     }
 
     async render() {
         let element = await super.render();
 
-        let _from = this.inputs.from.querySelector("[name]")
-        let _to = this.inputs.to.querySelector("[name]");
+        let _from = this.controls.from.htmlElement;
+        let _to = this.controls.to.htmlElement;
 
         const check = e => {
             if (e.target === _from) {

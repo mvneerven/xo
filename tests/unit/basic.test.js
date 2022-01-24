@@ -40,7 +40,7 @@ describe("XO form basic Tests", () => {
     });
 
     it("Form field with name drop1 has dropdown control", () => {
-        expect(context.exo.get("drop1")._control.htmlElement.type).toBe("select-one");
+        expect(context.exo.get("drop1").htmlElement.type).toBe("select-one");
     });
 
 
@@ -50,7 +50,7 @@ function form(schema) {
     return new Promise((resolve, reject) => {
         xo.form.run(schema, {
             on: {
-                renderReady: e => {
+                interactive: e => {
                     let context = {
                         exo: e.detail.host,
                         posted: e.detail.host.getFormValues()

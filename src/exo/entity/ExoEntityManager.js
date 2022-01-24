@@ -23,9 +23,9 @@ class ExoEntityManager {
       on: {
         schemaLoaded: (e) => {
         },
-        renderReady: (e) => {
+        interactive: (e) => {
           this.exo = e.detail.host;
-          const grid = this.exo.get("grid")._control;
+          const grid = this.exo.get("grid");
           grid
             .on("delete", (e) => {
               if (!Array.isArray(e.detail.data)) {
@@ -55,7 +55,7 @@ class ExoEntityManager {
     }
 
     let promises = [];
-    const grid = this.exo.get("grid")._control;
+    const grid = this.exo.get("grid");
 
     ids.forEach((id) => {
       promises.push(this.api.delete(id));

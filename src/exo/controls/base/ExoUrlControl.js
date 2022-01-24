@@ -35,19 +35,19 @@ class ExoUrlControl extends ExoTextControl {
                     tooltip: title,
                     icon: "ti-file",
                     click: async e => {
-                        const context = {};
+                        
                         let r = await xo.form.run({
                             type: "filedialog",
                             title: title,
                             fileTypes: this.dialog.fileTypes,
                             maxSize: this.dialog.maxSize,
-                            name: "test",
+                            name: "drop",
                             click: async (button, event) => {
                                 if (button === "confirm") {
-                                    let field = context.field._control.exo.get("drop");
-                                    let fileDropCtl = field._control;
-                                    if (fileDropCtl.value?.length) {
-                                        let file = fileDropCtl.value[0];
+                                    let exo = xo.form.from(event.target.closest(".exf-dlg-c")?.querySelector("form"));
+                                    let ctl = exo.get("drop");
+                                    if (ctl.value?.length) {
+                                        let file = ctl.value[0];
                                         let url = `data:${file.type};base64,${file.b64}`;
                                         me.value = url;
                                         var evt = new Event("change", { bubbles: true, cancelable: true })
@@ -56,8 +56,8 @@ class ExoUrlControl extends ExoTextControl {
                                 }
                             }
                         });
-                        context.field = window.xo.form.factory.getFieldFromElement(r);
-                        context.field._control.show();
+                        let ctl = xo.control.get(r);
+                        ctl.show();
                     }
                 }
             }

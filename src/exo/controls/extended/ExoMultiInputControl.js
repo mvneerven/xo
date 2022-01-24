@@ -1,17 +1,20 @@
 import ExoBaseControls from '../base';
 import ExoFormFactory from '../../core/ExoFormFactory';
+import DOM from '../../../pwa/DOM';
 
 class ExoMultiInputControl extends ExoBaseControls.controls.div.type {
     columns = ""
 
     _areas = "";
 
+    _inputs = {};
+
     gap = "0rem 1rem;";
 
     static returnValueType = Object;
 
-    constructor(context) {
-        super(context);
+    constructor() {
+        super(...arguments);
 
         this.acceptProperties(
             {
@@ -37,7 +40,8 @@ class ExoMultiInputControl extends ExoBaseControls.controls.div.type {
                 example: "16px"
             },
             {
-                name: "fields", type: Object,
+                name: "fields", 
+                type: Object,
                 description: "Fields structure",
                 example: {
                     first: { caption: "First", type: "text", maxlength: 30 },
@@ -46,31 +50,54 @@ class ExoMultiInputControl extends ExoBaseControls.controls.div.type {
             }
 
         );
+        
+        if (this._parent) {
+            Object.entries(this.fields || {}).forEach(entry => {
+                let options = {
+                    ...entry[1],
+                    name: this.name + "_" + entry[0]
+                }
+
+                for (var o in options) {
+                    var v = options[o];
+                    if (v === "inherit")
+                        options[o] = this.context.field[o]
+                }
+                let control = this.createChild(options);
+                this.controls[entry[0]] = control; // dictionary
+                this._children.push(control)
+            });
+        }
     }
 
-    set areas(value){
-        if(typeof(value) !== "string")
+    set areas(value) {
+        if (typeof (value) !== "string")
             throw TypeError("The areas property must be a string");
 
-        if(value){
-            if(value.indexOf('"') === -1 && value.indexOf("'") == -1){
+        if (value) {
+            if (value.indexOf('"') === -1 && value.indexOf("'") == -1) {
                 value = `'${value}'`;
             }
         }
         this._areas = value;
     }
 
-    get areas(){
+    get fields() {
+        return this._fields;
+    }
+
+    set fields(value) {
+        // NA
+    }
+
+    get areas() {
         return this._areas;
     }
 
     async render() {
-
         await super.render();
 
-        const _ = this;
-        const f = _.context.field;
-        const exo = _.context.exo;
+        const me = this, f = me.context.field;
 
         this.htmlElement.classList.add("exf-cnt", "exf-ctl-group")
 
@@ -79,7 +106,6 @@ class ExoMultiInputControl extends ExoBaseControls.controls.div.type {
         }
 
         if (this.areas && this.columns) {
-
             this.htmlElement.setAttribute("style", `display: grid; grid-template-areas: ${this.areas}; grid-template-columns: ${this.columns}; grid-gap: ${this.gap}`);
         }
         else {
@@ -90,85 +116,57 @@ class ExoMultiInputControl extends ExoBaseControls.controls.div.type {
                 this.htmlElement.classList.add(this.grid)
             }
         }
+        
+        this.children.forEach(async control => {
+            let span = document.createElement("span");
+            me.htmlElement.appendChild(span);
+            let elm = await control.render();
 
-
-        const rs = async (name, options) => {
-            return _.context.exo.renderSingleControl(options)
-        }
-
-        _.inputs = {}
-
-        const add = async (n, options) => {
-
-            options = {
-                ...options,
-                name: f.name + "_" + n
+            if (me.areas) {
+                let name = control.name.split("_").pop();
+                elm.setAttribute("style", `grid-area: ${name}`);
             }
-
-            for (var o in options) {
-                var v = options[o];
-                if (v === "inherit")
-                    options[o] = f[o]
-            }
-
-
-            _.inputs[n] = await rs(n, options);
-            _.inputs[n].setAttribute("data-multi-name", options.name);
-            _.htmlElement.appendChild(_.inputs[n])
-            return _.inputs[n];
-        }
-
-
-        if (!this.fields && f.fields) {
-            this.fields = f.fields;
-        }
-
-        for (var n in this.fields) {
-            var elm = await add(n, this.fields[n])
-
-            if (this.areas){                
-                elm.setAttribute("style", `grid-area: ${n}`);
-            }
-        };
+            DOM.replace(span, elm);
+        });
 
         // inform system that this is the master control 
         // See: ExoFormFactory.getFieldFromElement(... , {master: true})
         this.htmlElement.setAttribute("exf-data-master", "multiinput");
-        return this.container;
 
+        return this.container;
+    }
+
+    get controls() {
+        return this._inputs
+    }
+
+    set controls(value) {
+        // NA
+    }
+
+    set fields(value){
+        this._fields = value;
+    }
+
+    get fields(){
+        return this._fields;
     }
 
     focus() {
 
-        for(var n in this.fields){
-            var elm = this._qs(n);
-            if (elm) {
-                let fld = ExoFormFactory.getFieldFromElement(elm);
-                let ctl = fld._control
-                ctl.focus();
-            }
-            break;
+        for (var key in this.controls) {
+            xo.control.get(this.controls[key])?.focus();
+            break
         }
-    }
-
-    _qs(name) {
-        const f = this.context.field;
-        if (this.htmlElement) {
-            return this.htmlElement.querySelector('[data-multi-name="' + f.name + "_" + name + '"]')
-        }
-        return "";
     }
 
     get value() {
 
         let data = this.context.field.value || {};
 
-        for (var n in this.fields) {
-            var elm = this._qs(n);
-            if (elm) {
-                let fld = ExoFormFactory.getFieldFromElement(elm);
-                data[n] = fld._control.value;
-            }
+        for (var key in this.controls) {
+            let control = this.controls[key]
+            data[key] = control.value;
         }
         return data
     }
@@ -176,40 +174,38 @@ class ExoMultiInputControl extends ExoBaseControls.controls.div.type {
     set value(data) {
         data = data || {};
         this.context.field.value = data
-        for (var n in this.fields) {
-            data[n] = data[n] || "";
-            this.fields[n].value = data[n];
-            var elm = this._qs(n);
-            if (elm) {
-                let fld = ExoFormFactory.getFieldFromElement(elm);
-                fld._control.value = data[n];
-            }
+
+        for (var key in this.controls) {
+            let control = this.controls[key]
+            control.value = data[key] || "";
         }
     }
 
     get valid() {
         let v = true;
-        for (var n in this.fields) {
-            var elm = this._qs(n);
-            let fld = ExoFormFactory.getFieldFromElement(elm);
-            if (!fld._control.valid) {
+
+        for (var key in this.controls) {
+            let control = this.controls[key]
+            if (control && !control.valid)
                 v = false;
-            }
         }
         return v;
     }
 
     showValidationError() {
+        for (var key in this.controls) {
+            let control = this.controls[key]
+            if (control) {
+                let elm = control.htmlElement
+                if (elm && !elm.checkValidity()) {
+                    if (elm.reportValidity)
+                        elm.reportValidity();
 
-        for (var n in this.fields) {
-            var elm = this.getFormElement(this._qs(n));
-            if (!elm.checkValidity()) {
-                if (elm.reportValidity)
-                    elm.reportValidity();
-
-                return false;
+                    return false;
+                }
             }
         }
+
         return true;
     }
 

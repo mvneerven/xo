@@ -52,11 +52,11 @@ class ExoTextConfirm extends ExoTextControl {
 
         this.htmlElement.name = this.id;
 
-        this.div = document.createElement("div");
-        this.div.appendChild(this.htmlElement);
+        //this.div = document.createElement("div");
+        //this.div.appendChild(this.htmlElement);
 
-        this.div.appendChild(this.button);
-        this.container.querySelector(".exf-ctl").appendChild(this.div);
+        //this.div.appendChild(this.button);
+        this.container.querySelector(".exf-inp").appendChild(this.button);
 
         this.button.addEventListener("click", e => {
             var evt = new Event("change", {bubbles: true, cancelable: true})

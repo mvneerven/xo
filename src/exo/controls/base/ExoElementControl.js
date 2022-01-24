@@ -1,16 +1,16 @@
-import ExoControlBase from './ExoControlBase';
+import ExoControlBase from '../ExoControlBase';
 
 class ExoElementControl extends ExoControlBase {
     static returnValueType = undefined;
 
-    constructor(context) {
-        super(context);
+    constructor() {
+        super(...arguments);
 
-        if (context.field.tagName) {
+        if (this.context.field.tagName) {
             try {
-                this.htmlElement = document.createElement(context.field.tagName);
-                if (this.htmlElement.nodeName !== context.field.tagName.toUpperCase()) {
-                    throw TypeError("'" + context.field.tagName + "' is not a valid tagName");
+                this.htmlElement = document.createElement(this.context.field.tagName);
+                if (this.htmlElement.nodeName !== this.context.field.tagName.toUpperCase()) {
+                    throw TypeError("'" + this.context.field.tagName + "' is not a valid tagName");
                 }
 
                 if (!this.isSelfClosing) {
@@ -24,14 +24,20 @@ class ExoElementControl extends ExoControlBase {
                 }
 
 
-                if (this.html) {
-                    this.htmlElement.innerHTML = this.html;
-                }
+                
 
             }
             catch (ex) {
-                throw TypeError("Could not generate '" + context.field.tagName + "' element: " + ex.toString());
+                throw TypeError("Could not generate '" + this.context.field.tagName + "' element: " + ex.toString());
             }
+        }
+    }
+
+    mapAcceptedProperties(){
+        super.mapAcceptedProperties();
+
+        if (this.html) {
+            this.htmlElement.innerHTML = this.html;
         }
     }
 }

@@ -3,7 +3,7 @@ import ExoFormFactory from '../core/ExoFormFactory';
 class ExoFormDefaultValidation {
     constructor(exo) {
         this.exo = exo;
-        exo.form.setAttribute('novalidate', true);
+
     }
 
     /**
@@ -12,23 +12,42 @@ class ExoFormDefaultValidation {
      * Use inScope: false to check for overall validity including pages that are currently out of scope .
      * @returns {Boolean} - true if all form controls are valid.
      */
-    checkValidity(settings) {
+    checkValidity(settings = {}) {
         settings = {
             inScope: true,
             page: undefined,
-            ...settings || {}
+            ...settings
         }
 
-        let numInvalid = this.exo.query(f => {
-            const control = f._control;
-            if(!control.visible || control.disabled){
+        let all = this.getAllControls(settings)
+
+        let invalid = all.find(control => {
+            if (control === this.exo.root)
+                return false;
+
+            if (!control.visible || control.disabled) {
                 return false;
             }
             return !control.valid;
-        }, settings).length;
+        })
+        return !invalid || invalid.length === 0;
+    }
 
-        let valid = numInvalid === 0;
-        return valid;
+    getAllControls(settings = {}) {
+        return settings.page !== undefined
+            ? this.exo.root.children[settings.page - 1].all()
+            : this.exo.root.all();
+    }
+
+    /**
+     * Checks whether the given page is valid.
+     * @param {*} index - page index (1-based)
+     * @returns {Boolean} - true if page is valid.
+     */
+    isPageValid(index) {
+        return this.checkValidity({
+            page: index
+        })
     }
 
     /**
@@ -36,12 +55,15 @@ class ExoFormDefaultValidation {
      * @param {*} page - optional page to check
      */
     reportValidity(page) {
-        let invalidFields = this.exo.query(f => {
-            return page === undefined ? !f._control.valid : page === f._page.index && !f._control.valid;
-        }).map(f => {
+
+        let all = this.getAllControls({page: page})
+
+        let invalidFields = all.find(control => {
+            return !control.valid;
+        }).map(control => {
             return {
-                field: f,
-                validationMessage: f._control.validationMessage
+                field: control.context.field,
+                validationMessage: control.validationMessage
             }
         });
 
@@ -51,7 +73,7 @@ class ExoFormDefaultValidation {
             });
 
             if (returnValue !== false) {
-                this.focus(invalidFields[0].field);
+                this.focus(invalidFields[0]);
             }
         }
     }
@@ -60,12 +82,12 @@ class ExoFormDefaultValidation {
      * Focuses the given field, optionally moving to the page the field is displayed on.
      * @param {*} field - field element in the schema
      */
-    focus(field) {
-        let element = field._control.htmlElement;
+    focus(ctl) {
+        let element = ctl.htmlElement;
 
-        const f = field => {
-            let element = field._control.htmlElement;
-            field._control.showValidationError();
+        const f = ctl => {
+            let element = ctl.htmlElement;
+            ctl.showValidationError();
             if (!element.form)
                 element = element.querySelector("[name]");
         };
@@ -81,20 +103,11 @@ class ExoFormDefaultValidation {
             }
         }
         else {
-            f(field);
+            f(ctl);
         }
     }
 
-    /**
-     * Checks whether the given page is valid.
-     * @param {*} index - page index (1-based)
-     * @returns {Boolean} - true if page is valid.
-     */
-    isPageValid(index) {
-        return this.checkValidity({
-            page: index
-        })
-    }
+
 
     testValidity(e, field) {
         if (this.runValidCheck)

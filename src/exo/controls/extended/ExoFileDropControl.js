@@ -6,13 +6,11 @@ class ExoFileDropControl extends ExoBaseControls.controls.input.type {
     height = 120;
     _value = [];
 
-    constructor(context) {
-        super(context);
+    constructor() {
+        super(...arguments);
         this.field = this.context.field;
-        //this.field.type = "file";
-
+        
         this.acceptProperties(
-            { name: "maxSize" },
             { name: "max", type: Number, description: "Max number of files accepted" },
             { name: "fileTypes", type: Array, description: 'Array of strings - example: ["image/"]' },
             { name: "maxSize", type: Number, description: "Maximum filesize of files to be uploaded (in bytes) - example: 4096000" },
@@ -37,7 +35,7 @@ class ExoFileDropControl extends ExoBaseControls.controls.input.type {
         this.previewDiv = DOM.parseHTML(`<div class="file-preview clearable"></div>`);
         this.previewDiv.style.height = `${this.height}px`;
 
-        this.container.querySelector(".exf-ctl").appendChild(this.previewDiv);
+        this.container.querySelector(".exf-inp").appendChild(this.previewDiv);
         this.container.classList.add("exf-filedrop", "exf-std-lbl");
         
 

@@ -7,8 +7,8 @@ class ExoRangeControl extends ExoNumberControl {
 
     static returnValueType = Number;
 
-    constructor(context) {
-        super(context);
+    constructor() {
+        super(...arguments);
 
         //this.context.field.type = "range";
         this.htmlElement = DOM.parseHTML(`<input name="${this.context.field.name}" type="range"/>`);

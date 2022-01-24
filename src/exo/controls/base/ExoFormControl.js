@@ -1,8 +1,8 @@
 import ExoElementControl from './ExoElementControl';
 
 class ExoFormControl extends ExoElementControl {
-    constructor(context) {
-        super(context);
+    constructor() {
+        super(...arguments);
         this.htmlElement = document.createElement('form');
     }
 }

@@ -4,9 +4,8 @@ import DOM from '../../../pwa/DOM';
 class ExoTextAreaControl extends ExoTextControl {
     autogrow = false;
 
-    constructor(context) {
-        super(context);
-
+    constructor() {
+        super(...arguments);
         this.acceptProperties({
             name: "autogrow",
             type: Boolean,
@@ -17,8 +16,8 @@ class ExoTextAreaControl extends ExoTextControl {
         this.htmlElement = DOM.parseHTML('<textarea/>');
     }
 
-    setProperties() {
-        super.setProperties();
+    applyNonMappedFieldSchemaProperties() {
+        super.applyNonMappedFieldSchemaProperties();
 
         if (this.attributes["value"]) {
             this.htmlElement.innerHTML = this.attributes["value"];

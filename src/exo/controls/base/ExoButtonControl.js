@@ -6,24 +6,8 @@ class ExoButtonControl extends ExoElementControl {
 
   clickCount = 0;
 
-  constructor(context) {
-    super(context);
-
-    this._useContainer = false; // no container by default
-
-
-    this.iconHtml = "";
-
-    this.htmlElement = DOM.parseHTML('<button type="button" class="exf-btn" />');
-
-    // if no binding is set up, add one to make clicking the button change a value in the model
-    // for conditionless RuleEngine actions to fire then.
-    if (!context.field.bind) {
-      
-      if (this.dataBinding) {
-        this.dataBinding.setupDefaultButtonBinding(this)
-      }
-    }
+  constructor() {
+    super(...arguments);  
 
     this.acceptProperties(
       {
@@ -64,7 +48,25 @@ class ExoButtonControl extends ExoElementControl {
     );
   }
 
-  
+  mapAcceptedProperties(){
+    super.mapAcceptedProperties();
+
+    this._useContainer = false; // no container by default
+
+
+    this.iconHtml = "";
+
+    this.htmlElement = DOM.parseHTML('<button type="button" class="exf-btn" />');
+
+    // if no binding is set up, add one to make clicking the button change a value in the model
+    // for conditionless RuleEngine actions to fire then.
+    if (!this.context.field.bind) {
+      
+      if (this.dataBinding) {
+        this.dataBinding.setupDefaultButtonBinding(this)
+      }
+    }
+  }
 
   async render() {
     let me = this;
@@ -143,23 +145,23 @@ class ExoButtonControl extends ExoElementControl {
           break;
         case "hide":
           let fld = exo.get(actionParts[1]);
-          fld._control.container.style.display = 'none';
+          fld.container.style.display = 'none';
           break;
         case "show":
           let fld1 = exo.get(actionParts[1]);
-          fld1._control.container.style.display = 'initial';
+          fld1.container.style.display = 'initial';
           break;
         case "toggle":
           let fld2 = exo.get(actionParts[1]);
-          fld2._control.container.style.display = fld2._control.container.style.display === 'none' ? 'initial' : 'none';
+          fld2.container.style.display = fld2.container.style.display === 'none' ? 'initial' : 'none';
           break;
 
         case "dialog":
 
           let dname = actionParts[1];
-          let f = exo.get(dname);
-          if (f) {
-            f._control.show()
+          let c = exo.get(dname);
+          if (c) {
+            c.show()
           }
           break;
 
@@ -177,7 +179,7 @@ class ExoButtonControl extends ExoElementControl {
     }
 
     else {
-      const dv = this.context.field.defaultValue;
+      const dv = this.context.field._defaultValue;
       if (dv && this.value !== dv) {
 
         if (dv === -1) {

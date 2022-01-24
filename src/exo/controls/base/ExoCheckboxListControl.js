@@ -7,6 +7,9 @@ class ExoCheckboxListControl extends ExoInputListControl {
     static returnValueType = Array;
 
     get value() {
+        if(!this._rendered)
+            return this._value;
+
         let ar = [];
         this.htmlElement.querySelectorAll(":checked").forEach(i => {
             ar.push(i.value);
@@ -14,7 +17,7 @@ class ExoCheckboxListControl extends ExoInputListControl {
         return ar;
     }
 
-    set value(data) {
+    set value(data) {        
         if (!data) {
             this._value = null;
         }

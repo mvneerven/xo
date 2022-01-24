@@ -14,9 +14,7 @@ class ExoTreeViewControl extends ExoDivControl {
 
     singleSelect = false;
 
-    set items(treeObj) {
-        this._items = treeObj
-    }
+    
 
     constructor() {
         super(...arguments)
@@ -46,6 +44,11 @@ class ExoTreeViewControl extends ExoDivControl {
             }
 
         );
+    }
+
+
+    set items(treeObj) {
+        this._items = treeObj
     }
 
     // updates the array of items to display

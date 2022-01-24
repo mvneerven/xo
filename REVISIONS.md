@@ -1334,7 +1334,7 @@ const fr = await xo.form.run(schema, {
           fullname: e.detail.changeData?.newValue + " Doe",
         };
         e.detail.model.instance.data.selected = person;
-        e.detail.host.get("editor")._control.disabled = false;
+        e.detail.host.get("editor").disabled = false;
       }
     },
     dom: {
@@ -1342,7 +1342,7 @@ const fr = await xo.form.run(schema, {
         debugger;
       },
       "select-add": (e) => {
-        this.exo.get("editor")._control.disabled = true;
+        this.exo.get("editor").disabled = true;
       },
     },
   },

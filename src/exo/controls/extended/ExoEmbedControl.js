@@ -5,8 +5,8 @@ class ExoEmbedControl extends ExoBaseControls.controls.element.type {
     _width = "";
     _height = "";
 
-    constructor(context) {
-        super(context);
+    constructor() {
+        super(...arguments);
 
         this.htmlElement = document.createElement("iframe");
 
@@ -34,7 +34,7 @@ class ExoEmbedControl extends ExoBaseControls.controls.element.type {
             wrapper.style.height = this.height;
 
         wrapper.appendChild(this.htmlElement);
-        this.container.querySelector(".exf-ctl").appendChild(wrapper);
+        this.container.querySelector(".exf-inp").appendChild(wrapper);
 
         //this.container.classList.add("exf-base-embed");
 

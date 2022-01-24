@@ -1,4 +1,4 @@
-import xo from "../../../../js/xo";
+import DOM from "../../../pwa/DOM";
 import ExoDivControl from "./ExoDivControl";
 
 class ExoGroupControl extends ExoDivControl {
@@ -14,23 +14,33 @@ class ExoGroupControl extends ExoDivControl {
                 type: Array
             }
         );
+
+        
+    }
+
+    mapAcceptedProperties(){
+        super.mapAcceptedProperties();
+
+        this.fields.forEach(field => {
+            this._children.push(this.createChild(field))
+        });
     }
 
     async render() {
         await super.render();
         this.container.classList.add("exf-std-lbl");
         let div = document.createElement("div");
-        this.container.querySelector(".exf-ctl").appendChild(div);
-        this.fields.forEach(control => {
+        this.container.querySelector(".exf-inp").appendChild(div);
+
+        this.children.forEach(async control => {
             let dummy = document.createElement("span");
             div.appendChild(dummy);
-            xo.form.run(control, {
-                parentControl: this,
-                context: this.context.context
-            }).then(ctl => {
-                xo.dom.replace(dummy, ctl)
-            })
-        })
+
+            let elm = await control.render();
+
+            DOM.replace(dummy, elm);
+
+        });
         return this.container
     }
 

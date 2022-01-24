@@ -1,26 +1,26 @@
 import DOM from '../../pwa/DOM';
 
 class ExoFormTheme {
-    constructor(exo) {
-        this.exo = exo;
+     constructor(exo) {
+         this.exo = exo;
 
-        this.exo.on("interactive", this.correctPrefixAndSuffixPositions.bind(this))
-        this.exo.on("page", this.correctPrefixAndSuffixPositions.bind(this))
+    //     this.exo.on("interactive", this.correctPrefixAndSuffixPositions.bind(this))
+    //     this.exo.on("page", this.correctPrefixAndSuffixPositions.bind(this))
 
-    }
+    // }
 
-    correctPrefixAndSuffixPositions(e) {
-        this.exo.container.querySelectorAll(".exf-txt-psx-span").forEach(span => {
-            const container = span.closest(".exf-ctl")
-            const input = container?.querySelector("input");
-            if (input) {
-                const containerRect = container.getBoundingClientRect();
-                const presufRect = span.getBoundingClientRect();
-                let inputRect = input.getBoundingClientRect();
-                let top = (inputRect.top - containerRect.top) + (inputRect.height / 2 - presufRect.height / 2);
-                span.style.top = top + "px";
-            }
-        })
+    // correctPrefixAndSuffixPositions(e) {
+    //     // this.exo.container.querySelectorAll(".exf-txt-psx-span").forEach(span => {
+    //     //     const container = span.closest(".exf-ctl")
+    //     //     const input = container?.querySelector("input");
+    //     //     if (input) {
+    //     //         const containerRect = container.getBoundingClientRect();
+    //     //         const presufRect = span.getBoundingClientRect();
+    //     //         let inputRect = input.getBoundingClientRect();
+    //     //         let top = (inputRect.top - containerRect.top) + (inputRect.height / 2 - presufRect.height / 2);
+    //     //         span.style.top = top + "px";
+    //     //     }
+    //     // })
     }
 
     apply() {

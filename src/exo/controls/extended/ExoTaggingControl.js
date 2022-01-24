@@ -10,16 +10,18 @@ class ExoTaggingControl extends ExoBaseControls.controls.text.type {
 
     tagClass = 'tag';
 
+    _wrapper = document.createElement('div');
 
-    constructor(context) {
-        super(context)
+    _input = document.createElement('input');
 
-        this.wrapper = document.createElement('div');
-        this.input = document.createElement('input');
+    constructor() {
+        super(...arguments)
+
+        
         this.input.addEventListener("result-selected", e => {
             this.addTag(e.detail.text);
             //isRestrictedToAutoComplete
-            this.input.value="";
+            this.input.value = "";
         })
 
         this.wrapper.append(this.input);
@@ -58,14 +60,24 @@ class ExoTaggingControl extends ExoBaseControls.controls.text.type {
         )
     }
 
+    get wrapper(){
+        return this._wrapper;
+    }
+
+    get input(){
+        return this._input;
+    }
+
     async render() {
         const me = this;
         this.wrapper.classList.add(this.wrapperClass);
 
         await super.render();
+        this._rendered = false;
+        
         try {
             this._rendered = false;
-            this.renderTags();
+            //this.renderTags();
 
             this.htmlElement.parentNode.insertBefore(this.wrapper, this.htmlElement);
 
@@ -136,17 +148,13 @@ class ExoTaggingControl extends ExoBaseControls.controls.text.type {
     }
 
     renderTags() {
-
-        this.value.forEach(t => {
-
-            // if (this.anyErrors(t)) return;
-
-            this.addTag(t)
+        const me = this;
+        me.value.forEach(t => {
+            me.addTag(t, true)
         })
     }
 
     get value() {
-
         if (!this._value || !Array.isArray(this._value))
             this._value = []
 
@@ -154,7 +162,6 @@ class ExoTaggingControl extends ExoBaseControls.controls.text.type {
     }
 
     set value(data) {
-
         if (!data)
             return;
 
@@ -162,13 +169,24 @@ class ExoTaggingControl extends ExoBaseControls.controls.text.type {
             throw TypeError("Data for tags control must be array");
 
         this._value = data;
+
+        this.clear();
+        this.renderTags();
+    }
+
+    clear(){
+        this.wrapper?.querySelectorAll("span.tag")?.forEach(span=>{
+            span.remove();
+        })
     }
 
     // Add Tag
-    addTag(tagName) {
+    addTag(tagName, isRendering) {
+        
         if (this.rendered) {
-            if (this.anyErrors(tagName)) return;
-            this.value.push(tagName)
+            if (this.anyErrors(tagName, isRendering)) return;
+            if(!isRendering)
+                this.value.push(tagName)
         }
 
         var tag = document.createElement('span');
@@ -214,12 +232,12 @@ class ExoTaggingControl extends ExoBaseControls.controls.text.type {
     }
 
     // Errors
-    anyErrors(string) {
+    anyErrors(string, isRendering) {
         if (this.max != null && this.value.length >= this.max) {
             return true;
         }
 
-        if (!this.duplicate && this.value.indexOf(string) != -1) {
+        if (!isRendering && !this.duplicate && this.value.indexOf(string) != -1) {
             return true;
         }
 

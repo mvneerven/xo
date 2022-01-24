@@ -2,7 +2,8 @@ import Core from '../../pwa/Core';
 import ExoFormFactory from './ExoFormFactory';
 import JSONSchema from './JSONSchema';
 import ExoEntitySettings from '../entity/ExoEntitySettings';
-import ExoControlBase from '../controls/base/ExoControlBase';
+import ExoControlBase from '../controls/ExoControlBase';
+
 /**
  * Hosts the XO form json/js form schema and manages its state
  */
@@ -58,9 +59,6 @@ class ExoFormSchema {
         this._schemaData.pages = this._schemaData.pages || [];
 
         this._raw = JSON.parse(Core.stringifyJSONWithCircularRefs(this._schemaData)) // keep original schema as _schemaData will be modified 
-
-        this.refreshStats();
-
     }
 
     get raw(){
@@ -102,7 +100,7 @@ class ExoFormSchema {
                 if (!mapped.includes(name)) {
                     this.pages[0].fields.push({
                         name: name,
-                        bind: `instance.${defaultModelInstance}.${name}`
+                        bind: `#/${defaultModelInstance}/${name}`
                     })
                 }
             }
@@ -140,7 +138,7 @@ class ExoFormSchema {
                     console.debug("mappings.properties found for", name)
                     this.mappings.pages[prop.page].fields.push({
                         name: name,
-                        bind: `instance.${defaultModelInstance}.${name}`,
+                        bind: `#/${defaultModelInstance}/${name}`,
                         ...prop
                     })
                     mapped.push(name);
@@ -183,9 +181,7 @@ class ExoFormSchema {
         }
     }
 
-    refreshStats() {
-        this._totalFieldCount = this.query().length;
-    }
+    
 
     addJSONSchema(instanceName, schema) {
         this._jsonSchemas[instanceName] = new JSONSchema(instanceName, schema);
@@ -424,7 +420,7 @@ Pages: ${this.pages.length}
      * @param {object} options - query options. e.g. {inScope: true} for querying only fields that are currenttly in scope.
      * @return {array} - All matched fields in the current ExoForm schema
      */
-    query(matcher, options) {
+    query(matcher, options) {        
         if (matcher === undefined) matcher = () => { return true };
         options = options || {};
         let matches = [];
@@ -446,10 +442,10 @@ Pages: ${this.pages.length}
                 if (matcher(p, { type: "page", pageIndex: pageIndex })) {
                     if (Array.isArray(p.fields)) {
                         p.fields.forEach(f => {
-                            f._index = fieldIndex;
-                            f._page = {
-                                index: pageIndex
-                            }
+                            // f._index = fieldIndex;
+                            // f._page = {
+                            //     index: pageIndex
+                            // }
                             if (matcher(f, { type: "field", fieldIndex: fieldIndex })) {
                                 matches.push(f)
                             }

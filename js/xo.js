@@ -17,10 +17,44 @@ import ExoFormSchema from '../src/exo/core/ExoFormSchema';
 import { version } from '../package.json';
 import ExoSandboxControl from '../src/exo/controls/extended/ExoSandboxControl';
 
+class ControlHelper {
+    get(htmlElement, options) {
+        // let elm = htmlElement.closest("[data-exf]");
+
+        // const xo_form = htmlElement.closest("form")?.data.xo_form;
+        // if(!xo_form){
+        //     debugger;
+        // }
+
+        // debugger
+        // if (xo_form) {
+        //     
+        //     return xo_form.controlDict[elm];
+        // }
+        return ExoFormFactory.getControlFromElement(htmlElement, options);
+    }
+
+    register(htmlElement, control){
+        let f = control.context.field;
+        f._control = control
+        htmlElement.data = htmlElement.data || {}; htmlElement.data.field = f; // keep field in element data
+        htmlElement.setAttribute("data-exf", "1"); // mark as element holding data
+
+        // const xo_form = control.context.exo;
+        // xo_form.controlDict = xo_form.controlDict || {};
+        // xo_form.controlDict[htmlElement] = control;
+        // if(isRoot){
+        //     htmlElement.data = htmlElement.data || {};
+        //     htmlElement.data.xo_form = control.context.exo;
+        // }
+    }
+
+}
+
 /**
  * XO Form shortcut object
  */
-class Form {
+class FormHelper {
 
     /**
      * Returns the ExoFormFactory class
@@ -41,7 +75,7 @@ class Form {
     }
 
     get err() {
-        return ExoFormFactory.err ; 
+        return ExoFormFactory.err;
     }
 
     /**
@@ -166,7 +200,8 @@ class Form {
  */
 class XO {
     constructor() {
-        this._form = new Form();
+        this._form = new FormHelper();
+        this._control = new ControlHelper();
         this.events = new Core.Events(this);
         const v = version.split(".");
         this._path = `https://xo-js.dev/v${v[0]}.${v[1]}`;
@@ -176,8 +211,10 @@ class XO {
     get pwa() { return PWA }
     get route() { return RouteModule }
     get form() { return this._form }
+    get control() { return this._control }
     get version() { return version }
     get path() { return this._path }
+
     get isDebug() { return ["localhost", "127.0.0.1"].includes(document.location.hostname); }
     identity = {
         msal: MsIdentity

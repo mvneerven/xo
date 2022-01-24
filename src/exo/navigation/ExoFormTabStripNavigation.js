@@ -6,7 +6,7 @@ class ExoFormTabStripNavigation extends ExoFormDefaultNavigation {
     async render() {
         this.exo
 
-            .on(ExoFormFactory.events.renderReady, e => {
+            .on(ExoFormFactory.events.interactive, e => {
                 const tsOptions = {
                     tabs: {}
                 }

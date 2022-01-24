@@ -3,7 +3,7 @@ import ExoMultiInputControl from "./ExoMultiInputControl";
 class ExoImageSelector extends ExoMultiInputControl {
     constructor() {
         super(...arguments);
-        const me = this;        
+        const me = this;
 
         this.css = {
             "--exf-ac-itm-grid": "100px 1fr 7rem",
@@ -51,10 +51,16 @@ class ExoImageSelector extends ExoMultiInputControl {
                 type: Object,
                 description: "Mapping to use to translate URL value to textbox"
             }
-            
+
         );
 
-        this.fields = {
+
+    }
+
+    get fields() {
+        const me = this;
+
+        return {
             search: {
                 type: "search",
                 caption: "",
@@ -80,12 +86,19 @@ class ExoImageSelector extends ExoMultiInputControl {
         }
     }
 
-    async getImages(s) {
+    set fields(value) {
+        // NA
+    }
+
+    async getImages(search) {
+        search = search.toUpperCase();
         let acquire = async () => {
             return xo.core.acquireState(this.items).then(x => {
                 return x.filter(i => {
-                    return i.text.toUpperCase().indexOf(s) > -1;
+                    let s = i.text || i;
+                    return s.toUpperCase().indexOf(search) > -1;
                 }).map(i => {
+                    i = i.text ? i : { text: i };
                     return {
                         ...i,
                         category: "Image"
@@ -134,8 +147,8 @@ class ExoImageSelector extends ExoMultiInputControl {
         }
     }
 
-    mapText(txt){
-        if(typeof(this.textmap) === "function"){
+    mapText(txt) {
+        if (typeof (this.textmap) === "function") {
             return this.textmap(txt)
         }
         return txt;
@@ -156,12 +169,14 @@ class ExoImageSelector extends ExoMultiInputControl {
     async render() {
         await super.render();
 
-        this.image = this.container.querySelector(".exf-img-sm");
-        this.input = this.container.querySelector("input[type=search]");
-        
+        this.image = this.controls["image"].htmlElement;
+        //this.input = this.container.querySelector("input[type=search]");
+
+        this.input = this.controls["search"].htmlElement;
+
         // after autocomplete has fired change event, 
         // set last option.text in text input
-        this.input.addEventListener("result-selected", e=>{
+        this.input.addEventListener("result-selected", e => {
             this.input.value = this.selectedOption.text
         })
 

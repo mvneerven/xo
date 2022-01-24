@@ -13,7 +13,8 @@ const MODES = ["dynamic", "static"];
 
 class ExoListViewControl extends ExoDivControl {
   _views = ["tiles", "grid"];
-  _valid = false;
+  _valid = false;  
+  singleSelect = false;
   selectionDependencies = [];
   _properties = [];
 
@@ -58,6 +59,7 @@ class ExoListViewControl extends ExoDivControl {
     },
   ];
 
+
   currentPage = 1;
   pageSize = undefined;
   currentItems = [];
@@ -67,6 +69,7 @@ class ExoListViewControl extends ExoDivControl {
   constructor() {
     super(...arguments);
 
+    this._hasValue = true; 
     this.events = new Core.Events(this);
 
     this.acceptProperties(
@@ -96,7 +99,7 @@ class ExoListViewControl extends ExoDivControl {
         type: Boolean,
       },
       {
-        name: "controls", // default _controls now used
+        name: "controls", 
       },
       {
         name: "mappings",
@@ -470,7 +473,6 @@ class ExoListViewControl extends ExoDivControl {
 
     if (this.mode === MODES[0]) {
       this.listDiv.addEventListener("click", (e) => {
-
         if (this.checkboxes && e.target.type !== "checkbox") {
           this.selectFirstDropdownAction(e)
           return;
@@ -487,7 +489,7 @@ class ExoListViewControl extends ExoDivControl {
               return i[this.primaryKey] === id
             })
             if (i) {
-              if (this.singleSelect && i.id === this.value) {
+              if (this.singleSelect && i[this.primaryKey] === this.value) {
                 if (!e.ctrlKey)
                   return;
               }
@@ -998,6 +1000,7 @@ class ExoListViewControl extends ExoDivControl {
 
       this._value = data;
 
+      
       if (this.rendered) {
 
         const evData = this.singleSelect ? { item: data } : { items: data };

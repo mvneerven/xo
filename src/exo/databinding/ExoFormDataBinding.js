@@ -15,36 +15,41 @@ class ExoFormDataBinding {
 
     constructor(exo) {
         this.exo = exo;
-
         this.events = new Core.Events(this);
     }
 
     async prepare() {
-
         await this._init(this.exo);
 
         this._resolver = new ExoFormDataBindingResolver(this);
 
         this.exo.on(ExoFormFactory.events.renderStart, e => { // run logic for initial state of controls
             this.resolver._checkSchemaLogic();
+            //this.resolver.resolve();
         })
 
         this.exo.on(ExoFormFactory.events.renderReady, e => {
+
+            this.resolver.resolve();
+
             this.exo.on(ExoFormFactory.events.dataModelChange, e => {
                 this.resolver.resolve(e.detail.changeData);
             }).on(ExoFormFactory.events.page, e => { // on navigate, resolve again (e.g. for navigation control state)
-                this.resolver.resolve();
+                //this.resolver.resolve();
             })
-            this.resolver.resolve();
 
         })
+
+        //  this.exo.on(ExoFormFactory.events.interactive, e=>{
+        //      this.resolver.resolve();
+        //  })
 
         this._ready();
     }
 
     setupDefaultButtonBinding(btn) {
         let id = btn.context.field.name || btn.context.field.id;
-        btn.context.field.defaultValue = -1;
+        btn.context.field._defaultValue = -1;
         if (!this.model.instance.btnstates) {
             this.model.instance.btnstates = {};
             this.model.instance.btnstates[id] = "auto";
@@ -62,25 +67,10 @@ class ExoFormDataBinding {
         exo.on(ExoFormFactory.events.schemaLoaded, () => {
             let data = {};
 
-            const modelSetup = [ExoFormDataBinding.origins.bind, ExoFormDataBinding.origins.schema].includes(this._origin);
-
-
-            exo.query(f => {
-                if (!f.bind && !modelSetup) {
-                    if (f.name) {
-                        f.bind = "#/data/" + f.name; // use default model binding if no binding is specified
-                    }
-                }
-                if (f.bind) { // field uses databinding to model -> set databinding value
-                    f.name = f.name || ExoFormSchema.getPathFromBind(f.bind);
-                    f.defaultValue = f.value;
-                    f.value = (modelSetup ? this.get(f.bind) : f.value) || "";
-                    data[f.name] = f.value
-                }
-
-            }, {
-                includeControls: true // navigation buttons are not normally included
-            });
+            const modelSetup = [
+                ExoFormDataBinding.origins.bind,
+                ExoFormDataBinding.origins.schema
+            ].includes(this._origin);
 
             // make sure we have a model if it wasn't passed in
             if (!modelSetup) {
@@ -90,33 +80,31 @@ class ExoFormDataBinding {
             this.events.trigger("ready", { model: this._model });
         })
             .on(ExoFormFactory.events.interactive, () => {
-
                 console.debug("Bindings", this.resolver._boundControlState)
-
-
                 let eventName = this.exo.options.DOMChange || "input";
-
                 const handle = e => {
                     if (this.noProxy) {
                         console.debug("ExoFormDataBinding", "DOMChange event SKIPPED BECAUSE NO-PROXY")
                         return
                     }
 
-                    let field = ExoFormFactory.getFieldFromElement(e.target, {
-                        master: true // lookup master if nested
-                    });
-                    if (field && field.bind) {
+                    // let ctl = xo.control.get(e.target, {
+                    //     master: true // lookup master if nested
+                    // });
+                    let ctl = xo.control.get(e.target)
 
-                        if (!field._control.valid) {
-                            return; // don't update model if the value isn't valid
-                        }
-
-                        console.debug("DataModel change handling in ", ExoFormFactory.fieldToString(field))
-
-                        let value = field._control.value;
-                        Core.setObjectValue(this._model, field.bind, value);
-                        if (this._mapped) {
-                            this._mapped = this._model.instance; // map back
+                    if (ctl) {
+                        let bind = ctl.context.field.bind;
+                        if (bind) {
+                            if (!ctl.valid) {
+                                return; // don't update model if the value isn't valid
+                            }
+                            console.debug("DataModel change handling in ", ctl.toString())
+                            let value = ctl.value;
+                            Core.setObjectValue(this._model, bind, value);
+                            if (this._mapped) {
+                                this._mapped = this._model.instance; // map back
+                            }
                         }
                     }
                 }
@@ -274,18 +262,13 @@ class ExoFormDataBinding {
 
         const changeHandler = (target, key, oldValue, newValue, subPath, stackCount) => {
             if (equals(oldValue, newValue)) return
-            
+
             const isArray = Array.isArray(target);
 
             // set change path for binding
             const path = !isArray && key
                 ? `#/${instanceName}${subPath}/${key}`
                 : `#/${instanceName}${subPath}`;
-
-            if (path === "#/data/fields") {
-                console.log("DataModel -->>", target, key, oldValue, newValue, subPath, "stackCount:", stackCount)
-            }
-
 
             if (isArray) {
                 console.debug(`DataModel: array '${path}' changed`);
@@ -325,39 +308,36 @@ class ExoFormDataBinding {
         return s;
     }
 
-    _processFieldProperty(control, name, value) {
+    static isVariable(value) {
+        return (typeof (value) === "string" && value.startsWith("#/"))
+    }
+
+    _processFieldProperty(control, name, value, callback) {
         let returnValue = value;
 
-        if (typeof (value) === "string") {
+        if (ExoFormDataBinding.isVariable(value)) {
+            let path = value;
 
-            let isVarRef = value.startsWith("#/");
+            returnValue = this.get(path, undefined);
+            if (returnValue === undefined) {
+                returnValue = value  // return original string, don't resolve
+            }
+            else {
 
-            if (isVarRef) {// (isVarRef || name === "bind" && value.startsWith("#/")) {
-                console.debug("Resolving ", value);
-
-                let path = value;
-
-                returnValue = this.get(path, undefined);
-                if (returnValue === undefined) {
-
-                    returnValue = value  // return original string, don't resolve
-                }
-                else {
+                if (!["bind", "type", "name"].includes(name)) {
                     this.resolver.addBoundControl({
                         control: control,
                         field: control.context.field,
                         path: path,
+                        callback: callback,
                         propertyName: name,
                         originalBoundValue: returnValue
                     });
                 }
             }
+
         }
-        // else if (typeof (value) === 'object') {
-        //     for (var p in value) {
-        //         returnValue[p] = this._processFieldProperty(control, p, returnValue[p])
-        //     }
-        // }
+
         return returnValue;
     }
 }

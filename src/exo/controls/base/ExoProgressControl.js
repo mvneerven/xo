@@ -4,13 +4,13 @@ class ExoProgressControl extends ExoElementControl {
 
     static returnValueType = Number;
 
-    constructor(context) {
-        super(context);
-        
+    constructor() {
+        super(...arguments);
+
         this.htmlElement = document.createElement('progress');
 
         this.acceptProperties(
-            
+
             {
                 name: "max",
                 type: Number,
@@ -20,12 +20,12 @@ class ExoProgressControl extends ExoElementControl {
     }
 
 
-    async render(){
+    async render() {
         await super.render();
-        
+
         this.container.classList.add("exf-std-lbl");
         this.htmlElement.setAttribute("max", this.max)
-       
+
         this.htmlElement.setAttribute("value", this.value)
         return this.container
     }

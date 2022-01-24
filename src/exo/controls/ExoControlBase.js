@@ -1,32 +1,48 @@
-import ExoFormFactory from '../../core/ExoFormFactory';
-import ExoForm from '../../core/ExoForm';
-import DOM from '../../../pwa/DOM';
-import JSONSchema from '../../core/JSONSchema';
-import ExoFormSchema from '../../core/ExoFormSchema';
+import ExoFormFactory from '../core/ExoFormFactory';
+import ExoForm from '../core/ExoForm';
+import DOM from '../../pwa/DOM';
+import JSONSchema from '../core/JSONSchema';
+import ExoFormSchema from '../core/ExoFormSchema';
+import ExoFormDataBinding from '../databinding/ExoFormDataBinding';
+
+const STATUS = {
+    none: 0,
+    controlPropertiesSet: 1,
+    controlRenderStart: 2,
+    controlRenderEnd: 3
+}
 
 /**
  * Abstract base class for XO form controls
  */
 class ExoControlBase {
     attributes = {};
-
+    _status = STATUS.none;
     _visible = true;
     _disabled = false;
     _rendered = false;
     _useContainer = true;
     _cssVariables = {};
     _actions = [];
+    _children = [];
+    _props = {};
+    _isPage = false;
+    _parent = null;
+    _hasValue = false;
+
     acceptedProperties = [];
 
     dataProps = {};
 
     static returnValueType = undefined;
 
-    constructor(context) {
+    constructor(context, parentControl) {
         if (this.constructor === ExoControlBase)
             throw TypeError("Can't instantiate abstract class!");
 
         this.context = context;
+        this._parent = parentControl;
+
         if (!context || !context.field || !context.exo)
             throw TypeError("Invalid instantiation of ExoControlBase");
 
@@ -38,6 +54,7 @@ class ExoControlBase {
             { name: "caption", type: String, group: "UI", description: "Caption/label to display" },
             { name: "hidden", type: Boolean, group: "UI", default: false, description: "Determines control visibility" },
             { name: "disabled", type: Boolean, group: "UI", description: "Specifies whether the control can be interacted with by the user" },
+            { name: "visible", type: Boolean, default: true, group: "UI", description: "Specifies whether the control is visible" },
             //{ name: "required", type: Boolean, group: "Data", description: "Specifies whether the field is required" },
             { name: "tooltip", type: String, group: "UI", description: "Tooltip to show over the element" },
             { name: "info", type: String, group: "UI", description: "Informational text to show to help the user" },
@@ -50,8 +67,18 @@ class ExoControlBase {
             { name: "break", type: Boolean, description: "Set breakpoint" },
             { name: "css", type: Object },
             { name: "actions", type: Array, description: "List of actions to (conditionally) perform" }
-
         );
+    }
+
+    set bind(value) {
+        if (!ExoFormFactory.isVariable(value))
+            throw Error("Invalid databinding value on " + this.toString());
+
+        this._bind = value;
+    }
+
+    get bind() {
+        return this._bind;
     }
 
     /**
@@ -210,7 +237,30 @@ class ExoControlBase {
         return "Control";
     }
 
-    _getContainerTemplate(obj) {
+    /**
+     * Returns true if the control manipulates/returns a value
+     */
+    get hasValue() {
+        return this._hasValue;
+    }
+
+    get parent() {
+        return this._parent;
+    }
+
+    createChild(settings) {
+        let control = this.context.exo.createControl(settings, this);
+        if (settings.name) {
+            this.context.exo.root._addNamedControl(settings.name, control);
+        }
+        return control;
+    }
+
+    get children() {
+        return this._children;
+    }
+
+    getContainerTemplate(obj) {
 
         if (this.context.field.isPage) {
             return DOM.format( /*html*/`<span data-replace="true"></span>`, this._getContainerAttributes(obj))
@@ -223,12 +273,13 @@ class ExoControlBase {
             return DOM.format(tpl, this._getContainerAttributes(obj))
         }
 
-        return /*html*/`<div data-id="${obj.id}" class="${obj.class}" data-field-type="${obj.type}">
+        return /*html*/`
+<div data-id="${obj.id}" class="${obj.class}" data-field-type="${obj.type}">
     <div class="exf-ctl">
         <label for="${obj.id}" aria-hidden="true" class="exf-label" title="${obj.caption}">${obj.caption}</label>
-        
-        <span data-replace="true"></span>
-        
+        <div class="exf-inp">
+            <span data-replace="true"></span>
+        </div>
     </div>
     <div class="exf-fld-details">
         <div class="exf-help-wrapper"></div>
@@ -250,6 +301,10 @@ class ExoControlBase {
 
     get htmlElement() {
         return this._htmlElement;
+    }
+
+    get isPage() {
+        return this._isPage;
     }
 
     /**
@@ -365,7 +420,7 @@ class ExoControlBase {
 
     set value(data) {
         this.htmlElement.value = data;
-        if (this.rendered) {
+        if (this.container) {
             this.container.classList[data ? "add" : "remove"]("exf-filled");
         }
     }
@@ -385,10 +440,10 @@ class ExoControlBase {
 
     set visible(value) {
         this._visible = value;
-        if (this.rendered) {
-            var elm = this.container || this.htmlElement;
-            elm.style.display = value ? "unset" : "none";
-        }
+        //if (this.rendered) {
+        var elm = this.container || this.htmlElement;
+        elm.style.display = value ? "unset" : "none";
+        //}
     }
 
     get visible() {
@@ -406,14 +461,11 @@ class ExoControlBase {
     set disabled(value) {
         this._disabled = value;
 
-        if (this.rendered) {
+        if (this.container) {
             if (value) {
-                //this.htmlElement.setAttribute("disabled", "disabled")
                 this.container.classList.add("exf-disabled");
             }
             else {
-
-                //this.htmlElement.removeAttribute("disabled");
                 this.container.classList.remove("exf-disabled");
             }
         }
@@ -427,12 +479,22 @@ class ExoControlBase {
         return this._disabled;
     }
 
+    get name() {
+        return this.context.field.name;
+    }
+
+    set name(value) {
+        // NA
+    }
+
     /*
     * Tell system which properties to take from the configured field schema
     */
     acceptProperties(...ar) {
+        const field = this.context.field, me = this;
 
         ar.forEach(p => {
+
             if (typeof (p) === "string") {
                 p = {
                     name: p
@@ -440,15 +502,11 @@ class ExoControlBase {
             }
 
             let ix = this.acceptedProperties.indexOf(a => {
-                return e.name === p.name
+                return a.name === p.name
             })
 
             if (ix === -1) {
                 this.acceptedProperties.push(p);
-
-                // if (this.context.field[p.name] !== undefined || p.default) {
-                //     this[p.name] = this._processProp(p.name, this.context.field[p.name] || p.default);
-                // }
             }
             else {
                 // merge new (subclassed) accepted properties
@@ -456,17 +514,53 @@ class ExoControlBase {
                     ...this.acceptedProperties[ix],
                     ...p
                 }
-
             }
 
-            if (typeof (this.context.field[p.name]) !== "undefined") {
-                this[p.name] = this._processProp(p.name, this.context.field[p.name]);
-            }
-            else if (typeof (p.default) !== "undefined") {
-                this[p.name] = this._processProp(p.name, p.default);
-            }
+            let value = field[p.name] || p.default;
+            this._props[p.name] = value;
 
+            // if (typeof (value) !== "undefined" && !ExoFormDataBinding.isVariable(value)) {
+            //     if (p.name === "bind")
+            //         debugger;
+
+            //     this[p.name] = this._props[p.name]
+            // }
         });
+    }
+
+    /**
+     * Applies the accepted field schema values to properties 
+     * Use acceptProperties() to define which properties to map.
+     */
+    mapAcceptedProperties() {
+        try {
+            for (var key in this._props) {
+                let value = this._props[key];
+
+                let vType = typeof (value);
+                if (vType !== "undefined") {
+
+                    if (typeof (value) === "string") {
+                        this._processProp(key, value, (n, v) => {
+
+                            this._props[n] = v;
+
+                            this[n] = v;
+                        });
+                    }
+                    else {
+                        let name = key;
+                        if (name === "bind")
+                            throw "Invalid bind on " + this.toString()
+
+                        this[name] = value;
+                    }
+                }
+            }
+        }
+        finally {
+            this._status = STATUS.controlPropertiesSet
+        }
     }
 
     _scope() {
@@ -492,10 +586,10 @@ class ExoControlBase {
 
         ar.push("exf-base-" + this.baseType)
 
-        if (this.context.field.readOnly)
+        if (this.readOnly)
             ar.push("exf-readonly");
 
-        if (this.context.field.disabled)
+        if (this.disabled)
             ar.push("exf-disabled");
 
         return ar;
@@ -506,94 +600,103 @@ class ExoControlBase {
     }
 
     async render() {
-        this._registerActions()
+        this._rendering = 1;
 
-        this.setProperties();
-        if (this.break) {
-            debugger // LEAVE THIS HERE!
-        }
+        try {
+            this._registerActions()
 
-        for (var a in this.attributes) {
-            if (a === "required") {
-                this._htmlElement.required = this.attributes[a];
-                continue;
+            this.applyNonMappedFieldSchemaProperties();
+
+            if (this.break) {
+                debugger // LEAVE THIS HERE!
             }
-            this._htmlElement.setAttribute(a, this.attributes[a]);
-        }
-        for (var a in this.dataProps) {
-            if (this.dataProps[a])
-                this._htmlElement.setAttribute("data-" + a, this.dataProps[a]);
-        }
 
-        let obj = this._scope();
-        this.container = DOM.parseHTML(
-            this._getContainerTemplate(obj)
-        );
+            let obj = this._scope();
+            this.container = DOM.parseHTML(
+                this.getContainerTemplate(obj)
+            );
 
-        // make sure all (form) elements that require 'name' have one.
-        if (DOM.isPropertyAttr(this.htmlElement, "name")) {
-            if (!this.name)
-                this.name = obj.id; 
-            this.htmlElement.setAttribute("name", this.name);
-        }
+            // make sure all (form) elements that require 'name' have one.
+            if (DOM.isPropertyAttr(this.htmlElement, "name")) {
+                if (!this.name)
+                    this.name = obj.id;
+                this.htmlElement.setAttribute("name", this.name);
+            }
 
-        if (!obj.caption || obj.caption.length === 0) {
-            this.container.classList.add("exf-lbl-empty");
-        }
+            if (!obj.caption || obj.caption.length === 0) {
+                this.container.classList.add("exf-lbl-empty");
+            }
 
-        if (this.container.getAttribute("data-replace") === "true")
-            this.container = this.htmlElement;
-        else {
-            let toReplace = this.container.querySelector('[data-replace="true"]');
-            if (!toReplace)
+
+            if (this.container.getAttribute("data-replace") === "true")
                 this.container = this.htmlElement;
-            else
-                DOM.replace(toReplace, this.htmlElement);
-        }
+            else {
+                let toReplace = this.container.querySelector('[data-replace="true"]');
+                if (!toReplace)
+                    this.container = this.htmlElement;
+                else
+                    DOM.replace(toReplace, this.htmlElement);
+            }
 
-        this._addEventListeners();
+            this._addEventListeners();
 
-        if (this.context.field.required) {
-            this.container.classList.add("exf-required");
-        }
+            if (this.context.field.required) {
+                this.container.classList.add("exf-required");
+            }
 
-        // apply value if set in field
-        if (this.context.field.value) {
-            this.value = this.context.field.value;
-            if (this.value)
+            if (this.value) {
                 this.container.classList.add("exf-filled");
+            }
+
+            this._addContainerClasses();
+
+            if (this.tooltip) {
+                this.container.setAttribute("title", this.tooltip);
+            }
+
+            if (this.info) {
+                this.showHelp(this.info)
+            }
+
+            if (this.placeholder) {
+                this.htmlElement.setAttribute("placeholder", this.placeholder)
+            }
+
+            if (this.caption)
+                this.htmlElement.setAttribute("aria-label", this.caption)
+
+            if (this.css) {
+                Object.entries(this.css).map(i => {
+                    this.cssVariables[i[0]] = i[1];
+                })
+            }
+
+            this.renderStyleSheet();
+            return this.container
+        }
+        finally {
+            this._rendered = true;
+        }
+    }
+
+    setElementAttribute(name, value) {
+        const isDataAttribute = !this.allowedAttributes.includes(name)
+
+        if (name === "required") {
+            this._htmlElement.required = value;
+            return
         }
 
-        this._addContainerClasses();
+        name = isDataAttribute ? "data-" + name : name;
 
-        if (this.tooltip) {
-            this.container.setAttribute("title", this.tooltip);
-        }
+        let elm = this._htmlElement;
 
-        if (this.info) {
-            this.showHelp(this.info)
-        }
+        if (isDataAttribute || ['style', 'id', 'class'].includes(name))
+            elm = this.container || elm;
 
-        if (this.placeholder) {
-            this.htmlElement.setAttribute("placeholder", this.placeholder)
-        }
+        //console.log("Setting attribute on", DOM.elementToString(elm), ":", name, "=", value)
 
-        if (this.caption)
-            this.htmlElement.setAttribute("aria-label", this.caption)
-
-        this._rendered = true;
-
-        if (this.css) {
-
-            Object.entries(this.css).map(i => {
-                this.cssVariables[i[0]] = i[1];
-            })
-
-        }
-
-        this.renderStyleSheet();
-
-        return this.container
+        elm.setAttribute(name, value);
     }
 
     _registerActions() {
@@ -665,18 +768,18 @@ class ExoControlBase {
         }
     }
 
-    setProperties() {
+    // Apply properties not accepted using acceptProperties() 
+    // from field schema
+    applyNonMappedFieldSchemaProperties() {
         let f = this.context.field;
 
-        if (f.bind) {
+        if (f.bind && !f.name) { // resolve name from binding
             f.name = f.name || ExoFormSchema.getPathFromBind(f.bind);
             this.name = f.name;
         }
 
         for (var prop in f) {
-
-            let name = prop.toLowerCase();
-            let value = f[name];
+            let name = prop.toLowerCase(), value = f[name];
 
             if (name !== "bind" && ExoForm.meta.properties.reserved.includes(name)) {
                 continue;
@@ -690,38 +793,41 @@ class ExoControlBase {
             if (isSet)
                 continue;
 
-            if (this.allowedAttributes.includes(useName)) {
-                this.attributes[useName] = this._processProp(name, value);
+            if (typeof (value) === "object") {
+                this[useName] = value;
             }
             else {
 
-                if (typeof (value) === "object") {
-                    this[useName] = value;
-                }
-                else {
-                    this.dataProps[useName] = this._processProp(name, value);
-                }
+                this._processProp(name, value, (n, v) => {
+                    this.attributes[n] = v;
+                    this.setElementAttribute(n, v)
+                });
             }
         }
-
-
     }
 
-    // dataBinding with '@bindingpath'
-    _processProp(name, value) {
-        // resolve bound state 
+    // resolve bound state 
+    _processProp(name, value, callback) {
+        let old = value;
         let db = this.dataBinding;
         if (db) {
+
             try {
-                let result = db._processFieldProperty(this, name, value);
-                return result;
+                value = db._processFieldProperty(this, name, value, callback);
             }
             catch (ex) {
                 throw TypeError(`Databinding error in ${this.name}.${name}: ${ex.toString()}`)
             }
         }
 
-        return value;
+        if (name === "bind") {
+            name = "value"
+        }
+
+        if (old !== value)
+            console.log(name + " set to bound value ", old, "=", value)
+
+        callback(name, value)
     }
 
     // returns valid state of the control - can be subclassed
@@ -738,6 +844,14 @@ class ExoControlBase {
 
         elm.querySelectorAll("*").forEach(rv);
         return numInvalid === 0;
+    }
+
+    all() {
+        const ar = [this];
+        this.children.forEach(child => {
+            ar.push(...child.all())
+        })
+        return ar;
     }
 
     checkCustomValidity(valid) {

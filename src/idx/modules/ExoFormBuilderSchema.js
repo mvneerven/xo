@@ -38,6 +38,7 @@ class ExoFormBuilderSchema {
                     switch (context.changed.property) {
         
                         case "action":
+                            
                             let page = parseInt(context.changed.newValue);
                             if (page > 0) {
                                 context.exo.addins.navigation.goto(page)
@@ -105,10 +106,10 @@ class ExoFormBuilderSchema {
                     intro: "Building an ExoForm schema",
                     fields: [
                         {
-                            id: "action",
-                            bind: "instance.init.action",
-                            name: "action",
                             type: "listview",
+                            id: "action",
+                            bind: "#/init/action",
+                            name: "action",
                             style: "max-height: 300px",
                             singleSelect: true,
                             required: true,
@@ -184,7 +185,7 @@ class ExoFormBuilderSchema {
                         {
                             id: "template",
                             name: "template",
-                            bind: "instance.init.template",
+                            bind: "#/init/template",
                             type: "listview",
                             tilewidth: "200px",
                             views: "tiles",
@@ -228,7 +229,7 @@ class ExoFormBuilderSchema {
                         {
                             type: "url",
                             caption: "Enter or select a URL of a JSON Schema",
-                            bind: "instance.buildForm.jsonSchemaUrl",
+                            bind: "#/buildForm/jsonSchemaUrl",
                             required: true,
                             dialog: {
                                 title: "Upload a JSON Schema",
@@ -258,7 +259,7 @@ class ExoFormBuilderSchema {
                         {
                             type: "url",
                             caption: "Enter or select a URL of an OpenAPI Schema",
-                            bind: "instance.buildForm.openAPISchemaUrl",
+                            bind: "#/buildForm/openAPISchemaUrl",
                             required: true,
                             dialog: {
                                 title: "Upload an OpenAPI Schema",

@@ -17,6 +17,7 @@ class StudioRoute extends xo.route {
     menuIcon = "ti-panel";
 
     async asyncInit() {
+        const me = this;
         window.studioRoute = this;
 
         this.workspace = new ExoFormBuilderWorkspace(this);
@@ -65,10 +66,9 @@ class StudioRoute extends xo.route {
         })
 
         window.onunhandledrejection = function (error) {
-
             studioRoute.showFormNotRendered({
-                title: "Nothing to render",
-                body: error?.reason || "Empty schema/no fields rendered",
+                title: me.recentError ? "Error" : "Nothing to render",
+                body: me.recentError || error?.reason || "Empty schema/no fields rendered",
                 icon: "ti-na"
             });
         };
@@ -82,18 +82,13 @@ class StudioRoute extends xo.route {
 
     setError(e) {
         this.recentError = e.detail.error.toString();
-
-        // let elm = document.createElement("div");
-        // elm.innerHTML = this.recentError;
-        // this.sidePanel.tabStrip.tabs.errors.panel.appendChild(elm);
-        // this.sidePanel.tabStrip.tabs.errors.select()
     }
 
     showFormNotRendered(data) {
         data = {
             icon: "ti-info",
             title: "Form not rendered",
-            body: "No details",
+            body: this.recentError || "No details",
             ...data || {}
         }
         this.sidePanel.renderPanel.innerHTML = "";
@@ -219,8 +214,8 @@ class StudioRoute extends xo.route {
         if (!elm)
             return null;
 
-        let fld = window.xo.form.factory.getFieldFromElement(elm);
-        return fld ? fld._control.value : "";
+        let ctl = xo.control.get(elm);
+        return ctl ? ctl.value : "";
 
     }
 
@@ -229,26 +224,19 @@ class StudioRoute extends xo.route {
         let tsOptions = {
             tabs: {
                 start: { caption: "Start", class: "full-height", tooltip: "Select a templates or import DTO to generate an XO form Schema with" },
-                schema: { caption: "Schema", class: "full-height", tooltip: "Edit XO form Schema" },
-                //form: { caption: "▷ Run", class: "full-height", tooltip: "Run schema & view generated form" }
-
+                schema: { caption: "Schema", class: "full-height", tooltip: "Edit XO form Schema" }
             },
             class: "full-height"
         }
         if (localStorage.advancedUi == "On") {
             tsOptions.tabs = {
                 ...tsOptions.tabs,
-                //html: { caption: "HTML", class: "full-height", enabled: false, tooltip: "Show generated form HTML" },
-                //js: { caption: "JS", class: "full-height", tooltip: "Add JavaScript to execute" }
             }
         }
 
         this.tabStrip = new xo.pwa.TabStrip("exploreTabs", tsOptions);
 
         this.tabStrip.on("tabSelected", e => {
-
-            //this.styleSheetHelper.removeCSS();
-
             switch (e.detail.id) {
                 case "form":
                     let o = this.mainExoForm.getFormValues(e);
@@ -262,13 +250,9 @@ class StudioRoute extends xo.route {
                 default:
                     break;
             }
-
             this.prevTab = e.detail.id;
         })
-
         this.app.UI.areas.main.add(this.tabStrip.render());
-
-        //this.tabStrip.adaptHeight(this.app.UI.areas.main.element)
     }
 
     unload() {
@@ -303,7 +287,7 @@ class StudioRoute extends xo.route {
     }
 
     async renderCodeEditor(options) {
-        let elm = await this.exoContext.renderSingleControl({
+        let elm = xo.form.run({
             type: "monacoeditor",
             class: "full-height",
             ...options
@@ -443,8 +427,7 @@ class StudioRoute extends xo.route {
         exo.load(schemaEditForm).then(x => x.renderForm()).then(x => {
             this.tabStrip.tabs.schema.panel.appendChild(x.container);
 
-            this.schemafield = x.get("schema");
-            this.xo_schemaControl = this.schemafield._control
+            this.xo_schemaControl = x.get("schema");
             this.xo_schemaControl.on("SchemaReady", e => {
                 let value = this.xo_schemaControl.value
                 this.workspace.set("xo-schema", value)

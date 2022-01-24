@@ -7,16 +7,14 @@ class ExoSchemaEditor extends ExoMonacoCodeEditor {
 
     interval = null;
     focused = 0;
+
     throttleInterval = 400;
 
     constructor() {
         super(...arguments);
-
+        this._hasValue = true;
         this.on("createEditor", e => {
-            //console.log(e.detail)
             //e.detail.editorOptions.minimap.enabled = true
-
-            
         })
     }
 
@@ -34,6 +32,8 @@ class ExoSchemaEditor extends ExoMonacoCodeEditor {
 
             if (me.mode !== contentType) {
                 me.convertValue(me.mode);
+                //sme.language = me.mode
+
             }
             me.modeSwitch.innerText = me.mode;
         });
@@ -92,7 +92,7 @@ class ExoSchemaEditor extends ExoMonacoCodeEditor {
 
     set language(name) {
         this.mode = name;
-        monaco.editor.setModelLanguage(this.editor.getModel(), "jaja");
+        monaco.editor.setModelLanguage(this.editor.getModel(), name);
 
         if (this.modeSwitch)
             this.modeSwitch.innerText = name;
@@ -136,9 +136,14 @@ class ExoSchemaEditor extends ExoMonacoCodeEditor {
         const acProvider = {
             triggerCharacters: ['"'],
             provideCompletionItems: async (model, position) => {
-                let context = me.getSuggestionContext(model, position);
-                return {
-                    suggestions: await me.getSuggestions(context)
+                try {
+                    let context = me.getSuggestionContext(model, position);
+                    return {
+                        suggestions: await me.getSuggestions(context)
+                    }
+                }
+                catch (e) {
+                    //debugger;
                 }
             }
         }
@@ -154,8 +159,8 @@ class ExoSchemaEditor extends ExoMonacoCodeEditor {
             }
         }
 
-        monaco.languages.registerHoverProvider('javascript', hoverProvider);
-        monaco.languages.registerHoverProvider('json', hoverProvider);
+        // monaco.languages.registerHoverProvider('javascript', hoverProvider);
+        // monaco.languages.registerHoverProvider('json', hoverProvider);
 
         me.preventDefaultJavascriptAutocomplete()
 
@@ -173,8 +178,12 @@ class ExoSchemaEditor extends ExoMonacoCodeEditor {
                     >> Uncaught (in promise) Error: Could not find source file: 'inmemory://model/1'.
         */
 
+        // monaco.languages.typescript.javascriptDefaults.setDiagnosticsOptions({
+        //     diagnosticCodesToIgnore: [1109]
+        // })
+
         monaco.languages.typescript.javascriptDefaults.setCompilerOptions(
-            { noLib: true, allowNonTsExtensions: false}
+            { noLib: true, allowNonTsExtensions: false }
         )
 
     }
@@ -273,7 +282,7 @@ class ExoSchemaEditor extends ExoMonacoCodeEditor {
             const div = await xo.form.run({
                 type: options.type
             });
-            let control = xo.form.factory.getFieldFromElement(div)._control;
+            let control = xo.control.get(div);
             Object.entries(control.jsonSchema.properties).forEach(i => {
                 let propEnclosure = '""';
                 switch (i[1].type) {

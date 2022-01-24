@@ -4,8 +4,8 @@ class ExoDivControl extends ExoElementControl {
 
     html = "";
 
-    constructor(context) {
-        super(context);
+    constructor() {
+        super(...arguments);
         this.htmlElement = document.createElement('div');
 
         this.acceptProperties(

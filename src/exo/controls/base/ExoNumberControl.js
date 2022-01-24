@@ -4,10 +4,9 @@ import DOM from '../../../pwa/DOM';
 class ExoNumberControl extends ExoTextControl { 
 
     buttons = false;
-
-    constructor(context) {
-        super(context);
-
+    
+    constructor() {
+        super(...arguments);
         //this.context.field.type = "number";
         this.htmlElement = DOM.parseHTML(`<input name="${this.context.field.name}" type="number"/>`);
 

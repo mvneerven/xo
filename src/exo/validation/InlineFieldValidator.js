@@ -1,16 +1,18 @@
 class InlineFieldValidator {
 
-    constructor(field, options) {
+    constructor(control, options) {
         options = options || {};
-        this._field = field;
-        this._cnt = this._field._control.container || this._field._control.htmlElement;
+        this._ctl = control;
+        this._cnt = this._ctl.container || this._ctl.htmlElement;
         this._error = null;
         this._onInvalid = this._onInvalid.bind(this);
-        //if(options.onInput)
         this._onInput = this._onChange.bind(this);
         this._onChange = this._onChange.bind(this);
-
         this.bindEventListeners();
+    }
+
+    get control(){
+        return this._ctl
     }
 
     bindEventListeners() {
@@ -26,7 +28,7 @@ class InlineFieldValidator {
 
     // Displays an error message and adds error styles and aria attributes
     showError() {
-        this._field._control.showHelp(this._field._control.validationMessage, {
+        this.control.showHelp(this.control.validationMessage, {
             type: "invalid"
         })
     }
@@ -34,7 +36,7 @@ class InlineFieldValidator {
     // Hides an error message if one is being displayed
     // and removes error styles and aria attributes
     hideError() {
-        this._field._control.showHelp("", {
+        this.control.showHelp("", {
             type: "invalid"
         });
     }
@@ -45,7 +47,7 @@ class InlineFieldValidator {
     }
 
     _onChange(event) {
-        if (!this._field._control.valid) {
+        if (!this.control.valid) {
             this.showError();
         }
         else {

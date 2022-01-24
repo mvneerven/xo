@@ -23,7 +23,7 @@ class StyleSheetHelper {
     parseCSS() {
         try {
             let cssPanel = this.builder.sidePanel.tabStrip.tabs.css.panel;
-            let css = xo.form.factory.getFieldFromElement(cssPanel.querySelector('[data-field-type="aceeditor"]'))._control.value;
+            let css = xo.control.get(cssPanel.querySelector('[data-field-type="aceeditor"]')).value;
             let rules = DOM.parseCSS(css);
             let ar = [];
             for (var i = 0; i < rules.length; i++) {

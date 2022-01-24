@@ -16,9 +16,9 @@ class ExoDialogControl extends ExoBaseControls.controls.div.type {
     body = "The dialog body";
     modal = false;
 
-    constructor(context) {
-        super(context);
-
+    constructor() {
+        super(...arguments);
+        
         this.events = new xo.core.Events(this);
 
         this.acceptProperties("title", "cancelText", "body", "confirmText",
@@ -41,6 +41,12 @@ class ExoDialogControl extends ExoBaseControls.controls.div.type {
             }
 
         );
+        
+    }
+
+    mapAcceptedProperties(){
+        super.mapAcceptedProperties();
+        
         this.id = Core.guid({ compact: true, prefix: "dlg" });
         this.useContainer = false;
     }

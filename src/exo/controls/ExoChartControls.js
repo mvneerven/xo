@@ -7,8 +7,8 @@ class ExoCircularChart extends ExoBaseControls.controls.div.type {
     size = "200";
     color = "#00acc1";
 
-    constructor(context){
-        super(context);
+    constructor(){
+        super(...arguments);
 
         this.acceptProperties(
             {name: "value", type: Number, description: "Percentual value of the chart (0-100)", demoValue: 87},

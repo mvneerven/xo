@@ -5,10 +5,11 @@ import Core from '../../../pwa/Core';
 
 class ExoInputControl extends ExoElementControl {
 
-    static returnValueType = String;
+    static returnValueType = String;  
 
-    constructor(context) {
-        super(context);
+    constructor() {
+        super(...arguments);
+        this._hasValue = true;    
         this.htmlElement = document.createElement('input');  
     }
 
@@ -50,30 +51,28 @@ class ExoInputControl extends ExoElementControl {
     }
 
      testDataList() {
-        const _ = this;
-
-        let f = _.context.field;
+        let f = this.context.field;
 
         if (f.lookup) {
             if (Array.isArray(f.lookup)) {
-                _.createDataList(f, f.lookup);
+                this.createDataList(f.lookup);
             }
             else {
                 let query = (q) => {
                     let url = f.lookup.replace(".json", "_" + q + ".json");
-                    url = new URL(url, _.context.baseUrl);
+                    url = new URL(url, this.context.baseUrl);
 
                     fetch(url).then(x => x.json()).then(data => {1
-                        _.createDataList(f, data);
+                        this.createDataList(data);
                     })
                 };
 
                 if (!Core.isValidUrl(f.lookup)) {
-                    query = _.getFetchLookup(f);
+                    query = this.getFetchLookup(f);
                 }
 
                 this.htmlElement.addEventListener("keyup", e => {
-                    query(f._control.htmlElement.value);
+                    query(this.htmlElement.value);
                 })
             }
         }
@@ -103,12 +102,9 @@ class ExoInputControl extends ExoElementControl {
     }
 
     getFetchLookup(f) {
-        const _ = this;
-        const exo = _.context.exo;
-
         const o = {
             field: f, type: "lookup", data: f.lookup, callback: (field, data) => {
-                _.createDataList.call(_, field, data)
+                this.createDataList.call(this, data)
             }
         };
 
@@ -128,19 +124,14 @@ class ExoInputControl extends ExoElementControl {
 
         else if (o.data.type === "promise"){
             return (q) => { 
-                
                 this.getItems(o.data.items).then(x => {
-                    // o.callback(o.field, data.value.map(e => {
-                    //     return e.Title
-                    // }));
                     o.callback(o.field, x);
-                    
                 });
             } 
            
         }
 
-        return exo.options.get(o)
+        return this.context.exo.options.get(o)
     }
 
     async getItems(items) {
@@ -166,11 +157,10 @@ class ExoInputControl extends ExoElementControl {
         });
     }
 
-    createDataList(f, data) {
-        const _ = this;
-        let id = f.id;
-        f._control.htmlElement.setAttribute("list", "list-" + id);
-        let dl = f._control.container.querySelector("datalist");
+    createDataList(data) {
+        const id = this.context.field.id;
+        this.htmlElement.setAttribute("list", "list-" + id);
+        let dl = this.container.querySelector("datalist");
         if (dl) dl.remove();
         const dataList = DOM.parseHTML(DOM.format(ExoForm.meta.templates.datalist, {
             id: "list-" + id
@@ -184,7 +174,7 @@ class ExoInputControl extends ExoElementControl {
 
             dataList.appendChild(DOM.parseHTML(DOM.format(ExoForm.meta.templates.datalistItem, o)));
         });
-        f._control.container.appendChild(dataList);
+        this.container.appendChild(dataList);
     }
 }
 
