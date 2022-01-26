@@ -115,10 +115,6 @@ import ExoFormFactory from './ExoFormFactory';
 
         return (field.type.prototype instanceof ExoFormFactory.library.base.type)
     }
-
-    // renderSingleControl(field) {
-    //     return this.createForm().renderSingleControl(field);
-    // }
 }
 
 export default ExoFormContext;

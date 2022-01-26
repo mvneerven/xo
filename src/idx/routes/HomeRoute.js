@@ -1,5 +1,3 @@
-const DOM = window.xo.dom;
-const Core = window.xo.core;
 
 class HomeRoute extends xo.route {
     title = "XO-JS - eXtra Ordinary JavaScript";

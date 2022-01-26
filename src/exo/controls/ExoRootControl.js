@@ -4,13 +4,14 @@ import ExoFormFactory from "../core/ExoFormFactory";
 
 class ExoRootControl extends ExoDivControl {
     _pages = [];
+    _controls = [];
     _namedControls = {};
 
     constructor() {
         super(...arguments);
         this.context.exo.root = this;
         this.htmlElement = document.createElement("form")
-        this.htmlElement.data = {xo_form: this.context.exo};
+        this.htmlElement.data = { xo_form: this.context.exo };
 
         this.acceptProperties(
             {
@@ -21,6 +22,11 @@ class ExoRootControl extends ExoDivControl {
                 name: "pages",
                 type: Array
             },
+            {
+                name: "controls",
+                type: Array
+            },
+
             {
                 name: "form",
                 type: Object
@@ -34,6 +40,7 @@ class ExoRootControl extends ExoDivControl {
 
     mapAcceptedProperties() {
         super.mapAcceptedProperties();
+        this._loadAddins();
 
         let pageIndex = 0;
         this.pages.forEach(page => {
@@ -47,6 +54,13 @@ class ExoRootControl extends ExoDivControl {
             }
             this._children.push(this.createChild(page))
         });
+
+        let navField = {
+            type: "formnav",
+            controls: this.controls
+        }
+
+        this._children.push(this.createChild(navField))
     }
 
     _addNamedControl(name, control) {
@@ -57,6 +71,14 @@ class ExoRootControl extends ExoDivControl {
         }
 
         this._namedControls[name] = control;
+    }
+
+    get pages() {
+        return this._pages;
+    }
+
+    set pages(data) {
+        this._pages = data
     }
 
     _getControlByName(name) {
@@ -77,7 +99,7 @@ class ExoRootControl extends ExoDivControl {
         }
     }
 
-    toString(){
+    toString() {
         return "root"
     }
 
@@ -96,17 +118,25 @@ class ExoRootControl extends ExoDivControl {
 
         this.pageContainer = DOM.parseHTML('<div class="exf-wrapper" />');
 
-        this.children.forEach(async child => {
+        for (let child of this.children.filter(c => {
+            return c.type !== "formnav"
+        })) {
+
             let span = document.createElement("span");
             this.pageContainer.appendChild(span)
-
             let elm = await child.render();
-
             DOM.replace(span, elm);
 
-        });
+        };
 
         this.htmlElement.appendChild(this.pageContainer);
+
+        this.navControl = this.children.find(c => {
+            return c.type === "formnav"
+        })
+
+        let navContainer = await this.navControl.render();
+        this.htmlElement.appendChild(navContainer);
 
         if (this.id) {
             this.container.setAttribute("id", this.id);
@@ -188,13 +218,7 @@ class ExoRootControl extends ExoDivControl {
         })
     }
 
-    set pages(data) {
-        this._pages = data
-    }
 
-    get pages() {
-        return this._pages;
-    }
 }
 
 export default ExoRootControl;

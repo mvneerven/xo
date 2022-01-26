@@ -35,7 +35,7 @@ class ExoUrlControl extends ExoTextControl {
                     tooltip: title,
                     icon: "ti-file",
                     click: async e => {
-                        
+
                         let r = await xo.form.run({
                             type: "filedialog",
                             title: title,
@@ -44,7 +44,9 @@ class ExoUrlControl extends ExoTextControl {
                             name: "drop",
                             click: async (button, event) => {
                                 if (button === "confirm") {
-                                    let exo = xo.form.from(event.target.closest(".exf-dlg-c")?.querySelector("form"));
+                                    let root = event.target.closest(".exf-dlg-c")
+                                        .querySelector(".exf-container");
+                                    const exo = xo.control.get(root).context.exo;
                                     let ctl = exo.get("drop");
                                     if (ctl.value?.length) {
                                         let file = ctl.value[0];

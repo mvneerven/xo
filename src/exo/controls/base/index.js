@@ -26,6 +26,7 @@ import ExoDateControl from './ExoDateControl';
 import ExoGroupControl from './ExoGroupControl';
 import ExoRootControl from '../ExoRootControl';
 import ExoPasswordControl from './ExoPasswordControl';
+import ExoNavControl from '../ExoNavControl';
 
 class ExoBaseControls { 
 
@@ -68,7 +69,8 @@ class ExoBaseControls {
         link: { type: ExoLinkControl, note: "HTML Anchor element", demo: {url: "http://blacknegative.com/", html: "Visit http://blacknegative.com/", external: true} },
         separator: {type: ExoSeparatorControl, note: "Separator" },
         group: {type: ExoGroupControl, note: "Group control" },
-        formcontainer: {type: ExoRootControl, hidden: true}
+        formcontainer: {type: ExoRootControl, hidden: true},
+        formnav: {type: ExoNavControl, hidden: true}
     }
 }
 

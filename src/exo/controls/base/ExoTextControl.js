@@ -111,7 +111,9 @@ class ExoTextControl extends ExoInputControl {
         }
         else if (obj.field) { // field
             span.classList.add("field")
-            let elm = await xo.form.run(obj.field);
+            let elm = await xo.form.run(obj.field, {
+                parentElement: span,
+            });
             span.appendChild(elm);
         }
         else {
@@ -126,8 +128,6 @@ class ExoTextControl extends ExoInputControl {
                 obj.click(e);
             })
         }
-        //let div = DOM.wrap(this.htmlElement);
-        //div.classList.add("")
         this.container.querySelector(".exf-inp").appendChild(span);
     }
 

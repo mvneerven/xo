@@ -3,6 +3,7 @@ import ExoFormFactory from './ExoFormFactory';
 import JSONSchema from './JSONSchema';
 import ExoEntitySettings from '../entity/ExoEntitySettings';
 import ExoControlBase from '../controls/ExoControlBase';
+import ExoFormDataBinding from '../databinding/ExoFormDataBinding';
 
 /**
  * Hosts the XO form json/js form schema and manages its state
@@ -23,20 +24,26 @@ class ExoFormSchema {
 
 
     parse(schemaData) {
+
+        if (typeof (schemaData) === "object") {
+            this._raw = schemaData;
+            schemaData = xo.core.clone(schemaData) // Clone object to lose reference - FIX
+        }
+
         if (typeof (schemaData) !== "object") {
 
             let test = ExoFormFactory.tryScriptLiteral(schemaData);
             if (test?.type === "javascript") {
                 this._type = this.types.js;
-                if (test.executed){
+                if (test.executed) {
                     schemaData = test.schema;
                 }
-                else if(test.syntaxError) {
+                else if (test.syntaxError) {
                     throw test.syntaxError;
                 }
                 else
                     throw test.error;
-                
+
             }
             else {
                 try {
@@ -58,10 +65,11 @@ class ExoFormSchema {
 
         this._schemaData.pages = this._schemaData.pages || [];
 
-        this._raw = JSON.parse(Core.stringifyJSONWithCircularRefs(this._schemaData)) // keep original schema as _schemaData will be modified 
+        if (!this._raw) 
+            this._raw = xo.core.clone(this._schemaData)
     }
 
-    get raw(){
+    get raw() {
         return this._raw;
     }
 
@@ -74,13 +82,13 @@ class ExoFormSchema {
         let defaultModelInstance = this.getFirstInstanceName();
         if (!defaultModelInstance) {
             defaultModelInstance = "data";
-            
-            if(this._schemaData.model){
-                if(!this._schemaData.model.instance)
+
+            if (this._schemaData.model) {
+                if (!this._schemaData.model.instance)
                     throw TypeError("The 'model' node must contain an 'instance' node");
             }
-            else{
-                this._schemaData.model = { instance: {}};
+            else {
+                this._schemaData.model = { instance: {} };
                 this.model.instance[defaultModelInstance] = {};
             }
         }
@@ -181,7 +189,7 @@ class ExoFormSchema {
         }
     }
 
-    
+
 
     addJSONSchema(instanceName, schema) {
         this._jsonSchemas[instanceName] = new JSONSchema(instanceName, schema);
@@ -277,7 +285,6 @@ Pages: ${this.pages.length}
         this.query().forEach(f => {
             this.applyJsonSchema(f)
         });
-
     }
 
     /**
@@ -292,9 +299,9 @@ Pages: ${this.pages.length}
     }
 
     applyJsonSchema(field) {
-
+        
         if (field.bind) {
-            let instanceName = field.bind.split('.')[1];
+            let instanceName = ExoFormDataBinding.getInstanceFromBind(field.bind);
             if (this.jsonSchemas[instanceName]) {
                 this.jsonSchemas[instanceName].apply(field);
             }
@@ -302,7 +309,7 @@ Pages: ${this.pages.length}
     }
 
     static getPathFromBind(bind) {
-        
+
         bind = Core.translateBindingPath(bind);
 
         let parts = bind.split('.');
@@ -420,7 +427,7 @@ Pages: ${this.pages.length}
      * @param {object} options - query options. e.g. {inScope: true} for querying only fields that are currenttly in scope.
      * @return {array} - All matched fields in the current ExoForm schema
      */
-    query(matcher, options) {        
+    query(matcher, options) {
         if (matcher === undefined) matcher = () => { return true };
         options = options || {};
         let matches = [];
@@ -610,7 +617,6 @@ Pages: ${this.pages.length}
 
     get fieldCount() {
         return this._totalFieldCount;
-
     }
 
     static async fromJsonSchema(jsonSchema) {
@@ -651,9 +657,8 @@ Pages: ${this.pages.length}
     }
 
     static async fromOpenApiSchema(openApiSchema, options) {
-        options = {...options}
+        options = { ...options }
         let ent = new xo.form.entity({ dataSchema: openApiSchema, dto: options.dto });
-        
         let editor = await ent.createEditor({});
         return await ExoFormSchema.fromJsonSchema(editor.schema.model.schemas.data);
     }

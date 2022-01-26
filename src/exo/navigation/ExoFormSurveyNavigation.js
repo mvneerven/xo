@@ -25,7 +25,7 @@ class ExoFormSurveyNavigation extends ExoFormWizardNavigation {
             }
             else if (e.keyCode === 13) { // enter
                 if (e.target.type !== "textarea") {
-                    let exf = e.target.closest("[data-exf]");
+                    let exf = e.target.closest(".exf-cnt");
                     let ctl = xo.control.get(exf)
                     this.checkForward(ctl, "enter", e);
                     e.preventDefault();
@@ -75,7 +75,8 @@ class ExoFormSurveyNavigation extends ExoFormWizardNavigation {
 
         
         var isValid = control.valid;
-        if (isValid || !this.multiValueFieldTypes.includes(f.type)) {
+        
+        if (isValid || !this.multiValueFieldTypes.includes(control.type)) {
             if (this._currentPage == this.getLastPage()) {
                 this.exo.container.classList.add("end-reached");
                 this.form.appendChild(

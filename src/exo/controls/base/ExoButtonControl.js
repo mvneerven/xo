@@ -102,6 +102,7 @@ class ExoButtonControl extends ExoElementControl {
   }
 
   handleClick(e) {
+    
     e.preventDefault();
 
     const me = this;
@@ -179,6 +180,7 @@ class ExoButtonControl extends ExoElementControl {
     }
 
     else {
+      
       const dv = this.context.field._defaultValue;
       if (dv && this.value !== dv) {
 

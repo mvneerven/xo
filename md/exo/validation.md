@@ -14,7 +14,7 @@ If you want to have inline validation the default for all forms, specify it as a
 
 ```javascript
 // set default validation to be 'inline' for all forms
-const context = await window.xo.form.factory.build({
+const context = await xo.form.factory.build({
     defaults: {
         validation: "inline"
     }

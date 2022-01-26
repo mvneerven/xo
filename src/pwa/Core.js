@@ -83,17 +83,41 @@ class Core {
 
     };
 
+    // /**
+    //  * Clone an object.
+    //  * @param {Object} obj 
+    //  * @param {Function} replacer
+    //  * @returns cloned object.
+    //  */
+    // static clone(obj, replacer) {
+    //     // https://stackoverflow.com/questions/53102700/how-do-i-turn-an-es6-proxy-back-into-a-plain-object-pojo
+    //     if (typeof (obj) !== "object")
+    //         return obj;
+    //     return JSON.parse(JSON.stringify(obj, replacer));
+    // }
+
     /**
      * Clone an object.
      * @param {Object} obj 
-     * @param {Function} replacer
      * @returns cloned object.
      */
-    static clone(obj, replacer) {
-        // https://stackoverflow.com/questions/53102700/how-do-i-turn-an-es6-proxy-back-into-a-plain-object-pojo
-        if (typeof (obj) !== "object")
+    static clone(obj) {
+        if (obj === null || typeof (obj) !== 'object' || 'isActiveClone' in obj)
             return obj;
-        return JSON.parse(JSON.stringify(obj, replacer));
+
+        if (obj instanceof Date)
+            var temp = new obj.constructor(); //or new Date(obj);
+        else
+            var temp = obj.constructor();
+
+        for (var key in obj) {
+            if (Object.prototype.hasOwnProperty.call(obj, key)) {
+                obj['isActiveClone'] = null;
+                temp[key] = Core.clone(obj[key]);
+                delete obj['isActiveClone'];
+            }
+        }
+        return temp;
     }
 
     /**
@@ -404,21 +428,23 @@ class Core {
      * @param {Any} value - the value to set
      */
     static setObjectValue(obj, path, value) {
-
         path = Core.translateBindingPath(path)
-
         // Get the path as an array
-        path = Core.stringToPath(path);
+        let pathElements = Core.stringToPath(path);
 
         // Cache the current object
         var current = obj;
 
         // For each item in the path, dig into the object
-        for (var i = 0; i < path.length; i++) {
-            current = current[path[i]];
-
-            if (i === path.length - 2) {
-                current[path[i + 1]] = value;
+        for (var i = 0; i < pathElements.length; i++) {
+            current = current[pathElements[i]];
+            
+            if (i === pathElements.length - 2) {
+                if(!current){
+                    //console.warn("Trying to set ", pathElements , " to ", value, " failed", JSON.stringify(obj, null, 2));
+                    break;
+                }
+                current[pathElements[i + 1]] = value;
             }
         }
     }
@@ -511,24 +537,6 @@ class Core {
         return this.operatorTable[operator](a, b);
     }
 
-    // get rid of circular references in objects 
-    static stringifyJSONWithCircularRefs(json) {
-        // Note: cache should not be re-used by repeated calls to JSON.stringify.
-        var cache = [];
-        var s = JSON.stringify(json, (key, value) => {
-            if (typeof value === 'object' && value !== null) {
-                // Duplicate reference found, discard key
-                if (cache.includes(value)) return;
-
-                // Store value in our collection
-                cache.push(value);
-            }
-            return value;
-        }, 2);
-        cache = null; // Enable garbage collection
-        return s;
-    }
-
     static formatValue(value, options) {
         options = options || { type: "currency", country: "nl", currencyCode: "EUR" }
 
@@ -537,7 +545,6 @@ class Core {
                 { style: 'currency', currency: options.currencyCode }).format(value);
 
     }
-
 
     static toPascalCase(s) {
         if (typeof (s) !== "string")

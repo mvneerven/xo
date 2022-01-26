@@ -32,6 +32,8 @@ class ExoLiveEditor {
                     me.btnToggle.classList[me.enabled ? "add" : "remove"]("active");
                     me.renderActiveState()
                 }
+            }, {
+                parentElement: this.exo.container
             });
 
             this.btnToggle.classList.add("exf-le-btn");

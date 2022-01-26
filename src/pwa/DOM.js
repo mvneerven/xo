@@ -201,7 +201,7 @@ class DOM {
             ...options || {},
             type: "dialog"
         });
-        var ctl = xo.form.factory.getControlromElement(r);
+        var ctl = xo.control.get(r);
         ctl.show();
         return ctl;
     }

@@ -18,37 +18,43 @@ import { version } from '../package.json';
 import ExoSandboxControl from '../src/exo/controls/extended/ExoSandboxControl';
 
 class ControlHelper {
-    get(htmlElement, options) {
-        // let elm = htmlElement.closest("[data-exf]");
 
-        // const xo_form = htmlElement.closest("form")?.data.xo_form;
-        // if(!xo_form){
-        //     debugger;
-        // }
-
-        // debugger
-        // if (xo_form) {
-        //     
-        //     return xo_form.controlDict[elm];
-        // }
-        return ExoFormFactory.getControlFromElement(htmlElement, options);
+    cElm(htmlElement, master) {
+        let elm = htmlElement;
+        if(master)
+            elm = htmlElement.closest(`[data-exf-master]`) || elm;
+        
+        elm = elm.closest(`[data-exf]`) ;
+        
+        return elm || htmlElement;
     }
 
-    register(htmlElement, control){
-        let f = control.context.field;
-        f._control = control
-        htmlElement.data = htmlElement.data || {}; htmlElement.data.field = f; // keep field in element data
-        htmlElement.setAttribute("data-exf", "1"); // mark as element holding data
-
-        // const xo_form = control.context.exo;
-        // xo_form.controlDict = xo_form.controlDict || {};
-        // xo_form.controlDict[htmlElement] = control;
-        // if(isRoot){
-        //     htmlElement.data = htmlElement.data || {};
-        //     htmlElement.data.xo_form = control.context.exo;
-        // }
+    get(htmlElement, master) {
+        if (document.data?.controlDict) {
+            let hex = this.cElm(htmlElement, master).getAttribute("data-exf")
+            let ctl = document.data.controlDict[hex];
+            return ctl;
+        }
     }
 
+    register(htmlElement, control) {
+        if (!document.data) {
+            const obj = {
+                controlDict: {},
+                index: 1000
+            }
+            document.data = obj;//new WeakRef(obj);
+        }
+
+        document.data.index++;
+
+        const elm = this.cElm(htmlElement);
+        const hex = 'exi' + document.data.index.toString(16)
+        elm.setAttribute("data-exf", hex);
+
+        document.data.controlDict[hex] = control;
+
+    }
 }
 
 /**
@@ -221,7 +227,6 @@ class XO {
     }
 }
 const xo = new XO();
-
 window.xo = xo;
 export default xo;
 

@@ -325,8 +325,15 @@
                     box-shadow: inset 0 0 0 0.065rem var(--color-input-border);
                 }
 
-                .exf-caption-description:empty {
-                    display: none;
+                .exf-caption-main {
+                    display: block;
+                }
+
+                .exf-caption-description {
+                    display: block!important;
+                    &:empty {
+                        display: none;
+                    }
                 }
 
                 .exf-caption-main {

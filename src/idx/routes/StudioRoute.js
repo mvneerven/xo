@@ -5,8 +5,8 @@ import ExoFormBuilderSchema from '../modules/ExoFormBuilderSchema';
 import ExoSchemaRenderer from '../modules/ExoSchemaRenderer';
 import ExoFormBuilderWorkspace from '../modules/ExoFormBuilderWorkspace';
 
-const DOM = window.xo.dom;
-const Core = window.xo.core;
+const DOM = xo.dom;
+const Core = xo.core;
 
 class StudioRoute extends xo.route {
 
@@ -98,7 +98,7 @@ class StudioRoute extends xo.route {
     }
 
     async buildExoFormContext() {
-        const factory = window.xo.form.factory;
+        const factory = xo.form.factory;
 
         const context = await factory.build({
             defaults: {
@@ -179,7 +179,7 @@ class StudioRoute extends xo.route {
         this.currentForm = x;
 
         // when paging in rendered form, update sidepanel
-        this.currentForm.on(window.xo.form.factory.events.page, e => {
+        this.currentForm.on(xo.form.factory.events.page, e => {
             this.sidePanel.updateCurrentFormPage(e.detail.page);
         })
 
@@ -454,46 +454,26 @@ class StudioRoute extends xo.route {
 
         this.renderCssTab()
 
-        this.renderJsTab()
+        //this.renderJsTab()
 
         //this.renderHtmlTab()
 
     }
 
     renderCssTab() {
-        if (!this.sidePanel.tabStrip.tabs.css)
+        
+        const tab = this.sidePanel.tabStrip.tabs.css;
+        if (!tab)
             return;
 
-        this.renderCodeEditor({ mode: "css", value: this.styleSheetHelper.buildCssFromClasses() }).then(e => {
+        this.renderCodeEditor({ 
+            mode: "css", value: this.styleSheetHelper.buildCssFromClasses() 
+        }).then(e => {
 
-            e.querySelector("[data-exf]").data?.editor.on("change", ev => {
+             e.querySelector("[data-exf]").data?.editor.on("change", ev => {
                 this.styleSheetHelper.applyCSS();
             })
-            this.sidePanel.tabStrip.tabs.css.replaceWith(e);
-        });
-    }
-
-    renderJsTab() {
-        if (!this.tabStrip.tabs.js)
-            return;
-
-        var ar = []
-        for (var ev in window.xo.form.factory.events) {
-            ar.push(
-                `this.on("${ev}", e => {
-    //console.log('>> XO form Event: ${ev}", e.detail);
-    })`)
-        }
-
-        const defaultScript = `
-    // Add your logic here...
-    
-    ` + ar.join('\n\n');
-
-        let js = this.workspace.get("xo-script") || defaultScript;
-
-        this.renderCodeEditor({ mode: "javascript", value: js, id: "js-code" }).then(e => {
-            this.tabStrip.tabs.js.replaceWith(e);
+            tab.replaceWith(e);
         });
     }
 

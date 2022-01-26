@@ -131,7 +131,7 @@ class ExoMultiInputControl extends ExoBaseControls.controls.div.type {
 
         // inform system that this is the master control 
         // See: ExoFormFactory.getFieldFromElement(... , {master: true})
-        this.htmlElement.setAttribute("exf-data-master", "multiinput");
+        this.htmlElement.setAttribute("data-exf-master", "multiinput");
 
         return this.container;
     }

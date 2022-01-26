@@ -86,7 +86,7 @@ class PWA_OmniBox {
             }
         });
         this.elm?.classList.add("pwa-omnibox");
-        document.addEventListener("keydown", e => {
+        this.elm?.addEventListener("keydown", e => {
 
             if (e.key === "/") {
                 if (!["INPUT", "TEXTAREA"].includes(e.target.tagName)) {

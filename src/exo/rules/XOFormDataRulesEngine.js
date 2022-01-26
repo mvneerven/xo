@@ -52,10 +52,12 @@ class XOFormDataRulesEngine extends ExoRuleEngineBase {
         }
     }
     _checkState(mode) {
+        
         try{
 
-            if(this.checking)
+            if(this.checking){
                 return;
+            }
 
             this.checking = true;
             return this._checkState_internal(mode)
@@ -66,8 +68,6 @@ class XOFormDataRulesEngine extends ExoRuleEngineBase {
     }
 
     _checkState_internal(mode) {
-        
-
         const TESTS = {
             is: (e, v) => { return e == v },
             in: (e, v) => { return e.includes(v) },
@@ -277,7 +277,8 @@ class XOFormDataRulesEngine extends ExoRuleEngineBase {
                 calc(a, b, (c, d) => { return c ** d })
             },
             trigger: (a, b) => {
-                this.exo.events.trigger(this.var(a), {
+                const eventName = this.var(a);
+                this.exo.events.trigger(eventName, {
                     ...b || {}
                 })
             },

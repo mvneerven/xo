@@ -2,7 +2,7 @@ import 'regenerator-runtime/runtime'; // included for babel build
 import routes from "../src/idx/routes";
 import GridColumnResizer from '../src/idx/modules/GridColumnResizer';
 
-class ExoFormStudio extends window.xo.pwa {
+class ExoFormStudio extends xo.pwa {
 
     constructor(){
         super(...arguments);

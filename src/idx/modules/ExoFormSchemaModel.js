@@ -1,5 +1,3 @@
-const Core = window.xo.core;
-
 class ExoFormSchemaModel {
     _mode = null
     _pageIndex = 0;
@@ -7,7 +5,7 @@ class ExoFormSchemaModel {
     _rawData = null;
 
     constructor(context) {
-        this.events = new Core.Events(this); // add simple event system
+        this.events = new xo.core.Events(this); // add simple event system
         this._xoSchema = context.createSchema();
     }
 

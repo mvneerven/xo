@@ -617,7 +617,7 @@ class ExoListViewControl extends ExoDivControl {
     // (re)select all ids inside value
     this.renderSelected();
 
-    document.addEventListener("mousemove", () => this.addOverflowBars());
+    this.listDiv.addEventListener("mousemove", () => this.addOverflowBars());
 
     // create single contextmenu and move it to article hovered over
     if (this.contextMenu) {
@@ -824,7 +824,9 @@ class ExoListViewControl extends ExoDivControl {
     );
     for (const c of filteredControls) {
       // render single controls
-      await xo.form.run(c).then((e) => {
+      await xo.form.run(c, {
+        parentElement: btns
+      }).then((e) => {
         btns.appendChild(e);
 
         if (c.useSelection) {

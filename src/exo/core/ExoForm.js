@@ -57,6 +57,7 @@ class ExoForm {
         };
 
         this.id = this.options.id || Core.guid({ compact: true, prefix: "frm" });
+
         this.events = new Core.Events(this);
 
         xo.events.trigger("new-form", {
@@ -92,7 +93,9 @@ class ExoForm {
                 if (!schema)
                     resolve(this)
                 else {
+
                     this.loadSchema(schema).then(() => {
+
                         this.schema.applyJsonSchemas();
                         this.events.trigger(ExoFormFactory.events.jsonSchemasApplied);
                         resolve(this);
@@ -144,35 +147,30 @@ class ExoForm {
      * @return {any} - the loaded schema
      */
     async loadSchema(schema) {
-
         this.events.trigger(ExoFormFactory.events.created);
-
         this._schema = this.context.createSchema();
         this.schema.parse(schema);
-
+       
         this.events.trigger(ExoFormFactory.events.schemaParsed);
-
+        
         await this.resolveJsonSchemas()
-
         this.schema.createDefaultUiIfNeeded();
-
         this.events.trigger(ExoFormFactory.events.schemaLoading);
-
+        
         this._dataBinding = new ExoFormDataBinding(this);
         await this._dataBinding.prepare();
 
-        console.debug("Model loaded", this.dataBinding.model)
-
         this.dataBinding.on("change", e => {
             e.detail.state = "change";
-            this.events.trigger(ExoFormFactory.events.dataModelChange, e.detail)
+            this.events.trigger(ExoFormFactory.events.dataModelChange, e.detail)        
         }).on("ready", e => {
             e.detail.state = "ready";
             this.events.trigger(ExoFormFactory.events.dataModelChange, e.detail)
+
         }).on("error", e => {
             this.events.trigger(ExoFormFactory.events.error, e.detail);
         });
-
+        
         this.events.trigger(ExoFormFactory.events.schemaLoaded);
     }
 
@@ -245,7 +243,7 @@ class ExoForm {
         }
 
         this.root = this.createControl(fieldSchema); // root control
-        this.root._loadAddins()
+
 
         await this.root.render();
 
@@ -287,13 +285,15 @@ class ExoForm {
      */
     get(data) {
         const type = typeof (data);
-        if (type === "string")
-            return this.root._getControlByName(data);
+        if (type !== "string")
+            throw TypeError("The data argument must be a string");
 
-        else if (type === "object") {
-            let elm = data.closest("[data-exf]")
-            return this.controlDict[elm]
-        }
+        return this.root._getControlByName(data);
+
+        // else if (type === "object") {
+        //     let elm = data.closest("[data-exf]")
+        //     return this.controlDict[elm]
+        // }
     }
 
     all() {
@@ -347,15 +347,14 @@ class ExoForm {
         return Core.clone(data);
     }
 
-
-
     /**
      * Renders a single ExoForm control 
      * @param {object} field - field structure sub-schema. 
      * @return {promise} - A promise with the typed rendered element
      */
     async renderSingleControl(field) {
-        let c = await this.createControl(field);
+        let c = await this.createControl(field, null);
+
         let element = await c.render();
         if (!element)
             throw ExoFormFactory.fieldToString(field) + " does not render an HTML element";
@@ -396,11 +395,8 @@ class ExoForm {
         };
 
         control = new baseType(context, parentControl);
+
         control.mapAcceptedProperties();
-
-        xo.control.register(control.htmlElement, control);
-
-        
         return control;
     }
 

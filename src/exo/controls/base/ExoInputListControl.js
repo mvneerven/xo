@@ -1,14 +1,6 @@
 import ExoListControl from './ExoListControl';
 import DOM from '../../../pwa/DOM';
 
-const tpl = /*html*/`<div class="exf-ilc-cnt" title="{{tooltip}}">
-    <input class="{{class}}" {{disabled}} {{checked}} name="{{inputname}}" value="{{value}}" type="{{type}}" id="{{oid}}" />
-    <label for="{{oid}}" class="exf-caption">
-        <div class="exf-caption-main">{{name}}</div>
-        <div title="{{description}}" class="exf-caption-description">{{description}}</div>
-    </label>
-</div>`;
-
 class ExoInputListControl extends ExoListControl {
     constructor() {
         super(...arguments);
@@ -39,30 +31,35 @@ class ExoInputListControl extends ExoListControl {
 
     async render() {
         await super.render();
-        
-        this._rendered = false;
 
-        return new Promise(resolve => {
+        try {
             this._rendered = false;
-            
             this.htmlElement.innerHTML = "";
-            this.populateList(this.htmlElement, tpl).then(() => {
-                this.container.classList.add("exf-input-group", "exf-std-lbl");
+            await this.populateList(this.htmlElement);
+            this.container.classList.add("exf-input-group", "exf-std-lbl");
 
-                if (this._columns)
-                    this.htmlElement.style = `column-count: ${this.columns}; column-gap: 1rem;`
+            if (this._columns)
+                this.htmlElement.style = `column-count: ${this.columns}; column-gap: 1rem;`
 
-                if (this.addcaption) {
-                    if (!Array.isArray(this.items))
-                        throw TypeError("Must have an array as items for adding items to work");
-                    this.setupAdd()
-                }
-                this._rendered = true;
-                resolve(this.container);
-            });
-        });
+            // allow adding of new items
+            if (this.addcaption) {
+                if (!Array.isArray(this.items))
+                    throw TypeError("Must have an array as items for adding items to work");
+                this.setupAdd()
+            }
+
+        }
+        finally {
+            this._rendered = true;
+
+        }
+
+        return this.container;
     }
 
+    // accept user edited new items to append to the list
+    // using a contenteditable element
+    // when 'addcaption' property is set
     setupAdd() {
         this.container.addEventListener("click", e => {
             let elm = e.target.closest(".exf-ilc-cnt");
@@ -101,12 +98,13 @@ class ExoInputListControl extends ExoListControl {
         })
     }
 
-    async populateList(containerElm, tpl) {
-        await super.populateList(containerElm, tpl);
+    async populateList(containerElm) {
+        await super.populateList(containerElm);
         if (this.addcaption)
-            this.addListItem(this.context.field, { value: "___new", name: this.addcaption }, tpl, containerElm, 0);
+            this.addListItem(this.context.field, { value: "___new", name: this.addcaption }, containerElm, 0);
     }
 
+    // add one option to list, based on user input
     add(text, elm) {
         text = text?.trim();
         if (text && Array.isArray(this.items)) {
@@ -193,13 +191,11 @@ class ExoInputListControl extends ExoListControl {
     }
 
     set items(value) {
-        console.log("InputList Items " , value );
-        
         if (!this._updating) {
             this._items = value;
             this._updating = true
             this.htmlElement.innerHTML = "";
-            this.populateList(this.htmlElement, tpl).then(() => {
+            this.populateList(this.htmlElement).then(() => {
                 this._updating = false;
             });
         }

@@ -2,11 +2,12 @@ import ExoElementControl from './ExoElementControl';
 import ExoFormFactory from '../../core/ExoFormFactory';
 import DOM from '../../../pwa/DOM';
 import Core from '../../../pwa/Core';
+import xo from '../../../../js/xo';
 
 class ExoListControl extends ExoElementControl {
 
     isMultiSelect = false;
-    
+
     view = "block";
 
     constructor() {
@@ -28,87 +29,52 @@ class ExoListControl extends ExoElementControl {
         );
     }
 
-    async populateList(containerElm, tpl) {
+    async populateList(containerElm) {
         const f = this.context.field;
         let items = await Core.acquireState(this.items)
         if (items && Array.isArray(items)) {
             let index = 0;
             items.forEach(i => {
-                this.addListItem(f, i, tpl, containerElm, index);
+                this.addListItem(f, i, containerElm, index);
                 index++;
             });
         }
     }
 
-    get baseType(){
+    getListItemTemplate(item) { 
+        // to be implemented
+    }
+
+    get baseType() {
         return "multi";
     }
 
-    addListItem(f, i, tpl, container, index) {
-        const _ = this;
-
-        var dummy = DOM.parseHTML('<span/>')
-        container.appendChild(dummy);
-
-        let isSelected = this.isItemSelected(i);
+    addListItem(f, i, container, index) {
+        
         let item = {
-            ...i,
             name: typeof (i.name) === "string" ? i.name : i.toString(),
             value: (i.value != undefined) ? i.value : i,
-            type: _.optionType,
             inputname: f.name || f.id,
-            checked: isSelected ? "checked" : "",
-            selected: isSelected,
+            
             disabled: (i.disabled || i.enabled === false) ? "disabled" : "",
             tooltip: (i.tooltip || i.name || "").replace('{{field}}', ''),
-            oid: f.id + "_" + index
+            oid: f.id + "_" + index,
+            description: i.description || ""
         }
+        item.checked = this.isItemSelected(item) ? "checked" : "";
 
-        var o = {
-            field: f,
-            control: _,
-            item: item
-        };
-
-        if (item.element) {
-            o.listElement = item.element;
-            DOM.replace(dummy, item.element);
-        }
-        else if (item.field) { // replace item.name with rendered XO form control
-            this.renderFieldSync(item, tpl, container);
-        }
-        else if (item.html) {
-            o.listElement = DOM.parseHTML(item.html);
-            DOM.replace(dummy, o.listElement);
-        }
-        else {
-            var s = DOM.format(tpl, item);
-            o.listElement = DOM.parseHTML(s);
-            DOM.replace(dummy, o.listElement);
-        }
-        _.context.exo.events.trigger(ExoFormFactory.events.getListItem, o);
+        container.appendChild(DOM.parseHTML(this.getListItemTemplate(item)));
     }
 
     isItemSelected(item) {
-        return (item.checked || item.selected) ? "checked" : ""
-    }
-
-    // use trick to run async stuff and wait for it.
-    renderFieldSync(item, tpl, container) {
-        return (async (item, tpl) => {
-            if (item.name.indexOf('{{field}}') === -1) {
-                item.tooltip = item.tooltip || item.name;
-                item.name = item.name + '{{field}}'
-            }
-
-            const exoContext = this.context.exo.context;
-
-            let e = await exoContext.createForm().renderSingleControl(item.field);
-            item.name = DOM.format(item.name, {
-                field: e.outerHTML
-            });
-            container.appendChild(DOM.parseHTML(DOM.format(tpl, item)));
-        })(item, tpl) //So we defined and immediately called this async function.
+        let checked;
+        if (Array.isArray(this.value)) {
+            checked = this.value.includes(typeof (item) === "string" ? item : item.value) 
+        }
+        else {
+            checked = (item.checked || item.selected) 
+        }
+        return checked;
     }
 
     async render() {

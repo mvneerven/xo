@@ -68,13 +68,14 @@ main {
             }
         }
 
-        // .exf-btn {
-        //     padding: 0.2rem 0.4rem;
-        //     border-radius: 0.3rem;
-        //     outline: none;
-        //     background-color: var(--color-button);
-        //     color: var(--color-button-text);
-        // }
+        .btn {
+            text-decoration: none;
+            padding: 0.4rem 0.8rem;
+            border-radius: 0.3rem;
+            outline: none;
+            background-color: var(--color-button);
+            color: var(--color-button-text);
+        }
     }
 
     nav.main-menu {
@@ -659,7 +660,7 @@ ul.progressive {
         }
     }
 
-    $total-items: 16;
+    $total-items: 17;
 
     // Set delay per List Item
     @for $i from 1 through $total-items {

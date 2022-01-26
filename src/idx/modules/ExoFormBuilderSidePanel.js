@@ -1,6 +1,3 @@
-const DOM = window.xo.dom;
-const Core = window.xo.core;
-
 class ExoFormBuilderSidePanel {
 
     constructor(builder) {
@@ -47,7 +44,7 @@ class ExoFormBuilderSidePanel {
 
         containerPanel.add(this.tabStrip.render());
 
-        let div = DOM.parseHTML(`<div title="Type to filter fields..." class="field-search exf-ctl-cnt"><input name="_search" type="search" placeholder="Search..." /></div>`)
+        let div = xo.dom.parseHTML(`<div title="Type to filter fields..." class="field-search exf-ctl-cnt"><input name="_search" type="search" placeholder="Search..." /></div>`)
         _.tabStrip.tabs.addField.panel.appendChild(div);
 
         let ul = _.getFieldMeta();
@@ -62,7 +59,9 @@ class ExoFormBuilderSidePanel {
         })
 
         if (this.tabStrip.tabs.dataTab) {
-            this.builder.renderCodeEditor({ mode: "json", readOnly: true, id: "exo-datamodel", value: "" }).then(elm => {
+            this.builder.renderCodeEditor(
+                { mode: "json", readOnly: true, id: "exo-datamodel", value: "" }
+            ).then(elm => {
                 this.builder.formDataViewer = xo.control.get(elm);
                 this.tabStrip.tabs.dataTab.panel.appendChild(elm);
             })
@@ -89,7 +88,7 @@ class ExoFormBuilderSidePanel {
 
                 if (parseInt(form.querySelector("[name='page']").value) > parseInt(form.querySelector("[name='pages']").value)) {
                     form.querySelector("[name='pages']").value = form.querySelector("[name='page']").getAttribute("max");
-                    DOM.trigger(form.querySelector("[name='pages']"), "change");
+                    xo.dom.trigger(form.querySelector("[name='pages']"), "change");
                 }
             }
 
@@ -186,7 +185,7 @@ class ExoFormBuilderSidePanel {
         })
 
         xo.form.factory.extractControlMeta(this.builder.exoContext.library).forEach(data => {
-            let li = DOM.parseHTML(/*html*/`
+            let li = xo.dom.parseHTML(/*html*/`
                 <li>
                     <div class="field">
                         <span class="type-name">${data.name}</span> <span title="HTML element rendered" class="field-element">${data.element}</span> 
@@ -219,7 +218,7 @@ class ExoFormBuilderSidePanel {
                     </li>
                 `;
 
-                propsUl.appendChild(DOM.parseHTML(s))
+                propsUl.appendChild(xo.dom.parseHTML(s))
             }
             ul.appendChild(li);
 
@@ -238,13 +237,13 @@ class ExoFormBuilderSidePanel {
     getFields() {
         let ar = [];
 
-        let meta = window.xo.form.factory.meta;
+        let meta = xo.form.factory.meta;
         for (var n in meta) {
             var cmp = meta[n];
             ar.push({
                 type: "dropdown",
                 name: "setting." + n,
-                caption: Core.toWords(n),
+                caption: xo.core.toWords(n),
                 items: this.getItems(cmp.type.types)
             })
         }
@@ -272,19 +271,6 @@ class ExoFormBuilderSidePanel {
             navigation: "static",
             progress: "auto",
             pages: [
-                // {
-                //     legend: "Live Editor",
-                //     fields: [
-                //         {
-                //             type: "switch",
-                //             name: "live-edit",
-                //             id: "live-edit-switch1",
-                //             tooltip: "Toggle live editing",
-                //             value: false,
-                //             caption: "Enable"
-                //         }
-                //     ]
-                // },
                 {
                     legend: "Schema Settings",
                     fields: this.getFields()
@@ -310,11 +296,7 @@ class ExoFormBuilderSidePanel {
                             max: 100,
                             showoutput: true,
                             caption: "Current Page",
-                            value: 1 //,
-                            // bindings: {
-                            //     max: "page.pages.value"
-                            // }
-
+                            value: 1
                         }
                     ]
                 }

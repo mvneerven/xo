@@ -1,4 +1,3 @@
-const Core = xo.core;
 const DOM = xo.dom;
 import uiTests from '../../../tests/ui/ui-tests.js';
 
@@ -12,30 +11,54 @@ class TestsRoute extends xo.route {
     constructor() {
         super(...arguments)
 
-        this.tests = Object.entries(uiTests).map(entry => {
+        this.testGroups = Object.entries(uiTests).map(entry => {
             let name = entry[0];
-            let test = entry[1];
+            let group = entry[1];
             return {
                 name: name,
-                ...test,
+                ...group,
                 value: name,
-                description: `${Object.keys(test.tests).length} tests`,
+                description: `${Object.keys(group.tests).length} tests`,
                 checked: true
             }
         })
     }
 
     async render(path) {
-        const me = this;
 
-        this.elm = await xo.form.run({
+        document.data = null;
+
+        this.showSideForm();
+        this.showMessage({
+            title: 'XO Test Suite',
+            body: "Select the tests on the right and press 'Run tests'"
+        })
+    }
+
+    showMessage(data) {
+        this.area.add(DOM.parseHTML(/*html*/`
+            <div>
+                <h3>${data.title}</h3>
+                <p>
+                    ${data.body}
+                </p>
+            </div>
+        `))
+    }
+
+    async showSideForm() {
+        const me = this;
+        me.side.clear();
+
+        let sideForm = await xo.form.run({
             submit: false,
             model: {
                 instance: {
                     data: {
-                        tests: this.tests.map(t => {
+                        groups: this.testGroups.map(t => {
                             return t.name
-                        })
+                        }),
+                        tests: this.testGroups.map(g => { return g.value })
                     }
                 }
             },
@@ -46,15 +69,15 @@ class TestsRoute extends xo.route {
                             type: "checkboxlist",
                             view: "block",
                             bind: "#/data/tests",
-                            items: this.tests.map(t => {
 
+                            items: this.testGroups.map(t => {
                                 return {
                                     name: t.name,
                                     value: t.name,
-                                    checked: t.checked,
                                     description: t.description
                                 }
-                            })
+                            }),
+
                         },
                         {
                             type: "button",
@@ -79,15 +102,12 @@ class TestsRoute extends xo.route {
                 }
             }
         });
-        this.side.add(this.elm)
-        this.area.add(DOM.parseHTML(/*html*/`
-            <div>
-                <h3>XO Test Suite </h3>
-                <p>
-                    Select the tests on the right and press 'Run tests'
-                </p>
-            </div>
-        `))
+        this.side.add(sideForm)
+    }
+
+    clear() {
+        this.area.clear()
+        this.side.clear()
     }
 
     get area() {
@@ -101,12 +121,11 @@ class TestsRoute extends xo.route {
     async run(exo) {
         const me = this;
         me.area.clear();
-        let selected = exo.getInstance("data").tests;
+        let selectedGroups = exo.getInstance("data").groups;
 
         let ul = document.createElement("ul");
         ul.classList.add("ui-test-results")
 
-        let promises = [];
         let accumulated = {
             passed: 0,
             failed: 0
@@ -118,8 +137,7 @@ class TestsRoute extends xo.route {
 
         const stringify = form => {
             return JSON.stringify(form, (key, value) => {
-                if (key.startsWith("_")){
-                    console.log(key, value)
+                if (key.startsWith("_")) {
                     return;
                 }
                 return value;
@@ -127,10 +145,10 @@ class TestsRoute extends xo.route {
             }, 2);
         }
 
-        const list = (ar, type, parent) => {
+        const list = (ar, parent) => {
             ar.forEach(result => {
                 let li = document.createElement("li");
-                li.innerHTML = resultIcon(type === "passed") + " " + result.key;
+                li.innerHTML = resultIcon(result.passed) + " " + result.key;
                 li.title = result.test;
                 if (result.reason) {
                     let reason = document.createElement('small');
@@ -143,48 +161,45 @@ class TestsRoute extends xo.route {
             });
         }
 
-        this.tests.filter(test => {
-            return selected.includes(test.name);
-        }).forEach(async test => {
-            promises.push(me.runTest(test).then(result => {
-                let li = document.createElement("li")
-                li.innerHTML = `${resultIcon(result.failed.length === 0)} ${test.name} (${result.total} tests)`;
-                li.title = stringify(test.form)
-                accumulated.passed += result.passed.length;
-                accumulated.failed += result.failed.length;
+        let groups = this.testGroups.filter(test => {
+            return selectedGroups.includes(test.name);
+        });
 
-                let failedUl = document.createElement("ul");
-                li.appendChild(failedUl);
-                let passedUl = document.createElement("ul");
-                li.appendChild(passedUl);
+        for (let group of groups) {
+            let result = await me.runTestGroup(group);
+            let li = document.createElement("li");
+            let failedCount = result.filter(r => {
+                return r.passed === false
+            }).length;
+            li.innerHTML = `${resultIcon(failedCount === 0)} ${group.name} (${result.length} tests)`;
+            li.title = stringify(group.form)
+            accumulated.passed += result.length - failedCount;
+            accumulated.failed += failedCount;
 
-                list(result.failed, "failed", failedUl)
+            let groupUl = document.createElement("ul");
+            li.appendChild(groupUl);
 
-                list(result.passed, "passed", passedUl)
+            list(result, groupUl)
 
-
-                ul.appendChild(li)
-            }));
-
-        })
-
-        for (const task of promises) {
-            await Promise.resolve(task);
+            ul.appendChild(li)
         }
 
         me.area.clear();
+
         me.area.add("<h3>Results</h3>");
         me.area.add(`<div>Total: ${accumulated.passed + accumulated.failed}</div>`)
         me.area.add(`<div>Passed: ${accumulated.passed}</div>`)
         me.area.add(`<div>Failed: ${accumulated.failed}</div>`)
         me.area.add("<div><hr/></div>");
         me.area.add(ul);
+
+  
     }
 
-    runTest(test) {
+    async runTestGroup(testGroup) {
         const me = this;
 
-        let tests = Object.entries(test.tests);
+        let tests = Object.entries(testGroup.tests);
 
         const runIndividualTest = async (test, context, exo) => {
             try {
@@ -195,86 +210,79 @@ class TestsRoute extends xo.route {
             }
         }
 
-        let results = {
-            total: tests.length,
-            passed: [],
-            failed: []
-        };
-        return new Promise((resolve) => {
-            this.form(test.form).then(async exo => {
-                me.area.clear();
-                me.area.add(exo.container);
+        let results = [];
+        let i = 0;
+        let oldContainer;
 
-                let i = 0;
+        for (const task of tests) {
+            if(oldContainer)
+                oldContainer.remove();
 
-                tests.forEach(entry => {
-                    let key = entry[0]
-                    let test = entry[1];
+            me.area.clear();
+            let exo = await this.form(testGroup.form);
+            me.area.add(exo.container);
+            oldContainer = exo.container;
 
-                    Promise.resolve(runIndividualTest(test, me, exo)).then(result => {
-                        i++;
-                        if (result instanceof Error) {
-                            results.failed.push({
-                                key: key,
-                                test: test.toString(),
-                                reason: result
-                            })
-                        }
+            let key = task[0];
 
-                        else if (!result) {
-                            results.failed.push({
-                                test: test.toString(),
-                                key: key
-                            })
-                        }
-                        else {
-                            results.passed.push({
-                                test: test.toString(),
-                                key: key
-                            })
-                        }
+            let test = task[1]
+            let result = await runIndividualTest(test, me, exo)
 
-                        if (i === tests.length) {
-                            resolve(results)
-                        }
-                    }).catch(ex => {
-                        i++;
-                        results.failed.push({
-                            key: key
-                        })
-                    })
-                });
-            }).catch(ex => {
+            i++;
+            if (result instanceof Error) {
+                results.push({
+                    passed: false,
+                    error: result,
+                    test: test.toString(),
+                    reason: result
+                })
+            }
 
-            })
-        });
+            else if (!result) {
+                results.push({
+                    passed: false,
+                    test: test.toString(),
+                    key: key
+                })
+            }
+            else {
+                results.push({
+                    passed: true,
+                    test: test.toString(),
+                    key: key
+                })
+            }
+        }
+        return results
     }
 
     runAndWaitFor(runFunction, waitForFunction, timeout = 500) {
         return new Promise((resolve, reject) => {
-            setTimeout(() => {
-                resolve(false);
+            let tmr;
+            const resolver = result => {
+                clearTimeout(tmr);
+                resolve(result)
+            }
+            tmr = setTimeout(() => {
+                resolver(false);
             }, timeout);
 
-            waitForFunction(resolve);
-
             try {
+                waitForFunction(resolver);
+
                 setTimeout(() => {
                     runFunction();
                 }, 0);
             }
             catch (err) {
-                reject(err);
+                resolver(err);
             }
         });
     }
 
     async form(schema) {
-        const me = this;
-
         return new Promise(async (resolve, reject) => {
             let exo;
-
             await xo.form.run(schema, {
                 on: {
                     renderReady: e => {

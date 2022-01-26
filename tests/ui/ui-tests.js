@@ -9,6 +9,10 @@ const uiTests = {
               type: "text",
               name: "text1",
               value: "hello"
+            },
+            {
+              type: "checkbox",
+              caption: "aa",
             }
           ]
         },
@@ -32,8 +36,8 @@ const uiTests = {
       ]
     },
     tests: {
-      "Form is has 2 pages": (c, x) => {
-        return x.root.children.length === 2;
+      "Form has 2 pages": (c, x) => {
+        return x.root.pages.length === 2;
       },
 
       "Form is complete": (c, x) => {
@@ -61,6 +65,147 @@ const uiTests = {
         return posted.text1 === "hello" && posted.drop1 === "2";
       },
 
+    }
+  },
+  "Disable controls": {
+    form: schema = {
+      model: {
+        instance: {
+          data: {
+            receive: false,
+            email: "yama@moto.jp"
+          }
+        }
+      },
+      pages: [
+        {
+          legend: "Newsletter",
+          fields: [
+            {
+              type: "checkbox",
+              caption: "I want to receive the newsletter",
+              bind: "#/data/receive"
+            },
+            {
+              caption: "Email address",
+              name: "email",
+              placeholder: "john@doe.com",
+              bind: "#/data/email",
+              type: "email",
+              prefix: {
+                icon: "ti-email"
+              },
+              actions: [
+                {
+                  "do": {
+                    enable: [
+                      "#/data/receive"
+                    ]
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    tests: {
+      "Email control is disabled": (c, x) => {
+        return x.get("email").disabled === true;
+      },
+
+      "Email control is enabled after clicking checkbox": async (c, x) => {
+        const f = b => {
+          resolve(b)
+        }
+        return await c.runAndWaitFor(() => {
+          x.container.querySelector("input[type=checkbox]").click();
+
+        }, f => {
+          setTimeout(() => {
+            f(x.get("email").disabled === false)
+          }, 20);
+        })
+
+
+      }
+    }
+  },
+  "Listview tests": {
+    form: {
+      pages: [
+        {
+          fields: [
+            {
+              name: "grid",
+              type: "listview",
+              items: [
+                {
+                  id: "8c93b7b0",
+                  name: "Nice 1st item",
+                },
+                {
+                  id: "8c93b7b1",
+                  name: "Nice 2nd item",
+                }
+              ],
+              pageSize: 16,
+              bind: "#/data/selection",
+              views: [
+                "tiles"
+              ],
+              mappings: {
+                tiles: [
+                  {
+                    key: "name",
+                    height: "auto"
+                  }
+                ]
+              },
+              properties: [
+                {
+                  key: "id",
+                  type: "string",
+                  name: "Id"
+                },
+                {
+                  key: "name",
+                  type: "string",
+                  name: "Name"
+
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    tests: {
+      "Listview renders two items having ids '8c93b7b0' and '8c93b7b1'": async (c, x) => {
+        return await c.runAndWaitFor(() => {
+        }, resolve => {
+          setTimeout(() => {
+            let ids = [...x.container.querySelectorAll("[data-field-type='listview'] article")].map(i => {
+              return i.getAttribute("data-id")
+            });
+            resolve(ids.join(",") === "8c93b7b0,8c93b7b1");
+          }, 20);
+        })
+      },
+      "Listview selection updates model": async (c,x)=> {
+        return await c.runAndWaitFor(() => {
+
+        }, resolve => {
+          setTimeout(() => {
+            x.container.querySelector("[data-field-type='listview'] article[data-id='8c93b7b1']").click();
+
+            setTimeout(() => {
+                resolve(x.getInstance("data").selection.join() === "8c93b7b1")
+            }, 20);
+            
+          }, 20);
+        })
+      }
     }
   },
   "Basic databinding tests": {
@@ -194,11 +339,11 @@ const uiTests = {
 
         return await c.runAndWaitFor(() => {
           x.dataBinding.set("#/data/list",
-          [
-            "One",
-            "Two",
-            "Three"
-          ])
+            [
+              "One",
+              "Two",
+              "Three"
+            ])
 
         }, resolve => {
 
@@ -213,17 +358,38 @@ const uiTests = {
   },
   "Buttons": {
     form: {
+      submit: false,
+      model: {
+        instance: {
+          data: {
+            name: "",
+            style: "",
+            caption: "Text field"
+          }
+        }
+      },
       pages: [
         {
           fields: [
             {
+              bind: "#/data/name",
+              type: "text",
+              caption: "#/data/caption",
+              placeholder: "John Doe",
+              style: "#/data/style"
+            },
+            {
               type: "button",
-              caption: "CLICK",
+              caption: "Test",
+              name: "btn1",
               icon: "ti-arrow-right",
               actions: [
                 {
-                  do: {
-                    trigger: ["my-event"]
+                  "do": {
+                    set: [
+                      "#/data/caption",
+                      "New label text"
+                    ]
                   }
                 }
               ]
@@ -239,13 +405,78 @@ const uiTests = {
           "form .exf-page .exf-btn-cnt button span.ti-arrow-right") != null;
       },
 
-      "Clicking button fires 'my-event' Event on form": async (c, x) => {
+      "Clicking button changes textbox caption to 'New label text'": async (c, x) => {
+
+        const f = b => {
+          resolve(b)
+        }
         return await c.runAndWaitFor(() => {
-          x.container.querySelector("button").click();
-        }, resolve => {
-          x.addEventListener("my-event", resolve(true));
+          x.container.querySelector("button[name='btn1']").click();
+
+        }, f => {
+          setTimeout(() => {
+            f(x.container.querySelector("[data-field-type='text'] .exf-ctl label").innerText === "New label text")
+          }, 20);
         })
 
+      }
+    }
+  },
+  "Wizards": {
+    form: {
+      navigation: "wizard",
+      validation: "inline",
+      pages: [
+        {
+          legend: "Page 1",
+          intro: "This is page 1",
+          fields: [
+            {
+              name: "field1",
+              type: "text",
+              required: true,
+              caption: "A text field"
+            },
+            {
+              name: "field2",
+              type: "radiobuttonlist",
+              required: true,
+              caption: "Radio buttons",
+              items: [
+                "Option 1",
+                "Option 2",
+                "Option 3",
+                "Option 4"
+              ]
+            }
+          ]
+        },
+        {
+          legend: "Page 2",
+          intro: "This is page 2",
+          fields: [
+            {
+              name: "field3",
+              required: true,
+              type: "multiline",
+              autogrow: true,
+              caption: "A multiline field"
+            }
+          ]
+        }
+      ]
+    },
+    tests: {
+      "Navigation tests": async (c, x) => {
+        return await c.runAndWaitFor(() => {
+        }, resolve => {
+          setTimeout(() => {
+              let disabled = x.container.querySelector(
+                ".exf-nav-cnt button[name='next']").closest(".exf-disabled") != null;
+              
+              resolve(disabled)
+          }, 10);
+        })
       }
     }
   }

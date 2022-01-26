@@ -30,7 +30,6 @@ class ExoFormFactory {
         schemaLoaded: "schemaLoaded", // when loading the form schema is complete
         jsonSchemasApplied: "jsonSchemasApplied",
         renderStart: "renderStart", // when form rendering starts
-        getListItem: "getListItem", // 
         ruleContextReady: "ruleContextReady",
         renderReady: "renderReady", // when form rendering is complete
         interactive: "interactive", // when form is actually shown to user
@@ -251,12 +250,6 @@ class ExoFormFactory {
                         ...props.demoSchema
                     }
                 }
-
-                // schema.pages[0].fields.push({
-                //     type: "separator"
-
-                // })
-
                 let name = (p + "1").replace('-', '');
                 schema.pages[0].fields.push({
                     type: p,
@@ -394,11 +387,7 @@ class ExoFormFactory {
                 result.parsed = true;
                 result.schema = f.call();
                 result.executed = true;
-
             }
-
-
-
             catch (ex) {
                 let type = ex.__proto__?.name || "TypeError", msg = ex.toString().replace(type + ": ", "");
 
@@ -459,38 +448,6 @@ class ExoFormFactory {
     static parseBoolean(value) {
         return parseInt(value) > 0 || value === "1" || value === "true" || value === "on";
     }
-
-    static getFieldFromElement(element, options) {
-        options = {
-            master: false,
-            ...(options || {})
-        }
-        let field = null;
-
-        if (element && options.master) {
-            let masterElement = element?.closest("[exf-data-master]");
-            if (masterElement) {
-                element = masterElement;
-                field = element.data.field;
-            }
-        }
-
-        if (!field) {
-            let cnt = element?.closest(".exf-ctl-cnt:not(.exf-page)");
-            if (cnt) {
-                let el = cnt.querySelector("[data-exf]");
-                if (el && el.data)
-                    field = el.data.field;
-            }
-        }
-
-        return field;
-    }
-
-    static getControlFromElement(e, options) {
-        return ExoFormFactory.getFieldFromElement(e, options)?._control;
-    }
-
 
     static async createDropDown(control) {
         const dex = new ExoDropdownExtension(control);
@@ -575,8 +532,8 @@ class ExoFormFactory {
                     x = options.context.createForm({
                         ...options
                     });
-                    applyOptions(x)
-                    await x.load(value);
+                    applyOptions(x)                    
+                    await x.load(value);            
                     if (options.returnSchema) {
                         return x.schema;
                     }
@@ -594,7 +551,7 @@ class ExoFormFactory {
                 x = options.context.createForm({
                     ...options
                 });
-                applyOptions(x, null);
+                applyOptions(x, null);                
                 result = await x.renderSingleControl(value);
                 applyOptions(null, result);
                 return result;

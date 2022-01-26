@@ -127,7 +127,7 @@ Make the Google ReCaptcha control act invisibly.
 
 ```javascript
 // set default validation to be 'inline' for all forms
-const context = await window.xo.form.factory.build({
+const context = await xo.form.factory.build({
   defaults: {
     validation: "inline",
   },
@@ -896,7 +896,7 @@ We added a [rules engine](./md/exo/rules.md) that model based. Rules can be trig
 You can now add defaults for the options passed to each form `xo.form.run()` when creating the xo form context:
 
 ```js
-const context = await window.xo.form.factory.build({
+const context = await xo.form.factory.build({
   defaults: {
     validation: "inline",
   },

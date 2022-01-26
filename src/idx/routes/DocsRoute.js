@@ -113,6 +113,8 @@ class DocsRoute extends xo.route {
                     }
                 },
             ]
+        }, {
+            parentElement: pwa.UI.areas.panel.element
         });
 
         btn.setAttribute("style", "position: absolute; right: 5px; top: 20px;");
@@ -189,13 +191,13 @@ class DocsRoute extends xo.route {
 
         return new Promise((resolve, reject) => {
 
-            window.xo.form.run(code.innerText, {
+            xo.form.run(code.innerText, {
                 on: {
-                    schemaLoaded: e => {
+                    schemaLoaded: e => {                        
                         var json = e.detail.host.schema.toString("json")
                         var blob = new Blob([json], { type: "application/json" });
                         var url = URL.createObjectURL(blob);
-                        pwa.router.route = "/studio/" + url;
+                        pwa.router.route = "/studio/" + url;                        
                     }
                 }
             }).then(resolve).catch(reject)

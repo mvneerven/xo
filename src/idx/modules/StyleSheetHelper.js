@@ -1,7 +1,4 @@
-const DOM = window.xo.dom;
-
 class StyleSheetHelper {
-
     constructor(builder) {
         this.builder = builder;
     }
@@ -24,7 +21,7 @@ class StyleSheetHelper {
         try {
             let cssPanel = this.builder.sidePanel.tabStrip.tabs.css.panel;
             let css = xo.control.get(cssPanel.querySelector('[data-field-type="aceeditor"]')).value;
-            let rules = DOM.parseCSS(css);
+            let rules = xo.dom.parseCSS(css);
             let ar = [];
             for (var i = 0; i < rules.length; i++) {
                 let r = rules[i]
@@ -42,15 +39,15 @@ class StyleSheetHelper {
     buildCssFromClasses() {
         let ar = [];
 
-        for (var c in window.xo.form.factory.html.classes) {
-            ar.push(DOM.format(
+        for (var c in xo.form.factory.html.classes) {
+            ar.push(xo.dom.format(
                 ` 
 /* {{name}} */
 .{{value}} {
 
 }`, {
                 name: c,
-                value: window.xo.form.factory.html.classes[c]
+                value: xo.form.factory.html.classes[c]
             })
             )
         }

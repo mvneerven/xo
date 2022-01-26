@@ -380,8 +380,12 @@ class ExoControlBase {
         data = typeof (data) === "object" ? data : JSON.parse(data);
 
         const helper = async () => {
-            let newElm = await this.context.exo.renderSingleControl(data, {
+            throw Error("Need to reimplement")
+
+            let newElm = await xo.form.run(data, {
                 context: this.context
+            }, {
+                parentElement: this.container
             })
 
             let exCntNew = newElm.querySelector("[data-exf]");
@@ -518,13 +522,6 @@ class ExoControlBase {
 
             let value = field[p.name] || p.default;
             this._props[p.name] = value;
-
-            // if (typeof (value) !== "undefined" && !ExoFormDataBinding.isVariable(value)) {
-            //     if (p.name === "bind")
-            //         debugger;
-
-            //     this[p.name] = this._props[p.name]
-            // }
         });
     }
 
@@ -534,6 +531,8 @@ class ExoControlBase {
      */
     mapAcceptedProperties() {
         try {
+            
+
             for (var key in this._props) {
                 let value = this._props[key];
 
@@ -675,6 +674,7 @@ class ExoControlBase {
             return this.container
         }
         finally {
+            xo.control.register(this.container, this);
             this._rendered = true;
         }
     }
@@ -774,8 +774,8 @@ class ExoControlBase {
         let f = this.context.field;
 
         if (f.bind && !f.name) { // resolve name from binding
-            f.name = f.name || ExoFormSchema.getPathFromBind(f.bind);
-            this.name = f.name;
+            f.name =ExoFormSchema.getPathFromBind(f.bind);
+            this.name = f.name;            
         }
 
         for (var prop in f) {
@@ -807,8 +807,7 @@ class ExoControlBase {
     }
 
     // resolve bound state 
-    _processProp(name, value, callback) {
-        let old = value;
+    _processProp(name, value, callback) {        
         let db = this.dataBinding;
         if (db) {
 
@@ -823,9 +822,6 @@ class ExoControlBase {
         if (name === "bind") {
             name = "value"
         }
-
-        if (old !== value)
-            console.log(name + " set to bound value ", old, "=", value)
 
         callback(name, value)
     }

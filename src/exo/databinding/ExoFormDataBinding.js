@@ -25,24 +25,21 @@ class ExoFormDataBinding {
 
         this.exo.on(ExoFormFactory.events.renderStart, e => { // run logic for initial state of controls
             this.resolver._checkSchemaLogic();
-            //this.resolver.resolve();
+
         })
 
         this.exo.on(ExoFormFactory.events.renderReady, e => {
-
             this.resolver.resolve();
 
             this.exo.on(ExoFormFactory.events.dataModelChange, e => {
                 this.resolver.resolve(e.detail.changeData);
-            }).on(ExoFormFactory.events.page, e => { // on navigate, resolve again (e.g. for navigation control state)
-                //this.resolver.resolve();
             })
 
         })
 
-        //  this.exo.on(ExoFormFactory.events.interactive, e=>{
-        //      this.resolver.resolve();
-        //  })
+        this.exo.on(ExoFormFactory.events.interactive, e => {
+            this.resolver.resolve();
+        })
 
         this._ready();
     }
@@ -51,9 +48,9 @@ class ExoFormDataBinding {
         let id = btn.context.field.name || btn.context.field.id;
         btn.context.field._defaultValue = -1;
         if (!this.model.instance.btnstates) {
-            this.model.instance.btnstates = {};
-            this.model.instance.btnstates[id] = "auto";
-            this.model.instance.btnstates = this.proxy('btnstates', this.model.instance.btnstates); // Proxy to monitor changes
+            let btnInst = {}
+            btnInst[id] = "auto";
+            this.model.instance.btnstates = this.proxy('btnstates', btnInst); // Proxy to monitor changes
         }
         btn.context.field.bind = "#/btnstates/" + id
     }
@@ -66,7 +63,6 @@ class ExoFormDataBinding {
         const exo = this.exo;
         exo.on(ExoFormFactory.events.schemaLoaded, () => {
             let data = {};
-
             const modelSetup = [
                 ExoFormDataBinding.origins.bind,
                 ExoFormDataBinding.origins.schema
@@ -76,24 +72,24 @@ class ExoFormDataBinding {
             if (!modelSetup) {
                 this._model.instance.data = data;
             }
-
             this.events.trigger("ready", { model: this._model });
         })
             .on(ExoFormFactory.events.interactive, () => {
+
                 console.debug("Bindings", this.resolver._boundControlState)
                 let eventName = this.exo.options.DOMChange || "input";
-                const handle = e => {
+
+                const handleChange = e => {
                     if (this.noProxy) {
                         console.debug("ExoFormDataBinding", "DOMChange event SKIPPED BECAUSE NO-PROXY")
                         return
                     }
 
-                    // let ctl = xo.control.get(e.target, {
-                    //     master: true // lookup master if nested
-                    // });
-                    let ctl = xo.control.get(e.target)
+                    let ctl = xo.control.get(e.target, true)
+                    console.debug("DataModel change event detected on ", ctl.toString())
 
                     if (ctl) {
+
                         let bind = ctl.context.field.bind;
                         if (bind) {
                             if (!ctl.valid) {
@@ -107,12 +103,15 @@ class ExoFormDataBinding {
                             }
                         }
                     }
+                    else {
+                        console.warn("No control found for change in ", e.target)
+                    }
                 }
 
-                exo.form.addEventListener("change", handle);
+                exo.form.addEventListener("change", handleChange);
 
                 if (eventName === "input")
-                    exo.form.addEventListener(eventName, handle)
+                    exo.form.addEventListener(eventName, handleChange)
             })
     }
 
@@ -190,8 +189,6 @@ class ExoFormDataBinding {
                 resolve();
             }
         });
-
-
     }
 
     toString() {
@@ -199,7 +196,6 @@ class ExoFormDataBinding {
     }
 
     get model() {
-
         if (!this._instanceInitialized) {
             try {
                 if (this._origin === ExoFormDataBinding.origins.none) {
@@ -213,10 +209,8 @@ class ExoFormDataBinding {
                 this._model.instance = this._model.instance || { data: {} };
             }
         }
-
         return this._model;
     }
-
 
     proxy(instanceName, obj) {
         const me = this;
@@ -318,6 +312,8 @@ class ExoFormDataBinding {
         if (ExoFormDataBinding.isVariable(value)) {
             let path = value;
 
+            this.ensureInstancePropertyExists(path)
+
             returnValue = this.get(path, undefined);
             if (returnValue === undefined) {
                 returnValue = value  // return original string, don't resolve
@@ -339,6 +335,37 @@ class ExoFormDataBinding {
         }
 
         return returnValue;
+    }
+
+    // ensure a bound property exists on the instance,
+    // in order for databinding to work properly
+    ensureInstancePropertyExists(bind) {
+
+        let old = this.noProxy;
+
+        this.noProxy = true
+
+        try {
+           let instanceName = ExoFormDataBinding.getInstanceFromBind(bind)
+
+            if (!this.model.instance[instanceName]) {
+                this.model.instance[instanceName] = {}
+            }
+
+            if (!Core.getObjectValue(this._model, bind)) {
+                let initialValue = null;
+                Core.setObjectValue(this._model, bind, initialValue);
+            }
+        }
+
+        finally {
+            this.noProxy = old;
+        }
+    }
+
+    static getInstanceFromBind(bind){
+        let b = Core.translateBindingPath(bind).substring(9);
+        return b.split('.')[0];
     }
 }
 

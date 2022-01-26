@@ -170,25 +170,17 @@ class ExoImageSelector extends ExoMultiInputControl {
         await super.render();
 
         this.image = this.controls["image"].htmlElement;
-        //this.input = this.container.querySelector("input[type=search]");
-
         this.input = this.controls["search"].htmlElement;
 
-        // after autocomplete has fired change event, 
-        // set last option.text in text input
+        // after autocomplete has fired change event, set last option.text in text input
         this.input.addEventListener("result-selected", e => {
             this.input.value = this.selectedOption.text
         })
 
         this.variable = this.container.querySelector("input[type=hidden]");
-
         this.image.style = `background-repeat: no-repeat; background-size: contain; height: ${this.height || "100px"}; width: auto`
-
         this.input.addEventListener("change", this.setImage.bind(this));
         this.input.addEventListener("input", this.setImage.bind(this));
-
-        //debug - keep autocomplete dropdown open
-        //this.input.data.field._control._autoComplete.clear = e => { }
 
         return this.container;
     }

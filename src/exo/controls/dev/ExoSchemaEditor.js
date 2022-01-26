@@ -260,10 +260,8 @@ class ExoSchemaEditor extends ExoMonacoCodeEditor {
 
     async getSuggestions(options = {}) {
         const ar = [];
-        console.log("PATH", options.path);
 
         if (options.path.pop() === "fields") {
-
             Object.entries(this.context.exo.context.library).forEach(i => {
                 let key = i[0], data = i[1];
                 ar.push({

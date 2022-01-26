@@ -13,23 +13,18 @@ class ExoCheckboxControl extends ExoCheckboxListControl {
             name: "text",
             description: "Text to display on checkbox label"
         });
-
-
     }
 
     mapAcceptedProperties() {
-        
         super.mapAcceptedProperties();
 
         this.items = [
             {
                 name: this.text || this.context.field.caption || "Checkbox",
                 value: "true",
-                //checked: this.value,
                 tooltip: this.tooltip || ""
             }
         ]
-
     }
 
     async render() {
@@ -39,8 +34,6 @@ class ExoCheckboxControl extends ExoCheckboxListControl {
         else {
             this.context.field.class = ((this.context.field.class || "") + " exf-std-lbl").trim();
         }
-
-        console.log("Rendering checkbox with checked " + this.value);
 
         this.items[0].checked = this.value;
 

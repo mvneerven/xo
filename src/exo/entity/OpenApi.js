@@ -3,7 +3,7 @@ import OpenApiEndPoint from './OpenApiEndPoint';
 
 class OpenApi {
     constructor(data, options) {
-        this._raw = data;
+        this._rawData = data;
         this.events = new Core.Events(this);
         this.options = {
             baseUrl: "https://apim-asf-poc.azure-api.net",
@@ -14,7 +14,7 @@ class OpenApi {
     async read() {
         
         const me = this;
-        this._data = Core.isUrl(this._raw) ? await fetch(this._raw).then(x => x.json()) : this._raw
+        this._data = Core.isUrl(this._rawData) ? await fetch(this._rawData).then(x => x.json()) : this._rawData
         this._schemas = this._getSchemas();
         
         let index = 0;

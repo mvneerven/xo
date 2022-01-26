@@ -9,7 +9,9 @@ class ExoFormNavigationBase {
         this._visible = true;
         this._currentPage = 1;
         this.form = exo.form;
-
+        this.exo.on("renderReady", e=>{
+            this.controls = this.exo.root.navControl?.children || [];
+        })
     }
 
     get visible() {
@@ -28,103 +30,59 @@ class ExoFormNavigationBase {
     }
 
     async render() {
-        const tpl = /*html*/`<fieldset class="exf-cnt exf-nav-cnt"></fieldset>`;
 
-        this.container = DOM.parseHTML(tpl);
+        
 
-        return new Promise((resolve, reject) => {
+        this.form.setAttribute("data-current-page", this.currentPage);
 
-            this.renderButtons().then(() => {
-                this.form.appendChild(this.container);
+        this.form.querySelector(".exf-cnt.exf-nav-cnt").addEventListener("click", e => {
 
-                this.form.setAttribute("data-current-page", this.currentPage);
+            let btn = e.target.closest("[name]")
+            if (!btn)
+                return;
 
-                this.form.querySelector(".exf-cnt.exf-nav-cnt").addEventListener("click", e => {
+            switch (btn.name) {
+                case "reset":
+                    e.preventDefault();
+                    this.restart();
+                    break;
 
-                    let btn = e.target.closest("[name]")
-                    if (!btn)
-                        return;
+                case "next":
+                    e.preventDefault();
+                    this.next();
+                    break;
+                case "prev":
+                    e.preventDefault();
+                    this.back();
+                    break;
 
-                    switch (btn.name) {
-                        case "reset":
-                            e.preventDefault();
-                            this.restart();
-                            break;
+                case "send":
+                    e.preventDefault();
+                    this.exo.submitForm();
+                    break;
+            }
+        })
 
-                        case "next":
-                            e.preventDefault();
-                            this.next();
-                            break;
-                        case "prev":
-                            e.preventDefault();
-                            this.back();
-                            break;
+        this.exo.on(ExoFormFactory.events.page, e => {
+            this.updatecontrolstates()
+        });
 
-                        case "send":
-                            e.preventDefault();
-                            this.exo.submitForm();
-                            break;
-                    }
+        this.exo.on(ExoFormFactory.events.pageRelevancyChange, e => {
+            this._pageCount = this.getLastPage();
+            this.updatecontrolstates()
+        })
 
-                })
-
-                this.exo.on(ExoFormFactory.events.page, e => {
-                    this.updatecontrolstates()
-                });
-
-                this.exo.on(ExoFormFactory.events.pageRelevancyChange, e => {
-                    this._pageCount = this.getLastPage();
-                    this.updatecontrolstates()
-                })
-
-                this.exo.form.addEventListener("change", e => {
-                    this.updatecontrolstates()
-                });
-                if (this.exo.options.DOMChange === "input") {
-                    this.exo.form.addEventListener("input", e => {
-                        this.updatecontrolstates()
-                    });
-                }
-
-                this.exo.on(ExoFormFactory.events.interactive, this._ready.bind(this));
-
-                resolve();
+        this.exo.form.addEventListener("change", e => {
+            this.updatecontrolstates()
+        });
+        if (this.exo.options.DOMChange === "input") {
+            this.exo.form.addEventListener("input", e => {
+                this.updatecontrolstates()
             });
-        });
+        }
 
+        this.exo.on(ExoFormFactory.events.interactive, this._ready.bind(this));
 
-
-    }
-
-    renderButtons() {
-        return new Promise((resolve, reject) => {
-            if (Array.isArray(this.exo.schema.controls)) {
-                this.controls = this.exo.schema.controls;
-            }
-
-            let rendered = 0, count = this.controls.length;
-
-            if (count === 0) { // empty list of controls
-                if (rendered === count)
-                    resolve();
-            }
-            this.controls.forEach(b => {
-                this.addButton(b).then(btn => {
-                    
-                    let field = ExoFormFactory.getFieldFromElement(btn);
-                    b._control = field._control;
-                    b._control._rendered = true;
-                    
-                    //let control = xo.control.get(btn);
-                    // xo.control.register(btn, control)
-                    //  b._control = control;
-                    //  b._control._rendered = true;
-                    rendered++;
-                    if (rendered === count)
-                        resolve();
-                });
-            })
-        });
 
 
     }
@@ -151,23 +109,9 @@ class ExoFormNavigationBase {
         }
     }
 
-    async addButton(options) {
-        options = {
-            type: "button",
-            ...options || {}
-        }
-        let btn = await this.exo.renderSingleControl(options);
-
-        if (btn.querySelector("button").name !== "send" || this.exo.schema.submit !== false)
-            this.container.appendChild(btn);
-        
-
-        return btn;
-    }
-
-    preventAutoButtonStates() {
-        this._noUpdatecontrolstates = true;
-    }
+    // preventAutoButtonStates() {
+    //     this._noUpdatecontrolstates = true;
+    // }
 
     _updateView(add, page) {
         if (!page && add === 0)
@@ -183,7 +127,7 @@ class ExoFormNavigationBase {
         }
 
         if (add !== 0)
-            page = this.currentPage;// parseInt("0" + this.form.getAttribute("data-current-page")) || 1;
+            page = this.currentPage;
 
         page = this._getNextPage(add, page)
 
@@ -323,19 +267,14 @@ class ExoFormNavigationBase {
     }
 
     getControl(name) {
-        let field = this.controls.find(c => {
+        return this.controls.find(c => {
             return c.name === name;
         });
-        if (field) {
-            return field._control;
-        }
     }
 
     updatecontrolstates() {
-        if (this._noUpdatecontrolstates)
-            return;
-
         let prev = this.getControl("prev");
+
         if (prev)
             prev.disabled = this.currentPage < 2;
 

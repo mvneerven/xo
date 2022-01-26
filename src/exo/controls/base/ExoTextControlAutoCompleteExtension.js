@@ -43,8 +43,6 @@ class ExoTextControlAutoCompleteExtension {
         this.resultsDiv.classList.add(this.cssClasses.result)
         this.resultsDiv.addEventListener("mousedown", this.resultClick.bind(this))
 
-        //this.container.appendChild(this.resultsDiv)
-        //this.container.insertBefore(this.resultsDiv, this.container.querySelector(".exf-fld-details"))
         this.container.querySelector(".exf-inp").appendChild(this.resultsDiv)
 
         this.clear();

@@ -286,22 +286,9 @@ class ExoFormBuilderSchema {
                             name: "code2",
                             caption: "Generate Form Schema",
                             action: "load:instance.buildForm.baseForm"
-                            // actions: [
-                            //     {
-                            //         if: {
-                            //             nonempty: "#/buildForm/openAPISchemaDTOName"
-                            //         },
-                            //         do: {
-                            //             alert: ["#/buildForm/openAPISchemaDTOName"]
-                            //         }
-                            //     }
-                            // ]
                         }
                     ]
                 },
-        
-        
-        
                 {
                     legend: "Generate Form",
                     intro: "Create schema with all available ExoForm controls",

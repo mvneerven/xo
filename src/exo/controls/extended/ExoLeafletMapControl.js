@@ -122,8 +122,6 @@ class ExoLeafletMapControl extends ExoElementControl {
     }
 
     static generate(elm, pos, zoom, options, ready) {
-        console.log("Map: ", pos, zoom);
-
         pos = Array.isArray(pos) && pos.length > 1 ? pos : [0, 0];
 
         let p = [pos[0], pos[1]];

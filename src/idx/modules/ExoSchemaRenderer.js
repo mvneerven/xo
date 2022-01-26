@@ -1,12 +1,9 @@
 import ExoFormSchemaModel from './ExoFormSchemaModel';
 
-const Core = window.xo.core;
-
 class ExoSchemaRenderer {
-
     constructor(builder) {
         this.builder = builder;
-        this.events = new Core.Events(this);
+        this.events = new xo.core.Events(this);
         this.cache = this.builder.workspace.get("xo-schema");
 
         this._model = new ExoFormSchemaModel(this.builder.exoContext);

@@ -18,9 +18,6 @@ class ExoFormDataBindingResolver {
             this._hash[h] = 1;
             this._boundControlState.push(settings);
         }
-        else{
-            debugger;
-        }
     }
 
     resolve(changedData) {
@@ -32,7 +29,7 @@ class ExoFormDataBindingResolver {
 
             this._bindControlStateToUpdatedModel(changedData)
         }
-        finally {
+        finally {            
             this.dataBinding.noProxy = false;
         }
     }
