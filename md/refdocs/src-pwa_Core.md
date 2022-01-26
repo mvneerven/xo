@@ -12,7 +12,7 @@ Core utility methods
 
 ## Methods
 
-### `clone(obj, replacer) ► `
+### `clone(obj) ► `
 
 ![modifier: private](images/badges/modifier-private.svg) ![modifier: static](images/badges/modifier-static.svg)
 
@@ -21,7 +21,6 @@ Clone an object.
 Parameters | Type | Description
 --- | --- | ---
 __obj__ | `Object` | **
-__replacer__ | `function` | **
 __*return*__ | `undefined` | *cloned object.*
 
 ---

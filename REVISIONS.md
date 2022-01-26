@@ -1388,3 +1388,12 @@ The underlying XO Form Control is `xoformeditor`, which is a wrapper around the 
 
 > Note: See [Monaco documentation for IEditorConstructionOptions](https://microsoft.github.io/monaco-editor/api/interfaces/monaco.editor.IEditorConstructionOptions.html) for the ```options``` property.
 
+# New in 2.0
+
+## Rendering model changes
+
+The Component Model has been rewritten to allow for a more flexible and future proof rendering.
+
+## UI Tests included 
+
+The integrity of the XO platform is fully tested using a built-in test suite.

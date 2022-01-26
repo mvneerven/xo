@@ -59,15 +59,15 @@ __*return*__ | `boolean` | *- true if page is in scope*
 
 ---
 
-### `get(name) ► Object`
+### `get(data) ► Object`
 
 ![modifier: private](images/badges/modifier-private.svg)
 
-Get control with given name
+Get control with given name or from element
 
 Parameters | Type | Description
 --- | --- | ---
-__name__ | `string` | *name of field to get*
+__data__ | `string` | *name of field to get, or HTML element*
 __*return*__ | `Object` | *- Control*
 
 ---
