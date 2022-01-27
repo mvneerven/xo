@@ -12,13 +12,16 @@ class ExoGroupControl extends ExoDivControl {
             {
                 name: "fields",
                 type: Array
-            }
+            },
+            {
+                name: "view",
+                type: String,
+                description: "Set the view mode (inline, block)"
+            },
         );
-
-        
     }
 
-    mapAcceptedProperties(){
+    mapAcceptedProperties() {
         super.mapAcceptedProperties();
 
         this.fields.forEach(field => {
@@ -28,9 +31,10 @@ class ExoGroupControl extends ExoDivControl {
 
     async render() {
         await super.render();
+        this.htmlElement.remove(); // no need for standard DIV element 
+
         this.container.classList.add("exf-std-lbl");
-        let div = document.createElement("div");
-        this.container.querySelector(".exf-inp").appendChild(div);
+        let div = this.container.querySelector(".exf-inp");
 
         this.children.forEach(async control => {
             let dummy = document.createElement("span");
@@ -41,6 +45,16 @@ class ExoGroupControl extends ExoDivControl {
             DOM.replace(dummy, elm);
 
         });
+
+        switch (this.view) {
+
+            case "inline":
+                this.container.classList.add("horizontal");
+                break;
+            default:
+                this.container.classList.add("block");
+                break;
+        }
         return this.container
     }
 
