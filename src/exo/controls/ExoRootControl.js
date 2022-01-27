@@ -45,9 +45,6 @@ class ExoRootControl extends ExoDivControl {
 
     mapAcceptedProperties() {
         super.mapAcceptedProperties();
-        
-        console.log("submit: " , this.context.field.submit,  this.submit)
-
         this._loadAddins();
 
         let pageIndex = 0;

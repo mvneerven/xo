@@ -444,10 +444,10 @@ class ExoControlBase {
 
     set visible(value) {
         this._visible = value;
-        //if (this.rendered) {
-        var elm = this.container || this.htmlElement;
-        elm.style.display = value ? "unset" : "none";
-        //}
+        
+        if(this.container)
+            this.container.style.display = value ? "unset" : "none";
+        
     }
 
     get visible() {
@@ -569,7 +569,8 @@ class ExoControlBase {
             caption: f.caption || "",
             tooltip: f.tooltip || "",
             class: f.class || "",
-            id: f.id
+            id: f.id,
+            style: (f.style ? f.style+ ";" : "") + (!this.visible ? `;display: none`: '' ) 
         }
     }
 
