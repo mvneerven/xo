@@ -34,12 +34,20 @@ class ExoRootControl extends ExoDivControl {
             {
                 name: "model",
                 type: Object
+            },
+            {
+                name: "submit",
+                type: Boolean,
+                default: true
             }
         )
     }
 
     mapAcceptedProperties() {
         super.mapAcceptedProperties();
+        
+        console.log("submit: " , this.context.field.submit,  this.submit)
+
         this._loadAddins();
 
         let pageIndex = 0;

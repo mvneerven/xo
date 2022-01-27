@@ -1390,9 +1390,21 @@ The underlying XO Form Control is `xoformeditor`, which is a wrapper around the 
 
 # New in 2.0
 
+## Reduced memory footprint
+
+XO now uses consideraby less memory and cleans up used memory.
+
 ## Rendering model changes
 
-The Component Model has been rewritten to allow for a more flexible and future proof rendering.
+The Control Component Model has been rewritten to allow for a more flexible and future proof rendering.
+
+A tree of components is now instantiated at JSON/JS parsing time, with every component having a ```parent``` and ```children```, and the rendering process is fully delegated to the individual controls.
+
+It all starts with the ```root``` control (```ExoRootControl```), that takes care of setting up the page/pages and the navigation control container (```ExoNavControl```).
+
+There is now a clear separation of parsing and accepting field properties in controls (```acceptProperties()```), that takes place in the control component constructor, and application of property values (```mapAcceptedProperties()```), where you can apply the state as passed through the JSON/JS field properties directly, or through databinding, to the state of your component.
+
+As mentioned above, each control that can have children (fieldset, multiinput, group, root, etc.) is now responsible for rendering subcomponents. This means that anyone can create a nesting and the schema can be extended in many ways.
 
 ## UI Tests included 
 

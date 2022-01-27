@@ -7,10 +7,8 @@ class ExoEntitySettings {
         if (!options)
             throw TypeError("Missing options");
 
-        if (!options.dataSchema){
-            debugger;
+        if (!options.dataSchema)
             throw TypeError("Missing dataSchema");
-        }
 
         this.events = new Core.Events(this);
         this.options = {

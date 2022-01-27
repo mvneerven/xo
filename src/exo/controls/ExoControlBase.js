@@ -520,7 +520,7 @@ class ExoControlBase {
                 }
             }
 
-            let value = field[p.name] || p.default;
+            let value = typeof (field[p.name]) !== "undefined" ? field[p.name] : p.default;
             this._props[p.name] = value;
         });
     }
@@ -531,7 +531,7 @@ class ExoControlBase {
      */
     mapAcceptedProperties() {
         try {
-            
+
 
             for (var key in this._props) {
                 let value = this._props[key];
@@ -774,8 +774,8 @@ class ExoControlBase {
         let f = this.context.field;
 
         if (f.bind && !f.name) { // resolve name from binding
-            f.name =ExoFormSchema.getPathFromBind(f.bind);
-            this.name = f.name;            
+            f.name = ExoFormSchema.getPathFromBind(f.bind);
+            this.name = f.name;
         }
 
         for (var prop in f) {
@@ -807,7 +807,7 @@ class ExoControlBase {
     }
 
     // resolve bound state 
-    _processProp(name, value, callback) {        
+    _processProp(name, value, callback) {
         let db = this.dataBinding;
         if (db) {
 

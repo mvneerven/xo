@@ -8,7 +8,7 @@ class ExoLinkControl extends ExoElementControl {
 
         this.useContainer = false;
         this.htmlElement = document.createElement("a");
-        this.htmlElement.innerHTML = this.caption
+
 
         this.acceptProperties(
             {
@@ -21,17 +21,21 @@ class ExoLinkControl extends ExoElementControl {
                 type: String
 
             },
-
             {
                 name: "url",
                 type: String
             },
-
             {
                 name: "dropdown",
                 type: Array
             }
         );
+    }
+
+    mapAcceptedProperties() {
+        super.mapAcceptedProperties();
+
+        this.htmlElement.innerHTML = this.caption
     }
 
     set value(href) {
@@ -80,7 +84,7 @@ class ExoLinkControl extends ExoElementControl {
 
         if (this.dropdown) {
             this.dropdownExtension = await ExoFormFactory.createDropDown(this);
-            this.dropdownExtension.on("click", e=>{
+            this.dropdownExtension.on("click", e => {
                 //TODO
             })
         }

@@ -11,12 +11,8 @@ class ExoNavControl extends ExoDivControl {
             {
                 name: "controls",
                 type: Array
-            },
-            {
-                name: "submit",
-                type: Boolean,
-                default: true
             }
+
         )
     }
 
@@ -28,8 +24,9 @@ class ExoNavControl extends ExoDivControl {
 
         super.mapAcceptedProperties();
 
+
         this.controls?.forEach(field => {
-            if (field.name !== "send" || me.submit)
+            if (field.name !== "send" || this.parent.submit)
                 this._children.push(this.createChild(field))
         });
     }
@@ -53,6 +50,10 @@ class ExoNavControl extends ExoDivControl {
             let span = document.createElement("span");
             this.container.appendChild(span)
             let elm = await child.render();
+            let btn = elm.querySelector("button")
+            if (btn) {
+                btn.classList.add("form-" + child.name)
+            }
             DOM.replace(span, elm);
         };
 
