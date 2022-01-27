@@ -30,13 +30,13 @@ class ExoCheckboxListControl extends ExoInputListControl {
     </div>`;
     }
 
-    isItemSelected(item){
-        if(!Array.isArray(this._value))
+    isItemSelected(item) {
+        if (!Array.isArray(this._value))
             return false;
-            
-        let isSel = this._value.find(i=>{
-           return i == item.value
-        }) 
+
+        let isSel = this._value.find(i => {
+            return i == item.value
+        })
 
         return isSel;
     }

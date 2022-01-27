@@ -34,7 +34,7 @@ class ExoRadioButtonListControl extends ExoInputListControl {
     }
 
     isItemSelected(item){
-        return this._value === item.name
+        return this._value === item.value
     }
 }
 
