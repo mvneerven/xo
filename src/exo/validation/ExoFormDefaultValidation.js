@@ -13,6 +13,13 @@ class ExoFormDefaultValidation {
      * @returns {Boolean} - true if all form controls are valid.
      */
     checkValidity(settings = {}) {
+
+        const invalid = this.getInvalidControls(settings)
+
+        return invalid.length === 0;
+    }
+
+    getInvalidControls(settings) {
         settings = {
             inScope: true,
             page: undefined,
@@ -21,16 +28,13 @@ class ExoFormDefaultValidation {
 
         let all = this.getAllControls(settings)
 
-        let invalid = all.find(control => {
-            if (control === this.exo.root)
+        let invalid = all.filter(control => {
+            if (!control.hasValue || !control.visible || control.disabled)
                 return false;
 
-            if (!control.visible || control.disabled) {
-                return false;
-            }
             return !control.valid;
-        })
-        return !invalid || invalid.length === 0;
+        });
+        return invalid;
     }
 
     getAllControls(settings = {}) {
@@ -56,25 +60,24 @@ class ExoFormDefaultValidation {
      */
     reportValidity(page) {
 
-        let all = this.getAllControls({page: page})
+        let controls = this.getInvalidControls({
+            page: page
+        })
 
-        let invalidFields = all.find(control => {
-            return !control.valid;
-        }).map(control => {
+        controls = controls.map(control => {
             return {
                 field: control.context.field,
                 validationMessage: control.validationMessage
             }
         });
 
-        if (invalidFields.length) {
+        if (controls.length) {
             let returnValue = this.exo.events.trigger(ExoFormFactory.events.reportValidity, {
-                invalid: invalidFields
+                invalid: controls
             });
 
-            if (returnValue !== false) {
-                this.focus(invalidFields[0]);
-            }
+            if (returnValue !== false)
+                this.focus(controls[0]);
         }
     }
 

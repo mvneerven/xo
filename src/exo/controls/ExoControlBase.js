@@ -3,7 +3,6 @@ import ExoForm from '../core/ExoForm';
 import DOM from '../../pwa/DOM';
 import JSONSchema from '../core/JSONSchema';
 import ExoFormSchema from '../core/ExoFormSchema';
-import ExoFormDataBinding from '../databinding/ExoFormDataBinding';
 
 const STATUS = {
     none: 0,
@@ -616,6 +615,10 @@ class ExoControlBase {
                 this.getContainerTemplate(obj)
             );
 
+            if(obj.style){
+                this.container.setAttribute("style", obj.style)
+            }
+
             // make sure all (form) elements that require 'name' have one.
             if (DOM.isPropertyAttr(this.htmlElement, "name")) {
                 if (!this.name)
@@ -828,7 +831,7 @@ class ExoControlBase {
     }
 
     // returns valid state of the control - can be subclassed
-    get valid() {
+    get valid() {        
         let numInvalid = 0;
         const rv = el => {
             if (el.validity) {
