@@ -319,8 +319,10 @@ class ExoFormDataBinding {
                 returnValue = value  // return original string, don't resolve
             }
             else {
+                if(name === "bind")
+                    name = "value";
 
-                if (!["bind", "type", "name"].includes(name)) {
+                if (!["type", "name"].includes(name)) {
                     this.resolver.addBoundControl({
                         control: control,
                         field: control.context.field,
@@ -331,9 +333,7 @@ class ExoFormDataBinding {
                     });
                 }
             }
-
         }
-
         return returnValue;
     }
 

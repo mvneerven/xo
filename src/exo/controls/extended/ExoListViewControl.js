@@ -276,23 +276,6 @@ class ExoListViewControl extends ExoDivControl {
     }
   }
 
-  // renderStyleSheet() {
-  //   const prevStyleSheet = document.getElementById(
-  //     `variables-${this.context.field.id}`
-  //   );
-  //   if (prevStyleSheet) prevStyleSheet.remove();
-
-  //   const cssSheet = document.createElement("style");
-  //   cssSheet.id = `variables-${this.context.field.id}`;
-  //   const css = Object.keys(this.cssVariables).map(
-  //     (c) => `${c}: ${this.cssVariables[c]};`
-  //   );
-  //   cssSheet.innerHTML = `[data-id=${this.context.field.id}] { ${css.join(
-  //     " "
-  //   )} }`;
-  //   document.querySelector("head").appendChild(cssSheet);
-  // }
-
   renderLoading() {
     const loadingGridDiv = DOM.parseHTML(/*html*/ `
       <div class="exf-lv-item loading-grid-item">
@@ -349,7 +332,7 @@ class ExoListViewControl extends ExoDivControl {
         .querySelectorAll(".exf-lv-item")
         .forEach((el) => el.remove());
       this.cssVariables["--lv-tile-template"] = "1fr";
-      //this.renderStyleSheet();
+      
       const failedDiv = DOM.parseHTML(/*html*/ `
         <div class="exf-lv-item empty">
           ⚠ Failed to fetch items

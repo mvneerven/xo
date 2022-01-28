@@ -192,7 +192,7 @@ const uiTests = {
           }, 20);
         })
       },
-      "Listview selection updates model": async (c,x)=> {
+      "Listview selection updates model": async (c, x) => {
         return await c.runAndWaitFor(() => {
 
         }, resolve => {
@@ -200,9 +200,9 @@ const uiTests = {
             x.container.querySelector("[data-field-type='listview'] article[data-id='8c93b7b1']").click();
 
             setTimeout(() => {
-                resolve(x.getInstance("data").selection.join() === "8c93b7b1")
+              resolve(x.getInstance("data").selection.join() === "8c93b7b1")
             }, 20);
-            
+
           }, 20);
         })
       }
@@ -268,7 +268,7 @@ const uiTests = {
       }
     }
   },
-  "Advanced databinding tests": {
+  "Advanced databinding tests - Part I": {
     form: {
       submit: true,
       model: {
@@ -356,6 +356,74 @@ const uiTests = {
       }
     }
   },
+  "Advanced databinding tests - Part II": {
+    form: {
+      rem: "Using logic to autofill bound control",
+      submit: true,
+      model: {
+        logic: context => {
+          const i = context.model.instance;
+          i.data.text = ((i.data.prefix || "") + " " + (i.data.name || "")).trim()
+        },
+        instance: {
+          data: {
+            name: "John Doe",
+          }
+        }
+      },
+      pages: [
+        {
+          legend: "Using logic to autofill bound control",
+          fields: [
+            {
+              type: "group",
+              fields: [
+                {
+                  bind: "#/data/prefix",
+                  name: "prf1",
+                  caption: "Prefix",
+                  autocomplete: {
+                    items: ["Mr.", "Mrs.", "Ms", "Dr"]
+                  }
+                },
+                {
+                  bind: "#/data/name",
+                  caption: "Your name",
+                  placeholder: "John Doe"
+                },
+              ]
+            },
+
+            {
+              caption: "Addressing you",
+              name: "addr1",
+              readonly: true,
+              bind: "#/data/text",
+            }
+          ]
+        }
+      ]
+    },
+    tests: {
+      "Check initial value of bound text control": (c, x) => {
+        return x.container.querySelector("[name='addr1']").value === "John Doe"
+      },
+
+      "Check modified value of bound text control after changing a value that triggers custom logic": async (c, x) => {
+        return await c.runAndWaitFor(() => {
+          let prf = x.container.querySelector("[name='prf1']");
+          let ctl = xo.control.get(prf);
+          prf.value = "Mr.";
+          ctl.triggerChange();
+        }, resolve => {
+          setTimeout(() => {
+            resolve(x.container.querySelector("[name='addr1']").value === "Mr. John Doe")
+          }, 20);
+        })
+      }
+    }
+  },
+
   "Buttons": {
     form: {
       submit: false,
@@ -407,15 +475,12 @@ const uiTests = {
 
       "Clicking button changes textbox caption to 'New label text'": async (c, x) => {
 
-        const f = b => {
-          resolve(b)
-        }
         return await c.runAndWaitFor(() => {
           x.container.querySelector("button[name='btn1']").click();
 
-        }, f => {
+        }, resolve => {
           setTimeout(() => {
-            f(x.container.querySelector("[data-field-type='text'] .exf-ctl label").innerText === "New label text")
+            resolve(x.container.querySelector("[data-field-type='text'] .exf-ctl label").innerText === "New label text")
           }, 20);
         })
 
@@ -471,10 +536,10 @@ const uiTests = {
         return await c.runAndWaitFor(() => {
         }, resolve => {
           setTimeout(() => {
-              let disabled = x.container.querySelector(
-                ".exf-nav-cnt button[name='next']").closest(".exf-disabled") != null;
-              
-              resolve(disabled)
+            let disabled = x.container.querySelector(
+              ".exf-nav-cnt button[name='next']").closest(".exf-disabled") != null;
+
+            resolve(disabled)
           }, 10);
         })
       }

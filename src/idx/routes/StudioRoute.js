@@ -470,7 +470,7 @@ class StudioRoute extends xo.route {
             mode: "css", value: this.styleSheetHelper.buildCssFromClasses() 
         }).then(e => {
 
-             e.querySelector("[data-exf]").data?.editor.on("change", ev => {
+            xo.control.get(e).on("change", ev => {
                 this.styleSheetHelper.applyCSS();
             })
             tab.replaceWith(e);

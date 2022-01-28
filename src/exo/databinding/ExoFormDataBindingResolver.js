@@ -1,5 +1,4 @@
 import Core from '../../pwa/Core';
-import ExoFormFactory from '../core/ExoFormFactory';
 
 class ExoFormDataBindingResolver {
 
@@ -12,8 +11,7 @@ class ExoFormDataBindingResolver {
     }
 
     addBoundControl(settings) {
-        let h = `${settings.field.type}.${settings.propertyName}.${Core.hashFromString(settings.callback.toString())}`;
-
+        let h = `${settings.field.id}.${settings.propertyName}`;
         if (!this._hash[h]) {
             this._hash[h] = 1;
             this._boundControlState.push(settings);
@@ -118,21 +116,12 @@ class ExoFormDataBindingResolver {
     _bindControlStateToUpdatedModel() {
         this._boundControlState.forEach(obj => {
             let value = this.dataBinding.get(obj.path);
-
             if (obj.callback) {
                 obj.callback(obj.propertyName, value)
             }
             else {
                 obj.control[obj.propertyName] = value;
             }
-
-            if (obj.propertyName === "bind") {
-                if (obj.control.value != value) {
-                    console.log("Updating ", obj.control.toString(), value)
-                    obj.control.value = value;
-                }
-            }
-
             obj.updatedValue = value
         });
     }

@@ -155,7 +155,7 @@ class ExoSchemaEditor extends ExoMonacoCodeEditor {
         const hoverProvider = {
             provideHover: function (model, position) {
                 // Log the current word in the console, you probably want to do something else here.
-                console.log(model.getWordAtPosition(position));
+                //console.log(model.getWordAtPosition(position));
             }
         }
 

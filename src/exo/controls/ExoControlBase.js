@@ -539,10 +539,8 @@ class ExoControlBase {
                 if (vType !== "undefined") {
 
                     if (typeof (value) === "string") {
-                        this._processProp(key, value, (n, v) => {
-
+                        this._processProp(key, value, (n, v) => {                            
                             this._props[n] = v;
-
                             this[n] = v;
                         });
                     }
@@ -697,8 +695,6 @@ class ExoControlBase {
 
         if (isDataAttribute || ['style', 'id', 'class'].includes(name))
             elm = this.container || elm;
-
-        //console.log("Setting attribute on", DOM.elementToString(elm), ":", name, "=", value)
 
         elm.setAttribute(name, value);
     }
