@@ -29,12 +29,10 @@ class ExoSchemaRenderer {
         let frm = await xo.form.run(schema, {
             context: this.builder.exoContext,
             on: {
-                created: e => {
+                
+                schemaLoaded: e => {
                     me.exo = e.detail.host
                     me.events.trigger("created", { exo: me.exo });
-                },
-
-                schemaLoaded: e => {
                     me.events.trigger("schemaloaded", { exo: me.exo })
                 },
 

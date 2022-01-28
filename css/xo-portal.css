@@ -1539,6 +1539,7 @@ html:not(.pwa-signed-in) .if-signed-out {
 }
 
 .exf-container .exf-page {
+  padding: 0;
   padding-top: 1rem;
 }
 
@@ -5953,6 +5954,7 @@ html.theme-dark [data-pwa-area="main"] {
 }
 
 html.theme-dark [data-pwa-area="panel"] {
+  padding: 1rem;
   border: none;
   background-color: #232323;
 }
@@ -6330,10 +6332,6 @@ main {
   border-left-color: #c11;
 }
 
-#xo-portal [data-pwa-route="/studio"] [data-pwa-area="panel"] {
-  padding: 0;
-}
-
 #xo-portal .exf-ctl-cnt.full-height {
   margin-top: 0;
   margin-bottom: 0;
@@ -6530,7 +6528,6 @@ html:not([data-pwa-route="/"]) img.xo-logo {
   z-index: 500 !important;
   height: 100%;
   font-size: 0.8rem;
-  padding: 0px 0px 10px 0px;
   display: -ms-grid;
   display: grid;
   -ms-grid-rows: 50% 1fr;

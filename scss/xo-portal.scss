@@ -24,6 +24,7 @@
     border-bottom: 3px solid var(--color-background);
     margin-bottom: 1rem;
     max-height: 55vh;
+    
 }
 
 #start-wiz {
@@ -137,11 +138,11 @@ main {
         }
     }
 
-    [data-pwa-route="/studio"] {
-        [data-pwa-area="panel"] {
-            padding: 0;
-        }
-    }
+    // [data-pwa-route="/studio"] {
+    //     [data-pwa-area="panel"] {
+    //         padding: 0;
+    //     }
+    // }
 
     .exf-ctl-cnt.full-height {
         margin-top: 0;
@@ -366,7 +367,7 @@ html:not([data-pwa-route="/"]) {
                 height: 100%;
                 font-size: 0.8rem;
                 //overflow-y: auto;
-                padding: 0px 0px 10px 0px;
+                //padding: 0px 0px 10px 0px;
                 //box-shadow: -3px 3px 10px 2px rgba(0, 0, 0, 0.4);
 
                 display: grid;

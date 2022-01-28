@@ -947,6 +947,7 @@ html:not(.pwa-signed-in) .if-signed-out {
 }
 
 .exf-container .exf-page {
+  padding: 0;
   padding-top: 1rem;
 }
 
