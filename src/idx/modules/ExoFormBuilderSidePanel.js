@@ -9,7 +9,7 @@ class ExoFormBuilderSidePanel {
 
         let tsOptions = {
             tabs: {
-                settings: { caption: "Options", class: "full-height", enabled: true },
+                settings: { caption: "Options", class: "full-height pad", enabled: true },
                 addField: { caption: "Add", class: "full-height", enabled: false },
                 dataTab: { caption: "Data", class: "full-height", enabled: true },
             },
@@ -39,7 +39,7 @@ class ExoFormBuilderSidePanel {
         })
 
         this.renderPanel = document.createElement("div");
-        this.renderPanel.classList.add("render-panel");
+        this.renderPanel.classList.add("render-panel", "pad");
         containerPanel.add(this.renderPanel)
 
         containerPanel.add(this.tabStrip.render());
@@ -60,7 +60,7 @@ class ExoFormBuilderSidePanel {
 
         if (this.tabStrip.tabs.dataTab) {
             this.builder.renderCodeEditor(
-                { mode: "json", readOnly: true, id: "exo-datamodel", value: "" }
+                { mode: "json", readonly: true, id: "exo-datamodel", value: "" }
             ).then(elm => {
                 this.builder.formDataViewer = xo.control.get(elm);
                 this.tabStrip.tabs.dataTab.panel.appendChild(elm);

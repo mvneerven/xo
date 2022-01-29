@@ -27,6 +27,10 @@
     
 }
 
+.start-panel {
+    padding: 1rem!important;
+}
+
 #start-wiz {
     form {
         .exf-cnt.exf-nav-cnt {
@@ -46,6 +50,10 @@ main {
 
 #xo-portal [data-pwa-area] .ul-tabs.full-height .exf-page.full-height {
     margin-bottom: 35px;
+}
+
+.pad {
+    padding: 1rem!important;
 }
 
 #xo-portal {
@@ -331,30 +339,15 @@ html:not([data-pwa-route="/"]) {
             height: 100%;
             overflow: hidden;
 
-            > .exf-container {
-                height: 100%;
+            // > .exf-container {
+            //     border: 2px solid red!important;
+            //     height: 100%;
 
-                form.form-explorer {
-                    height: 100%;
-                }
-            }
+            //     form.form-explorer {
+            //         height: 100%;
+            //     }
+            // }
         }
-
-        // textarea {
-        //     &.code {
-        //         min-height: 350px;
-        //         padding: 0.5em;
-        //         display: block;
-        //         overflow: scroll !important;
-        //         border: 1px inset;
-        //         height: 100%;
-        //         border: 1px solid #bbb;
-        //         white-space: pre;
-        //         color: #444;
-        //         resize: vertical;
-        //         //background-color: white;
-        //     }
-        // }
 
         &:not(.nsp-xs):not(.nsp-xxs) {
             main {
@@ -366,10 +359,6 @@ html:not([data-pwa-route="/"]) {
                 z-index: 500 !important;
                 height: 100%;
                 font-size: 0.8rem;
-                //overflow-y: auto;
-                //padding: 0px 0px 10px 0px;
-                //box-shadow: -3px 3px 10px 2px rgba(0, 0, 0, 0.4);
-
                 display: grid;
                 grid-template-rows: 50% 1fr;
                 gap: 1rem;

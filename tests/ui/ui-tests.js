@@ -473,17 +473,17 @@ const uiTests = {
           "form .exf-page .exf-btn-cnt button span.ti-arrow-right") != null;
       },
 
-      "Clicking button changes textbox caption to 'New label text'": async (c, x) => {
+      "Clicking button changes textbox caption to 'New label text'": async (c, x, r) => {
 
-        return await c.runAndWaitFor(() => {
-          x.container.querySelector("button[name='btn1']").click();
-
-        }, resolve => {
-          setTimeout(() => {
-            resolve(x.container.querySelector("[data-field-type='text'] .exf-ctl label").innerText === "New label text")
-          }, 20);
-        })
-
+        return c
+          .waitFor("button[name='btn1']", 10)
+          .then(b => b.click())
+          .then(c.wait(20))
+          .then(b => 
+            {
+            return c.get("[data-field-type='text'] .exf-ctl label")?.innerText === "New label text";
+            }
+          )
       }
     }
   },

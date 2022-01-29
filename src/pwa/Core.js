@@ -456,7 +456,7 @@ class Core {
      */
     static deepMerge(obj1, obj2) {
         for (var p in obj2) {
-            if (typeof (obj2[p]) === "object") {
+            if (!Array.isArray(obj2[p]) && typeof (obj2[p]) === "object") {
                 if (obj1[p]) {
                     Core.deepMerge(obj1[p], obj2[p])
                 }
@@ -472,6 +472,7 @@ class Core {
                 }
             }
         }
+        return obj1;
     }
 
     /**

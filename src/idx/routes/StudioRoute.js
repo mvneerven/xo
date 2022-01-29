@@ -223,7 +223,7 @@ class StudioRoute extends xo.route {
 
         let tsOptions = {
             tabs: {
-                start: { caption: "Start", class: "full-height", tooltip: "Select a templates or import DTO to generate an XO form Schema with" },
+                start: { caption: "Start", class: "full-height start-panel pad", tooltip: "Select a templates or import DTO to generate an XO form Schema with" },
                 schema: { caption: "Schema", class: "full-height", tooltip: "Edit XO form Schema" }
             },
             class: "full-height"
@@ -286,12 +286,21 @@ class StudioRoute extends xo.route {
 
     }
 
-    async renderCodeEditor(options) {
+    async renderCodeEditor(options = {type: "monacoeditor"}) {
+        
+        options.options = {
+            minimap: {
+                enabled: false
+            },
+            ...options.options 
+        }
+        
         let elm = xo.form.run({
             type: "monacoeditor",
             class: "full-height",
             ...options
         });
+        
         return elm;
     }
 

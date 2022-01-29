@@ -5954,7 +5954,6 @@ html.theme-dark [data-pwa-area="main"] {
 }
 
 html.theme-dark [data-pwa-area="panel"] {
-  padding: 1rem;
   border: none;
   background-color: #232323;
 }
@@ -6242,6 +6241,10 @@ html.theme-dark select > option {
   max-height: 55vh;
 }
 
+.start-panel {
+  padding: 1rem !important;
+}
+
 #start-wiz form .exf-cnt.exf-nav-cnt {
   position: fixed;
   bottom: 30px;
@@ -6257,6 +6260,10 @@ main {
 
 #xo-portal [data-pwa-area] .ul-tabs.full-height .exf-page.full-height {
   margin-bottom: 35px;
+}
+
+.pad {
+  padding: 1rem !important;
 }
 
 #xo-portal body {
@@ -6509,14 +6516,6 @@ html:not([data-pwa-route="/"]) img.xo-logo {
 .nsp-grid.nsp-grid-3rc[data-pwa-route="/studio"] [data-pwa-area="main"] {
   height: 100%;
   overflow: hidden;
-}
-
-.nsp-grid.nsp-grid-3rc[data-pwa-route="/studio"] [data-pwa-area="main"] > .exf-container {
-  height: 100%;
-}
-
-.nsp-grid.nsp-grid-3rc[data-pwa-route="/studio"] [data-pwa-area="main"] > .exf-container form.form-explorer {
-  height: 100%;
 }
 
 .nsp-grid.nsp-grid-3rc[data-pwa-route="/studio"]:not(.nsp-xs):not(.nsp-xxs) main {

@@ -53,6 +53,8 @@ class ExoControlBase {
             { name: "caption", type: String, group: "UI", description: "Caption/label to display" },
             { name: "hidden", type: Boolean, group: "UI", default: false, description: "Determines control visibility" },
             { name: "disabled", type: Boolean, group: "UI", description: "Specifies whether the control can be interacted with by the user" },
+            { name: "enabled", type: Boolean, default: true, hidden: true },
+            { name: "readonly", type: Boolean, default: false},
             { name: "visible", type: Boolean, default: true, group: "UI", description: "Specifies whether the control is visible" },
             //{ name: "required", type: Boolean, group: "Data", description: "Specifies whether the field is required" },
             { name: "tooltip", type: String, group: "UI", description: "Tooltip to show over the element" },
@@ -443,10 +445,10 @@ class ExoControlBase {
 
     set visible(value) {
         this._visible = value;
-        
-        if(this.container)
+
+        if (this.container)
             this.container.style.display = value ? "unset" : "none";
-        
+
     }
 
     get visible() {
@@ -472,6 +474,14 @@ class ExoControlBase {
                 this.container.classList.remove("exf-disabled");
             }
         }
+    }
+
+    set enabled(value) {
+        this.disabled = !value;
+    }
+
+    get enabled() {
+        return !this.disabled;
     }
 
     get rendered() {
@@ -539,7 +549,7 @@ class ExoControlBase {
                 if (vType !== "undefined") {
 
                     if (typeof (value) === "string") {
-                        this._processProp(key, value, (n, v) => {                            
+                        this._processProp(key, value, (n, v) => {
                             this._props[n] = v;
                             this[n] = v;
                         });
@@ -567,7 +577,7 @@ class ExoControlBase {
             tooltip: f.tooltip || "",
             class: f.class || "",
             id: f.id,
-            style: (f.style ? f.style+ ";" : "") + (!this.visible ? `;display: none`: '' ) 
+            style: (f.style ? f.style + ";" : "") + (!this.visible ? `;display: none` : '')
         }
     }
 
@@ -613,7 +623,7 @@ class ExoControlBase {
                 this.getContainerTemplate(obj)
             );
 
-            if(obj.style){
+            if (obj.style) {
                 this.container.setAttribute("style", obj.style)
             }
 
@@ -827,7 +837,7 @@ class ExoControlBase {
     }
 
     // returns valid state of the control - can be subclassed
-    get valid() {        
+    get valid() {
         let numInvalid = 0;
         const rv = el => {
             if (el.validity) {

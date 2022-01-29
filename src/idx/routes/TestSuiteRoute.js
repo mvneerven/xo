@@ -51,6 +51,7 @@ class TestsRoute extends xo.route {
         me.side.clear();
 
         let sideForm = await xo.form.run({
+
             submit: false,
             model: {
                 instance: {
@@ -64,6 +65,7 @@ class TestsRoute extends xo.route {
             },
             pages: [
                 {
+                    legend: "Test Groups",
                     fields: [
                         {
                             type: "checkboxlist",
@@ -102,6 +104,8 @@ class TestsRoute extends xo.route {
                 }
             }
         });
+        
+        sideForm.classList.add("pad");
         this.side.add(sideForm)
     }
 
@@ -193,7 +197,15 @@ class TestsRoute extends xo.route {
         me.area.add("<div><hr/></div>");
         me.area.add(ul);
 
-  
+        //me.side.element.querySelector(".exf-container").setAttribute("disabled", true);
+
+        // let restartButton = DOM.parseHTML(`<div><a class="btn cta" href="/testsuite">Restart</div>`)
+        // restartButton.querySelector("a").addEventListener("click", e => {
+        //     e.preventDefault();
+        //     location.reload(true);
+        // });
+
+        // me.area.add(restartButton)
     }
 
     async runTestGroup(testGroup) {
@@ -214,19 +226,26 @@ class TestsRoute extends xo.route {
         let i = 0;
         let oldContainer;
 
-        for (const task of tests) {
-            if(oldContainer)
-                oldContainer.remove();
+        me.area.clear();
+        this.currentForm = await this.form(testGroup.form);
+        me.area.add(this.currentForm.container);
+        //oldContainer = exo.container;
 
-            me.area.clear();
-            let exo = await this.form(testGroup.form);
-            me.area.add(exo.container);
-            oldContainer = exo.container;
+        
+
+        for (const task of tests) {
+            // if(oldContainer)
+            //     oldContainer.remove();
+                
+            // me.area.clear();
+            // let exo = await this.form(testGroup.form);
+            // me.area.add(exo.container);
+            // oldContainer = exo.container;
 
             let key = task[0];
 
             let test = task[1]
-            let result = await runIndividualTest(test, me, exo)
+            let result = await runIndividualTest(test, me, this.currentForm)
 
             i++;
             if (result instanceof Error) {
@@ -255,6 +274,33 @@ class TestsRoute extends xo.route {
         }
         return results
     }
+
+    wait(ms){
+        return new Promise(resolve => {
+            setTimeout(() => {
+                resolve()
+            }, ms);
+        })
+    }
+
+    async waitFor(selector, limit = 1000){
+        const me = this;
+        let elm;
+
+        return new Promise(async resolve => {
+            await xo.core.waitFor(()=>{
+                elm = me.currentForm.container.querySelector(selector)
+                return elm
+            }, limit);
+            resolve(elm)
+        })
+    }
+
+    get(selector){
+        return this.currentForm.container.querySelector(selector)
+    }
+
+
 
     runAndWaitFor(runFunction, waitForFunction, timeout = 500) {
         return new Promise((resolve, reject) => {

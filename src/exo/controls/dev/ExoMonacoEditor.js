@@ -151,6 +151,7 @@ class ExoMonacoCodeEditor extends ExoDivControl {
 
                 const detail = {
                     editorOptions: {
+                        readOnly: me.readonly,
                         value: me.value || "",
                         language: me.mode,
                         theme: me.theme,

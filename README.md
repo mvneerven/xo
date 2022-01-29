@@ -1,5 +1,7 @@
 # XO Documentation
 
+Jump to *[What's new](./REVISIONS.md)*.
+
 > This documentation is best viewed at [https://www.xo-js.dev](https://www.xo-js.dev/#/docs).
 >
 > A complete [playground (Studio)](./md/exo/studio.md) is included and code examples can directly be run and edited.
