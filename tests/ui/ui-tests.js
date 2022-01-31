@@ -115,19 +115,23 @@ const uiTests = {
       },
 
       "Email control is enabled after clicking checkbox": async (c, x) => {
-        const f = b => {
-          resolve(b)
-        }
-        return await c.runAndWaitFor(() => {
-          x.container.querySelector("input[type=checkbox]").click();
+        return c
+          .waitFor("input[type=checkbox]", 10)
+          .then(b => b.click())
+          .then(c.wait(20))
+          .then(b => {
+            return x.get("email").disabled === false;
+          })
+      },
 
-        }, f => {
-          setTimeout(() => {
-            f(x.get("email").disabled === false)
-          }, 20);
-        })
-
-
+      "Email control is disabled after clicking checkbox again": async (c, x) => {
+        return c
+          .waitFor("input[type=checkbox]", 10)
+          .then(b => b.click())
+          .then(c.wait(20))
+          .then(b => {
+            return x.get("email").disabled === true;
+          })
       }
     }
   },
@@ -172,7 +176,6 @@ const uiTests = {
                   key: "name",
                   type: "string",
                   name: "Name"
-
                 }
               ]
             }
@@ -182,29 +185,25 @@ const uiTests = {
     },
     tests: {
       "Listview renders two items having ids '8c93b7b0' and '8c93b7b1'": async (c, x) => {
-        return await c.runAndWaitFor(() => {
-        }, resolve => {
-          setTimeout(() => {
+
+        return c
+          .wait()
+          .then(b => {
             let ids = [...x.container.querySelectorAll("[data-field-type='listview'] article")].map(i => {
               return i.getAttribute("data-id")
             });
-            resolve(ids.join(",") === "8c93b7b0,8c93b7b1");
-          }, 20);
-        })
+            return ids.join(",") === "8c93b7b0,8c93b7b1"
+          })
+
       },
       "Listview selection updates model": async (c, x) => {
-        return await c.runAndWaitFor(() => {
-
-        }, resolve => {
-          setTimeout(() => {
-            x.container.querySelector("[data-field-type='listview'] article[data-id='8c93b7b1']").click();
-
-            setTimeout(() => {
-              resolve(x.getInstance("data").selection.join() === "8c93b7b1")
-            }, 20);
-
-          }, 20);
-        })
+        return c
+          .waitFor("[data-field-type='listview'] article[data-id='8c93b7b1']", 10)
+          .then(b => b.click())
+          .then(c.wait())
+          .then(() => {
+            return x.getInstance("data").selection.join() === "8c93b7b1"
+          })
       }
     }
   },
@@ -336,23 +335,17 @@ const uiTests = {
       },
 
       "Radio Renders 3 options From Model after clicking button": async (c, x) => {
+        x.dataBinding.set("#/data/list",
+          [
+            "One", "Two", "Three"
+          ])
 
-        return await c.runAndWaitFor(() => {
-          x.dataBinding.set("#/data/list",
-            [
-              "One",
-              "Two",
-              "Three"
-            ])
-
-        }, resolve => {
-
-          setTimeout(() => {
+        return c
+          .wait()
+          .then(() => {
             let r = x.get("rbl1");
-            resolve(r.htmlElement.querySelectorAll("input[type='radio']").length === 3)
-          }, 20);
-
-        })
+            return r.htmlElement.querySelectorAll("input[type='radio']").length === 3
+          })
       }
     }
   },
@@ -410,16 +403,19 @@ const uiTests = {
       },
 
       "Check modified value of bound text control after changing a value that triggers custom logic": async (c, x) => {
-        return await c.runAndWaitFor(() => {
-          let prf = x.container.querySelector("[name='prf1']");
-          let ctl = xo.control.get(prf);
-          prf.value = "Mr.";
-          ctl.triggerChange();
-        }, resolve => {
-          setTimeout(() => {
-            resolve(x.container.querySelector("[name='addr1']").value === "Mr. John Doe")
-          }, 20);
-        })
+
+
+        return c
+          .waitFor("[name='prf1']", 10)
+          .then(prf => {
+            let ctl = xo.control.get(prf);
+            prf.value = "Mr.";
+            ctl.triggerChange();
+          })
+          .then(c.wait())
+          .then(b => {
+            return c.get("[name='addr1']")?.value === "Mr. John Doe";
+          })
       }
     }
   },
@@ -474,16 +470,13 @@ const uiTests = {
       },
 
       "Clicking button changes textbox caption to 'New label text'": async (c, x, r) => {
-
         return c
           .waitFor("button[name='btn1']", 10)
           .then(b => b.click())
-          .then(c.wait(20))
-          .then(b => 
-            {
+          .then(c.wait())
+          .then(() => {
             return c.get("[data-field-type='text'] .exf-ctl label")?.innerText === "New label text";
-            }
-          )
+          })
       }
     }
   },
@@ -532,17 +525,53 @@ const uiTests = {
       ]
     },
     tests: {
-      "Navigation tests": async (c, x) => {
-        return await c.runAndWaitFor(() => {
-        }, resolve => {
-          setTimeout(() => {
-            let disabled = x.container.querySelector(
-              ".exf-nav-cnt button[name='next']").closest(".exf-disabled") != null;
-
-            resolve(disabled)
-          }, 10);
-        })
-      }
+      "Page 2 can not be navigated to when the form shows": async (c, x) => {
+        return c
+          .wait()
+          .then(c.wait())
+          .then(() => {
+            return !x.addins.navigation.canMoveNext()
+          })
+      },
+      "Page 2 can be navigated to when text and radio fields are set": async (c, x) => {
+        return c
+          .wait()
+          .then(()=>{
+            let txt = c.get("input[name='field1']");
+            txt.value = "Text value";
+            let ctl = xo.control.get(txt);
+            ctl.triggerChange();
+            let radio2 = c.get("[value='Option 2']");
+            radio2.click();
+          })
+          .then(b => {
+            return x.addins.navigation.canMoveNext()
+          })
+      },
+      "Submit button is disabled": async (c, x) => {
+        return c
+          .wait()
+          .then(() => {
+            return x.addins.navigation.getControl('send').disabled
+          })
+      },
+      "Submit button is enabled after setting message in field3 textarea": async (c, x) => {
+        return c
+          .wait()
+          .then(()=>{
+            let txt = c.get("textarea[name='field3']");
+            txt.value = "Some message";
+            let ctl = xo.control.get(txt);
+            ctl.triggerChange();
+          })
+          .then(()=>{
+            x.addins.navigation.next()
+          })
+          .then(() => {
+            return !x.addins.navigation.getControl('send').disabled
+          })
+          
+      },
     }
   }
 }

@@ -5769,25 +5769,39 @@ body {
 }
 
 .ui-test-results li {
-  padding: .5rem;
+  padding: 0.5rem;
 }
 
 .ui-test-results li .reason {
   display: block;
   padding-left: 1.2rem;
-  opacity: .7;
+  opacity: 0.7;
 }
 
-.ui-test-results li .failed {
+.ui-test-results li .test-item {
+  border: 1px solid rgba(127, 127, 127, 0.2);
+  color: transparent;
+  width: 1.4rem;
+  height: 1.4rem;
+  line-height: 1.4rem;
+  padding: 0.3rem;
+}
+
+.ui-test-results li .test-item.ti-close {
   color: red;
 }
 
-.ui-test-results li .passed {
+.ui-test-results li .test-item.ti-check {
   color: #00ff33;
 }
 
 .ui-test-results li ul {
   list-style: inherit;
+}
+
+.ui-tests-panel {
+  position: absolute;
+  left: -10000px;
 }
 
 :root {

@@ -11,7 +11,7 @@ class PWA_SettingsGroup {
 
         ar.forEach(i => {
             if (!i.name || !i.title || !i.type)
-                throw TypeError("Setting needs at least id, type and title properties");
+                throw TypeError("Setting needs at least name, type and title properties");
         })
 
         this.settings = ar;

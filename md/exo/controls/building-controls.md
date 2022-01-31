@@ -65,7 +65,7 @@ async createContext(config) {
 
     return factory.build({
         defaults: {
-            validation: "inline",
+            validation: "inline"            
         },
         ...(config || {}),
     });

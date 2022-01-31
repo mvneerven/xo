@@ -1,6 +1,16 @@
 const DOM = xo.dom;
 import uiTests from '../../../tests/ui/ui-tests.js';
 
+const stringify = form => {
+    return JSON.stringify(form, (key, value) => {
+        if (key.startsWith("_")) {
+            return;
+        }
+        return value;
+
+    }, 2);
+}
+
 class TestsRoute extends xo.route {
     menuTitle = "Tests"
 
@@ -10,6 +20,10 @@ class TestsRoute extends xo.route {
 
     constructor() {
         super(...arguments)
+
+        this.testDiv = document.createElement("div")
+        this.testDiv.classList.add("ui-tests-panel")
+        document.body.appendChild(this.testDiv);
 
         this.testGroups = Object.entries(uiTests).map(entry => {
             let name = entry[0];
@@ -25,30 +39,47 @@ class TestsRoute extends xo.route {
     }
 
     async render(path) {
-
-        document.data = null;
-
-        this.showSideForm();
-        this.showMessage({
-            title: 'XO Test Suite',
-            body: "Select the tests on the right and press 'Run tests'"
-        })
+        this.showTestGroupsAndTests()
+        await this.showSideForm();
     }
 
-    showMessage(data) {
-        this.area.add(DOM.parseHTML(/*html*/`
-            <div>
-                <h3>${data.title}</h3>
-                <p>
-                    ${data.body}
-                </p>
-            </div>
-        `))
+    showTestGroupsAndTests() {
+        const me = this;
+        let groups = this.testGroups;
+        let ul = document.createElement("ul");
+        ul.classList.add("ui-test-results")
+
+        for (let group of groups) {
+            let li = document.createElement("li");
+            li.setAttribute("data-id", group.name);
+            li.innerHTML = `${group.name}`;
+            li.title = stringify(group.form)
+
+            let groupUl = document.createElement("ul");
+            li.appendChild(groupUl);
+
+            Object.entries(group.tests).forEach(entry => {
+                let key = entry[0]
+                let li = document.createElement("li");
+                li.setAttribute("data-id", key);
+                li.innerHTML = `<span data-test="${key}" class="ti-info test-item"></span>&nbsp;` + key;
+                groupUl.appendChild(li)
+            });
+            ul.appendChild(li)
+        }
+
+        me.area.add(ul)
     }
+
 
     async showSideForm() {
         const me = this;
         me.side.clear();
+
+        let count = 0;
+        me.testGroups.map(a => {
+            count += Object.keys(a.tests).length;
+        })
 
         let sideForm = await xo.form.run({
 
@@ -68,50 +99,68 @@ class TestsRoute extends xo.route {
                     legend: "Test Groups",
                     fields: [
                         {
-                            type: "checkboxlist",
-                            view: "block",
-                            bind: "#/data/tests",
-
-                            items: this.testGroups.map(t => {
-                                return {
-                                    name: t.name,
-                                    value: t.name,
-                                    description: t.description
-                                }
-                            }),
+                            type: "info",
+                            title: "Statistics",
+                            body: `${count} tests`
 
                         },
                         {
-                            type: "button",
-                            caption: "Run tests",
-                            icon: "ti-arrow-right",
-                            class: "cta",
-                            actions: [
+                            type: "group",
+                            fields: [
                                 {
-                                    do: {
-                                        trigger: ["run"]
-                                    }
+                                    type: "button",
+                                    caption: "Run tests",
+                                    icon: "ti-arrow-right",
+                                    class: "cta",
+                                    actions: [
+                                        {
+                                            do: {
+                                                trigger: ["run"]
+                                            }
+                                        }
+                                    ]
+                                },
+                                {
+                                    type: "button",
+                                    caption: "Reset",
+                                    icon: "ti-close",
+                                    class: "cta",
+                                    actions: [
+                                        {
+                                            do: {
+                                                trigger: ["reset"]
+                                            }
+                                        }
+                                    ]
                                 }
                             ]
                         }
+                        
                     ]
                 }
             ]
         }, {
             on: {
+                schemaParsed: e => {
+                    this.exo = e.detail.host
+                },
                 run: e => {
                     me.run(e.detail.host)
+                },
+                reset: e=>{
+                    me.reset();
                 }
             }
         });
-        
+
         sideForm.classList.add("pad");
         this.side.add(sideForm)
     }
 
     clear() {
         this.area.clear()
-        this.side.clear()
+        this.side.clear();
+        this.testDiv.innerHTML = ""
     }
 
     get area() {
@@ -122,90 +171,40 @@ class TestsRoute extends xo.route {
         return pwa.UI.areas.panel
     }
 
-    async run(exo) {
-        const me = this;
-        me.area.clear();
-        let selectedGroups = exo.getInstance("data").groups;
+    async run() {
+        const me = this;      
 
-        let ul = document.createElement("ul");
-        ul.classList.add("ui-test-results")
+        me.reset();
 
-        let accumulated = {
-            passed: 0,
-            failed: 0
-        }
+        for (let group of me.testGroups) {
 
-        const resultIcon = result => {
-            return result ? '<span class="passed ti-check"></span>' : '<span class="failed ti-close"></span>';
-        }
-
-        const stringify = form => {
-            return JSON.stringify(form, (key, value) => {
-                if (key.startsWith("_")) {
-                    return;
-                }
-                return value;
-
-            }, 2);
-        }
-
-        const list = (ar, parent) => {
-            ar.forEach(result => {
-                let li = document.createElement("li");
-                li.innerHTML = resultIcon(result.passed) + " " + result.key;
-                li.title = result.test;
-                if (result.reason) {
-                    let reason = document.createElement('small');
-                    reason.classList.add("reason");
-                    reason.textContent = result.reason;
-                    li.appendChild(reason)
-                }
-
-                parent.appendChild(li)
-            });
-        }
-
-        let groups = this.testGroups.filter(test => {
-            return selectedGroups.includes(test.name);
-        });
-
-        for (let group of groups) {
             let result = await me.runTestGroup(group);
-            let li = document.createElement("li");
-            let failedCount = result.filter(r => {
-                return r.passed === false
-            }).length;
-            li.innerHTML = `${resultIcon(failedCount === 0)} ${group.name} (${result.length} tests)`;
-            li.title = stringify(group.form)
-            accumulated.passed += result.length - failedCount;
-            accumulated.failed += failedCount;
+            // let failedCount = result.filter(r => {
+            //     return r.passed === false
+            // }).length;
 
-            let groupUl = document.createElement("ul");
-            li.appendChild(groupUl);
+            let groupLi = me.getListItem(group.name)
 
-            list(result, groupUl)
+            groupLi.title = stringify(group.form)
 
-            ul.appendChild(li)
+            for (let item of result) {
+                let span = me.getListItem(item.key).querySelector(".test-item");
+                span.classList.remove("ti-close", "ti-check", "ti-info");
+
+                span.classList.add(item.passed ? "ti-check" : "ti-close")
+            }
         }
+    }
 
-        me.area.clear();
+    reset(){
+        this.area.element.querySelectorAll(".test-item").forEach(i => {
+            i.classList.remove("ti-check", "ti-close");
+            i.classList.add("ti-info")
+        })
+    }
 
-        me.area.add("<h3>Results</h3>");
-        me.area.add(`<div>Total: ${accumulated.passed + accumulated.failed}</div>`)
-        me.area.add(`<div>Passed: ${accumulated.passed}</div>`)
-        me.area.add(`<div>Failed: ${accumulated.failed}</div>`)
-        me.area.add("<div><hr/></div>");
-        me.area.add(ul);
-
-        //me.side.element.querySelector(".exf-container").setAttribute("disabled", true);
-
-        // let restartButton = DOM.parseHTML(`<div><a class="btn cta" href="/testsuite">Restart</div>`)
-        // restartButton.querySelector("a").addEventListener("click", e => {
-        //     e.preventDefault();
-        //     location.reload(true);
-        // });
-
-        // me.area.add(restartButton)
+    getListItem(key) {
+        return this.area.element.querySelector(`[data-id="${key}"]`);
     }
 
     async runTestGroup(testGroup) {
@@ -215,7 +214,7 @@ class TestsRoute extends xo.route {
 
         const runIndividualTest = async (test, context, exo) => {
             try {
-                return test(context, exo)
+                return await test(context, exo)
             }
             catch (ex) {
                 return ex;
@@ -224,26 +223,14 @@ class TestsRoute extends xo.route {
 
         let results = [];
         let i = 0;
-        let oldContainer;
+        me.testDiv.innerHTML = ""
 
-        me.area.clear();
         this.currentForm = await this.form(testGroup.form);
-        me.area.add(this.currentForm.container);
-        //oldContainer = exo.container;
-
-        
+        this.currentForm.container.style.opacity = "0";
+        me.testDiv.appendChild(this.currentForm.container);
 
         for (const task of tests) {
-            // if(oldContainer)
-            //     oldContainer.remove();
-                
-            // me.area.clear();
-            // let exo = await this.form(testGroup.form);
-            // me.area.add(exo.container);
-            // oldContainer = exo.container;
-
             let key = task[0];
-
             let test = task[1]
             let result = await runIndividualTest(test, me, this.currentForm)
 
@@ -253,7 +240,8 @@ class TestsRoute extends xo.route {
                     passed: false,
                     error: result,
                     test: test.toString(),
-                    reason: result
+                    reason: result,
+                    key: key
                 })
             }
 
@@ -275,7 +263,7 @@ class TestsRoute extends xo.route {
         return results
     }
 
-    wait(ms){
+    wait(ms) {
         return new Promise(resolve => {
             setTimeout(() => {
                 resolve()
@@ -283,12 +271,12 @@ class TestsRoute extends xo.route {
         })
     }
 
-    async waitFor(selector, limit = 1000){
+    async waitFor(selector, limit = 1000) {
         const me = this;
         let elm;
 
         return new Promise(async resolve => {
-            await xo.core.waitFor(()=>{
+            await xo.core.waitFor(() => {
                 elm = me.currentForm.container.querySelector(selector)
                 return elm
             }, limit);
@@ -296,34 +284,8 @@ class TestsRoute extends xo.route {
         })
     }
 
-    get(selector){
+    get(selector) {
         return this.currentForm.container.querySelector(selector)
-    }
-
-
-
-    runAndWaitFor(runFunction, waitForFunction, timeout = 500) {
-        return new Promise((resolve, reject) => {
-            let tmr;
-            const resolver = result => {
-                clearTimeout(tmr);
-                resolve(result)
-            }
-            tmr = setTimeout(() => {
-                resolver(false);
-            }, timeout);
-
-            try {
-                waitForFunction(resolver);
-
-                setTimeout(() => {
-                    runFunction();
-                }, 0);
-            }
-            catch (err) {
-                resolver(err);
-            }
-        });
     }
 
     async form(schema) {

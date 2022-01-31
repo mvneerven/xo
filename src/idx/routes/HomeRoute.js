@@ -1,3 +1,4 @@
+import ExoFormThemes from "../../exo/themes/ExoFormThemes";
 
 class HomeRoute extends xo.route {
     title = "XO-JS - eXtra Ordinary JavaScript";
@@ -5,6 +6,8 @@ class HomeRoute extends xo.route {
     menuIcon = "ti-home";
 
     get settings() {
+
+
         return pwa.settings.createGroup("User Interface",
             {
                 type: "boolean",
@@ -13,7 +16,7 @@ class HomeRoute extends xo.route {
                 ui: {
                     type: "radiobuttonlist",
                     view: "inline",
-                    items: ["Off","On" ]
+                    items: ["Off", "On"]
                 }
             },
             {
@@ -24,11 +27,32 @@ class HomeRoute extends xo.route {
                 ui: {
                     type: "radiobuttonlist",
                     view: "inline",
-                    items: ["Off" , "On" ]
-                    
+                    items: ["Off", "On"]
+
                 }
+            },
+
+            {
+                name: "defTheme",
+                type: "string",
+                title: "Default theme",
+                ui: {
+                    type: "dropdown",
+                    items: this.getThemes()
+                }
+
             }
+
         );
+    }
+
+    getThemes() {
+        return Object.keys(ExoFormThemes.types).map(i => {
+            return {
+                name: xo.core.toWords(i),
+                value: i
+            }
+        })
     }
 
     constructor() {
@@ -37,9 +61,10 @@ class HomeRoute extends xo.route {
         pwa.settings.add(this.settings)
             .on("read", e => {
                 let data = {
-                    darkmode: ["dark", "On"].includes( pwa.UI.theme) ? "On" : "Off",
+                    darkmode: ["dark", "On"].includes(pwa.UI.theme) ? "On" : "Off",
                     pagesize: pwa.UI.pagesize || 8,
-                    advancedUi: ["true", "On", true].includes(localStorage.advancedUi)  ? "On": "Off"
+                    advancedUi: ["true", "On", true].includes(localStorage.advancedUi) ? "On" : "Off",
+                    defTheme: localStorage.defTheme || "auto"
                 }
 
                 e.detail.instance.data = data;
@@ -47,9 +72,10 @@ class HomeRoute extends xo.route {
             .on("write", e => {
 
                 let settings = e.detail.instance.data;
-                pwa.UI.theme = settings.darkmode === "On" ? "dark": "light";
+                pwa.UI.theme = settings.darkmode === "On" ? "dark" : "light";
                 pwa.UI.pagesize = settings.pagesize;
                 localStorage.advancedUi = settings.advancedUi === "On" ? "On" : "Off"
+                localStorage.defTheme = settings.defTheme
             })
 
     }

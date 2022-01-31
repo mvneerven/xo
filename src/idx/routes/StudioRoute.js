@@ -102,7 +102,8 @@ class StudioRoute extends xo.route {
 
         const context = await factory.build({
             defaults: {
-                validation: "inline"
+                validation: "inline",
+                theme: localStorage.defTheme || ""
             }
         });
         return context;
@@ -286,21 +287,21 @@ class StudioRoute extends xo.route {
 
     }
 
-    async renderCodeEditor(options = {type: "monacoeditor"}) {
-        
+    async renderCodeEditor(options = { type: "monacoeditor" }) {
+
         options.options = {
             minimap: {
                 enabled: false
             },
-            ...options.options 
+            ...options.options
         }
-        
+
         let elm = xo.form.run({
             type: "monacoeditor",
             class: "full-height",
             ...options
         });
-        
+
         return elm;
     }
 
@@ -470,13 +471,13 @@ class StudioRoute extends xo.route {
     }
 
     renderCssTab() {
-        
+
         const tab = this.sidePanel.tabStrip.tabs.css;
         if (!tab)
             return;
 
-        this.renderCodeEditor({ 
-            mode: "css", value: this.styleSheetHelper.buildCssFromClasses() 
+        this.renderCodeEditor({
+            mode: "css", value: this.styleSheetHelper.buildCssFromClasses()
         }).then(e => {
 
             xo.control.get(e).on("change", ev => {
