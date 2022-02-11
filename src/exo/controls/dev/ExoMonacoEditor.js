@@ -5,7 +5,7 @@ import ExoDivControl from "../base/ExoDivControl";
 const MONACO_VERSION = "0.31.1";
 
 class ExoMonacoCodeEditor extends ExoDivControl {
-    mode = "html";    
+    mode = "html";
     theme = document.documentElement.classList.contains("theme-dark") ? "vs-dark" : "vs-light";
     events = new Core.Events(this);
     _version = MONACO_VERSION;
@@ -14,7 +14,7 @@ class ExoMonacoCodeEditor extends ExoDivControl {
 
     constructor() {
         super(...arguments);
-        
+
 
         this.acceptProperties(
             {
@@ -41,9 +41,9 @@ class ExoMonacoCodeEditor extends ExoDivControl {
         );
     }
 
-    mapAcceptedProperties(){
+    mapAcceptedProperties() {
         super.mapAcceptedProperties();
-        
+
         this._hasValue = true;
         this.useContainer = true;
         this.htmlElement = document.createElement("div");
@@ -63,14 +63,12 @@ class ExoMonacoCodeEditor extends ExoDivControl {
 
         await super.render();
 
-        //this.htmlElement.style = "min-height: 200px; width: 100%";
         this.container.querySelector(".exf-ctl").appendChild(this.htmlElement)
         this.container.classList.add("exf-std-lbl")
 
         var observer = new IntersectionObserver((entries, observer) => {
             if (me.htmlElement.parentNode.offsetHeight) {
                 observer = null;
-
                 me.initMonacoEditor();
             }
         },
@@ -97,14 +95,14 @@ class ExoMonacoCodeEditor extends ExoDivControl {
     get value() {
         return this.editor?.getModel().getValue() || this._value;
     };
-    
+
 
     /**
      * @param {String} name
      */
     set mode(name) {
         this._mode = name;
-        monaco.editor.setModelLanguage(this.editor.getModel(), name);        
+        monaco.editor.setModelLanguage(this.editor.getModel(), name);
     }
 
     /**
@@ -148,14 +146,13 @@ class ExoMonacoCodeEditor extends ExoDivControl {
             );
 
             require(["vs/editor/editor.main"], () => {
-
                 const detail = {
                     editorOptions: {
                         readOnly: me.readonly,
                         value: me.value || "",
                         language: me.mode,
                         theme: me.theme,
-                        automaticLayout: true,
+                        //automaticLayout: true, //BUGGY!
                         ...me.options || {}
                     }
                 }
@@ -169,6 +166,10 @@ class ExoMonacoCodeEditor extends ExoDivControl {
                 me.editor.getModel().onDidChangeContent(e => {
                     me.events.trigger("change")
                 })
+
+                DOM.throttleResize(window, () => {
+                    me.editor.layout();
+                });
             });
         }
         );

@@ -32,12 +32,10 @@ class ExoSchemaEditor extends ExoMonacoCodeEditor {
 
             if (me.mode !== contentType) {
                 me.convertValue(me.mode);
-                //sme.language = me.mode
-
             }
             me.modeSwitch.innerText = me.mode;
         });
-
+        
         this.container.appendChild(this.modeSwitch)
 
         this.on("ready", this.initAutocomplete.bind(this));
