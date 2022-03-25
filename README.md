@@ -1,3 +1,5 @@
+> THIS PACKAGE IS DEPRECATED - Please use [xo-form](https://github.com/mvneerven/xo-form)
+
 # XO Documentation
 
 Jump to *[What's new](./REVISIONS.md)*.
